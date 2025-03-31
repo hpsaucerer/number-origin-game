@@ -67,7 +67,7 @@ funFact: "Aside from basketball, Jordan also competed in minor league baseball t
   clues: [
     "A very specific London address.",
     "You might find a violin-playing genius here.",
-    "You know my methods, Watson."
+    "'You know my methods, Watson.'"
   ],
   answer: "Sherlock Holmes’ address",
   keywords: ["221b", "sherlock holmes", "baker street", "detective"],
