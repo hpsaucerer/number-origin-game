@@ -251,12 +251,11 @@ const renderCenterLabel = ({ viewBox }) => {
               
 <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
   {isCorrect ||
-  revealedClues.length > 1 ||
-  revealedClues.some(clue => clue.includes("formatted"))
+  (puzzle.revealFormattedAt &&
+    revealedClues.length >= puzzle.revealFormattedAt)
     ? puzzle.formatted
     : puzzle.number}
 </p>
-
 
           <div className="flex space-x-2 mt-2">
             {Array.from({ length: attempts }, (_, i) => (
