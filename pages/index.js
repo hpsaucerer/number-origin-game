@@ -518,9 +518,10 @@ const renderCenterLabel = ({ viewBox }) => {
 
 <div className="flex flex-col items-center space-y-0">
 <img
-  src="public/icons/ring-icon.png"
+  src="/icons/ring-icon.png"
   alt="Ring o' Results Icon"
-  className="w-30 h-auto mb-[-60px]"
+  className="w-12 h-12 border border-red-500"
+
 />
 
 
