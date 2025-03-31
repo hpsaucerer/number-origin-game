@@ -119,7 +119,7 @@ funFact: "Everest grows approximately 44 millimetres every year.This occurs beca
   ],
   answer: "The speed of light",
   keywords: ["lightspeed", "light speed"],
-  funFact: "Sunlight takes roughly 8 minutes 17 seconds to travel ther average distance from the surface of the Sun to the Earth."
+  funFact: "Sunlight takes roughly 8 minutes 17 seconds to travel the average distance from the surface of the Sun to the Earth."
 },
 {
   number: "24601",
