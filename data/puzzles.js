@@ -114,9 +114,10 @@ funFact: "Everest grows approximately 44 millimetres every year.This occurs beca
   formatted: "299,792,458",
   clues: [
     "Einstein's faithful courier, never late.",
-    "The ultimate universal speed limt. No ticket required.",
-    "Measured in metres per second, nothing outruns it."
+    "The ultimate universal speed limit. No ticket required.",
+    " Take another look at the number - measured in metres per second, nothing outruns it."
   ],
+  revealFormattedAt: 3,
   answer: "The speed of light",
   keywords: ["lightspeed", "light speed"],
   funFact: "Sunlight takes roughly 8 minutes 17 seconds to travel the average distance from the surface of the Sun to the Earth."
