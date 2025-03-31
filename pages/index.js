@@ -520,7 +520,7 @@ const renderCenterLabel = ({ viewBox }) => {
 <img
   src="/icons/Ring-icon.png"
   alt="Ring o' Results"
-  className="w-10 h-10 mx-auto mb-2"
+  className="w-32 h-32 mx-auto mb-[-64px]"
 />
 
 
