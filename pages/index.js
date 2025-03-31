@@ -267,11 +267,20 @@ const renderCenterLabel = ({ viewBox }) => {
             ))}
           </div>
 
-          {revealedClues.map((clue, index) => (
-            <p key={index} className="mt-2 text-gray-600">
-              <span className="font-semibold">Clue {index + 1}:</span> {clue}
-            </p>
-          ))}
+{revealedClues.map((clue, index) => (
+  <p key={index} className="mt-2 text-gray-600">
+    <span className="font-semibold">Clue {index + 1}:</span>{" "}
+    {clue.split("formatted").map((part, i, arr) => (
+      <React.Fragment key={i}>
+        {part}
+        {i < arr.length - 1 && (
+          <span className="text-blue-600 font-semibold">{puzzle.formatted}</span>
+        )}
+      </React.Fragment>
+    ))}
+  </p>
+))}
+
 
           {isCorrect ? (
             <>
