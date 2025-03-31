@@ -1,0 +1,40 @@
+/* Ensure full height layout and mobile-safe scrolling */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* ✅ Apply consistent box-sizing across all elements */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
+}
+
+.recharts-pie-sector:focus {
+  outline: none;
+}
+
+.recharts-surface:focus {
+  outline: none !important;
+}
+.recharts-wrapper:focus {
+  outline: none !important;
+}
+
+html, body, button, .recharts-wrapper, .recharts-surface {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
