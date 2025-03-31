@@ -137,13 +137,13 @@ funFact: "Everest grows approximately 44 millimetres every year.This occurs beca
   number: "451",
   formatted: "451°F",
   clues: [
-    "Format: Temperature",
+    "Take another look — this number is actually formatted.",
     "A dystopian temperature where books meet their fate.",
     "Ray Bradbury warned us about a future where knowledge is set on fire."
   ],
-  answer: "Fahrenheit 451 (temperature at which paper burns)",
+  answer: "Fahrenheit 451",
   keywords: ["Ray", "Bradbury", "book", "Fahrenheit", "451"],
-  funFact: "In Fahrenheit 451 books were outlawed and burned at 451°F - a metaphor for censorship and loss of knowledge."
+  funFact: "In Fahrenheit 451, books were outlawed and burned at 451°F..."
 },
 ];
 
