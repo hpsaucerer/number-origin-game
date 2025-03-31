@@ -1,16 +1,16 @@
 "use client";
 
-import WelcomeModal from "@/components/WelcomeModal";
-import InteractiveTutorial from "@/components/InteractiveTutorial";
-import OnScreenKeyboard from "@/components/OnScreenKeyboard";
+import WelcomeModal from "../components/WelcomeModal";
+import InteractiveTutorial from "../components/InteractiveTutorial";
+import OnScreenKeyboard from "../components/OnScreenKeyboard";
 import { useState, useEffect } from "react";
 import { BarChart, Share2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Card, CardContent } from "../components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "recharts";
-import puzzles from "@/data/puzzles";
+import puzzles from "../data/puzzles";
 
 export default function NumberOriginGame() {
   const [puzzle, setPuzzle] = useState(null);
