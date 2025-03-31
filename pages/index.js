@@ -248,13 +248,15 @@ const renderCenterLabel = ({ viewBox }) => {
 
       <Card className="w-full max-w-md p-6 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
         <CardContent className="overflow-hidden">
-          <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
-            {isCorrect
-              ? puzzle.formatted
-              : revealedClues.length > 1
-              ? puzzle.formatted
-              : puzzle.number}
-          </p>
+              
+<p className="text-4xl font-bold text-[#3B82F6] font-daysone">
+  {isCorrect ||
+  revealedClues.length > 1 ||
+  revealedClues.some(clue => clue.includes("formatted"))
+    ? puzzle.formatted
+    : puzzle.number}
+</p>
+
 
           <div className="flex space-x-2 mt-2">
             {Array.from({ length: attempts }, (_, i) => (
