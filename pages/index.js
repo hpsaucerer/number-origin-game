@@ -518,12 +518,10 @@ const renderCenterLabel = ({ viewBox }) => {
 
 <div className="flex flex-col items-center space-y-0">
 <img
-  src="/icons/Ring-icon.png"
-  alt="Ring o' Results Icon"
-  className="w-18 h-auto mb-[-72px]"
-
+  src="/icons/ring-icon.png"
+  alt="Ring o' Results"
+  className="w-10 h-10 mx-auto mb-2"
 />
-
 
 
   <ResponsiveContainer width={300} height={300}>
