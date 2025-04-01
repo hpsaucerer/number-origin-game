@@ -417,9 +417,9 @@ const renderCenterLabel = ({ viewBox }) => {
             </li>
           </ul>
 
- <p className="mt-4">
-            Categories:
-          </p>
+<DialogTitle>
+  <strong>Categories</strong>
+</DialogTitle>
           <ul className="list-disc ml-6">
             <li className="flex items-start gap-2 mb-2">
               <img src="/icons/math.jpg" alt="Math Icon" className="w-5 h-5 mt-1" />
