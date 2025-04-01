@@ -413,7 +413,7 @@ const renderCenterLabel = ({ viewBox }) => {
             </li>
             <li>
               <strong>Stuck? Reveal a clue to help you. </strong>< br/>
-              Remember though, this uses up a guess. Good luck!
+              Remember though, this uses up a guess.
             </li>
           </ul>
 
