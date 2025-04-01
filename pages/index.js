@@ -429,10 +429,7 @@ const renderPill = ({ label, color, tooltip, icon, index }) => (
               <strong>How To Play</strong>
             </DialogTitle>
           </DialogHeader>
-          <div className="mt-2 font-sans">
-</div>
-
-        
+   
 <ul className="list-decimal ml-6">
   <li className="mb-2">
     <strong>Look at the number.</strong><br />
