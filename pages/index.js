@@ -418,9 +418,7 @@ const renderCenterLabel = ({ viewBox }) => {
           </ul>
 
  <p className="mt-4">
-            <DialogHeader>
-            <DialogTitle>
-              <strong>Categories</strong>
+            Categories < br/>
           </p>
           <ul className="list-disc ml-6">
             <li className="flex items-start gap-2 mb-2">
