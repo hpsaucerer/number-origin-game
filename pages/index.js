@@ -453,72 +453,65 @@ const renderPill = ({ label, color, tooltip, icon, index }) => (
   {/* Custom row-based layout */}
 <div className="space-y-2">
 
-  {/* Row 1: Mathematical */}
-  <div className="flex justify-center">
+  <div className="space-y-2">
+  {/* Row 1: Maths + Geography */}
+  <div className="flex justify-center space-x-2">
     {renderPill({
-      label: "Mathematical",
+      label: "Maths",
       color: "bg-blue-100 text-blue-700",
       tooltip: "Equations, constants, patterns, numerals",
       icon: "/icons/math.jpg",
-      index: 0
+      index: 0,
+    })}
+    {renderPill({
+      label: "Geography",
+      color: "bg-green-100 text-green-700",
+      tooltip: "Coordinates, altitudes, distances, borders",
+      icon: "/icons/geo.jpg",
+      index: 1,
     })}
   </div>
 
-  {/* Row 2: Scientific + Historical */}
+  {/* Row 2: Science + History */}
   <div className="flex justify-center space-x-2">
     {renderPill({
-      label: "Scientific",
+      label: "Science",
       color: "bg-red-100 text-red-700",
       tooltip: "Measurements, physics, chemistry, biology",
       icon: "/icons/science.jpg",
-      index: 1
+      index: 2,
     })}
     {renderPill({
-      label: "Historical",
+      label: "History",
       color: "bg-yellow-100 text-yellow-700",
       tooltip: "Important years, reigns, eras, events",
       icon: "/icons/history.jpg",
-      index: 2
+      index: 3,
     })}
   </div>
 
-  {/* Row 3: Cultural + Sport */}
+  {/* Row 3: Culture + Sport */}
   <div className="flex justify-center space-x-2">
     {renderPill({
-      label: "Cultural",
+      label: "Culture",
       color: "bg-purple-100 text-purple-700",
       tooltip: "Books, films, pop culture, inventions",
       icon: "/icons/culture.jpg",
-      index: 3
+      index: 4,
     })}
     {renderPill({
       label: "Sport",
       color: "bg-pink-100 text-pink-700",
       tooltip: "Scores, records, statistics, dates",
       icon: "/icons/sport.jpg",
-      index: 4
+      index: 5,
     })}
   </div>
-
-  {/* Row 4: Geographical */}
-  <div className="flex justify-center">
-    {renderPill({
-      label: "Geographical",
-      color: "bg-green-100 text-green-700",
-      tooltip: "Coordinates, altitudes, distances, borders",
-      icon: "/icons/geo.jpg",
-      index: 5
-    })}
-  </div>
-
 </div>
 
 
+</div>
 
-
-          <p className="mt-2">
-           
-          </p>
         </DialogContent>
       </Dialog>
 
