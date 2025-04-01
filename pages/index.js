@@ -418,7 +418,9 @@ const renderCenterLabel = ({ viewBox }) => {
           </ul>
 
  <p className="mt-4">
-            Categories in the game: 
+            <DialogHeader>
+            <DialogTitle>
+              <strong>Categories</strong>
           </p>
           <ul className="list-disc ml-6">
             <li className="flex items-start gap-2 mb-2">
