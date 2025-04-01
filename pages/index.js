@@ -510,9 +510,6 @@ const renderPill = ({ label, color, tooltip, icon, index }) => (
 
 </div>
 
-        </DialogContent>
-      </Dialog>
-
       {/* Stats Popup */}
       <Dialog open={showStats} onOpenChange={setShowStats}>
         <DialogContent>
@@ -521,8 +518,7 @@ const renderPill = ({ label, color, tooltip, icon, index }) => (
           </DialogHeader>
 
       <p className="mt-2">
-  {" "}
-</p>
+      </p>
 
           {/* Formatted stat boxes */}
           <div className="grid grid-cols-4 gap-4 text-center my-6">
