@@ -408,12 +408,12 @@ const renderCenterLabel = ({ viewBox }) => {
               What could it mean?< br/>< br/>
             </li>
             <li>
-              <strong>Make a guess.</strong>< br/>
+              <strong>Make a guess. You have 4 chances.</strong>< br/>
               Type what you think the number relates to (e.g., 'speed of light', 'year of the moon landing'.< br/>< br/>
             </li>
             <li>
-              <strong>Use clues wisely.</strong>< br/>
-              With each incorrect guess, a clue is revealed. You have 4 guesses - use them well!
+              <strong>Stuck? Reveal a clue to help you. </strong>< br/>
+              Remember though, this uses up a guess. Good luck!
             </li>
           </ul>
 
