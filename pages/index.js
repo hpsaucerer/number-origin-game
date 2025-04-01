@@ -496,7 +496,7 @@ const renderCenterLabel = ({ viewBox }) => {
 
          
           </p>
-        </DialogContent>
+
       </Dialog>
 
       {/* Stats Popup */}
