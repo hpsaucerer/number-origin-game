@@ -429,22 +429,24 @@ const renderPill = ({ label, color, tooltip, icon, index }) => (
               <strong>How To Play</strong>
             </DialogTitle>
           </DialogHeader>
-   
-<ul className="list-decimal ml-6">
-  <li className="mb-2">
-    <strong>Look at the number.</strong><br />
-    What could it mean?
-  </li>
-  <li className="mb-2">
-    <strong>Make a guess. You have 4 in total.</strong><br />
-    Type what you think the number relates to (e.g., "speed of light", "year of the moon landing").
-  </li>
-  <li>
-    <strong>Stuck? Reveal a clue to help you.</strong><br />
-    Remember though, this uses up a guess.
-  </li>
-</ul>
+          <div className="mt-2 font-sans">
+</div>
 
+        
+          <ul className="list-decimal ml-6">
+            <li>
+              <strong>Look at the number.</strong>< br/>
+              What could it mean?< br/>< br/>
+            </li>
+            <li>
+              <strong>Make a guess. You have 4 in total.</strong>< br/>
+              Type what you think the number relates to (e.g., 'speed of light', 'year of the moon landing'.< br/>< br/>
+            </li>
+            <li>
+              <strong>Stuck? Reveal a clue to help you. </strong>< br/>
+              Remember though, this uses up a guess.< br/>< br/>
+            </li>
+          </ul>
 
 <div className="mt-4">
   <h3 className="text-lg font-bold text-black mb-2">Categories</h3>
@@ -510,15 +512,15 @@ const renderPill = ({ label, color, tooltip, icon, index }) => (
 
 </div>
 
+        </DialogContent>
+      </Dialog>
+
       {/* Stats Popup */}
       <Dialog open={showStats} onOpenChange={setShowStats}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Statistics</DialogTitle>
           </DialogHeader>
-
-      <p className="mt-2">
-      </p>
 
           {/* Formatted stat boxes */}
           <div className="grid grid-cols-4 gap-4 text-center my-6">
