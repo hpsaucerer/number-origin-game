@@ -228,6 +228,30 @@ const renderCenterLabel = ({ viewBox }) => {
   );
 };
 
+const renderPill = ({ label, color, tooltip, icon, index }) => (
+  <div
+    key={index}
+    className={`flex items-center space-x-2 px-3 py-1 rounded-full cursor-pointer ${color} relative`}
+    onClick={(e) => {
+      e.stopPropagation();
+      const tooltipBox = document.getElementById(`tooltip-${index}`);
+      document.querySelectorAll(".tooltip-box").forEach((el) => {
+        if (el !== tooltipBox) el.classList.add("hidden");
+      });
+      tooltipBox?.classList.toggle("hidden");
+    }}
+  >
+    <img src={icon} alt={label} className="w-5 h-5" />
+    <span className="font-bold text-black">{label}</span>
+    <div
+      id={`tooltip-${index}`}
+      className="tooltip-box hidden absolute left-1/2 transform -translate-x-1/2 top-full mt-1 bg-white border border-gray-300 text-sm text-gray-800 p-2 rounded shadow-lg z-10 w-48"
+    >
+      {tooltip}
+    </div>
+  </div>
+);
+
 
   return (
 
@@ -430,69 +454,69 @@ const renderCenterLabel = ({ viewBox }) => {
 
 <div className="mt-4">
   <h3 className="text-lg font-bold text-black mb-2">Categories</h3>
-  <div className="grid grid-cols-2 gap-2">
-    {[
-      {
-        label: "Mathematical",
-        color: "bg-blue-100 text-blue-700",
-        tooltip: "Equations, constants, patterns, numerals",
-        icon: "/icons/math.jpg",
-      },
-      {
-        label: "Geographical",
-        color: "bg-green-100 text-green-700",
-        tooltip: "Coordinates, altitudes, distances, borders",
-        icon: "/icons/geo.jpg",
-      },
-      {
-        label: "Scientific",
-        color: "bg-red-100 text-red-700",
-        tooltip: "Measurements, physics, chemistry, biology",
-        icon: "/icons/science.jpg",
-      },
-      {
-        label: "Historical",
-        color: "bg-yellow-100 text-yellow-700",
-        tooltip: "Important years, reigns, eras, events",
-        icon: "/icons/history.jpg",
-      },
-      {
-        label: "Cultural",
-        color: "bg-purple-100 text-purple-700",
-        tooltip: "Books, films, pop culture, inventions",
-        icon: "/icons/culture.jpg",
-      },
-      {
-        label: "Sport",
-        color: "bg-pink-100 text-pink-700",
-        tooltip: "Scores, records, statistics, dates",
-        icon: "/icons/sport.jpg",
-      },
-    ].map((item, index) => (
-      <div
-        key={index}
-        className={`flex items-center space-x-2 px-3 py-1 rounded-full cursor-pointer ${item.color} relative`}
-        onClick={(e) => {
-          e.stopPropagation();
-          const tooltip = document.getElementById(`tooltip-${index}`);
-          document.querySelectorAll(".tooltip-box").forEach((el) => {
-            if (el !== tooltip) el.classList.add("hidden");
-          });
-          tooltip?.classList.toggle("hidden");
-        }}
-      >
-        <img src={item.icon} alt={item.label} className="w-5 h-5" />
-        <span className="font-bold text-black">{item.label}</span>
-        <div
-          id={`tooltip-${index}`}
-          className="tooltip-box hidden absolute left-1/2 transform -translate-x-1/2 top-full mt-1 bg-white border border-gray-300 text-sm text-gray-800 p-2 rounded shadow-lg z-10 w-48"
-        >
-          {item.tooltip}
-        </div>
-      </div>
-    ))}
+  {/* Custom row-based layout */}
+<div className="space-y-2">
+
+  {/* Row 1: Mathematical */}
+  <div className="flex justify-center">
+    {renderPill({
+      label: "Mathematical",
+      color: "bg-blue-100 text-blue-700",
+      tooltip: "Equations, constants, patterns, numerals",
+      icon: "/icons/math.jpg",
+      index: 0
+    })}
   </div>
+
+  {/* Row 2: Scientific + Historical */}
+  <div className="flex justify-center space-x-2">
+    {renderPill({
+      label: "Scientific",
+      color: "bg-red-100 text-red-700",
+      tooltip: "Measurements, physics, chemistry, biology",
+      icon: "/icons/science.jpg",
+      index: 1
+    })}
+    {renderPill({
+      label: "Historical",
+      color: "bg-yellow-100 text-yellow-700",
+      tooltip: "Important years, reigns, eras, events",
+      icon: "/icons/history.jpg",
+      index: 2
+    })}
+  </div>
+
+  {/* Row 3: Cultural + Sport */}
+  <div className="flex justify-center space-x-2">
+    {renderPill({
+      label: "Cultural",
+      color: "bg-purple-100 text-purple-700",
+      tooltip: "Books, films, pop culture, inventions",
+      icon: "/icons/culture.jpg",
+      index: 3
+    })}
+    {renderPill({
+      label: "Sport",
+      color: "bg-pink-100 text-pink-700",
+      tooltip: "Scores, records, statistics, dates",
+      icon: "/icons/sport.jpg",
+      index: 4
+    })}
+  </div>
+
+  {/* Row 4: Geographical */}
+  <div className="flex justify-center">
+    {renderPill({
+      label: "Geographical",
+      color: "bg-green-100 text-green-700",
+      tooltip: "Coordinates, altitudes, distances, borders",
+      icon: "/icons/geo.jpg",
+      index: 5
+    })}
+  </div>
+
 </div>
+
 
 
 
