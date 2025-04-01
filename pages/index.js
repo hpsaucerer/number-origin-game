@@ -520,6 +520,10 @@ const renderPill = ({ label, color, tooltip, icon, index }) => (
             <DialogTitle>Statistics</DialogTitle>
           </DialogHeader>
 
+      <p className="mt-2">
+  {" "}
+</p>
+
           {/* Formatted stat boxes */}
           <div className="grid grid-cols-4 gap-4 text-center my-6">
             <div>
