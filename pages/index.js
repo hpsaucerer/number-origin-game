@@ -494,10 +494,7 @@ const renderCenterLabel = ({ viewBox }) => {
   </div>
 </div>
 
-
-
-          <p className="mt-2">
-           
+         
           </p>
         </DialogContent>
       </Dialog>
