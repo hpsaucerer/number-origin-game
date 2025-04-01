@@ -432,11 +432,7 @@ const renderPill = ({ label, color, tooltip, icon, index }) => (
           <div className="mt-2 font-sans">
 </div>
 
-         
-          <p>
-           
-          </p>
-          <p></p>
+        
           <ul className="list-decimal ml-6">
             <li>
               <strong>Look at the number.</strong>< br/>
