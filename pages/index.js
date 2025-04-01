@@ -494,9 +494,7 @@ const renderCenterLabel = ({ viewBox }) => {
   </div>
 </div>
 
-         
-          </p>
-
+        
 
       {/* Stats Popup */}
       <Dialog open={showStats} onOpenChange={setShowStats}>
