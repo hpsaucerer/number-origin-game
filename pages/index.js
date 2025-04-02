@@ -389,8 +389,6 @@ const renderCategoryPills = () => {
     )}
   </>
 ) : attempts >= maxGuesses ? (
-  ...
-
 
             <>
               <p className="text-red-600 mt-4">
