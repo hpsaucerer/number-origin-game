@@ -12,7 +12,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "recharts";
 import puzzles from "../data/puzzles";
 
-  export default function Home() {
+  export default function NumberOriginGame() {
   const [openTooltip, setOpenTooltip] = useState(null);
   const [puzzle, setPuzzle] = useState(null);
   const [dateString, setDateString] = useState("");
