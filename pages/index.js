@@ -123,25 +123,6 @@ const renderCategoryPills = () => {
 };
 
 
-
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (
-      tooltipRefs.current.every(
-        (ref) => ref && !ref.contains(event.target)
-      )
-    ) {
-      setOpenTooltip(null);
-    }
-  };
-
-  document.addEventListener("click", handleClickOutside);
-  return () => {
-    document.removeEventListener("click", handleClickOutside);
-  };
-}, [openTooltip]);
-
-
   if (!puzzle) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
