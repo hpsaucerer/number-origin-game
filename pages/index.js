@@ -13,6 +13,14 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "rechar
 import puzzles from "../data/puzzles";
 import { useRef } from "react";
 
+const colorClassMap = {
+  blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
+  green: "text-green-700 bg-green-100 hover:bg-green-200",
+  maroon: "text-red-900 bg-red-100 hover:bg-red-200",
+  yellow: "text-yellow-700 bg-yellow-100 hover:bg-yellow-200",
+  purple: "text-purple-700 bg-purple-100 hover:bg-purple-200",
+  red: "text-red-700 bg-red-100 hover:bg-red-200",
+};
 
   export default function Home() {
     
@@ -68,17 +76,6 @@ import { useRef } from "react";
   return () => document.removeEventListener("click", handleClickOutside);
 }, []);
 
-    useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (
-      openTooltip !== null &&
-      !event.target.closest(".category-pill") &&
-      !event.target.closest(".tooltip-box")
-    ) {
-      setOpenTooltip(null);
-    }
-  };
-
       useEffect(() => {
   const handleClickOutside = (event) => {
     if (
@@ -104,7 +101,7 @@ const renderCategoryPills = () => {
         <div key={index} className="relative">
           <Button
             variant="outline"
-            className={`w-32 justify-center text-sm font-bold text-${category.color}-700 bg-${category.color}-100 hover:bg-${category.color}-200 transition rounded-full`}
+            className={`w-32 justify-center text-sm font-bold transition rounded-full ${colorClassMap[category.color]}`}
             onClick={(e) => {
               e.stopPropagation(); // prevent bubbling to document
               setOpenTooltip(openTooltip === index ? null : index);
