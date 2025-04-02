@@ -78,34 +78,6 @@ const colorClassMap = {
 
       
 
-const renderCategoryPills = () => {
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 justify-items-center mt-4">
-      {categoryInfo.map((category, index) => (
-        <div key={index} className="relative">
-          <Button
-            variant="outline"
-            className={`w-32 justify-center text-sm font-bold transition rounded-full ${colorClassMap[category.color]}`}
-            onClick={(e) => {
-              e.stopPropagation(); // prevent bubbling to document
-              setOpenTooltip(openTooltip === index ? null : index);
-            }}
-            ref={(el) => (tooltipRefs.current[index] = el)}
-          >
-            {category.label}
-          </Button>
-          {openTooltip === index && (
-            <div className="absolute z-10 mt-2 w-52 p-3 text-xs text-black bg-white border border-gray-300 rounded shadow-lg">
-              <strong className="block mb-1">{category.label}</strong>
-              {category.tooltip}
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-};
-
 useEffect(() => {
   const handleClickOutside = (event) => {
     if (
