@@ -334,6 +334,17 @@ return (
           {isCorrect ? (
             <>
               <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
+
+{attempts === 0 && (
+  <div className="flex justify-center mt-4">
+    <img
+      src="/icons/stamp-success.png"
+      alt="Success Stamp"
+      className="w-24 h-auto animate-bounce"
+    />
+  </div>
+)}
+           
               {puzzle.funFact && (
                 <div className="flex items-center gap-3 p-2 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow">
                   <img
