@@ -377,9 +377,20 @@ const renderCategoryPills = () => {
       />
     )}
 
-    <p className="text-sm leading-snug">{puzzle.funFact}</p>
+    {puzzle.funFact && (
+      <div className="mt-4 flex items-start gap-3 p-4 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow">
+        <img
+          src="/icons/funfact.png"
+          alt="Fun Fact Icon"
+          className="w-10 h-10"
+        />
+        <p className="text-sm leading-snug">{puzzle.funFact}</p>
+      </div>
+    )}
   </>
 ) : attempts >= maxGuesses ? (
+  ...
+
 
             <>
               <p className="text-red-600 mt-4">
