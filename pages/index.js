@@ -433,7 +433,7 @@ const renderCenterLabel = ({ viewBox }) => {
   <div className="grid grid-cols-2 gap-2">
     {[
       {
-        label: "Math",
+        label: "Maths",
         color: "bg-blue-100 text-blue-700",
         tooltip: "Equations, constants, patterns, numerals",
         icon: "/icons/math.jpg",
