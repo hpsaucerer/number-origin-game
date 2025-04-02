@@ -65,19 +65,7 @@ const colorClassMap = {
     setPuzzle(puzzles[randomIndex]);
     setDateString(new Date().toLocaleDateString());
   }, []);
-
-  useEffect(() => {
-  const handleClickOutside = (e) => {
-    document.querySelectorAll(".tooltip-box").forEach((el) => {
-      el.classList.add("hidden");
-    });
-  };
-  document.addEventListener("click", handleClickOutside);
-  return () => document.removeEventListener("click", handleClickOutside);
-}, []);
-
-      
-
+  
 useEffect(() => {
   const handleClickOutside = (event) => {
     if (
