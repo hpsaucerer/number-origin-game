@@ -124,6 +124,17 @@ const renderCategoryPills = () => {
 
 
 
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      tooltipRefs.current.every(
+        (ref) => ref && !ref.contains(event.target)
+      )
+    ) {
+      setOpenTooltip(null);
+    }
+  };
+
   document.addEventListener("click", handleClickOutside);
   return () => {
     document.removeEventListener("click", handleClickOutside);
