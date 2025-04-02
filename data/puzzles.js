@@ -148,6 +148,43 @@ funFact: "Everest grows approximately 44 millimetres every year. This occurs bec
   keywords: [ "paper burns" "Ray", "Bradbury", "book", "Fahrenheit", "451"],
   funFact: "In Fahrenheit 451 (published in 1953) - books were outlawed and burned at 451°F, a metaphor for censorship and loss of knowledge."
 },
+  {
+  number: "1776",
+  formatted: "1776",
+  clues: [
+    "Ink and ideals flowed freely.",
+    "The colonies made a declaration.",
+    "Fireworks and freedom began here."
+  ],
+  answer: "American Declaration of Independence",
+  keywords: ["independence", "usa", "founding", "july 4th"],
+  funFact: "On July 4, 1776, the U.S. declared independence from Britain. The Declaration, penned in Philadelphia, became a cornerstone of American democracy."
+}
+  {
+  number: "1.618",
+  formatted: "1.618",
+  clues: [
+    "Beauty in ratio, found in art and spirals.",
+    "You might say it's irrationally attractive.",
+    "Between Fibonacci steps, it quietly hides."
+  ],
+  answer: "Golden ratio",
+  keywords: ["phi", "fibonacci", "divine proportion", "golden mean"],
+  funFact: "The golden ratio (about 1.618) appears in nature, art, and architecture. It's often associated with aesthetically pleasing proportions."
+}
+{
+  number: "6381",
+  formatted: "6,381 km",
+  clues: [
+    "The average journey from core to cloud.",
+    "Roughly the radius of our rocky home.",
+    "Half the story of a planetary diameter."
+  ],
+  revealFormattedAt: 3,
+  answer: "Radius of the Earth",
+  keywords: ["earth", "radius", "planet", "geometry"],
+  funFact: "The Earth's mean radius is approximately 6,371 km. It varies slightly due to the planet's equatorial bulge."
+}
 ];
 
 export default puzzles;
