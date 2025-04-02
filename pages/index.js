@@ -12,7 +12,9 @@ import { Card, CardContent } from "../components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "recharts";
 import puzzles from "../data/puzzles";
 
-export default function NumberOriginGame() {
+  export default function NumberOriginGame() {
+  export default function Home() {
+  const [openTooltip, setOpenTooltip] = useState(null);
   const [puzzle, setPuzzle] = useState(null);
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
@@ -61,6 +63,23 @@ export default function NumberOriginGame() {
   document.addEventListener("click", handleClickOutside);
   return () => document.removeEventListener("click", handleClickOutside);
 }, []);
+
+    useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      openTooltip !== null &&
+      !event.target.closest(".category-pill") &&
+      !event.target.closest(".tooltip-box")
+    ) {
+      setOpenTooltip(null);
+    }
+  };
+
+  document.addEventListener("click", handleClickOutside);
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, [openTooltip]);
 
 
   if (!puzzle) {
@@ -428,71 +447,6 @@ const renderCenterLabel = ({ viewBox }) => {
             </li>
           </ul>
 
-<div className="mt-4">
-  <h3 className="text-lg font-bold text-black mb-2">Categories</h3>
-  <div className="grid grid-cols-2 gap-2">
-    {[
-      {
-        label: "Maths",
-        color: "bg-blue-100 text-blue-700",
-        tooltip: "Equations, constants, patterns, numerals",
-        icon: "/icons/math.jpg",
-      },
-      {
-        label: "Geography",
-        color: "bg-green-100 text-green-700",
-        tooltip: "Coordinates, altitudes, distances, borders",
-        icon: "/icons/geo.jpg",
-      },
-      {
-        label: "Science",
-        color: "bg-red-100 text-red-700",
-        tooltip: "Measurements, physics, chemistry, biology",
-        icon: "/icons/science.jpg",
-      },
-      {
-        label: "History",
-        color: "bg-yellow-100 text-yellow-700",
-        tooltip: "Important years, reigns, eras, events",
-        icon: "/icons/history.jpg",
-      },
-      {
-        label: "Culture",
-        color: "bg-purple-100 text-purple-700",
-        tooltip: "Books, films, pop culture, inventions",
-        icon: "/icons/culture.jpg",
-      },
-      {
-        label: "Sport",
-        color: "bg-pink-100 text-pink-700",
-        tooltip: "Scores, records, statistics, dates",
-        icon: "/icons/sport.jpg",
-      },
-    ].map((item, index) => (
-      <div
-        key={index}
-        className={`flex items-center space-x-2 px-3 py-1 rounded-full cursor-pointer ${item.color} relative`}
-        onClick={(e) => {
-          e.stopPropagation();
-          const tooltip = document.getElementById(`tooltip-${index}`);
-          document.querySelectorAll(".tooltip-box").forEach((el) => {
-            if (el !== tooltip) el.classList.add("hidden");
-          });
-          tooltip?.classList.toggle("hidden");
-        }}
-      >
-        <img src={item.icon} alt={item.label} className="w-5 h-5" />
-        <span className="font-bold text-black">{item.label}</span>
-        <div
-          id={`tooltip-${index}`}
-          className="tooltip-box hidden absolute left-1/2 transform -translate-x-1/2 top-full mt-1 bg-white border border-gray-300 text-sm text-gray-800 p-2 rounded shadow-lg z-10 w-48"
-        >
-          {item.tooltip}
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
 
 
 
