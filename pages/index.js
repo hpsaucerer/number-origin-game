@@ -369,13 +369,13 @@ const renderCategoryPills = () => {
           {isCorrect ? (
             <>
               <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
-              {puzzle.funFact && (
-                <div className="flex items-center gap-3 p-2 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow">
-                  <img
-                    src="/icons/funfact.png"
-                    alt="Fun Fact Icon"
-                    className="w-32 h-auto"
-                  />
+{isCorrect && attempts === 0 && (
+  <img
+    src="/icons/stamp-success.png"
+    alt="Perfect first-guess badge"
+    className="w-24 h-auto mt-4"
+  />
+)}
                   <p className="text-sm leading-snug">{puzzle.funFact}</p>
                 </div>
               )}
