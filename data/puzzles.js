@@ -84,7 +84,7 @@ funFact: "The Sherlock Holmes Museum isn't at 221b Baker Street - it's actually 
   ],
   answer: "Height of Mount Everest",
   keywords: ["8848", "everest", "mount everest", "mt everest", "highest mountain", "height"],
-funFact: "Everest grows approximately 44 millimetres every year.This occurs because of the continuous shift of tectonic plates, pushing the Himalayas upwards."
+funFact: "Everest grows approximately 44 millimetres every year. This occurs because of the continuous shift of tectonic plates, pushing the Himalayas upwards."
 },
 {
   number: "7",
@@ -145,7 +145,7 @@ funFact: "Everest grows approximately 44 millimetres every year.This occurs beca
   ],
   revealFormattedAt: 1,
   answer: "Fahrenheit 451",
-  keywords: ["Ray", "Bradbury", "book", "Fahrenheit", "451"],
+  keywords: [ "paper burns" "Ray", "Bradbury", "book", "Fahrenheit", "451"],
   funFact: "In Fahrenheit 451 (published in 1953) - books were outlawed and burned at 451°F, a metaphor for censorship and loss of knowledge."
 },
 ];
