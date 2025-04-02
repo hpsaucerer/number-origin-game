@@ -366,20 +366,21 @@ const renderCategoryPills = () => {
 ))}
 
 
-          {isCorrect ? (
-            <>
-              <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
-{isCorrect && attempts === 0 && (
-  <img
-    src="/icons/stamp-success.png"
-    alt="Perfect first-guess badge"
-    className="w-24 h-auto mt-4"
-  />
-)}
-                  <p className="text-sm leading-snug">{puzzle.funFact}</p>
+{isCorrect ? (
+  <>
+    <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
+
+    {attempts === 0 && (
+      <img
+        src="/icons/stamp-success.png"
+        alt="Perfect first-guess badge"
+        className="w-24 h-auto mt-4"
+      />
+    )}
+
+    <p className="text-sm leading-snug">{puzzle.funFact}</p>
+  </>
               
-              )}
-            </>
           ) : attempts >= maxGuesses ? (
             <>
               <p className="text-red-600 mt-4">
