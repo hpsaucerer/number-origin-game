@@ -365,7 +365,6 @@ const renderCategoryPills = () => {
   </p>
 ))}
 
-
 {isCorrect ? (
   <>
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
