@@ -94,7 +94,6 @@ useEffect(() => {
   }
 
 
-
   const handleGuess = () => {
     const cleanedGuess = guess.trim();
 
