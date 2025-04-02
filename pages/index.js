@@ -52,17 +52,6 @@ export default function NumberOriginGame() {
     setDateString(new Date().toLocaleDateString());
   }, []);
 
-  useEffect(() => {
-  const handleClickOutside = (e) => {
-    document.querySelectorAll(".tooltip-box").forEach((el) => {
-      el.classList.add("hidden");
-    });
-  };
-  document.addEventListener("click", handleClickOutside);
-  return () => document.removeEventListener("click", handleClickOutside);
-}, []);
-
-
   if (!puzzle) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
@@ -428,75 +417,63 @@ const renderCenterLabel = ({ viewBox }) => {
             </li>
           </ul>
 
-<div className="mt-4">
-  <h3 className="text-lg font-bold text-black mb-2">Categories</h3>
-  <div className="grid grid-cols-2 gap-2">
-    {[
-      {
-        label: "Mathematical",
-        color: "bg-blue-100 text-blue-700",
-        tooltip: "Equations, constants, patterns, numerals",
-        icon: "/icons/math.jpg",
-      },
-      {
-        label: "Geographical",
-        color: "bg-green-100 text-green-700",
-        tooltip: "Coordinates, altitudes, distances, borders",
-        icon: "/icons/geo.jpg",
-      },
-      {
-        label: "Scientific",
-        color: "bg-red-100 text-red-700",
-        tooltip: "Measurements, physics, chemistry, biology",
-        icon: "/icons/science.jpg",
-      },
-      {
-        label: "Historical",
-        color: "bg-yellow-100 text-yellow-700",
-        tooltip: "Important years, reigns, eras, events",
-        icon: "/icons/history.jpg",
-      },
-      {
-        label: "Cultural",
-        color: "bg-purple-100 text-purple-700",
-        tooltip: "Books, films, pop culture, inventions",
-        icon: "/icons/culture.jpg",
-      },
-      {
-        label: "Sport",
-        color: "bg-pink-100 text-pink-700",
-        tooltip: "Scores, records, statistics, dates",
-        icon: "/icons/sport.jpg",
-      },
-    ].map((item, index) => (
-      <div
-        key={index}
-        className={`flex items-center space-x-2 px-3 py-1 rounded-full cursor-pointer ${item.color} relative`}
-        onClick={(e) => {
-          e.stopPropagation();
-          const tooltip = document.getElementById(`tooltip-${index}`);
-          document.querySelectorAll(".tooltip-box").forEach((el) => {
-            if (el !== tooltip) el.classList.add("hidden");
-          });
-          tooltip?.classList.toggle("hidden");
-        }}
-      >
-        <img src={item.icon} alt={item.label} className="w-5 h-5" />
-        <span className="font-bold text-black">{item.label}</span>
-        <div
-          id={`tooltip-${index}`}
-          className="tooltip-box hidden absolute left-1/2 transform -translate-x-1/2 top-full mt-1 bg-white border border-gray-300 text-sm text-gray-800 p-2 rounded shadow-lg z-10 w-48"
-        >
-          {item.tooltip}
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
+<DialogTitle>
+  <strong>Categories</strong>
+</DialogTitle>
+          <ul className="list-disc ml-6">
+            <li className="flex items-start gap-2 mb-2">
+              <img src="/icons/math.jpg" alt="Math Icon" className="w-5 h-5 mt-1" />
+              <div>
+                <strong className="block"><span className="text-blue-500 font-semibold">Mathematical</span></strong>
+                <span></span>
+              </div>
+            </li>
+            <li className="flex items-start gap-2 mb-2">
+              <img src="/icons/geo.jpg" alt="Math Icon" className="w-5 h-5 mt-1" />
+              <div>
+                <strong className="block"><span className="text-green-600 font-semibold">Geographical</span></strong>
+                <span>
+                </span>
+              </div>
+            </li>
+            <li className="flex items-start gap-2 mb-2">
+              <img src="/icons/science.jpg" alt="Math Icon" className="w-5 h-5 mt-1" />
+              <div>
+                <strong className="block"><span className="text-red-900 font-semibold">Scientific</span></strong>
+                <span></span>
+              </div>
+            </li>
+            <li className="flex items-start gap-2 mb-2">
+              <img src="/icons/history.jpg" alt="Math Icon" className="w-5 h-5 mt-1" />
+              <div>
+                <strong className="block"><span className="text-yellow-400 font-semibold">Historical</span></strong>
+                <span></span>
+              </div>
+            </li>
+            <li className="flex items-start gap-2 mb-2">
+              <img src="/icons/culture.jpg" alt="Math Icon" className="w-5 h-5 mt-1" />
+              <div>
+                <strong className="block"><span className="text-purple-600 font-semibold">Cultural</span></strong>
+                <span>
+                </span>
+              </div>
+            </li>
+            <li className="flex items-start gap-2 mb-2">
+              <img src="/icons/sport.jpg" alt="Math Icon" className="w-5 h-5 mt-1" />
+              <div>
+                <strong className="block"><span className="text-red-500 font-semibold">Sport</span></strong>
+                <span>
+                </span>
+              </div>
+            </li>
+          </ul>
 
-</DialogContent>
-</Dialog>
 
+          <p className="mt-2">
+           
+          </p>
+        </DialogContent>
+      </Dialog>
 
       {/* Stats Popup */}
       <Dialog open={showStats} onOpenChange={setShowStats}>
