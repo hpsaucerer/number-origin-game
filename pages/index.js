@@ -377,7 +377,7 @@ const renderCategoryPills = () => {
   />
 )}
                   <p className="text-sm leading-snug">{puzzle.funFact}</p>
-                </div>
+              
               )}
             </>
           ) : attempts >= maxGuesses ? (
