@@ -11,6 +11,8 @@ import { Input } from "../components/ui/input";
 import { Card, CardContent } from "../components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "recharts";
 import puzzles from "../data/puzzles";
+import { useRef } from "react";
+
 
   export default function Home() {
     
@@ -26,6 +28,8 @@ import puzzles from "../data/puzzles";
   const [inputError, setInputError] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
   const [showTutorial, setShowTutorial] = useState(false);
+  const tooltipRefs = useRef([]);
+
 
   const maxGuesses = 4;
 
@@ -75,16 +79,52 @@ import puzzles from "../data/puzzles";
     }
   };
 
-        const renderCategoryPills = () => (
-    <div className="grid grid-cols-2 gap-2 mt-4 text-center">
-      <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold text-sm">Maths</div>
-      <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold text-sm">Geography</div>
-      <div className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full font-bold text-sm">Science</div>
-      <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full font-bold text-sm">History</div>
-      <div className="bg-pink-100 text-pink-800 px-3 py-1 rounded-full font-bold text-sm">Culture</div>
-      <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-bold text-sm">Sport</div>
+      useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      tooltipRefs.current.every(
+        (ref) => ref && !ref.contains(event.target)
+      )
+    ) {
+      setOpenTooltip(null);
+    }
+  };
+
+  document.addEventListener("click", handleClickOutside);
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, []);
+
+
+const renderCategoryPills = () => {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 justify-items-center mt-4">
+      {categoryInfo.map((category, index) => (
+        <div key={index} className="relative">
+          <Button
+            variant="outline"
+            className={`w-32 justify-center text-sm font-bold text-${category.color}-700 bg-${category.color}-100 hover:bg-${category.color}-200 transition rounded-full`}
+            onClick={(e) => {
+              e.stopPropagation(); // prevent bubbling to document
+              setOpenTooltip(openTooltip === index ? null : index);
+            }}
+            ref={(el) => (tooltipRefs.current[index] = el)}
+          >
+            {category.label}
+          </Button>
+          {openTooltip === index && (
+            <div className="absolute z-10 mt-2 w-52 p-3 text-xs text-black bg-white border border-gray-300 rounded shadow-lg">
+              <strong className="block mb-1">{category.label}</strong>
+              {category.tooltip}
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
+};
+
 
 
   document.addEventListener("click", handleClickOutside);
