@@ -43,8 +43,9 @@ funFact: "The event was born out of the legend of the Athenian courier Pheidippi
   clues: [
     "A pull you can’t escape (unless you're in orbit).",
     "Acceleration affecting every object on Earth.",
-    "Earth’s gravitational acceleration."
+    "Take another look at the number - finally up to speed?"
   ],
+  revealFormattedAt: 3,
   answer: "Gravitational acceleration on Earth",
   keywords: ["gravity", "9.81", "earth gravity", "acceleration", "m/s²"],
 funFact: "Galileo was the first to show by experiment that bodies fall with the same acceleration whatever their composition (the weak principle of equivalence)."
@@ -145,7 +146,7 @@ funFact: "Everest grows approximately 44 millimetres every year.This occurs beca
   revealFormattedAt: 1,
   answer: "Fahrenheit 451",
   keywords: ["Ray", "Bradbury", "book", "Fahrenheit", "451"],
-  funFact: "In Fahrenheit 451 - published in 1953 - books were outlawed and burned at 451°F, a metaphor for censorship and loss of knowledge."
+  funFact: "In Fahrenheit 451 (published in 1953) - books were outlawed and burned at 451°F, a metaphor for censorship and loss of knowledge."
 },
 ];
 
