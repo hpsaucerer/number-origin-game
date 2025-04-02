@@ -80,9 +80,6 @@ useEffect(() => {
   document.addEventListener("click", handleClickOutside);
 
   return () => {
-    document.removeEventListener("click", handleClickOutside);
-  };
-}, [openTooltip]);
 
 
   if (!puzzle) {
