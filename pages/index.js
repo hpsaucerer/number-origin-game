@@ -506,7 +506,7 @@ const renderCategoryPills = () => {
 <div className="flex justify-center mt-6">
   <div className="bg-gray-100 border border-gray-300 rounded-xl p-4 w-full max-w-md text-center shadow-md">
 <h3 className="text-lg font-bold mb-1 text-gray-800">Categories</h3>
-<p className="text-sm text-gray-600 mb-3">Tap/click the buttons to explore the categories numbers can come from!</p>
+<p className="text-sm text-gray-600 mb-3">Tap the buttons below to explore the categories in more detail.</p>
 {renderCategoryPills()}
 
   </div>
