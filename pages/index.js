@@ -247,6 +247,64 @@ const renderCenterLabel = ({ viewBox }) => {
   );
 };
 
+const renderCategoryPills = () => {
+  const categories = [
+    {
+      label: "Maths",
+      color: "bg-blue-200 text-blue-800",
+      tooltip: "Equations, constants, famous mathematical years or theories.",
+    },
+    {
+      label: "Geography",
+      color: "bg-green-200 text-green-800",
+      tooltip: "Distances, coordinates, altitudes, country codes.",
+    },
+    {
+      label: "Science",
+      color: "bg-pink-200 text-pink-800",
+      tooltip: "Physics, chemistry, space, biology, scientific constants.",
+    },
+    {
+      label: "History",
+      color: "bg-yellow-200 text-yellow-800",
+      tooltip: "Years, inventions, revolutions, treaties, dynasties.",
+    },
+    {
+      label: "Culture",
+      color: "bg-purple-200 text-purple-800",
+      tooltip: "Films, books, music, fashion, languages.",
+    },
+    {
+      label: "Sport",
+      color: "bg-red-200 text-red-800",
+      tooltip: "Records, matches, championships, teams, athletes.",
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 gap-2 mt-4">
+      {categories.map((cat, idx) => (
+        <div key={idx} className="relative">
+          <button
+            className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpenTooltip(openTooltip === idx ? null : idx);
+            }}
+          >
+            {cat.label}
+          </button>
+          {openTooltip === idx && (
+            <div className="tooltip-box absolute left-1/2 transform -translate-x-1/2 mt-2 w-64 p-2 bg-white border border-gray-300 rounded shadow text-sm z-10">
+              {cat.tooltip}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 
   return (
 
@@ -447,10 +505,10 @@ const renderCenterLabel = ({ viewBox }) => {
             </li>
           </ul>
 
+<h3 className="font-semibold mt-4">Number Categories</h3>
+{renderCategoryPills()}
 
 
-
-          <p className="mt-2">
            
           </p>
         </DialogContent>
