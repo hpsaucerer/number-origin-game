@@ -515,7 +515,7 @@ const renderCategoryPills = () => {
 
 <div className="flex justify-center mt-6">
   <div className="bg-gray-100 border border-gray-300 rounded-xl p-4 w-full max-w-md text-center shadow-md">
-    <h3 className="text-lg font-bold mb-3 text-gray-800">Example Categories</h3>
+    <h3 className="text-lg font-bold mb-3 text-gray-800">Categories</h3>
     {renderCategoryPills()}
   </div>
 </div>
