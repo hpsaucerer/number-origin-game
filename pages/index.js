@@ -380,8 +380,8 @@ const renderCategoryPills = () => {
 
     <p className="text-sm leading-snug">{puzzle.funFact}</p>
   </>
-              
-          ) : attempts >= maxGuesses ? (
+) : attempts >= maxGuesses ? (
+
             <>
               <p className="text-red-600 mt-4">
                 Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
