@@ -76,23 +76,7 @@ const colorClassMap = {
   return () => document.removeEventListener("click", handleClickOutside);
 }, []);
 
-      useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (
-      tooltipRefs.current.every(
-        (ref) => ref && !ref.contains(event.target)
-      )
-    ) {
-      setOpenTooltip(null);
-    }
-  };
-
-  document.addEventListener("click", handleClickOutside);
-  return () => {
-    document.removeEventListener("click", handleClickOutside);
-  };
-}, []);
-
+      
 
 const renderCategoryPills = () => {
   return (
@@ -121,6 +105,24 @@ const renderCategoryPills = () => {
     </div>
   );
 };
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      tooltipRefs.current.every(
+        (ref) => ref && !ref.contains(event.target)
+      )
+    ) {
+      setOpenTooltip(null);
+    }
+  };
+
+  document.addEventListener("click", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, [openTooltip]);
 
 
   if (!puzzle) {
