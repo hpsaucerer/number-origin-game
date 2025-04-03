@@ -371,13 +371,17 @@ const renderCategoryPills = () => {
   <>
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
-    {attempts === 0 && (
-      <img
-        src="/icons/stamp-success.png"
-        alt="Perfect first-guess badge"
-        className="w-24 h-auto mt-4"
-      />
-    )}
+{attempts === 0 && (
+  <div className="flex items-center justify-center gap-4 mt-6 animate-bounce">
+    <img
+      src="/icons/stamp-success.png"
+      alt="Perfect first-guess badge"
+      className="w-20 h-auto drop-shadow-lg"
+    />
+    <p className="text-xl font-bold text-green-700">Nice! Got it in 1!</p>
+  </div>
+)}
+
 
     {puzzle.funFact && (
       <div className="mt-4 flex items-start gap-3 p-4 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow">
