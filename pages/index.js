@@ -339,7 +339,8 @@ const renderCategoryPills = () => {
       <Card className="w-full max-w-md p-6 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
         <CardContent className="overflow-hidden">
 
-<p className="animate-bounce text-lg text-red-600 font-bold">Bounce test</p>
+<p className="animate-bounce text-lg text-red-600 font-bold">Bounce test</p> {/* This is a single-line comment */}
+
             
 <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
   {isCorrect ||
@@ -372,7 +373,7 @@ const renderCategoryPills = () => {
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
 {attempts === 0 && (
-  <div className="flex items-center justify-center gap-4 mt-6 animate-bounce-once">
+  <div className="flex items-center justify-center gap-2 mt-6 animate-bounce-once">
     <img
       src="/icons/stamp-success.png"
       alt="Perfect first-guess badge"
