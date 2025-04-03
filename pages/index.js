@@ -410,7 +410,8 @@ const renderCategoryPills = () => {
   />
 </div>
 
-    <FunFactBox text={puzzle.funFact} />
+    <FunFactBox text={puzzle.funFact} className="mt-0" />
+
   </>
 )}
 
