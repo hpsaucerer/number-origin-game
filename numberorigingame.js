@@ -95,6 +95,22 @@ export default function NumberOriginGame() {
     setGuess("");
   };
 
+const FunFactBlock = ({ funFact }) =>
+  funFact ? (
+    <div className="mt-6 p-4 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow flex items-start gap-4">
+      <img
+        src="/icons/funfact.png"
+        alt="Fun Fact Icon"
+        className="w-16 h-16"
+      />
+      <div>
+        <h2 className="text-lg font-bold mb-1">🎉 Did You Know?</h2>
+        <p className="text-base leading-relaxed">{funFact}</p>
+      </div>
+    </div>
+  ) : null;
+
+  
   return (
     <>
       <WelcomeModal
@@ -331,50 +347,35 @@ return (
             </p>
           ))}
 
-          {isCorrect ? (
-            <>
-              <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
+{isCorrect ? (
+  <>
+    <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
-{attempts === 0 && (
-  <div className="flex justify-center mt-4">
-    <img
-      src="/icons/stamp-success.png"
-      alt="Success Stamp"
-      className="w-24 h-auto animate-bounce"
-    />
-  </div>
+    {attempts === 0 && (
+      <div className="flex justify-center mt-4">
+        <img
+          src="/icons/stamp-success.png"
+          alt="Success Stamp"
+          className="w-24 h-auto animate-bounce"
+        />
+      </div>
+    )}
+
+    <FunFactBlock funFact={puzzle.funFact} />
+  </>
 )}
-           
-              {puzzle.funFact && (
-                <div className="flex items-center gap-3 p-2 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow">
-                  <img
-                    src="/icons/funfact.png"
-                    alt="Fun Fact Icon"
-                    className="w-32 h-auto"
-                  />
-                  <p className="text-sm leading-snug">{puzzle.funFact}</p>
-                </div>
-              )}
-            </>
-          ) : attempts >= maxGuesses ? (
-            <>
-              <p className="text-red-600 mt-4">
-                Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
-              </p>
-              {puzzle.funFact && (
-                <div className="mt-2 p-4 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow flex items-start gap-1">
-                  <img
-                    src="/icons/funfact.png"
-                    alt="Fun Fact Icon"
-                    className="w-10 h-10 mr-3"
-                  />
-                  <div>
-                    <p>{puzzle.funFact}</p>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
+
+
+ ) : attempts >= maxGuesses ? (
+  <>
+    <p className="text-red-600 mt-4">
+      Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
+    </p>
+
+    <FunFactBlock funFact={puzzle.funFact} />
+  </>
+)
+ 
             
 <>
 <WelcomeModal
