@@ -387,7 +387,7 @@ const renderCategoryPills = () => {
         <img
           src="/icons/funfact.png"
           alt="Fun Fact Icon"
-          className="w-36 h-36 mr-4"
+          className="w-48 h-48 mr-1"
         />
         <p className="text-sm leading-snug">{puzzle.funFact}</p>
       </div>
