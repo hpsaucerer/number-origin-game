@@ -12,6 +12,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "recharts";
 import puzzles from "../data/puzzles";
 import { useRef } from "react";
+import FunFactBox from "../components/FunFactBox";
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
@@ -381,17 +382,7 @@ const renderCategoryPills = () => {
   </div>
 )}
 
-
-{(isCorrect || attempts >= maxGuesses) && puzzle.funFact && (
-  <div className="mt-4 flex items-start gap-4 p-4 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow">
-    <img
-      src="/icons/funfact.png"
-      alt="Fun Fact Icon"
-      className="w-24 h-24 flex-shrink-0"
-    />
-    <p className="text-sm leading-snug">{puzzle.funFact}</p>
-  </div>
-)}
+{(isCorrect || attempts >= maxGuesses) && <FunFactBox text={puzzle.funFact} />}
 
   </>
 ) : attempts >= maxGuesses ? (
@@ -400,18 +391,8 @@ const renderCategoryPills = () => {
               <p className="text-red-600 mt-4">
                 Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
               </p>
-              {puzzle.funFact && (
-                <div className="mt-2 p-4 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow flex items-start gap-1">
-                  <img
-                    src="/icons/funfact.png"
-                    alt="Fun Fact Icon"
-                    className="w-10 h-10 mr-3"
-                  />
-                  <div>
-                    <p>{puzzle.funFact}</p>
-                  </div>
-                </div>
-              )}
+
+
             </>
           ) : (
             
