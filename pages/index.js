@@ -316,7 +316,7 @@ const renderCategoryPills = () => {
       <div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14">
         {/* Centered logo */}
         <div className="flex flex-1 justify-center">
-          <img src="/logo.png" alt="Game Logo" className="h-40 w-auto max-h-full mt-6" />
+          <img src="/logo.svg" alt="Game Logo" className="h-40 w-auto max-h-full mt-6" />
         </div>
         {/* Buttons on the right */}
         <div className="flex space-x-4">
