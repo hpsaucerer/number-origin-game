@@ -401,18 +401,14 @@ const renderCategoryPills = () => {
 )}
 
 {(isCorrect || attempts >= maxGuesses) && (
-  <>
-<div className="flex justify-center mt-2 mb-2">
-  <img
-    src={getResultImage()}
-    alt="Result"
-    className="w-48 sm:w-56 md:w-64 h-auto transition-transform duration-300 hover:scale-105"
-  />
-</div>
-
+  <div className="flex flex-col items-center space-y-2 mt-2 mb-2">
+    <img
+      src={getResultImage()}
+      alt={isCorrect ? "Success Result" : "Motivational Message"}
+      className="w-48 sm:w-56 md:w-64 h-auto transition-transform duration-300 hover:scale-105"
+    />
     <FunFactBox text={puzzle.funFact} className="mt-0" />
-
-  </>
+  </div>
 )}
 
 
