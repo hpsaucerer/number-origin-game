@@ -43,17 +43,17 @@ const colorClassMap = {
   const maxGuesses = 4;
 
 const getResultImage = () => {
-  if (!isCorrect && attempts >= maxGuesses) return "/images/tomorrow.svg";
+  if (!isCorrect && attempts >= maxGuesses) return "/images/tomorrow.png";
   if (isCorrect) {
     switch (attempts + 1) {
       case 1:
-        return "/images/gotitinone.svg";
+        return "/images/gotitinone.png";
       case 2:
-        return "/images/second.svg";
+        return "/images/second.png";
       case 3:
-        return "/images/thirdtime.svg";
+        return "/images/thirdtime.png";
       case 4:
-        return "/images/squeaky.svg";
+        return "/images/squeaky.png";
     }
   }
   return null;
