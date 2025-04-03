@@ -507,7 +507,7 @@ const renderCategoryPills = () => {
     Type what you think the number relates to (e.g., 'speed of light', 'year of the moon landing').<br /><br />
   </li>
   <li>
-    <strong>Stuck? Reveal a clue to help you.</strong><br />
+    <strong>Stuck? Reveal a clue!</strong><br />
     Remember though, this uses up a guess.<br /><br />
   </li>
 </ul>
