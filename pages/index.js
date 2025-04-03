@@ -391,15 +391,16 @@ const renderCategoryPills = () => {
 
 
 {(isCorrect || attempts >= maxGuesses) && (
-<div className="flex flex-col items-center my-[2px] gap-[2px]">
+<div className="flex flex-col items-center my-0 py-0 gap-0">
   <img
     src={getResultImage()}
     alt="Result"
-    className="w-32 h-auto"
-    style={{ margin: 0, padding: 0, lineHeight: 0 }}
+    className="w-28 h-auto"
+    style={{ margin: "0", padding: "0", display: "block", lineHeight: "0" }}
   />
   <FunFactBox text={puzzle.funFact} />
 </div>
+
 
 )}
 
