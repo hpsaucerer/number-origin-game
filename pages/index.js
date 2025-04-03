@@ -378,7 +378,7 @@ const renderCategoryPills = () => {
       alt="Perfect first-guess badge"
       className="w-20 h-auto drop-shadow-lg"
     />
-    <p className="text-xl font-bold text-green-700">Nice! Got it in 1!</p>
+    <p className="text-xl font-bold text-green-700">Got it in 1!</p>
   </div>
 )}
 
