@@ -382,16 +382,17 @@ const renderCategoryPills = () => {
 )}
 
 
-    {puzzle.funFact && (
-      <div className="mt-4 flex items-start gap-3 p-4 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow">
-        <img
-          src="/icons/funfact.png"
-          alt="Fun Fact Icon"
-          className="w-48 h-48 mr-1"
-        />
-        <p className="text-sm leading-snug">{puzzle.funFact}</p>
-      </div>
-    )}
+{(isCorrect || attempts >= maxGuesses) && puzzle.funFact && (
+  <div className="mt-4 flex items-start gap-4 p-4 bg-yellow-100 text-yellow-900 border-l-4 border-yellow-400 rounded shadow">
+    <img
+      src="/icons/funfact.png"
+      alt="Fun Fact Icon"
+      className="w-16 h-16 flex-shrink-0"
+    />
+    <p className="text-sm leading-snug">{puzzle.funFact}</p>
+  </div>
+)}
+
   </>
 ) : attempts >= maxGuesses ? (
 
