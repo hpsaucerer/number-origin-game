@@ -72,7 +72,7 @@ funFact: "Aside from basketball, Jordan also competed in minor league baseball t
   ],
   answer: "Sherlock Holmes’ address",
   keywords: ["221b", "sherlock holmes", "baker street", "detective"],
-funFact: "The Sherlock Holmes Museum isn't at 221b Baker Street - it's actually a few door's down at number 239!"
+funFact: "The Sherlock Holmes Museum isn't at 221b Baker Street - it's actually a few doors down at number 239!"
 },
 {
   number: "8848",
