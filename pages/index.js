@@ -42,6 +42,24 @@ const colorClassMap = {
 
   const maxGuesses = 4;
 
+const getResultImage = () => {
+  if (!isCorrect && attempts >= maxGuesses) return "/images/tomorrow.svg";
+  if (isCorrect) {
+    switch (attempts + 1) {
+      case 1:
+        return "/images/gotitinone.svg";
+      case 2:
+        return "/images/second.svg";
+      case 3:
+        return "/images/thirdtime.svg";
+      case 4:
+        return "/images/squeaky.svg";
+    }
+  }
+  return null;
+};
+
+    
   const [stats, setStats] = useState({
     gamesPlayed: 0,
     gamesWon: 0,
@@ -382,7 +400,20 @@ const renderCategoryPills = () => {
   </div>
 )}
 
-{(isCorrect || attempts >= maxGuesses) && <FunFactBox text={puzzle.funFact} />}
+{(isCorrect || attempts >= maxGuesses) && (
+  <>
+    <div className="flex justify-center mt-6">
+      <img
+        src={getResultImage()}
+        alt="Result"
+        className="max-w-xs w-full h-auto"
+      />
+    </div>
+
+    <FunFactBox text={puzzle.funFact} />
+  </>
+)}
+
 
   </>
 ) : attempts >= maxGuesses ? (
