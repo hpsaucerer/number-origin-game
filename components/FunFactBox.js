@@ -9,7 +9,7 @@ export default function FunFactBox({ text }) {
       <img
         src="/icons/funfact.svg"
         alt="Fun Fact Icon"
-        className="w-16 h-16 flex-shrink-0"
+        className="w-18 h-18 flex-shrink-0"
       />
       <p className="text-sm leading-snug">{text}</p>
     </div>
