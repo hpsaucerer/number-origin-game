@@ -338,7 +338,9 @@ const renderCategoryPills = () => {
 
       <Card className="w-full max-w-md p-6 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
         <CardContent className="overflow-hidden">
-              
+
+<p className="animate-bounce text-lg text-red-600 font-bold">Bounce test</p>
+            
 <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
   {isCorrect ||
   (puzzle.revealFormattedAt &&
