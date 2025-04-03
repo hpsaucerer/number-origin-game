@@ -8,7 +8,7 @@ export default function FunFactBox({ text }) {
 <img
   src="/icons/funfact.png"
   alt="Fun Fact Icon"
-  className="w-16 aspect-square object-contain scale-110 transform flex-shrink-0 transition-transform duration-200"
+  className="w-12 h-12 sm:w-16 sm:h-16 aspect-square object-contain flex-shrink-0"
 />
 
       <p className="text-sm leading-snug">{text}</p>
