@@ -351,15 +351,17 @@ return (
   <>
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
-    {attempts === 0 && (
-      <div className="flex justify-center mt-4">
-        <img
-          src="/icons/stamp-success.png"
-          alt="Success Stamp"
-          className="w-24 h-auto animate-bounce"
-        />
-      </div>
-    )}
+{attempts === 0 && (
+  <div className="flex items-center justify-center gap-4 mt-4 animate-bounce">
+    <img
+      src="/icons/stamp-success.png"
+      alt="Perfect first-guess badge"
+      className="w-20 h-auto drop-shadow-lg"
+    />
+    <p className="text-xl font-bold text-green-700">Nice! Got it in 1!</p>
+  </div>
+)}
+
 
     <FunFactBlock funFact={puzzle.funFact} />
   </>
