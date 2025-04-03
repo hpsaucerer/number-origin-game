@@ -12,4 +12,4 @@ return (
     />
     <p className="text-sm leading-tight m-0 p-0">{text}</p>
   </div>
-);
+)
