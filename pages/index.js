@@ -389,16 +389,6 @@ const renderCategoryPills = () => {
   <>
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
-{attempts === 0 && (
-  <div className="flex items-center justify-center gap-2 mt-6 animate-bounce-once">
-    <img
-      src="/icons/stamp-success.png"
-      alt="Perfect first-guess badge"
-      className="w-20 h-auto drop-shadow-lg"
-    />
-    <p className="text-xl font-bold text-green-700">Got it in 1!</p>
-  </div>
-)}
 
 {(isCorrect || attempts >= maxGuesses) && (
 <div className="flex flex-col items-center my-[2px] gap-[2px]">
