@@ -169,11 +169,13 @@ useEffect(() => {
       }
     }
 
-if (newAttempts >= 4 || isCorrect) {
-  setTimeout(() => setShowPostGame(true), 500); // small delay for effect
+// Trigger modal after correct guess or final attempt
+const isFinalGuess = attempts + 1 >= maxGuesses;
+const isAnswerCorrect = cleanedGuess.toLowerCase() === puzzle.answer.toLowerCase().trim();
+
+if (isFinalGuess || isAnswerCorrect) {
+  setTimeout(() => setShowPostGame(true), 500);
 }
-
-
     
     setGuess("");
   };
