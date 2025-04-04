@@ -14,7 +14,7 @@ import puzzles from "../data/puzzles";
 import { useRef } from "react";
 import FunFactBox from "../components/FunFactBox";
 import PostGameModal from "../components/PostGameModal";
-
+import { X } from "lucide-react";
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
@@ -574,6 +574,13 @@ const renderCategoryPills = () => {
       {/* Stats Popup */}
       <Dialog open={showStats} onOpenChange={setShowStats}>
         <DialogContent>
+          <button
+    className="absolute top-3 right-3 text-blue-500 hover:text-blue-600 transition z-50"
+    onClick={() => setShowStats(false)}
+    aria-label="Close"
+  >
+    <X size={22} />
+  </button>
           <DialogHeader>
             <DialogTitle>Statistics</DialogTitle>
           </DialogHeader>
