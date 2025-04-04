@@ -254,7 +254,7 @@ const renderCenterLabel = ({ viewBox }) => {
   if (!value) return null;
 
   const RADIAN = Math.PI / 180;
-  const labelMap = ["1", "2", "3", "4", "❌"];
+  const labelMap = ["1", "2", "3", "4", "✖"];
 
   // Inner label position
   const innerRadiusMid = innerRadius + (outerRadius - innerRadius) / 2;
