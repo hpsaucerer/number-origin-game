@@ -3,11 +3,35 @@ import { Button } from "@/components/ui/button";
 import { BarChart as BarIcon, Share2, X } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import FunFactBox from "./FunFactBox";
+import { useEffect, useState } from "react";
+
 
 export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle }) {
 if (!puzzle || !stats) return null;
 
   console.log("🧠 Fun Fact in modal:", puzzle.funFact);
+
+const [countdown, setCountdown] = useState("");
+
+useEffect(() => {
+  const updateCountdown = () => {
+    const now = new Date();
+    const nextMidnight = new Date();
+    nextMidnight.setHours(24, 0, 0, 0); // midnight tonight
+    const diff = nextMidnight - now;
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    setCountdown(`${hours}h ${minutes}m ${seconds}s`);
+  };
+
+  const interval = setInterval(updateCountdown, 1000);
+  updateCountdown(); // initialize immediately
+
+  return () => clearInterval(interval);
+}, []);
 
 
   const handleShare = () => {
@@ -39,6 +63,10 @@ if (!puzzle || !stats) return null;
         {/* Fun Fact */}
         <FunFactBox puzzle={puzzle} />
 
+<div className="mt-6 text-center">
+  <p className="text-sm font-semibold text-gray-700">Next puzzle in:</p>
+  <p className="text-lg font-mono text-gray-900">{countdown}</p>
+</div>
 
 
         {/* Share Button */}
