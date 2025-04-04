@@ -270,17 +270,18 @@ const renderCenterLabel = ({ viewBox }) => {
   return (
     <>
       {/* Label inside slice */}
-      <text
-        x={xInner}
-        y={yInner}
-        fill="#ffffff"
-        fontSize={14}
-        fontWeight="bold"
-        textAnchor="middle"
-        dominantBaseline="central"
-      >
-        {labelMap[index]}
-      </text>
+<text
+  x={xInner}
+  y={yInner}
+  fill={labelMap[index] === "❌" ? "#FFFFFF" : "#FFFFFF"}
+  fontSize={14}
+  fontWeight="bold"
+  textAnchor="middle"
+  dominantBaseline="central"
+>
+  {labelMap[index]}
+</text>
+
 
       {/* Label outside slice */}
       {percent > 0 && (
