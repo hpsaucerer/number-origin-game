@@ -38,21 +38,25 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle 
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md p-4 relative bg-white rounded-xl shadow-xl">
-        {/* ❌ Close Button */}
-        <button
-          className="absolute top-3 right-3 text-gray-400 hover:text-black transition z-50"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          <X size={22} />
-        </button>
+<DialogContent className="max-w-md p-6 relative bg-white rounded-xl shadow-xl">
 
-        <DialogHeader className="text-center mb-2">
-          <DialogTitle className="text-xl font-bold">
-            {isCorrect ? "🎉 You got it!" : "📌 Nice Try!"}
-          </DialogTitle>
-        </DialogHeader>
+  <div className="relative">
+    {/* ❌ Close Button */}
+    <button
+      className="absolute top-0 right-0 text-gray-400 hover:text-black transition z-50"
+      onClick={onClose}
+      aria-label="Close"
+    >
+      <X size={20} />
+    </button>
+
+    {/* Header and content go here */}
+    <DialogHeader className="text-center mb-2">
+      <DialogTitle className="text-xl font-bold">
+        {isCorrect ? "🎉 You got it!" : "📌 Nice Try!"}
+      </DialogTitle>
+    </DialogHeader>
+  </div>
 
         {/* Fun Fact */}
         <FunFactBox puzzle={puzzle} />
@@ -60,7 +64,9 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle 
         {/* 🔥 Streak Count */}
         <div className="text-center mt-6">
           <p className="text-sm text-gray-700 font-semibold">🔥 Current Streak</p>
-          <p className="text-3xl font-bold text-amber-500">{stats.currentStreak} days</p>
+          <p className="text-3xl font-bold text-amber-500">
+           {stats?.currentStreak ?? 0} day{stats?.currentStreak === 1 ? "" : "s"}
+</p>
         </div>
 
         {/* ⏳ Countdown */}
