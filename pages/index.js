@@ -426,17 +426,18 @@ const renderCategoryPills = () => {
 
  
 {(isCorrect || attempts >= maxGuesses) && (
-<div className="flex flex-col items-center my-0 py-0 gap-0 overflow-hidden">
-  <div className="mb-4">
+  <div className="flex flex-col items-center mt-6 gap-4">
+    <p className="text-green-600 text-center text-lg font-medium mb-2">
+      Correct! The answer is {puzzle.answer}.
+    </p>
     <img
       src={getResultImage()}
       alt="Result"
-      className="w-48 h-auto block mt-16 mb-2"
-      style={{ margin: 0, padding: 0, lineHeight: 0 }}
+      className="w-48 h-auto block mt-4"
     />
-  </div>
-  </div>
-)}
+  </div> // ✅ This closes the .flex-col container
+)} // ✅ This closes the conditional expression
+
 
   </>
 ) : attempts >= maxGuesses ? (
