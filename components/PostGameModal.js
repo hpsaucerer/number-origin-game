@@ -53,7 +53,7 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle 
     {/* Header and content go here */}
 <DialogHeader className="text-center mb-4">
   <DialogTitle className="text-2xl font-bold font-vietnam">
-    {isCorrect ? "You smashed it!" : "Better luck tomorrow!"}
+    {isCorrect ? "Knocked it out the park! ⚾" : "Better luck tomorrow!"}
   </DialogTitle>
 </DialogHeader>
 
