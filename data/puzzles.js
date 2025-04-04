@@ -144,7 +144,7 @@ funFact: "Everest grows approximately 44 millimetres every year. This occurs bec
     "Ray Bradbury warned us about a future where knowledge is set on fire."
   ],
   revealFormattedAt: 1,
-  answer: "Fahrenheit 451",
+  answer: "The temperature at which paper burns (Fahrenheit 451)",
   keywords: ["paper burns", "Ray", "Bradbury", "book", "Fahrenheit", "451"],
   funFact: "In Fahrenheit 451 (published in 1953) - books were outlawed and burned at 451°F, a metaphor for censorship and loss of knowledge."
 },
@@ -156,7 +156,7 @@ funFact: "Everest grows approximately 44 millimetres every year. This occurs bec
     "The colonies made a declaration.",
     "Fireworks and freedom began here."
   ],
-  answer: "American Declaration of Independence",
+  answer: "The year the American Declaration of Independence was signed",
   keywords: ["independence", "usa", "founding", "july 4th"],
   funFact: "On July 4, 1776, the U.S. declared independence from Britain. The Declaration, penned in Philadelphia, became a cornerstone of American democracy."
 },
