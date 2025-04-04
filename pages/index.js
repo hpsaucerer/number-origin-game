@@ -340,7 +340,7 @@ const renderCategoryPills = () => {
     <div className="grid grid-cols-2 gap-2 mt-4">
       {categories.map((cat, idx) => (
         <div key={idx} className="relative">
-          <button
+          <
             className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
             onClick={(e) => {
               e.stopPropagation();
@@ -575,7 +575,7 @@ const renderCategoryPills = () => {
       <Dialog open={showStats} onOpenChange={setShowStats}>
         <DialogContent>
           <button
-    className="absolute top-3 right-3 text-blue-500 hover:text-blue-600 transition z-50"
+    className="absolute top-0 right-0 text-blue-500 hover:text-blue-600 transition z-50"    
     onClick={() => setShowStats(false)}
     aria-label="Close"
   >
