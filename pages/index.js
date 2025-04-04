@@ -171,7 +171,6 @@ useEffect(() => {
 
 // Trigger modal after correct guess or final attempt
 const isFinalGuess = attempts + 1 >= maxGuesses;
-const isAnswerCorrect = cleanedGuess.toLowerCase() === puzzle.answer.toLowerCase().trim();
 
 const willBeFinalGuess = attempts + 1 >= maxGuesses;
 const isAnswerCorrect = cleanedGuess.toLowerCase() === puzzle.answer.toLowerCase().trim();
