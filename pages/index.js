@@ -273,7 +273,7 @@ const renderCenterLabel = ({ viewBox }) => {
 <text
   x={xInner}
   y={yInner}
-  fill={labelMap[index] === "❌" ? "#FFFFFF" : "#FFFFFF"}
+  fill={labelMap[index] === "❌" ? "X" "#FFFFFF" : "#FFFFFF"}   
   fontSize={14}
   fontWeight="bold"
   textAnchor="middle"
