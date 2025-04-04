@@ -1,10 +1,9 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BarChart as BarIcon, Share2, X } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import FunFactBox from "./FunFactBox";
 import { useEffect, useState } from "react";
-
+import { X } from "lucide-react";
 
 export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle }) {
 if (!puzzle || !stats) return null;
