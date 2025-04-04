@@ -42,6 +42,9 @@ const colorClassMap = {
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
 
+  const toggleTooltip = (idx) => {
+  setOpenTooltip((prev) => (prev === idx ? null : idx));
+};
 
   const maxGuesses = 4;
 
@@ -90,7 +93,7 @@ useEffect(() => {
 
   
 useEffect(() => {
-   handleClickOutside = (event) => {
+  const handleClickOutside = (event) => {
     if (
       tooltipRefs.current.every(
         (ref) => ref && !ref.contains(event.target)
@@ -371,18 +374,19 @@ const renderCategoryPills = () => {
 {categories.map((cat, idx) => (
   <div key={idx} className="relative">
     <button
-      className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
       onClick={(e) => {
-        e.stopPropagation();
-        setOpenTooltip(openTooltip === idx ? null : idx);
-      }}
-    >
-      {cat.label}
-    </button>
+  e.stopPropagation();
+  toggleTooltip(idx);
+}}
+className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
+>
+   {cat.label}
+</button>
+  
 
     {openTooltip === idx && (
       <div className="tooltip absolute top-full left-0 mt-1 bg-white shadow-lg p-2 rounded-md">
-        {cat.description}
+        {cat.tooltip}
       </div>
     )}
   </div>
