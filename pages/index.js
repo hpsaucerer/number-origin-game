@@ -173,9 +173,13 @@ useEffect(() => {
 const isFinalGuess = attempts + 1 >= maxGuesses;
 const isAnswerCorrect = cleanedGuess.toLowerCase() === puzzle.answer.toLowerCase().trim();
 
-if (isFinalGuess || isAnswerCorrect) {
+const willBeFinalGuess = attempts + 1 >= maxGuesses;
+const isAnswerCorrect = cleanedGuess.toLowerCase() === puzzle.answer.toLowerCase().trim();
+
+if (willBeFinalGuess || isAnswerCorrect) {
   setTimeout(() => setShowPostGame(true), 500);
 }
+
     
     setGuess("");
   };
