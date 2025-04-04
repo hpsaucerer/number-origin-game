@@ -8,7 +8,7 @@ export default function FunFactBox({ puzzle }) {
   <img
     src="/icons/funfact.svg"
     alt="Fun Fact Icon"
-    className="w-24 h-24 -mt-2 -mb-2"
+    className="w-24 h-24 -mt-6 -mb-2"
   />
   <p className="text-sm leading-snug max-w-sm">
     {puzzle.funFact}
