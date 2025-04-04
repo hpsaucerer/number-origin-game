@@ -72,7 +72,7 @@ const getResultImage = () => {
   });
 
   useEffect(() => {
-    const savedStats = localStorage.getItem("numberOriginStats");
+     savedStats = localStorage.getItem("numberOriginStats");
     if (savedStats) {
       setStats(JSON.parse(savedStats));
     }
@@ -83,13 +83,13 @@ const getResultImage = () => {
   }, [stats]);
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * puzzles.length);
+     randomIndex = Math.floor(Math.random() * puzzles.length);
     setPuzzle(puzzles[randomIndex]);
     setDateString(new Date().toLocaleDateString());
   }, []);
   
 useEffect(() => {
-  const handleClickOutside = (event) => {
+   handleClickOutside = (event) => {
     if (
       tooltipRefs.current.every(
         (ref) => ref && !ref.contains(event.target)
@@ -116,8 +116,8 @@ useEffect(() => {
   }
 
 
-  const handleGuess = () => {
-    const cleanedGuess = guess.trim();
+   handleGuess = () => {
+     cleanedGuess = guess.trim();
 
     if (!cleanedGuess) {
       setInputError("Please enter a guess before submitting.");
@@ -147,7 +147,7 @@ useEffect(() => {
       }));
 
       } else {
-  const nextAttempts = attempts + 1;
+   nextAttempts = attempts + 1;
   setAttempts(nextAttempts);
 
   // Reveal a clue
@@ -186,7 +186,7 @@ if (
 ) {
   finalGuessMade = true;
 } else {
-  const newAttempts = attempts + 1;
+   newAttempts = attempts + 1;
   if (newAttempts >= maxGuesses) {
     finalGuessMade = true;
   }
@@ -207,11 +207,40 @@ setGuess("");
     setAttempts(attempts + 1);
   };
 
-  const shareResult = () => {
-    const message = `I solved today’s Number Origin puzzle in ${attempts + 1} attempts! Try it: [game link]`;
-    navigator.clipboard.writeText(message);
-    alert("Result copied to clipboard! Share it with your friends.");
-  };
+const shareResult = () => {
+  const guessCount = isCorrect ? attempts + 1 : "X";
+
+  const shareText = `Numerus ${puzzle?.id ?? "?"} ${guessCount}/4 🧠
+${isCorrect ? "Got it!" : "Missed it!"}
+
+Try it:
+https://numerus.site`;
+
+  // Optional tracking
+  if (typeof track === 'function') {
+    track('share_clicked', {
+      correct: isCorrect,
+      attempts: guessCount,
+      puzzleId: puzzle?.id ?? null,
+    });
+  }
+
+  // Modern mobile sharing modal
+  if (navigator.share) {
+    navigator
+      .share({
+        title: "Number Origin – Play now!",
+        text: shareText,
+        url: "https://numerus.site",
+      })
+      .catch((err) => console.error("Sharing failed:", err));
+  } else {
+    navigator.clipboard.writeText(shareText);
+    alert("Result copied to clipboard! 📋");
+  }
+};
+
+
 
   // Pie chart data
   const data = [
