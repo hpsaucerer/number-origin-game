@@ -427,7 +427,7 @@ const renderCategoryPills = () => {
  
 {(isCorrect || attempts >= maxGuesses) && (
 <div className="flex flex-col items-center my-0 py-0 gap-0 overflow-hidden">
-  <div className="mb-2">
+  <div className="mb-6">
     <img
       src={getResultImage()}
       alt="Result"
