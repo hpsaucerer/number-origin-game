@@ -51,11 +51,12 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle 
     </button>
 
     {/* Header and content go here */}
-    <DialogHeader className="text-center mb-2">
-      <DialogTitle className="text-xl font-bold">
-        {isCorrect ? "🎉 You got it!" : "📌 Nice Try!"}
-      </DialogTitle>
-    </DialogHeader>
+<DialogHeader className="text-center mb-4">
+  <DialogTitle className="text-2xl font-bold font-vietnam">
+    {isCorrect ? "Congratulations!" : "📌 Better luck tomorrow!"}
+  </DialogTitle>
+</DialogHeader>
+
   </div>
 
         {/* Fun Fact */}
