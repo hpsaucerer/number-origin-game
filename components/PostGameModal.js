@@ -1,65 +1,67 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { BarChart as BarIcon, Share2, X } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import FunFactBox from "./FunFactBox";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import { useEffect, useState } from "react";
 
 export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle }) {
-  const data = Object.entries(stats.guessDistribution).map(([label, value]) => ({
-    name: label,
-    value,
-  }));
+  const data = [
+    { guess: "1", value: stats.guessDistribution[1] },
+    { guess: "2", value: stats.guessDistribution[2] },
+    { guess: "3", value: stats.guessDistribution[3] },
+    { guess: "4", value: stats.guessDistribution[4] },
+    { guess: "❌", value: stats.guessDistribution.failed || 0 },
+  ];
 
-  const COLORS = ["#22c55e", "#84cc16", "#eab308", "#f97316", "#ef4444"]; // Green to red
-
-  const [countdown, setCountdown] = useState("");
-
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      const midnight = new Date();
-      midnight.setHours(24, 0, 0, 0);
-      const diff = midnight - now;
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-      setCountdown(`${hours}h ${minutes}m ${seconds}s`);
-    };
-
-    const timer = setInterval(updateCountdown, 1000);
-    updateCountdown();
-    return () => clearInterval(timer);
-  }, []);
+  const handleShare = () => {
+    const message = `I solved today’s Number Origin puzzle in ${
+      isCorrect ? stats.currentStreak : "X"
+    } attempts! 🧠 #NumberOrigin\n\nPlay now: [your-game-link]`;
+    navigator.clipboard.writeText(message);
+    alert("Copied to clipboard! Share your result.");
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-center text-xl font-bold">
-            {isCorrect ? "🎉 Correct!" : "📌 Nice Try!"}
+      <DialogContent className="max-w-md p-4 relative">
+        {/* ❌ Close Button */}
+        <button
+          className="absolute top-2 right-2 text-gray-500 hover:text-black"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <X size={20} />
+        </button>
+
+        <DialogHeader className="text-center mb-2">
+          <DialogTitle className="text-xl font-bold">
+            {isCorrect ? "🎉 You got it!" : "📌 Nice Try!"}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <FunFactBox puzzle={puzzle} />
-          
-          <div className="text-center">
-            <p className="text-sm font-semibold">Streak Stats</p>
-            <ResponsiveContainer width="100%" height={200}>
-              <PieChart>
-                <Pie data={data} dataKey="value" nameKey="name" outerRadius={60}>
-                  {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+        {/* Fun Fact */}
+        <FunFactBox text={puzzle.funFact} />
 
-          <div className="text-center mt-4">
-            <p className="text-sm font-medium">Next puzzle in:</p>
-            <p className="text-xl font-mono">{countdown}</p>
-          </div>
+        {/* Streak Bar Chart */}
+        <div className="mt-6 text-center">
+          <h3 className="font-semibold text-sm mb-2">Guess Distribution</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data}>
+              <XAxis dataKey="guess" />
+              <YAxis allowDecimals={false} />
+              <Bar dataKey="value" fill="#3B82F6" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Share Button */}
+        <div className="flex justify-center mt-4">
+          <Button
+            onClick={handleShare}
+            className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
+          >
+            <Share2 size={16} /> Share
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
