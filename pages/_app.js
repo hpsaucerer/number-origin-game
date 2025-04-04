@@ -1,19 +1,23 @@
-import '@/styles/globals.css'; // Import global styles first
+// pages/_app.js
+
+import '@/styles/globals.css'; // Global styles
 import { Be_Vietnam_Pro } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 
 // Load the Google font
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
   display: 'swap',
-  variable: '--font-bevietnam', // optional, if you want to use it in CSS
+  variable: '--font-bevietnam', // Optional: for custom CSS
 });
 
-// Correct default App wrapper with font applied
+// App wrapper with font and analytics
 export default function App({ Component, pageProps }) {
   return (
     <main className={beVietnamPro.className}>
       <Component {...pageProps} />
+      <Analytics />
     </main>
   );
 }
