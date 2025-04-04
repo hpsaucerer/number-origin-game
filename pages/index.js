@@ -437,10 +437,6 @@ const renderCategoryPills = () => {
   </div>
 </div>
 
-) : (
-  <div>...</div>
-)}
-
 
   </>
 ) : attempts >= maxGuesses ? (
