@@ -433,7 +433,7 @@ const renderCategoryPills = () => {
     <img
       src={getResultImage()}
       alt="Result"
-      className="w-48 h-auto block mt-4"
+      className="w-48 h-auto block mt-2"
     />
   </div>
 )}
