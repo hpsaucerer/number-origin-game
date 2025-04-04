@@ -431,11 +431,11 @@ const renderCategoryPills = () => {
     <img
       src={getResultImage()}
       alt="Result"
-      className="w-48 h-auto block mt-12 mb-2"
+      className="w-48 h-auto block mt-16 mb-2"
       style={{ margin: 0, padding: 0, lineHeight: 0 }}
     />
   </div>
-
+  </div>
 )}
 
   </>
