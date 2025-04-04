@@ -120,7 +120,8 @@ useEffect(() => {
   }
 
 
-   handleGuess = () => {
+   const handleGuess = () => {
+
      cleanedGuess = guess.trim();
 
     if (!cleanedGuess) {
