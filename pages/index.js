@@ -13,6 +13,8 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "rechar
 import puzzles from "../data/puzzles";
 import { useRef } from "react";
 import FunFactBox from "../components/FunFactBox";
+import PostGameModal from "../components/PostGameModal";
+
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
@@ -38,6 +40,7 @@ const colorClassMap = {
   const [showWelcome, setShowWelcome] = useState(true);
   const [showTutorial, setShowTutorial] = useState(false);
   const tooltipRefs = useRef([]);
+  const [showPostGame, setShowPostGame] = useState(false);
 
 
   const maxGuesses = 4;
@@ -166,6 +169,12 @@ useEffect(() => {
       }
     }
 
+if (newAttempts >= 4 || isCorrect) {
+  setTimeout(() => setShowPostGame(true), 500); // small delay for effect
+}
+
+
+    
     setGuess("");
   };
 
@@ -390,6 +399,15 @@ const renderCategoryPills = () => {
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
 
+<PostGameModal
+  open={showPostGame}
+  onClose={() => setShowPostGame(false)}
+  isCorrect={isCorrect}
+  stats={stats}
+  puzzle={puzzle}
+/>
+
+ 
 {(isCorrect || attempts >= maxGuesses) && (
 <div className="flex flex-col items-center my-0 py-0 gap-0 overflow-hidden">
   <div className="mb-[-4px]">
