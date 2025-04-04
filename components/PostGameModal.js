@@ -7,6 +7,8 @@ import FunFactBox from "./FunFactBox";
 export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle }) {
 if (!puzzle || !stats) return null;
 
+  console.log("🧠 Fun Fact in modal:", puzzle.funFact);
+
 
   const handleShare = () => {
     const message = `I solved today’s Number Origin puzzle in ${
