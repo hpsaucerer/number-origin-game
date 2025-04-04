@@ -338,24 +338,26 @@ const renderCategoryPills = () => {
 
   return (
     <div className="grid grid-cols-2 gap-2 mt-4">
-      {categories.map((cat, idx) => (
-        <div key={idx} className="relative">
-          <
-            className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpenTooltip(openTooltip === idx ? null : idx);
-            }}
-          >
-            {cat.label}
-          </button>
-          {openTooltip === idx && (
-            <div className="tooltip-box absolute left-1/2 transform -translate-x-1/2 mt-2 w-64 p-2 bg-white border border-gray-300 rounded shadow text-sm z-10">
-              {cat.tooltip}
-            </div>
-          )}
-        </div>
-      ))}
+{categories.map((cat, idx) => (
+  <div key={idx} className="relative">
+    <button
+      className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        setOpenTooltip(openTooltip === idx ? null : idx);
+      }}
+    >
+      {cat.label}
+    </button>
+
+    {openTooltip === idx && (
+      <div className="tooltip absolute top-full left-0 mt-1 bg-white shadow-lg p-2 rounded-md">
+        {cat.description}
+      </div>
+    )}
+  </div>
+))}
+
     </div>
   );
 };
