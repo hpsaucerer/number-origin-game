@@ -7,13 +7,6 @@ import FunFactBox from "./FunFactBox";
 export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle }) {
 if (!puzzle || !stats) return null;
 
-  const data = [
-    { guess: "1", value: stats.guessDistribution[1] },
-    { guess: "2", value: stats.guessDistribution[2] },
-    { guess: "3", value: stats.guessDistribution[3] },
-    { guess: "4", value: stats.guessDistribution[4] },
-    { guess: "❌", value: stats.guessDistribution.failed || 0 },
-  ];
 
   const handleShare = () => {
     const message = `I solved today’s Number Origin puzzle in ${
@@ -45,17 +38,6 @@ if (!puzzle || !stats) return null;
         <FunFactBox puzzle={puzzle} />
 
 
-        {/* Streak Bar Chart */}
-        <div className="mt-6 text-center">
-          <h3 className="font-semibold text-sm mb-2">Guess Distribution</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={data}>
-              <XAxis dataKey="guess" />
-              <YAxis allowDecimals={false} />
-              <Bar dataKey="value" fill="#3B82F6" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
 
         {/* Share Button */}
         <div className="flex justify-center mt-4">
