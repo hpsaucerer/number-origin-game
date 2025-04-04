@@ -390,6 +390,13 @@ const renderCategoryPills = () => {
       <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
         <CardContent className="overflow-hidden">
 
+  <PostGameModal
+  open={showPostGame}
+  onClose={() => setShowPostGame(false)}
+  isCorrect={isCorrect}
+  stats={stats}
+  puzzle={puzzle}
+/>      
             
 <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
   {isCorrect ||
@@ -421,14 +428,6 @@ const renderCategoryPills = () => {
   <>
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
-
-<PostGameModal
-  open={showPostGame}
-  onClose={() => setShowPostGame(false)}
-  isCorrect={isCorrect}
-  stats={stats}
-  puzzle={puzzle}
-/>
 
  
 {(isCorrect || attempts >= maxGuesses) && (
