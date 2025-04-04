@@ -573,9 +573,9 @@ const renderCategoryPills = () => {
 
       {/* Stats Popup */}
       <Dialog open={showStats} onOpenChange={setShowStats}>
-        <DialogContent>
+        className="relative bg-white pt-10 pr-10 pb-6 pl-6 rounded-xl shadow-xl"
           <button
-    className="absolute top-0 right-0 text-blue-500 hover:text-blue-600 transition z-50"    
+    className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"   
     onClick={() => setShowStats(false)}
     aria-label="Close"
   >
