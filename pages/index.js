@@ -121,8 +121,7 @@ useEffect(() => {
 
 
    const handleGuess = () => {
-
-     cleanedGuess = guess.trim();
+   const cleanedGuess = guess.trim();
 
     if (!cleanedGuess) {
       setInputError("Please enter a guess before submitting.");
@@ -152,7 +151,8 @@ useEffect(() => {
       }));
 
       } else {
-   nextAttempts = attempts + 1;
+   const nextAttempts = attempts + 1;
+
   setAttempts(nextAttempts);
 
   // Reveal a clue
@@ -191,7 +191,8 @@ if (
 ) {
   finalGuessMade = true;
 } else {
-   newAttempts = attempts + 1;
+   const newAttempts = attempts + 1;
+
   if (newAttempts >= maxGuesses) {
     finalGuessMade = true;
   }
