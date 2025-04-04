@@ -82,11 +82,12 @@ const getResultImage = () => {
     localStorage.setItem("numerusStats", JSON.stringify(stats));
   }, [stats]);
 
-  useEffect(() => {
-     randomIndex = Math.floor(Math.random() * puzzles.length);
-    setPuzzle(puzzles[randomIndex]);
-    setDateString(new Date().toLocaleDateString());
-  }, []);
+useEffect(() => {
+  const randomIndex = Math.floor(Math.random() * puzzles.length);
+  setPuzzle(puzzles[randomIndex]);
+  setDateString(new Date().toLocaleDateString());
+}, []);
+
   
 useEffect(() => {
    handleClickOutside = (event) => {
