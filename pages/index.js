@@ -435,8 +435,8 @@ const renderCategoryPills = () => {
       alt="Result"
       className="w-48 h-auto block mt-4"
     />
-  </div> // ✅ This closes the .flex-col container
-)} // ✅ This closes the conditional expression
+  </div>
+)}
 
 
   </>
