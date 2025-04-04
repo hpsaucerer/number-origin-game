@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Share2, X } from "lucide-react";
 import FunFactBox from "./FunFactBox";
+import { track } from '@vercel/analytics';
 
 export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle }) {
   if (!puzzle || !stats) return null;
@@ -29,6 +30,7 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle 
   }, []);
 
   const handleShare = () => {
+    track('share_clicked');
     const message = `I solved today’s Number Origin puzzle in ${
       isCorrect ? stats.currentStreak : "X"
     } attempts! 🧠 #NumberOrigin\n\nPlay now: [your-game-link]`;
