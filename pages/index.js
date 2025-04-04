@@ -145,29 +145,35 @@ useEffect(() => {
           [attempts + 1]: (prev.guessDistribution[attempts + 1] || 0) + 1,
         },
       }));
-    } else {
-      // Incorrect guess
-      const newAttempts = attempts + 1;
-      setAttempts(newAttempts);
 
-      // Reveal a clue only after first wrong guess
-      if (newAttempts <= puzzle.clues.length) {
-        setRevealedClues((prev) => [...prev, puzzle.clues[newAttempts - 1]]);
-      }
+      } else {
+  const nextAttempts = attempts + 1;
+  setAttempts(nextAttempts);
 
-      // Final guess = mark as failed
-      if (newAttempts >= 4) {
-        setStats((prev) => ({
-          ...prev,
-          gamesPlayed: prev.gamesPlayed + 1,
-          currentStreak: 0,
-          guessDistribution: {
-            ...prev.guessDistribution,
-            failed: (prev.guessDistribution.failed || 0) + 1,
-          },
-        }));
-      }
-    }
+  // Reveal a clue
+  if (nextAttempts <= puzzle.clues.length) {
+    setRevealedClues((prev) => [...prev, puzzle.clues[nextAttempts - 1]]);
+  }
+
+  // Final guess = mark as failed
+  if (nextAttempts >= maxGuesses) {
+    setStats((prev) => ({
+      ...prev,
+      gamesPlayed: prev.gamesPlayed + 1,
+      currentStreak: 0,
+      guessDistribution: {
+        ...prev.guessDistribution,
+        failed: (prev.guessDistribution.failed || 0) + 1,
+      },
+    }));
+  }
+
+  // Always trigger post-game modal if final guess is made
+  if (nextAttempts >= maxGuesses) {
+    setTimeout(() => setShowPostGame(true), 500);
+  }
+}
+
 
 // Trigger modal after final guess or correct answer
 let finalGuessMade = false;
