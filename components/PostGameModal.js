@@ -5,6 +5,8 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import FunFactBox from "./FunFactBox";
 
 export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle }) {
+if (!puzzle || !stats) return null;
+
   const data = [
     { guess: "1", value: stats.guessDistribution[1] },
     { guess: "2", value: stats.guessDistribution[2] },
@@ -40,7 +42,8 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle 
         </DialogHeader>
 
         {/* Fun Fact */}
-        <FunFactBox text={puzzle.funFact} />
+        <FunFactBox puzzle={puzzle} />
+
 
         {/* Streak Bar Chart */}
         <div className="mt-6 text-center">
