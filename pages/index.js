@@ -437,6 +437,8 @@ const renderCategoryPills = () => {
   </div>
 </div>
 
+) : (
+  <div>...</div>
 )}
 
 
