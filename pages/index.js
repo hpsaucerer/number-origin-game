@@ -279,7 +279,8 @@ const renderCenterLabel = ({ viewBox }) => {
   textAnchor="middle"
   dominantBaseline="central"
 >
-  {labelMap[index]}
+  {labelMap[index] === "❌" ? "✖" : labelMap[index]}
+
 </text>
 
 
