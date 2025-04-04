@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function FunFactBox({ text }) {
+export default function FunFactBox({ puzzle }) {
   if (!text) return null;
 
   return (
