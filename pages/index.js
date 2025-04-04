@@ -623,7 +623,7 @@ const renderCategoryPills = () => {
 <img
   src="/icons/Ring-icon.png"
   alt="Ring o' Results"
-  className="w-32 h-32 mx-auto mb-[-64px]"
+  className="w-36 h-36 mx-auto mb-[-64px]"
 />
 
 
