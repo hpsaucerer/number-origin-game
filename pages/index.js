@@ -575,7 +575,7 @@ const renderCategoryPills = () => {
 
       {/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
-  <DialogContent className="relative bg-white pt-10 pr-10 pb-6 pl-6 rounded-xl shadow-xl">
+<DialogContent className="relative bg-white pt-10 pr-10 pb-6 pl-6 rounded-xl shadow-xl w-full max-w-md">
     <button
       className="absolute top-3 right-3 text-blue-500 hover:text-blue-600 transition z-50"   
       onClick={() => setShowStats(false)}
