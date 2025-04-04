@@ -169,18 +169,30 @@ useEffect(() => {
       }
     }
 
-// Trigger modal after correct guess or final attempt
-const isFinalGuess = attempts + 1 >= maxGuesses;
+// Trigger modal after final guess or correct answer
+let finalGuessMade = false;
 
-const willBeFinalGuess = attempts + 1 >= maxGuesses;
-const isAnswerCorrect = cleanedGuess.toLowerCase() === puzzle.answer.toLowerCase().trim();
+if (
+  cleanedGuess.toLowerCase() === puzzle.answer.toLowerCase().trim() ||
+  puzzle.keywords?.some((keyword) =>
+    cleanedGuess.toLowerCase().includes(keyword.toLowerCase())
+  )
+) {
+  finalGuessMade = true;
+} else {
+  const newAttempts = attempts + 1;
+  if (newAttempts >= maxGuesses) {
+    finalGuessMade = true;
+  }
+}
 
-if (willBeFinalGuess || isAnswerCorrect) {
+// Slight delay to allow feedback before showing modal
+if (finalGuessMade) {
   setTimeout(() => setShowPostGame(true), 500);
 }
 
-    
-    setGuess("");
+setGuess("");
+
   };
 
   const handleClueReveal = () => {
