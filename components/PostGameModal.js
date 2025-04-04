@@ -43,7 +43,7 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle 
   <div className="relative">
     {/* ❌ Close Button */}
     <button
-      className="absolute top-0 right-0 text-gray-400 hover:text-black transition z-50"
+      className="absolute top-0 right-0 text-blue-500 hover:text-blue-600 transition z-50"
       onClick={onClose}
       aria-label="Close"
     >
