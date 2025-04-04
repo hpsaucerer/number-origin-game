@@ -420,7 +420,7 @@ const renderCategoryPills = () => {
       style={{ margin: 0, padding: 0, lineHeight: 0 }}
     />
   </div>
-  <FunFactBox text={puzzle.funFact} />
+  <FunFactBox puzzle={puzzle} />
 </div>
 
 )}
