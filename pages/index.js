@@ -72,14 +72,14 @@ const getResultImage = () => {
   });
 
   useEffect(() => {
-     const savedStats = localStorage.getItem("numberOriginStats");
+     const savedStats = localStorage.getItem("numerusStats");
     if (savedStats) {
       setStats(JSON.parse(savedStats));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("numberOriginStats", JSON.stringify(stats));
+    localStorage.setItem("numerusStats", JSON.stringify(stats));
   }, [stats]);
 
   useEffect(() => {
