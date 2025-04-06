@@ -386,11 +386,12 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
 </button>
   
 
-    {openTooltip === idx && (
-      <div className="tooltip absolute top-full left-0 mt-1 bg-white shadow-lg p-2 rounded-md">
-        {cat.tooltip}
-      </div>
-    )}
+{openTooltip === idx && (
+  <div className="tooltip absolute top-full left-0 mt-1 bg-white shadow-lg p-2 rounded-md z-50">
+    {cat.tooltip}
+  </div>
+)}
+
   </div>
 ))}
 
