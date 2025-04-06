@@ -614,7 +614,7 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
   <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-hidden">
 
    {/* Title */}
-    <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Statistics</h2>
+    <h2 className="text-base text-gray-800 mb-4">Statistics</h2>
   
 {/* Dismiss Button */}
     <button
