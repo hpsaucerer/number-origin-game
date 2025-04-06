@@ -611,21 +611,22 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
 
       {/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
-  <DialogContent className="relative bg-white pt-6 pr-6 pb-6 pl-6 rounded-xl shadow-xl w-full max-w-md mx-auto">
+  <DialogContent className="p-0 bg-white rounded-xl shadow-xl w-full max-w-md mx-auto overflow-hidden">
+    <div className="relative p-6">
 
-    {/* Dismiss X Button */}
-    <button
-      className="absolute top-3 right-3 text-blue-500 hover:text-blue-600 transition"
-      onClick={() => setShowStats(false)}
-      aria-label="Close"
-    >
-      <X size={22} />
-    </button>
+      {/* Dismiss X Button */}
+      <button
+        className="absolute top-3 right-3 text-blue-500 hover:text-blue-600 transition"
+        onClick={() => setShowStats(false)}
+        aria-label="Close"
+      >
+        <X size={22} />
+      </button>
 
-    {/* Your Stats Content Goes Here */}
-    <DialogHeader>
-      <DialogTitle className="text-2xl font-semibold text-center">Statistics</DialogTitle>
-    </DialogHeader>
+      {/* Modal Header + Content */}
+      <DialogHeader>
+        <DialogTitle className="text-2xl font-semibold text-center">Statistics</DialogTitle>
+      </DialogHeader>
 
           {/* Formatted stat boxes */}
           <div className="grid grid-cols-4 gap-4 text-center my-6">
