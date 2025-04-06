@@ -387,9 +387,10 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
   
 
 {openTooltip === idx && (
-  <div className="tooltip absolute top-full left-0 mt-1 bg-white shadow-lg p-2 rounded-md z-50">
+  <div className="tooltip absolute bottom-full left-0 mb-2 bg-white shadow-lg p-2 rounded-md z-50 text-sm leading-snug max-w-[220px]">
     {cat.tooltip}
   </div>
+
 )}
 
   </div>
