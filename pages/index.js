@@ -584,7 +584,7 @@ const renderCategoryPills = () => {
       onClick={() => setShowInstructions(false)}
       aria-label="Close"
     >
-      <X size={22} />
+      <X size={28} />
     </button>
       
         <DialogHeader>
