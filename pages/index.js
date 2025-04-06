@@ -611,7 +611,7 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
 
 {/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
-  <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto overflow-hidden p-6">
+  <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-hidden">
     {/* Dismiss Button */}
     <button
       className="absolute top-3 right-3 text-blue-500 hover:text-blue-600 transition"
