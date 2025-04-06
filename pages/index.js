@@ -560,11 +560,14 @@ const renderCategoryPills = () => {
       </div>
 
 {isCorrect && (
-  <Button
-    onClick={() => shareResult({ isCorrect, currentStreak: stats.currentStreak })}
-    className="flex items-center space-x-2"
-          <Share2 size={16} /> <span>Share</span>
-        </Button>
+<Button
+  onClick={() => shareResult({ isCorrect, currentStreak: stats.currentStreak })}
+  className="flex items-center space-x-2"
+>
+  <Share2 size={16} />
+  <span>Share</span>
+</Button>
+
       )}
 
       {/* Instructions Popup */}
