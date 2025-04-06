@@ -441,6 +441,7 @@ const renderCategoryPills = () => {
   isCorrect={isCorrect}
   stats={stats}
   puzzle={puzzle}
+  shareResult={shareResult}
 />      
             
 <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
