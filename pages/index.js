@@ -579,7 +579,7 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
         <DialogContent className="max-h-[90vh] overflow-y-auto p-4 sm:max-w-md w-full flex flex-col">
           <DialogHeader>
             <DialogTitle>
-              <strong>How To Play</strong>
+              <h2 className="text-lg text-gray-800 mb-4">How To Play</h2>
             </DialogTitle>
           </DialogHeader>
           <div className="mt-2 font-sans">
