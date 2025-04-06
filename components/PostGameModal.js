@@ -33,7 +33,7 @@ const handleShare = () => {
   track('share_clicked');
   const message = `I solved today’s Numerus puzzle in ${
     isCorrect ? stats.currentStreak : "X"
-  } attempts! 🧠 #NumberOrigin\n\nPlay now: https://numerus.site`;
+  } attempts! 🧠 #NumerusTrivia\n\nPlay now: https://numerus.site`;
 
   if (navigator.share) {
     navigator
