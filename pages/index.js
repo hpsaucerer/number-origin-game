@@ -342,22 +342,22 @@ const renderCategoryPills = () => {
     {
       label: "Maths",
       color: "bg-blue-200 text-blue-800",
-      tooltip: "Equations, constants, mathematical discoveries and calculations.",
+      tooltip: "Equations, constants, mathematical discoveries, calculations.",
     },
     {
       label: "Geography",
       color: "bg-green-200 text-green-800",
-      tooltip: "Distances, coordinates, elevations and statistics.",
+      tooltip: "Distances, coordinates, elevations, statistics.",
     },
     {
       label: "Science",
       color: "bg-pink-200 text-pink-800",
-      tooltip: "Atomic numbers, scientific constants and measurements. ",
+      tooltip: "Atomic numbers, scientific constants, measurements. ",
     },
     {
       label: "History",
       color: "bg-yellow-200 text-yellow-800",
-      tooltip: "Monumental events, inventions, revolutions, treaties and dynasties.",
+      tooltip: "Monumental events, inventions, revolutions, treaties.",
     },
     {
       label: "Culture",
@@ -367,7 +367,7 @@ const renderCategoryPills = () => {
     {
       label: "Sport",
       color: "bg-red-200 text-red-800",
-      tooltip: "World records, famous jersey numbers, stats and dates.",
+      tooltip: "World records, famous jersey numbers, stats, memorable dates.",
     },
   ];
 
