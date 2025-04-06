@@ -681,4 +681,3 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
 );
 }
 
-export default Home;
