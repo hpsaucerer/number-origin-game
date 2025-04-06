@@ -1,14 +1,14 @@
   export function shareResult({ isCorrect, currentStreak }) {
   const shareText = isCorrect
-    ? `I cracked today’s Number Origin puzzle in ${currentStreak} ${
+    ? `I cracked today’s Numerus puzzle in ${currentStreak} ${
         currentStreak === 1 ? "guess" : "guesses"
-      }! 🧠 #NumberOrigin`
-    : `Today’s Number Origin puzzle stumped me! 😅 #NumberOrigin`;
+      }! 🧠 #NumerusPuzzle`
+    : `Today’s Numerus puzzle stumped me! 😅 #NumerusPuzzle`;
 
   if (navigator.share) {
     navigator
       .share({
-        title: "Number Origin – Play now!",
+        title: "Numerus – Play now!",
         text: shareText,
         url: "https://numerus.site",
       })
