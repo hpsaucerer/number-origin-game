@@ -388,8 +388,6 @@ const renderCategoryPills = () => {
   {cat.label}
 </button>
 
-</>
-  
 
 {openTooltip === idx && (
   <div className="tooltip absolute bottom-full left-0 mb-2 bg-white shadow-lg p-2 rounded-md z-50 text-sm leading-snug max-w-[220px]">
