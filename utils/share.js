@@ -6,7 +6,8 @@ export function shareResult({ isCorrect, attempts, puzzle }) {
     ? `I cracked Numerus #${puzzleId} in ${guessCount} ${guessCount === 1 ? "guess" : "guesses"}! 🧠`
     : `Numerus #${puzzleId} stumped me today! 😅`;
 
-  const fullMessage = `${shareText}\nPlay it here:\nhttps://numerus.site`;
+  const fullMessage = `${shareText}\nPlay it here: https://numerus.site`;
+
 
   if (navigator.share) {
     navigator
