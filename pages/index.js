@@ -362,7 +362,7 @@ const renderCategoryPills = () => {
     {
       label: "Culture",
       color: "bg-purple-200 text-purple-800",
-      tooltip: "Films, books, music, fashion, languages.",
+      tooltip: "Movies, literature, music, art.",
     },
     {
       label: "Sport",
