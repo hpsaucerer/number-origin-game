@@ -609,10 +609,11 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
         </DialogContent>
       </Dialog>
 
-      {/* Stats Popup */}
+{/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
   <DialogContent className="p-0 bg-white rounded-xl shadow-xl w-full max-w-md mx-auto overflow-hidden">
     <div className="relative p-6">
+      {/* Dismiss Button */}
       <button
         className="absolute top-3 right-3 text-blue-500 hover:text-blue-600 transition"
         onClick={() => setShowStats(false)}
@@ -621,81 +622,70 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
         <X size={22} />
       </button>
 
-      {/* modal content */}
-    </div> {/* 👈 this closes the .relative container */}
+      {/* Formatted stat boxes */}
+      <div className="grid grid-cols-4 gap-4 text-center my-6">
+        <div>
+          <p className="text-3xl font-bold">{stats.gamesPlayed}</p>
+          <p className="text-sm text-gray-600">Played</p>
+        </div>
+        <div>
+          <p className="text-3xl font-bold">
+            {stats.gamesPlayed > 0
+              ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
+              : 0}
+          </p>
+          <p className="text-sm text-gray-600">Win %</p>
+        </div>
+        <div>
+          <p className="text-3xl font-bold">{stats.currentStreak}</p>
+          <p className="text-sm text-gray-600">
+            Current
+            <br />
+            Streak
+          </p>
+        </div>
+        <div>
+          <p className="text-3xl font-bold">{stats.maxStreak}</p>
+          <p className="text-sm text-gray-600">
+            Max
+            <br />
+            Streak
+          </p>
+        </div>
+      </div>
+
+      {/* Chart & Ring Icon */}
+      <div className="flex flex-col items-center space-y-4">
+        <div className="flex flex-col items-center space-y-0">
+          <img
+            src="/icons/Ring-icon.png"
+            alt="Ring o' Results"
+            className="w-36 h-36 mx-auto mb-[-64px]"
+          />
+
+          <ResponsiveContainer width={300} height={300}>
+            <PieChart>
+              <Pie
+                data={data}
+                dataKey="value"
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={100}
+                label={combinedLabel}
+                labelLine={false}
+                isAnimationActive={true}
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+                <Label content={renderCenterLabel} position="center" />
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div> {/* closes .relative */}
   </DialogContent>
 </Dialog>
 
-          {/* Formatted stat boxes */}
-          <div className="grid grid-cols-4 gap-4 text-center my-6">
-            <div>
-              <p className="text-3xl font-bold">{stats.gamesPlayed}</p>
-              <p className="text-sm text-gray-600">Played</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold">
-                {stats.gamesPlayed > 0
-                  ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
-                  : 0}
-              </p>
-              <p className="text-sm text-gray-600">Win %</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold">{stats.currentStreak}</p>
-              <p className="text-sm text-gray-600">
-                Current
-                <br />
-                Streak
-              </p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold">{stats.maxStreak}</p>
-              <p className="text-sm text-gray-600">
-                Max
-                <br />
-                Streak
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center space-y-4">
-
-<div className="flex flex-col items-center space-y-0">
-<img
-  src="/icons/Ring-icon.png"
-  alt="Ring o' Results"
-  className="w-36 h-36 mx-auto mb-[-64px]"
-/>
-
-
-  <ResponsiveContainer width={300} height={300}>
-    <PieChart>
-      <Pie
-        data={data}
-        dataKey="value"
-        cx="50%"
-        cy="50%"
-        innerRadius={60}
-        outerRadius={100}
-        label={combinedLabel}
-        labelLine={false}
-        isAnimationActive={true}
-      >
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-        ))}
-        <Label content={renderCenterLabel} position="center" />
-      </Pie>
-    </PieChart>
-  </ResponsiveContainer>
-</div>
-
-
-
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  </>       
-  );
-}
