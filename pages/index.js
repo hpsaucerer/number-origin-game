@@ -15,6 +15,8 @@ import { useRef } from "react";
 import FunFactBox from "../components/FunFactBox";
 import PostGameModal from "../components/PostGameModal";
 import { X } from "lucide-react";
+import { shareResult } from "../utils/share";
+
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
@@ -230,22 +232,6 @@ https://numerus.site`;
       puzzleId: puzzle?.id ?? null,
     });
   }
-
-  // Modern mobile sharing modal
-  if (navigator.share) {
-    navigator
-      .share({
-        title: "Number Origin – Play now!",
-        text: shareText,
-        url: "https://numerus.site",
-      })
-      .catch((err) => console.error("Sharing failed:", err));
-  } else {
-    navigator.clipboard.writeText(shareText);
-    alert("Result copied to clipboard! 📋");
-  }
-};
-
 
 
   // Pie chart data
@@ -570,8 +556,10 @@ const renderCategoryPills = () => {
         <p className="text-md font-medium">No. {stats.gamesPlayed + 1}</p>
       </div>
 
-      {isCorrect && (
-        <Button onClick={shareResult} className="flex items-center space-x-2">
+{isCorrect && (
+  <Button
+    onClick={() => shareResult({ isCorrect, currentStreak: stats.currentStreak })}
+    className="flex items-center space-x-2"
           <Share2 size={16} /> <span>Share</span>
         </Button>
       )}
