@@ -377,7 +377,7 @@ const renderCategoryPills = () => {
   <div key={idx} className="relative"
   ref={(el) => (tooltipRefs.current[idx] = el)}
   >
-    <
+  
 <button
   onClick={(e) => {
     e.stopPropagation();
