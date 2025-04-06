@@ -614,7 +614,7 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
   <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-hidden">
     {/* Dismiss Button */}
     <button
-  className="absolute top-6 right-6 m-3 p-2 text-blue-500 hover:text-blue-600 transition"
+  className="absolute top-4 right-4 text-blue-500 hover:text-blue-600 transition"
 
       onClick={() => setShowStats(false)}
       aria-label="Close"
