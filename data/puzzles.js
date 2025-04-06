@@ -158,7 +158,7 @@ funFact: "Everest grows approximately 44 millimetres every year. This occurs bec
   ],
   answer: "The year the American Declaration of Independence was signed",
   keywords: ["independence", "usa", "founding", "july 4th"],
-  funFact: "On July 4, 1776, the U.S. declared independence from Britain. The Declaration, penned in Philadelphia, became a cornerstone of American democracy."
+  funFact: "The original Declaration of Independence has a giant handprint on it — likely from someone handling the parchment with dirty hands!"
 },
   {
   number: "1.618",
@@ -184,7 +184,127 @@ funFact: "Everest grows approximately 44 millimetres every year. This occurs bec
   answer: "Radius of the Earth",
   keywords: ["earth", "radius", "planet", "geometry"],
   funFact: "The Earth's mean radius is approximately 6,371 km. It varies slightly due to the planet's equatorial bulge."
-}
+},
+  {
+  number: 1969,
+  formatted: "1969",
+  answer: "Moon Landing",
+  clues: [
+    "This year changed how we look at the sky.",
+    "A TV broadcast seen by over 600 million people.",
+    "One small step made here.",
+  ],
+  keywords: ["moon landing", "apollo", "nasa", "buzz aldrin", "neil armstrong"],
+  funFact: "Buzz Aldrin took communion on the Moon using a tiny chalice and wine — but NASA kept it secret due to a lawsuit about religion in space."
+},
+ {
+  number: 42,
+  formatted: "42",
+  answer: "The Answer to Life, the Universe, and Everything",
+  clues: [
+    "This number is the most famous punchline in British sci-fi.",
+    "You’ll find it in a book, a towel, and deep thought.",
+    "Douglas Adams made it hilariously meaningless."
+  ],
+  keywords: ["42", "hitchhiker", "douglas adams", "life universe everything", "deep thought"],
+  funFact: "Douglas Adams picked 42 arbitrarily. He later said, 'I sat down at my desk, stared out the window, and thought: 42 will do.'"
+},
+{
+  number: 742,
+  formatted: "742",
+  answer: "The Simpsons’ House",
+  clues: [
+    "This number appears in Springfield, just off Evergreen Terrace.",
+    "It’s where a yellow family with four fingers lives.",
+    "Homer calls it home (when he's not at Moe’s)."
+  ],
+  keywords: ["simpsons", "742 evergreen", "homer", "marge", "springfield"],
+  funFact: "The full address of The Simpsons is 742 Evergreen Terrace — a number creator Matt Groening picked from a street near his own childhood home."
+}, 
+ {
+  number: 11034,
+  formatted: "11,034",
+  answer: "Mariana Trench",
+  clues: [
+    "This number is measured in meters… straight down.",
+    "It’s deeper than Everest is tall.",
+    "The Challenger Deep lives here."
+  ],
+  keywords: ["mariana trench", "deepest", "ocean", "pacific", "challenger deep"],
+  funFact: "The Mariana Trench is so deep, if Mount Everest were dropped into it, the peak would still be over a mile underwater."
+},
+  {
+  number: 1600,
+  formatted: "1,600",
+  answer: "Grand Canyon Depth",
+  clues: [
+    "This chasm is over a mile deep at its deepest point.",
+    "Formed over millions of years by a stubborn river.",
+    "Arizona’s most photographed attraction."
+  ],
+  keywords: ["grand canyon", "colorado river", "arizona", "canyon", "depth"],
+  funFact: "The Grand Canyon is so vast, it creates its own weather patterns — you can see sun, snow, and storms in different parts at the same time."
+},
+  {
+  number: 3.14159,
+  formatted: "3.14159",
+  answer: "Pi",
+  clues: [
+    "This number is never-ending, never-repeating.",
+    "It relates to both pies and circles.",
+    "March 14 is its unofficial holiday."
+  ],
+  keywords: ["pi", "π", "circle", "irrational", "math constant"],
+  funFact: "The digits of Pi go on forever — but in 2019, Google calculated it to 31.4 trillion digits. That’s a lot of dessert."
+},
+  {
+  number: 1729,
+  formatted: "1,729",
+  answer: "Hardy-Ramanujan Number",
+  clues: [
+    "It’s the smallest number expressible as the sum of two cubes in two different ways.",
+    "Came up in a cab ride with two mathematicians.",
+    "A legend from India made it famous."
+  ],
+  keywords: ["1729", "ramanujan", "math", "hardy", "cube sum"],
+  funFact: "When Hardy told Ramanujan 1729 was a dull number, Ramanujan immediately replied: 'No, it’s the smallest number expressible as the sum of two cubes in two ways!'"
+},
+  {
+  number: 6174,
+  formatted: "6,174",
+  answer: "Kaprekar's Constant",
+  clues: [
+    "Pick any 4-digit number. Rearrange, subtract, repeat...",
+    "It pulls almost any number into a numerical vortex.",
+    "This constant was discovered by an Indian mathematician with a flair for magic."
+  ],
+  keywords: ["kaprekar", "kaprekar's constant", "6174", "math trick", "number magic"],
+  funFact: "Almost any 4-digit number (with at least two different digits) will reach 6174 in 7 steps or less. It’s like math’s version of gravity."
+},
+ {
+  number: 1089,
+  formatted: "1,089",
+  answer: "Reverse Math Trick",
+  clues: [
+    "Start with any 3-digit number, reverse it, subtract, reverse again…",
+    "You’ll always land here, no matter what.",
+    "A math magician’s favorite reveal."
+  ],
+  keywords: ["1089", "number trick", "math magic", "reversal", "puzzle"],
+  funFact: "Try it: Pick 732. Reverse (237), subtract (732−237 = 495), reverse (594), add: 495 + 594 = 1089. It always works. Spooky."
+},
+ {
+  number: 73,
+  formatted: "73",
+  answer: "The Best Number (Sheldon Cooper)",
+  clues: [
+    "It’s a prime number, but with prime quirks.",
+    "Its mirror (37) and binary (1001001) are also primes.",
+    "A fictional physicist claimed it as the 'best number'."
+  ],
+  keywords: ["sheldon cooper", "prime", "binary", "73", "big bang theory"],
+  funFact: "In *The Big Bang Theory*, Sheldon declares 73 the best number: it's the 21st prime, its reverse (37) is the 12th prime, and 21 = 7×3. Geek heaven."
+} 
 ];
 
 export default puzzles;
