@@ -218,6 +218,8 @@ setGuess("");
 const shareResult = () => {
   const shareText = generateShareMessage({ isCorrect, attempts, maxGuesses, puzzle });
 
+ console.log("Sharing:", shareText); // ✅ Debug line
+  
   if (navigator.share) {
     navigator.share({ title: "Number Origin", text: shareText });
   } else {
