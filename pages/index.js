@@ -613,8 +613,6 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
 <Dialog open={showStats} onOpenChange={setShowStats}>
   <DialogContent className="p-0 bg-white rounded-xl shadow-xl w-full max-w-md mx-auto overflow-hidden">
     <div className="relative p-6">
-
-      {/* Dismiss X Button */}
       <button
         className="absolute top-3 right-3 text-blue-500 hover:text-blue-600 transition"
         onClick={() => setShowStats(false)}
@@ -623,10 +621,10 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
         <X size={22} />
       </button>
 
-      {/* Modal Header + Content */}
-      <DialogHeader>
-        <DialogTitle className="text-2xl font-semibold text-center">Statistics</DialogTitle>
-      </DialogHeader>
+      {/* modal content */}
+    </div> {/* 👈 this closes the .relative container */}
+  </DialogContent>
+</Dialog>
 
           {/* Formatted stat boxes */}
           <div className="grid grid-cols-4 gap-4 text-center my-6">
