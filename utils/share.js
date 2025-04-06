@@ -1,23 +1,25 @@
-export function shareResult({ isCorrect, attempts }) {
+export function shareResult({ isCorrect, attempts, puzzle }) {
   const guessCount = isCorrect ? attempts + 1 : "X";
+  const puzzleId = puzzle?.id ?? "?";
 
   const shareText = isCorrect
-    ? `I cracked today’s Numerus puzzle in ${guessCount} ${guessCount === 1 ? "guess" : "guesses"}! 🧠 #NumerusPuzzle`
-    : `Today’s Numerus puzzle stumped me! 😅 #NumerusPuzzle`;
+    ? `I cracked Numerus #${puzzleId} in ${guessCount} ${guessCount === 1 ? "guess" : "guesses"}! 🧠`
+    : `Numerus #${puzzleId} stumped me today! 😅`;
 
-  const fullText = `${shareText}\nhttps://numerus.site`;
+  const fullMessage = `${shareText}\nPlay it here:\nhttps://numerus.site`;
 
   if (navigator.share) {
     navigator
       .share({
         title: "Numerus – Play now!",
-        text: fullText,
+        text: fullMessage,
         url: "https://numerus.site",
       })
       .catch((err) => console.error("Sharing failed:", err));
   } else {
-    navigator.clipboard.writeText(fullText);
+    navigator.clipboard.writeText(fullMessage);
     alert("Result copied to clipboard! 📋");
   }
 }
+
 
