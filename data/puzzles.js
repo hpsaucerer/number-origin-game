@@ -29,8 +29,8 @@ const puzzles = [
   number: "26.2",
   formatted: "26.2 miles",
   clues: [
-    "A long run with an ancient origin.",
     "Born in battle, glorified in sport.",
+    "A long run with an ancient origin.",
     "London. New York. Boston."
   ],
   answer: "Marathon distance",
