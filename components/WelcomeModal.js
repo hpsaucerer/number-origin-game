@@ -8,7 +8,7 @@ export default function WelcomeModal({ open, onOpenChange, showTutorial, setShow
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center">
+          <DialogTitle className="text-3xl font-bold text-center">
             Numerus
           </DialogTitle>
         </DialogHeader>
