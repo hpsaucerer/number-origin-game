@@ -5,7 +5,8 @@ import { Share2, X } from "lucide-react";
 import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 
-export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle }) {
+export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle, shareResult }) {
+
   if (!puzzle || !stats) return null;
 
   const [countdown, setCountdown] = useState("");
@@ -29,25 +30,7 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle 
     return () => clearInterval(interval);
   }, []);
 
-const handleShare = () => {
-  track('share_clicked');
-  const message = `I solved today’s Numerus puzzle in ${
-    isCorrect ? stats.currentStreak : "X"
-  } attempts! 🧠 #NumerusTrivia\n\nPlay now: https://numerus.site`;
 
-  if (navigator.share) {
-    navigator
-      .share({
-        title: "Numerus – Play now!",
-        text: message,
-        url: "https://numerus.site",
-      })
-      .catch((err) => console.error("Sharing failed:", err));
-  } else {
-    navigator.clipboard.writeText(message);
-    alert("Result copied to clipboard! 📋");
-  }
-};
 
 
   return (
@@ -61,7 +44,7 @@ const handleShare = () => {
       onClick={onClose}
       aria-label="Close"
     >
-      <X size={20} />
+      <X size={28} />
     </button>
 
     {/* Header and content go here */}
@@ -93,7 +76,7 @@ const handleShare = () => {
         {/* 📤 Share */}
         <div className="flex justify-center mt-4">
           <Button
-            onClick={handleShare}
+            onClick={shareResult}
             className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
           >
             <Share2 size={16} /> Share
