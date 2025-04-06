@@ -15,7 +15,7 @@ import { useRef } from "react";
 import FunFactBox from "../components/FunFactBox";
 import PostGameModal from "../components/PostGameModal";
 import { X } from "lucide-react";
-import { generateShareMessage } from "../utils/share";
+import { shareResult } from "../utils/share";
 
 
 const colorClassMap = {
@@ -215,28 +215,18 @@ setGuess("");
     setAttempts(attempts + 1);
   };
 
-const shareResult = () => {
-  const shareText = generateShareMessage({ isCorrect, attempts, maxGuesses, puzzle });
+const shareTextHandler = () => {
+  shareResult({ isCorrect, currentStreak: stats.currentStreak });
 
- console.log("Sharing:", shareText); // ✅ Debug line
-  
-  if (navigator.share) {
-    navigator.share({ title: "Number Origin", text: shareText });
-  } else {
-    navigator.clipboard.writeText(shareText);
-    alert("Results copied to clipboard!");
-  }
-};
-
-
-  // Optional tracking
-  if (typeof track === 'function') {
-    track('share_clicked', {
+  // Optional analytics tracking
+  if (typeof track === "function") {
+    track("share_clicked", {
       correct: isCorrect,
-      attempts: guessCount,
+      attempts: attempts,
       puzzleId: puzzle?.id ?? null,
     });
   }
+};
 
 
   // Pie chart data
@@ -563,7 +553,7 @@ const renderCategoryPills = () => {
 
 {isCorrect && (
 <Button
-  onClick={() => shareResult({ isCorrect, currentStreak: stats.currentStreak })}
+  onClick={shareTextHandler}
   className="flex items-center space-x-2"
 >
   <Share2 size={16} />
