@@ -612,9 +612,13 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
 {/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
   <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-hidden">
-    {/* Dismiss Button */}
+
+   {/* Title */}
+    <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Statistics</h2>
+  
+{/* Dismiss Button */}
     <button
-  className="absolute top-4 right-4 m-4 p-2 text-blue-500 hover:text-blue-600 transition"
+  className="absolute top-4 right-4 m-5 p-2 text-blue-500 hover:text-blue-600 transition"
 
       onClick={() => setShowStats(false)}
       aria-label="Close"
