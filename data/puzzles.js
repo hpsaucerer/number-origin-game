@@ -11,7 +11,7 @@ const puzzles = [
     ],
     answer: "The year Abraham Lincoln was assassinated",
     keywords: ["lincoln", "abraham", "assassinated", "1865"],
-    funFact: "John Wilkes Booth assassinated Lincoln just days after the Civil War ended — during a play at Ford’s Theatre."
+    funFact: "Lincoln’s assassination was part of a coordinated plot to also kill Vice President Andrew Johnson and Secretary of State William Seward. Seward was brutally attacked but survived, while Johnson’s would-be assassin lost his nerve."
   },
   {
     number: "212",
@@ -23,7 +23,7 @@ const puzzles = [
     ],
     answer: "Boiling point of water in Fahrenheit",
     keywords: ["boiling", "water", "fahrenheit", "212"],
-    funFact: "The boiling point of water actually depends on the oxygen content and atmospheric pressure. The higher the altitude, the lower the temperature at which water boils."
+    funFact: "At sea level, water boils at 212°F (100°C). But at the top of Mount Everest, the air pressure is so low that water boils at just 160°F (71°C) — not even hot enough to make decent tea."
   },
   {
   number: "26.2",
@@ -48,7 +48,7 @@ funFact: "The event was born out of the legend of the Athenian courier Pheidippi
   revealFormattedAt: 3,
   answer: "Gravitational acceleration on Earth",
   keywords: ["gravity", "9.81", "earth gravity", "acceleration", "m/s²"],
-funFact: "Galileo was the first to show by experiment that bodies fall with the same acceleration whatever their composition (the weak principle of equivalence)."
+funFact: "Gravity isn't perfectly uniform — it’s slightly weaker at the equator than at the poles due to Earth’s rotation and bulging shape. You literally weigh a tiny bit less in Ecuador than in Greenland!"
 },
 {
   number: "23",
@@ -60,7 +60,7 @@ funFact: "Galileo was the first to show by experiment that bodies fall with the 
   ],
   answer: "Michael Jordan's jersey number",
   keywords: ["23", "michael jordan", "basketball", "jersey", "nba"],
-funFact: "Aside from basketball, Jordan also competed in minor league baseball too, where he hit 3 home runs for the Chicago White Sox."
+funFact: "After retiring from the NBA, Jordan played baseball with the Birmingham Barons, impressing with a 13-game hitting streak and 30 stolen bases — then returned to the Bulls and led them to another championship."
 },
 {
   number: "221",
@@ -72,7 +72,7 @@ funFact: "Aside from basketball, Jordan also competed in minor league baseball t
   ],
   answer: "Sherlock Holmes’ address",
   keywords: ["221b", "sherlock holmes", "baker street", "detective"],
-funFact: "The Sherlock Holmes Museum isn't at 221b Baker Street - it's actually a few doors down at number 239!"
+funFact: "The iconic phrase most associated with Holmes never appears in the original books. It’s a line popularized by films and adaptations — a bit of pop culture Mandela Effect."
 },
 {
   number: "8848",
@@ -84,7 +84,7 @@ funFact: "The Sherlock Holmes Museum isn't at 221b Baker Street - it's actually 
   ],
   answer: "Height of Mount Everest",
   keywords: ["8848", "everest", "mount everest", "mt everest", "highest mountain", "height"],
-funFact: "Everest grows approximately 44 millimetres every year. This occurs because of the continuous shift of tectonic plates, pushing the Himalayas upwards."
+funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gains about 4mm per year as the Indian Plate pushes under the Eurasian Plate. It's literally still growing!"
 },
 {
   number: "7",
