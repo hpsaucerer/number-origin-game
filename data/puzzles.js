@@ -96,7 +96,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   answer: "Number of continents",
   keywords: ["7", "continents", "world", "landmasses"],
-  funFact: "During the Triassic Period (about 230 million years ago), the continents were arranged together as a single supercontinent called Pangea."
+  funFact: "Zealandia is a mostly submerged landmass beneath New Zealand — and some scientists argue it qualifies as an eighth continent. It’s 93% underwater, making it easy to miss!"
 },
 {
   number: "90",
@@ -108,7 +108,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   answer: "Latitude of the North Pole",
   keywords: ["north pole", "90", "90°", "latitude"],
-  funFact: "Unlike Antarctica, there's no land at the North Pole. Instead, it's all ice that's floating on top of the Arctic Ocean."
+  funFact: "At the North Pole, every direction is south — there’s no east or west. And because all the time zones converge there, it’s technically every time and no time at once."
 },
 {
   number: "299792458",
@@ -121,7 +121,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   revealFormattedAt: 3,
   answer: "The speed of light",
   keywords: ["lightspeed", "light speed"],
-  funFact: "Sunlight takes roughly 8 minutes 17 seconds to travel the average distance from the surface of the Sun to the Earth."
+  funFact: "Light from the Sun takes about 8 minutes and 20 seconds to reach Earth — meaning every sunrise, sunset, and sunbeam is slightly out of date. You’re always seeing the Sun as it was, not as it is."
 },
 {
   number: "24601",
@@ -146,7 +146,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   revealFormattedAt: 1,
   answer: "The temperature at which paper burns (Fahrenheit 451)",
   keywords: ["paper burns", "Ray", "Bradbury", "book", "Fahrenheit", "451"],
-  funFact: "In Fahrenheit 451 (published in 1953) - books were outlawed and burned at 451°F, a metaphor for censorship and loss of knowledge."
+  funFact: "Written in 1953, the book featured wall-sized televisions, interactive soap operas, and “seashells” that fed sound directly into the ear — eerily close to flat-screens, binge shows, and AirPods."
 },
   {
   number: "1776",
@@ -170,7 +170,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   answer: "Golden ratio",
   keywords: ["phi", "fibonacci", "divine proportion", "golden mean"],
-  funFact: "The golden ratio (about 1.618) appears in nature, art, and architecture. It's often associated with aesthetically pleasing proportions."
+  funFact: "The golden ratio, often denoted by the Greek letter φ (phi), is called “golden” because it shows up in art, architecture, and nature — from the Parthenon to sunflower seeds, seashell spirals, and even the layout of galaxies."
 },
 {
   number: "6381",
@@ -183,7 +183,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   revealFormattedAt: 3,
   answer: "Radius of the Earth",
   keywords: ["earth", "radius", "planet", "geometry"],
-  funFact: "The Earth's mean radius is approximately 6,371 km. It varies slightly due to the planet's equatorial bulge."
+  funFact: "The Earth is actually an oblate spheroid — it bulges slightly at the equator. This means the radius at the equator is about 21 km (13 miles) longer than the radius at the poles!"
 },
   {
   number: 1969,
