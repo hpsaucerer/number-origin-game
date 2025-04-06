@@ -15,7 +15,7 @@ import { useRef } from "react";
 import FunFactBox from "../components/FunFactBox";
 import PostGameModal from "../components/PostGameModal";
 import { X } from "lucide-react";
-import { shareResult } from "../utils/share";
+import { generateShareMessage } from "../utils/share";
 
 
 const colorClassMap = {
@@ -216,13 +216,16 @@ setGuess("");
   };
 
 const shareResult = () => {
-  const guessCount = isCorrect ? attempts + 1 : "X";
+  const shareText = generateShareMessage({ isCorrect, attempts, maxGuesses, puzzle });
 
-  const shareText = `Numerus ${puzzle?.id ?? "?"} ${guessCount}/4 🧠
-${isCorrect ? "Got it!" : "Missed it!"}
+  if (navigator.share) {
+    navigator.share({ title: "Number Origin", text: shareText });
+  } else {
+    navigator.clipboard.writeText(shareText);
+    alert("Results copied to clipboard!");
+  }
+};
 
-Try it:
-https://numerus.site`;
 
   // Optional tracking
   if (typeof track === 'function') {
