@@ -216,7 +216,7 @@ setGuess("");
   };
 
 const shareTextHandler = () => {
-  shareResult({ isCorrect, currentStreak: stats.currentStreak });
+  shareResult({ isCorrect, attempts });
 
   // Optional analytics tracking
   if (typeof track === "function") {
