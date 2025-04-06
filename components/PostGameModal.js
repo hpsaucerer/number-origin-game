@@ -76,7 +76,7 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle,
         {/* 📤 Share */}
         <div className="flex justify-center mt-4">
           <Button
-            onClick={shareResult}
+            onClick={() => shareResult()}
             className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
           >
             <Share2 size={16} /> Share
