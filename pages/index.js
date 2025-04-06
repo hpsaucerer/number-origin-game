@@ -577,7 +577,16 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
       {/* Instructions Popup */}
       <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
         <DialogContent className="max-h-[90vh] overflow-y-auto p-4 sm:max-w-md w-full flex flex-col">
-          <DialogHeader>
+             {/* Dismiss Button */}
+    <button
+      className="absolute top-4 right-4 m-5 p-2 text-blue-500 hover:text-blue-600 transition"
+      onClick={() => setShowInstructions(false)}
+      aria-label="Close"
+    >
+      <X size={22} />
+    </button>
+      
+        <DialogHeader>
             <DialogTitle>
               <h2 className="text-lg text-gray-800 mb-4">How To Play</h2>
             </DialogTitle>
