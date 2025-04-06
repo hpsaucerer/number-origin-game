@@ -374,7 +374,9 @@ const renderCategoryPills = () => {
   return (
     <div className="grid grid-cols-2 gap-2 mt-4">
 {categories.map((cat, idx) => (
-  <div key={idx} className="relative">
+  <div key={idx} className="relative"
+  ref={(el) => (tooltipRefs.current[idx] = el)}
+  >
     <button
       onClick={(e) => {
   e.stopPropagation();
