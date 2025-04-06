@@ -8,8 +8,8 @@ export default function WelcomeModal({ open, onOpenChange, showTutorial, setShow
 
       <DialogContent>
         <DialogHeader>
-        <p className="text-lg font-bold text-center">
-          Strengthen your trivia muscle, one number at a time. Start your workout now!
+        <p className="text-xl font-bold text-center">
+          Numerus
         </p>
         </DialogHeader>
 
