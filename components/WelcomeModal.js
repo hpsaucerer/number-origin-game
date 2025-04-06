@@ -8,13 +8,13 @@ export default function WelcomeModal({ open, onOpenChange, showTutorial, setShow
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-center">
+          <DialogTitle className="text-2xl font-bold text-center">
             Numerus
           </DialogTitle>
         </DialogHeader>
 
         {/* Description */}
-        <p className="text-sm text-center mt-2">
+        <p className="text-base text-center mt-2">
           Strengthen your trivia muscle, one number at a time. Start your workout now!
         </p>
 {/* ...existing instructions... */}
