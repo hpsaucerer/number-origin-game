@@ -377,7 +377,7 @@ const renderCategoryPills = () => {
   <div key={idx} className="relative"
   ref={(el) => (tooltipRefs.current[idx] = el)}
   >
-    <button
+    <
       onClick={(e) => {
   e.stopPropagation();
   toggleTooltip(idx);
@@ -385,7 +385,7 @@ const renderCategoryPills = () => {
 className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
 >
    {cat.label}
-</button>
+</>
   
 
 {openTooltip === idx && (
@@ -636,7 +636,7 @@ className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
       onClick={() => setShowStats(false)}
       aria-label="Close"
     >
-      <X size={22} />
+      <X size={28} />
     </button>
 
     {/* Formatted stat boxes */}
