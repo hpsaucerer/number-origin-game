@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Number Origin</title>
+        <title>Numerus</title>
         <meta
           name="description"
           content="Numerus is a daily reverse trivia game. Can you guess the significance behind today’s number?"
