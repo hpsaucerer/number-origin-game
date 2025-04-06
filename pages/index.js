@@ -216,7 +216,8 @@ setGuess("");
   };
 
 const shareTextHandler = () => {
-  shareResult({ isCorrect, attempts });
+  shareResult({ isCorrect, attempts, puzzle });
+
 
   // Optional analytics tracking
   if (typeof track === "function") {
