@@ -378,13 +378,16 @@ const renderCategoryPills = () => {
   ref={(el) => (tooltipRefs.current[idx] = el)}
   >
     <
-      onClick={(e) => {
-  e.stopPropagation();
-  toggleTooltip(idx);
-}}
-className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
+<button
+  onClick={(e) => {
+    e.stopPropagation();
+    toggleTooltip(idx);
+  }}
+  className={`category-pill px-3 py-1 rounded-full font-semibold ${cat.color}`}
 >
-   {cat.label}
+  {cat.label}
+</button>
+
 </>
   
 
