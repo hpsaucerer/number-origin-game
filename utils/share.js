@@ -13,7 +13,7 @@ export function shareResult({ isCorrect, attempts, puzzle }) {
       .share({
         title: "Numerus – Play now!",
         text: fullMessage,
-        url: "https://numerus.site",
+      
       })
       .catch((err) => console.error("Sharing failed:", err));
   } else {
