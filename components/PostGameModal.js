@@ -70,7 +70,7 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle,
         </div>
 
         {/* ⏳ Countdown */}
-        <div className="mt-6 text-center">
+        <div className="mt-4 text-center">
           <p className="text-sm font-semibold text-gray-700">Next puzzle in:</p>
           <p className="text-lg font-mono text-gray-900">{countdown}</p>
         </div>
