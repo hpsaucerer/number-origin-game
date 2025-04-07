@@ -50,22 +50,42 @@ const colorClassMap = {
 
   const maxGuesses = 4;
 
-const getResultImage = () => {
-  if (!isCorrect && attempts >= maxGuesses) return "/images/tomorrow.png";
-  if (isCorrect) {
-    switch (attempts + 1) {
-      case 1:
-        return "/images/gotitinone.png";
-      case 2:
-        return "/images/second.png";
-      case 3:
-        return "/images/thirdtime.png";
-      case 4:
-        return "/images/squeaky.png";
-    }
-  }
-  return null;
-};
+{(isCorrect || attempts >= maxGuesses) && (
+  <div className="mt-6 text-center space-y-2">
+    <p className="text-lg font-semibold text-gray-800">See you again soon 👋</p>
+    <p className="text-sm text-gray-600">Next puzzle in: <span className="font-mono">{countdown}</span></p>
+    <a
+      href="https://your-feedback-form-link.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-block text-sm text-blue-600 hover:underline mt-2"
+    >
+      Love the game? Loathe it? Let us know what you think!
+    </a>
+  </div>
+)}
+
+const [countdown, setCountdown] = useState("");
+
+useEffect(() => {
+  const updateCountdown = () => {
+    const now = new Date();
+    const nextMidnight = new Date();
+    nextMidnight.setHours(24, 0, 0, 0);
+    const diff = nextMidnight - now;
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    setCountdown(`${hours}h ${minutes}m ${seconds}s`);
+  };
+
+  const interval = setInterval(updateCountdown, 1000);
+  updateCountdown();
+  return () => clearInterval(interval);
+}, []);
+
 
     
   const [stats, setStats] = useState({
@@ -457,18 +477,21 @@ const renderCategoryPills = () => {
   <>
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
+     <div className="mt-6 text-center space-y-2">
+      <p className="text-lg font-semibold text-gray-800">See you again soon 👋</p>
+      <p className="text-sm text-gray-600">
+        Next puzzle in: <span className="font-mono">{countdown}</span>
+      </p>
+      <a
+        href="https://your-feedback-form-link.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block text-sm text-blue-600 hover:underline mt-2"
+      >
+        Love the game? Loathe it? Let us know what you think!
+      </a>
+    </div>
 
- 
-{(isCorrect || attempts >= maxGuesses) && (
-  <div className="flex flex-col items-center mt-6 gap-4">
-
-    <img
-      src={getResultImage()}
-      alt="Result"
-      className="w-48 h-auto block mt-2"
-    />
-  </div>
-)}
 
 
   </>
@@ -479,6 +502,22 @@ const renderCategoryPills = () => {
                 Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
               </p>
 
+<div className="mt-6 text-center space-y-2">
+  <p className="text-lg font-semibold text-gray-800">See you again soon 👋</p>
+  <p className="text-sm text-gray-600">
+    Next puzzle in: <span className="font-mono">{countdown}</span>
+  </p>
+  <a
+    href="https://your-feedback-form-link.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-block text-sm text-blue-600 hover:underline mt-2"
+  >
+    Love the game? Loathe it? Let us know what you think!
+  </a>
+</div>
+
+                
 
             </>
           ) : (
