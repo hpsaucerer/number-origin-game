@@ -48,7 +48,7 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle,
       <X size={28} />
     </button>
 
-<DialogHeader className="text-center mb-4">
+<DialogHeader className="text-center mb-2 p-0 m-0">
   <PostGameHeader attempts={attempts} isCorrect={isCorrect} />
 </DialogHeader>
 
