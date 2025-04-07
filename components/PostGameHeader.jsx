@@ -1,11 +1,11 @@
 import React from "react";
 
 const imageMap = {
-  1: "/gotitinone.png",
-  2: "/second.png",
-  3: "/thirdtime.png",
-  4: "/squeaky.png",
-  failed: "/tomorrow.png",
+  1: "/gotitinone.svg",
+  2: "/second.svg",
+  3: "/thirdtime.svg",
+  4: "/squeaky.svg",
+  failed: "/tomorrow.svg",
 };
 
 const titleMap = {
