@@ -587,7 +587,7 @@ const renderCategoryPills = () => {
 <ul className="list-decimal ml-6">
   <li>
     <strong>Look at the number.</strong><br />
-    What could it mean?<br /><br />
+    What could it signify?<br /><br />
   </li>
   <li>
     <strong>Make a guess. You have 4 in total.</strong><br />
