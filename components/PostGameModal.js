@@ -32,6 +32,17 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle,
   }, []);
 
 
+const imagePathFor = (attempts, isCorrect) => {
+  const key = isCorrect ? attempts + 1 : "failed";
+  const map = {
+    1: "/gotitinone.png",
+    2: "/second.png",
+    3: "/thirdtime.png",
+    4: "/squeaky.png",
+    failed: "/tomorrow.png",
+  };
+  return map[key];
+};
 
 
   return (
@@ -48,14 +59,17 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle,
       <X size={28} />
     </button>
 
-<DialogHeader className="p-0 m-0">
- <div className="text-center mb-0 p-0 m-0 border border-red-500">
-    <PostGameHeader attempts={attempts} isCorrect={isCorrect} />
-  </div>
-</DialogHeader>
-
-
-
+{/* Result Image & Guess Count */}
+<div className="flex flex-col items-center pt-2 pb-1">
+  <img
+    src={imagePathFor(attempts, isCorrect)}
+    alt=""
+    className="w-28 h-auto block"
+  />
+  <p className="mt-1 text-sm font-semibold text-gray-800">
+    {isCorrect ? `${attempts + 1} of 4 guesses` : `All 4 guesses used`}
+  </p>
+</div>
   </div>
 
         {/* Fun Fact */}
