@@ -2,10 +2,10 @@ import React from "react";
 
 const imageMap = {
   1: "/gotitinone.png",
-  2: "/solidtry.png",
-  3: "/closecall.png",
+  2: "/second.png",
+  3: "/thirdtime.png",
   4: "/squeaky.png",
-  failed: "/betterluck.png",
+  failed: "/tomorrow.png",
 };
 
 const titleMap = {
