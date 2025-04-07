@@ -6,7 +6,7 @@ import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 import PostGameHeader from "@/components/PostGameHeader";
 
-export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle, shareResult }) {
+export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle, shareResult, attempts }) {
 
   if (!puzzle || !stats) return null;
 
@@ -49,10 +49,7 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle,
     </button>
 
 <DialogHeader className="text-center mb-4">
-  <PostGameHeader
-    attempts={isCorrect ? Object.values(stats.guessDistribution).reduce((acc, val, idx) => val > 0 && idx !== "failed" ? idx : acc, 4) - 1 : 3}
-    isCorrect={isCorrect}
-  />
+  <PostGameHeader attempts={attempts} isCorrect={isCorrect} />
 </DialogHeader>
 
 
