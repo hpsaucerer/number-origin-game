@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Share2, X } from "lucide-react";
 import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
+import PostGameHeader from "@/components/PostGameHeader";
 
 export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle, shareResult }) {
 
@@ -47,12 +48,13 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle,
       <X size={28} />
     </button>
 
-    {/* Header and content go here */}
 <DialogHeader className="text-center mb-4">
-  <DialogTitle className="text-2xl font-bold font-vietnam">
-    {isCorrect ? "Knocked it out of the park! ⚾" : "Ah, better luck tomorrow!"}
-  </DialogTitle>
+  <PostGameHeader
+    attempts={isCorrect ? Object.values(stats.guessDistribution).reduce((acc, val, idx) => val > 0 && idx !== "failed" ? idx : acc, 4) - 1 : 3}
+    isCorrect={isCorrect}
+  />
 </DialogHeader>
+
 
   </div>
 
