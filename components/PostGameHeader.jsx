@@ -24,7 +24,7 @@ export default function PostGameHeader({ attempts, isCorrect }) {
 
   return (
 <div className="flex flex-col items-center space-y-1 m-0 p-0">
-  <img src={image} alt={title} className="w-32 h-32" />
+  <img src={image} alt={title} className="w-32 h-32 mb-1" />
   <div className="text-base font-medium text-gray-800">{countText}</div>
 </div>
   );
