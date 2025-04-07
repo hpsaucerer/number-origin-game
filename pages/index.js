@@ -58,7 +58,7 @@ const colorClassMap = {
       href="https://your-feedback-form-link.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-block text-sm text-blue-600 hover:underline mt-2"
+      className="inline-block text-[15px] text-blue-600 hover:underline mt-2"
     >
       Love the game? Loathe it? Let us know what you think!
     </a>
