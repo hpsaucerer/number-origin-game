@@ -23,9 +23,9 @@ export default function PostGameHeader({ attempts, isCorrect }) {
   const countText = isCorrect ? `${attempts + 1} of 4 guesses` : `All 4 guesses used`;
 
   return (
-    <div className="flex flex-col items-center space-y-1 pb-2">
-      <img src={image} alt={title} className="w-32 h-32" />
-      <div className="text-lg font-semibold text-gray-800">{countText}</div>
-    </div>
+<div className="flex flex-col items-center space-y-1 m-0 p-0">
+  <img src={image} alt={title} className="w-32 h-32" />
+  <div className="text-base font-medium text-gray-800">{countText}</div>
+</div>
   );
 }
