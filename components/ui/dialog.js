@@ -13,16 +13,18 @@ export function Dialog({ open, onOpenChange, children }) {
       }}
       onClick={() => onOpenChange(false)}
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: "#fff",
-          width: "80%",
-          margin: "10% auto",
-          padding: "1rem",
-          borderRadius: "8px"
-        }}
-      >
+<div
+  onClick={(e) => e.stopPropagation()}
+  style={{
+    background: "#fff",
+    maxWidth: "600px",   // or whatever you want (e.g. 500px, 40rem)
+    width: "100%",
+    margin: "10% auto",
+    padding: "1rem",
+    borderRadius: "8px"
+  }}
+>
+
         {children}
       </div>
     </div>
