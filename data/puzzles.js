@@ -177,7 +177,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   formatted: "6,371km",
   clues: [
     "This number is used in calculations for GPS and satellite positioning.",
-    "Look again at the number - measured in km it's a cut above, or more accurately 'below'."
+    "Look again at the number - measured in km it's a cut above, or more accurately 'below'.",
     "It's the average distance from the surface to the core — not the circumference!"
   ],
   revealFormattedAt: 2,
