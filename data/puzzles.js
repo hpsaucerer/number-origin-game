@@ -72,7 +72,7 @@ funFact: "After retiring from the NBA, Jordan played baseball with the Birmingha
   ],
   answer: "Sherlock Holmes’ address",
   keywords: ["221b", "sherlock holmes", "baker street", "detective"],
-funFact: "The iconic phrase most associated with Holmes never appears in the original books. It’s a line popularized by films and adaptations — a bit of pop culture Mandela Effect."
+funFact: "'Elementary, my dear Watson', the phrase most associated with Holmes never actually appears in the original books. It’s a line popularized by films and adaptations — a bit of pop culture Mandela Effect."
 },
 {
   number: "8848",
