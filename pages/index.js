@@ -51,18 +51,22 @@ const colorClassMap = {
   const maxGuesses = 4;
 
 {(isCorrect || attempts >= maxGuesses) && (
-  <div className="mt-6 text-center space-y-2">
-    <p className="text-lg font-semibold text-gray-800">See you again soon 👋</p>
-    <p className="text-sm text-gray-600">Next puzzle in: <span className="font-mono">{countdown}</span></p>
+<div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-center shadow-sm">
+  <p className="text-sm text-blue-900 font-medium">
+    💬 Love the game? Loathe it?
+  </p>
+  <p className="text-sm text-blue-800">
     <a
-      href="https://forms.gle/n8hiubngosB35CVq9"
+      href="https://forms.gle/abcdEfgh12345"
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-block text-[15px] text-blue-600 hover:underline mt-2"
+      className="inline-block mt-1 font-semibold underline hover:text-blue-600 transition-colors duration-150"
     >
-      Love the game? Loathe it? Let us know what you think!
+      Tell us what you think!
     </a>
-  </div>
+  </p>
+</div>
+
 )}
 
 const [countdown, setCountdown] = useState("");
