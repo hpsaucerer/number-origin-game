@@ -464,7 +464,7 @@ const renderCategoryPills = () => {
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
 <div className="mt-6 text-center space-y-3">
-  <p className="text-lg font-semibold text-gray-800">See you again soon 👋</p>
+  <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
   <p className="text-sm text-gray-600">
     Next puzzle in: <span className="font-mono">{countdown}</span>
   </p>
@@ -495,7 +495,7 @@ const renderCategoryPills = () => {
               </p>
 
 <div className="mt-6 text-center space-y-3">
-  <p className="text-lg font-semibold text-gray-800">See you again soon 👋</p>
+  <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
   <p className="text-sm text-gray-600">
     Next puzzle in: <span className="font-mono">{countdown}</span>
   </p>
