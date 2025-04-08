@@ -42,7 +42,7 @@ funFact: "The event was born out of the legend of the Athenian courier Pheidippi
   formatted: "9.81 m/s²",
   clues: [
     "A pull you can’t escape (unless you're in orbit).",
-    "Physics students know it as 'g' — but it's not a letter here."
+    "Physics students know it as 'g' — but it's not a letter here.",
     "Take another look at the number - finally up to speed?"
   ],
   revealFormattedAt: 3,
