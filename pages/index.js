@@ -603,14 +603,15 @@ const renderCategoryPills = () => {
 
       {/* Instructions Popup */}
       <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
-<DialogContent className="relative w-full max-w-md mx-auto px-4 pt-10 pb-6 rounded-xl shadow-lg">
-  <button
-    className="absolute top-4 right-4 z-50 text-blue-500 hover:text-blue-600 transition"
-    onClick={onClose}
-    aria-label="Close"
-  >
-    <X size={28} />
-  </button>
+        <DialogContent className="max-h-[90vh] overflow-y-auto p-4 sm:max-w-md w-full flex flex-col">
+             {/* Dismiss Button */}
+    <button
+      className="absolute top-4 right-4 m-5 p-2 text-blue-500 hover:text-blue-600 transition"
+      onClick={() => setShowInstructions(false)}
+      aria-label="Close"
+    >
+      <X size={28} />
+    </button>
       
         <DialogHeader>
             <DialogTitle>
