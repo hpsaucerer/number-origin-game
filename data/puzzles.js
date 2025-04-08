@@ -42,7 +42,7 @@ funFact: "The event was born out of the legend of the Athenian courier Pheidippi
   formatted: "9.81 m/s²",
   clues: [
     "A pull you can’t escape (unless you're in orbit).",
-    "Acceleration affecting every object on Earth.",
+    "Physics students know it as 'g' — but it's not a letter here."
     "Take another look at the number - finally up to speed?"
   ],
   revealFormattedAt: 3,
@@ -154,7 +154,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   clues: [
     "Ink and ideals flowed freely.",
     "Fireworks and freedom began here.",
-    "The colonies made a declaration."
+    "A revolutionary year — quite literally."
   ],
   answer: "The year the American Declaration of Independence was signed",
   keywords: ["independence", "usa", "founding", "july 4th"],
@@ -184,12 +184,6 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   answer: "Earth's radius",
   keywords: ["earth", "radius", "planet", "core", "km", "kilometers", "mean radius", "equatorial", "measurement", "distance"],
   funFact: "The Earth's radius isn't the same everywhere! It's about 6,378 km at the equator and 6,357 km at the poles — but 6,371 km is the commonly used average."
-},
-
-  revealFormattedAt: 3,
-  answer: "Radius of the Earth",
-  keywords: ["earth", "radius", "planet", "geometry"],
-  funFact: "The Earth is actually an oblate spheroid — it bulges slightly at the equator. This means the radius at the equator is about 21 km (13 miles) longer than the radius at the poles!"
 },
   {
   number: 1969,
