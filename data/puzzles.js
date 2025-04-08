@@ -133,7 +133,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   answer: "Jean Valjean's prisoner number",
   keywords: ["Jean", "Valjean", "prisoner", "convict", "number"],
-  funFact: "The musical production has played over 45,000 performances worldwide to a total audience of more than 57 million - almost the population of Italy!"
+  funFact: "Victor Hugo began writing Les Misérables in 1845, but much of it was completed while he was exiled from France for opposing Napoleon III. The novel was finally published in 1862, after nearly 17 years of work."
 },
 {
   number: "451",
@@ -153,8 +153,8 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   formatted: "1776",
   clues: [
     "Ink and ideals flowed freely.",
-    "The colonies made a declaration.",
-    "Fireworks and freedom began here."
+    "Fireworks and freedom began here.",
+    "The colonies made a declaration."
   ],
   answer: "The year the American Declaration of Independence was signed",
   keywords: ["independence", "usa", "founding", "july 4th"],
@@ -164,22 +164,28 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   number: "1.618",
   formatted: "1.618",
   clues: [
-    "Beauty in ratio, found in art and spirals.",
     "You might say it's irrationally attractive.",
-    "Between Fibonacci steps, it quietly hides."
+    "Between Fibonacci steps, it quietly hides.",
+    "Beauty in ratio, found in art and spirals."
   ],
   answer: "Golden ratio",
   keywords: ["phi", "fibonacci", "divine proportion", "golden mean"],
   funFact: "The golden ratio, often denoted by the Greek letter φ (phi), is called “golden” because it shows up in art, architecture, and nature — from the Parthenon to sunflower seeds, seashell spirals, and even the layout of galaxies."
 },
 {
-  number: "6381",
-  formatted: "6,381 km",
+  number: "6371",
+  formatted: "6,371km",
   clues: [
-    "The average journey from core to cloud.",
-    "Roughly the radius of our rocky home.",
-    "Half the story of a planetary diameter."
+    "This number is used in calculations for GPS and satellite positioning.",
+    "Look again at the number - measured in km it's a cut above, or more accurately 'below'."
+    "It's the average distance from the surface to the core — not the circumference!"
   ],
+  revealFormattedAt: 2,
+  answer: "Earth's radius",
+  keywords: ["earth", "radius", "planet", "core", "km", "kilometers", "mean radius", "equatorial", "measurement", "distance"],
+  funFact: "The Earth's radius isn't the same everywhere! It's about 6,378 km at the equator and 6,357 km at the poles — but 6,371 km is the commonly used average."
+},
+
   revealFormattedAt: 3,
   answer: "Radius of the Earth",
   keywords: ["earth", "radius", "planet", "geometry"],
