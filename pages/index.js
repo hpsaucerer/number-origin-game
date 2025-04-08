@@ -55,7 +55,7 @@ const colorClassMap = {
     <p className="text-lg font-semibold text-gray-800">See you again soon 👋</p>
     <p className="text-sm text-gray-600">Next puzzle in: <span className="font-mono">{countdown}</span></p>
     <a
-      href="https://your-feedback-form-link.com"
+      href="https://forms.gle/n8hiubngosB35CVq9"
       target="_blank"
       rel="noopener noreferrer"
       className="inline-block text-[15px] text-blue-600 hover:underline mt-2"
