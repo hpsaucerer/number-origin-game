@@ -485,22 +485,19 @@ const renderCategoryPills = () => {
                 Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
               </p>
 
-<div className="mt-6 text-center space-y-2">
-  <p className="text-lg font-semibold text-gray-800">See you again soon 👋</p>
-  <p className="text-sm text-gray-600">
-    Next puzzle in: <span className="font-mono">{countdown}</span>
-  </p>
+<div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-center shadow-sm">
+  <p className="text-base font-semibold text-blue-900">See you again soon 👋</p>
+  <p className="text-sm text-blue-800">Next puzzle in: <span className="font-mono">{countdown}</span></p>
   <a
-    href="https://your-feedback-form-link.com"
+    href="https://forms.gle/abcdEfgh12345"
     target="_blank"
     rel="noopener noreferrer"
-    className="inline-block text-sm text-blue-600 hover:underline mt-2"
+    className="inline-block mt-2 text-sm font-medium text-blue-700 hover:underline transition"
   >
-    Love the game? Loathe it? Let us know what you think!
+    💬 Love the game? Loathe it? Let us know what you think!
   </a>
 </div>
-
-                
+        
 
             </>
           ) : (
