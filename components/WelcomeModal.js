@@ -7,11 +7,14 @@ export default function WelcomeModal({ open, onOpenChange, showTutorial, setShow
     <Dialog open={open} onOpenChange={onOpenChange}>
 
       <DialogContent>
-        <DialogHeader>
-        <p className="text-xl font-bold text-center">
-          Numerus
-        </p>
-        </DialogHeader>
+<DialogHeader>
+  <p className="text-xl font-bold text-center">
+    Numerus
+  </p>
+  <p className="text-center text-gray-600 text-base mt-1">
+    The daily reverse trivia game.
+  </p>
+</DialogHeader>
 
         {/* Description */}
         <p className="text-base text-center mt-2">
