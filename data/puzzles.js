@@ -84,7 +84,7 @@ funFact: "The iconic phrase most associated with Holmes never appears in the ori
   ],
   answer: "Height of Mount Everest",
   keywords: ["8848", "everest", "mount everest", "mt everest", "highest mountain", "height"],
-funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gains about 4mm per year as the Indian Plate pushes under the Eurasian Plate. It's literally still growing!"
+funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gains about 4mm each year as the Indian Plate pushes under the Eurasian Plate. It's literally still growing!"
 },
 {
   number: "7",
