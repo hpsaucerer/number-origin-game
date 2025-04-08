@@ -19,8 +19,9 @@ export default function App({ Component, pageProps }) {
         <title>Numerus</title>
         <meta
           name="description"
-          content="Numerus is a daily reverse trivia game. Can you guess the significance behind today’s number?"
-        />
+    content="Numerus is a daily reverse trivia game. Can you guess the significance behind today’s number?"
+  />
+  <meta name="google-site-verification" content="NFzRNjrQmkhs56W8QgrDymrXZy2rusezlOhR2fcBDRA" />
 
         {/* Optional Open Graph tags for social previews */}
         <meta property="og:title" content="Numerus – A Daily Reverse Trivia Game" />
