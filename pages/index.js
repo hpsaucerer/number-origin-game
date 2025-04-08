@@ -50,24 +50,6 @@ const colorClassMap = {
 
   const maxGuesses = 4;
 
-{(isCorrect || attempts >= maxGuesses) && (
-<div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-center shadow-sm">
-  <p className="text-sm text-blue-900 font-medium">
-    💬 Love the game? Loathe it?
-  </p>
-  <p className="text-sm text-blue-800">
-    <a
-      href="https://forms.gle/abcdEfgh12345"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-block mt-1 font-semibold underline hover:text-blue-600 transition-colors duration-150"
-    >
-      Tell us what you think!
-    </a>
-  </p>
-</div>
-
-)}
 
 const [countdown, setCountdown] = useState("");
 
@@ -481,21 +463,18 @@ const renderCategoryPills = () => {
   <>
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
 
-     <div className="mt-6 text-center space-y-2">
-      <p className="text-lg font-semibold text-gray-800">See you again soon 👋</p>
-      <p className="text-sm text-gray-600">
-        Next puzzle in: <span className="font-mono">{countdown}</span>
-      </p>
-      <a
-        href="https://your-feedback-form-link.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block text-sm text-blue-600 hover:underline mt-2"
-      >
-        Love the game? Loathe it? Let us know what you think!
-      </a>
-    </div>
-
+<div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-center shadow-sm">
+  <p className="text-base font-semibold text-blue-900">See you again soon 👋</p>
+  <p className="text-sm text-blue-800">Next puzzle in: <span className="font-mono">{countdown}</span></p>
+  <a
+    href="https://forms.gle/CENLqWKNkuQKMG7J6"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-block mt-2 text-sm font-medium text-blue-700 hover:underline transition"
+  >
+    💬 Love the game? Loathe it? Let us know what you think!
+  </a>
+</div>
 
 
   </>
