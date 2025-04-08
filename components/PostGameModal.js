@@ -47,7 +47,8 @@ const imagePathFor = (attempts, isCorrect) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-<DialogContent className="max-w-md px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl">
+<DialogContent className="w-full max-w-md mx-auto px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl">
+
 
   <div className="relative">
     {/* ❌ Close Button */}
