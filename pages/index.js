@@ -479,9 +479,7 @@ const renderCategoryPills = () => {
       rel="noopener noreferrer"
       className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
     >
-    <span className="inline-block w-5 h-5 mr-1">💬</span>
-    <span>Fill Out the Feedback Form</span>
-
+    Fill out the Feedback Form
     </a>
   </div>
 </div>
@@ -512,7 +510,7 @@ const renderCategoryPills = () => {
       rel="noopener noreferrer"
       className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
     >
-      Fill Out the Feedback Form
+      Fill out the Feedback Form
     </a>
   </div>
 </div>
