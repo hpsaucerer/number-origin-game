@@ -146,7 +146,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   revealFormattedAt: 1,
   answer: "The temperature at which paper burns (Fahrenheit 451)",
   keywords: ["paper burns", "Ray", "Bradbury", "book", "Fahrenheit", "451"],
-  funFact: "Written in 1953, the book featured wall-sized televisions, interactive soap operas, and “seashells” that fed sound directly into the ear — eerily close to flat-screens, binge shows, and AirPods."
+  funFact: "Written in 1953, Fahrenheit 451 featured wall-sized televisions, interactive soap operas, and “seashells” that fed sound directly into the ear — eerily close to flat-screens, binge shows, and AirPods."
 },
   {
   number: "1776",
