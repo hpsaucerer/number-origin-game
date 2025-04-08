@@ -474,7 +474,7 @@ const renderCategoryPills = () => {
       💬 Love Numerus? Loathe it? Let us know what you think!
     </p>
     <a
-      href="https://forms.gle/abcdEfgh12345"
+      href="https://forms.gle/LifsBp42q2KBJRRK7"
       target="_blank"
       rel="noopener noreferrer"
       className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
@@ -505,7 +505,7 @@ const renderCategoryPills = () => {
       💬 Love Numerus? Loathe it? Let us know what you think!
     </p>
     <a
-      href="https://forms.gle/abcdEfgh12345"
+      href="https://forms.gle/LifsBp42q2KBJRRK7"
       target="_blank"
       rel="noopener noreferrer"
       className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
