@@ -663,7 +663,7 @@ const renderCategoryPills = () => {
   
 {/* Dismiss Button */}
     <button
-  className="absolute top-4 right-4 m-5 p-2 text-blue-500 hover:text-blue-600 transition"
+  className="absolute top-4 right-4 m-5 p-2 text-blue-500 hover:text-blue-600 transition">
 
       onClick={() => setShowStats(false)}
       aria-label="Close"
