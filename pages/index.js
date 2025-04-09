@@ -609,48 +609,49 @@ const renderCategoryPills = () => {
       )}
 
       {/* Instructions Popup */}
-      <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
-        className="relative max-h-[90vh] overflow-y-auto p-4 sm:max-w-md w-full flex flex-col"
-             {/* Dismiss Button */}
-<button
-  className="absolute top-4 right-4 p-2 text-blue-500 hover:text-blue-600 transition"
-  onClick={() => setShowInstructions(false)}
-  aria-label="Close"
->
+<Dialog open={showInstructions} onOpenChange={setShowInstructions}>
+  <DialogContent className="relative max-h-[90vh] overflow-y-auto p-4 sm:max-w-md w-full flex flex-col">
+    {/* Dismiss Button */}
+    <button
+      className="absolute top-4 right-4 p-2 text-blue-500 hover:text-blue-600 transition"
+      onClick={() => setShowInstructions(false)}
+      aria-label="Close"
+    >
       <X size={28} />
     </button>
-      
-        <DialogHeader>
-            <DialogTitle>
-              <h2 className="text-lg text-gray-800 mb-4">How To Play</h2>
-            </DialogTitle>
-          </DialogHeader>
-          <div className="mt-2 font-sans">
-</div>
 
-         
-<ul className="list-decimal ml-6">
-  <li>
-    <strong>Look at the number.</strong><br />
-    What could it signify?<br /><br />
-  </li>
-  <li>
-    <strong>Make a guess. You have 4 in total.</strong><br />
-    Type what you think the number relates to (e.g., 'speed of light', 'year of the moon landing').<br /><br />
-  </li>
-  <li>
-    <strong>Stuck? Reveal a clue!</strong><br />
-    Remember though, this uses up a guess.<br /><br />
-  </li>
-</ul>
+    <DialogHeader>
+      <DialogTitle>
+        <h2 className="text-lg text-gray-800 mb-4">How To Play</h2>
+      </DialogTitle>
+    </DialogHeader>
 
-<div className="flex justify-center mt-0">
-  <div className="bg-gray-100 border border-gray-300 rounded-xl p-4 w-full max-w-md text-center shadow-md">
-<h3 className="text-lg font-bold mb-1 text-gray-800">Categories</h3>
-<p className="text-sm text-gray-600 mb-3">Tap the buttons below to explore the categories in more detail.</p>
-{renderCategoryPills()}
+    <div className="mt-2 font-sans">
+      <ul className="list-decimal ml-6">
+        <li>
+          <strong>Look at the number.</strong><br />
+          What could it signify?<br /><br />
+        </li>
+        <li>
+          <strong>Make a guess. You have 4 in total.</strong><br />
+          Type what you think the number relates to (e.g., 'speed of light', 'year of the moon landing').<br /><br />
+        </li>
+        <li>
+          <strong>Stuck? Reveal a clue!</strong><br />
+          Remember though, this uses up a guess.<br /><br />
+        </li>
+      </ul>
 
-</DialogContent>
+      <div className="flex justify-center mt-0">
+        <div className="bg-gray-100 border border-gray-300 rounded-xl p-4 w-full max-w-md text-center shadow-md">
+          <h3 className="text-lg font-bold mb-1 text-gray-800">Categories</h3>
+          <p className="text-sm text-gray-600 mb-3">Tap the buttons below to explore the categories in more detail.</p>
+          {renderCategoryPills()}
+        </div>
+      </div>
+    </div>
+
+  </DialogContent>
 </Dialog>
 
 
