@@ -1,5 +1,4 @@
 export function Dialog({ open, onOpenChange, children }) {
-  // Minimal example to show/hide a modal
   if (!open) return null;
   return (
     <div
@@ -13,26 +12,29 @@ export function Dialog({ open, onOpenChange, children }) {
       }}
       onClick={() => onOpenChange(false)}
     >
-<div
-  onClick={(e) => e.stopPropagation()}
-  style={{
-    background: "#fff",
-    maxWidth: "500px",   // or whatever you want (e.g. 500px, 40rem)
-    width: "100%",
-    margin: "10% auto",
-    padding: "1rem",
-    borderRadius: "8px"
-  }}
->
-
-        {children}
-      </div>
+      {/* Wrap children in a consistent container */}
+      {children}
     </div>
   );
 }
 
-export function DialogContent({ children }) {
-  return <div>{children}</div>;
+export function DialogContent({ children, className = "", style = {} }) {
+  return (
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className={className}
+      style={{
+        background: "#fff",
+        width: "100%",
+        margin: "10% auto",
+        padding: "1rem",
+        borderRadius: "8px",
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 export function DialogHeader({ children }) {
