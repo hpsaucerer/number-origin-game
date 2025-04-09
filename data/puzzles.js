@@ -19,8 +19,9 @@ const puzzles = [
     clues: [
       "A fundamental number in physics.",
       "Things start bubbling at this temperature.",
-      "H2O by another name"
+      "Now look at the number. Psst! It's metric counterpart is 100."
     ],
+    revealFormattedAt: 3,
     answer: "Boiling point of water in Fahrenheit",
     keywords: ["boiling", "water", "fahrenheit", "212"],
     funFact: "At sea level, water boils at 212°F (100°C). But at the top of Mount Everest, the air pressure is so low that water boils at just 160°F (71°C) — not even hot enough to make decent tea."
