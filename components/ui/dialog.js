@@ -11,9 +11,9 @@ export function Dialog({ open, onOpenChange, children }) {
         height: "100vh",
         background: "rgba(0,0,0,0.5)",
         display: "flex", // 🆕 center content horizontally and vertically
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "center",
-        padding: "1rem", // optional, keeps content from touching edges on mobile
+        padding: "3rem", // optional, keeps content from touching edges on mobile
         boxSizing: "border-box", // optional, ensures padding is respected
       }}
       onClick={() => onOpenChange(false)}
