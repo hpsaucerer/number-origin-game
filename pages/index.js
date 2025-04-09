@@ -666,7 +666,7 @@ const renderCategoryPills = () => {
 <button
   onClick={() => setShowStats(false)}
   aria-label="Close"
-  className="absolute top-4 right-4 p-2 text-blue-500 hover:text-blue-600 transition"
+  className="absolute top-0 right-0 p-2 text-blue-500 hover:text-blue-600 transition"
 >
   <X size={28} />
 </button>
