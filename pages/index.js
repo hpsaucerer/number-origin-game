@@ -701,7 +701,7 @@ const renderCategoryPills = () => {
       <img
         src="/icons/Ring-icon.png"
         alt="Ring o' Results"
-        className="w-36 h-36 mx-auto mb-[-64px]"
+        className="w-45 h-45 mx-auto mb-[-64px]"
       />
 
       <ResponsiveContainer width={300} height={300}>
