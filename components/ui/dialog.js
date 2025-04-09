@@ -1,22 +1,39 @@
-export function DialogContent({ children, className = "", style = {} }) {
+export function Dialog({ open, onOpenChange, children }) {
+  // Minimal example to show/hide a modal
+  if (!open) return null;
   return (
     <div
-      onClick={(e) => e.stopPropagation()}
-      className={className}
       style={{
-        background: "#fff",
-        width: "100%",
-        margin: "10% auto",
-        padding: "1rem",
-        borderRadius: "8px",
-        ...style,
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "rgba(0,0,0,0.5)"
       }}
+      onClick={() => onOpenChange(false)}
     >
-      {children}
+<div
+  onClick={(e) => e.stopPropagation()}
+  style={{
+    background: "#fff",
+    maxWidth: "600px",   // or whatever you want (e.g. 500px, 40rem)
+    width: "100%",
+    margin: "10% auto",
+    padding: "1rem",
+    borderRadius: "8px"
+  }}
+>
+
+        {children}
+      </div>
     </div>
   );
 }
 
+export function DialogContent({ children }) {
+  return <div>{children}</div>;
+}
 
 export function DialogHeader({ children }) {
   return <div style={{ marginBottom: "0.5rem" }}>{children}</div>;
