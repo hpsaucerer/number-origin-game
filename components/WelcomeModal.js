@@ -29,7 +29,7 @@ export default function WelcomeModal({ open, onOpenChange, showTutorial, setShow
 
 <div className="mt-4 flex justify-center">
   <img
-    src="/tutorial.gif"
+    src="/tutorialnew.gif"
     alt="How to play example"
     className="max-w-full w-[300px] rounded shadow-lg"
   />
