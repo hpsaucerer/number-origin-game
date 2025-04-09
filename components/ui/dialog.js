@@ -1,5 +1,6 @@
 export function Dialog({ open, onOpenChange, children }) {
   if (!open) return null;
+
   return (
     <div
       style={{
@@ -8,15 +9,20 @@ export function Dialog({ open, onOpenChange, children }) {
         left: 0,
         width: "100vw",
         height: "100vh",
-        background: "rgba(0,0,0,0.5)"
+        background: "rgba(0,0,0,0.5)",
+        display: "flex", // 🆕 center content horizontally and vertically
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem", // optional, keeps content from touching edges on mobile
+        boxSizing: "border-box", // optional, ensures padding is respected
       }}
       onClick={() => onOpenChange(false)}
     >
-      {/* Wrap children in a consistent container */}
       {children}
     </div>
   );
 }
+
 
 export function DialogContent({ children, className = "", style = {} }) {
   return (
