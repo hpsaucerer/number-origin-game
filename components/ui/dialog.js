@@ -17,7 +17,7 @@ export function Dialog({ open, onOpenChange, children }) {
   onClick={(e) => e.stopPropagation()}
   style={{
     background: "#fff",
-    maxWidth: "600px",   // or whatever you want (e.g. 500px, 40rem)
+    maxWidth: "500px",   // or whatever you want (e.g. 500px, 40rem)
     width: "100%",
     margin: "10% auto",
     padding: "1rem",
