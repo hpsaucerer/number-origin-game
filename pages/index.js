@@ -376,7 +376,7 @@ const renderCategoryPills = () => {
   <img
     src={`/icons/${cat.label.toLowerCase()}.png`}
     alt={`${cat.label} icon`}
-    className="w-4 h-4"
+    className="w-8 h-8"
   />
   {cat.label}
 </button>
