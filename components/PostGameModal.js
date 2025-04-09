@@ -65,7 +65,7 @@ const imagePathFor = (attempts, isCorrect) => {
   <img
     src={imagePathFor(attempts, isCorrect)}
     alt=""
-    className="w-36 h-auto block"
+    className="w-38 h-auto block"
   />
   <p className="mt-1 text-sm font-semibold text-gray-800">
     {isCorrect ? `${attempts + 1} of 4 guesses` : `All 4 guesses used`}
