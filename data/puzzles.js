@@ -259,18 +259,6 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   funFact: "The digits of Pi go on forever — but in 2019, Google calculated it to 31.4 trillion digits. That’s a lot of dessert."
 },
   {
-  number: 1729,
-  formatted: "1,729",
-  answer: "Hardy-Ramanujan Number",
-  clues: [
-    "It’s the smallest number expressible as the sum of two cubes in two different ways.",
-    "Came up in a cab ride with two mathematicians.",
-    "A legend from India made it famous."
-  ],
-  keywords: ["1729", "ramanujan", "math", "hardy", "cube sum"],
-  funFact: "When Hardy told Ramanujan 1729 was a dull number, Ramanujan immediately replied: 'No, it’s the smallest number expressible as the sum of two cubes in two ways!'"
-},
-  {
   number: 6174,
   formatted: "6,174",
   answer: "Kaprekar's Constant",
@@ -283,18 +271,6 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   funFact: "Almost any 4-digit number (with at least two different digits) will reach 6174 in 7 steps or less. It’s like math’s version of gravity."
 },
  {
-  number: 1089,
-  formatted: "1,089",
-  answer: "Reverse Math Trick",
-  clues: [
-    "Start with any 3-digit number, reverse it, subtract, reverse again…",
-    "You’ll always land here, no matter what.",
-    "A math magician’s favorite reveal."
-  ],
-  keywords: ["1089", "number trick", "math magic", "reversal", "puzzle"],
-  funFact: "Try it: Pick 732. Reverse (237), subtract (732−237 = 495), reverse (594), add: 495 + 594 = 1089. It always works. Spooky."
-},
- {
   number: 73,
   formatted: "73",
   answer: "The Best Number (Sheldon Cooper)",
@@ -305,7 +281,44 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   keywords: ["sheldon cooper", "prime", "binary", "73", "big bang theory"],
   funFact: "In *The Big Bang Theory*, Sheldon declares 73 the best number: it's the 21st prime, its reverse (37) is the 12th prime, and 21 = 7×3. Geek heaven."
-} 
+},
+  {
+  number: 46,
+  formatted: "46",
+  answer: "Human chromosomes",
+  clues: [
+    "This number is found in nearly every cell in your body.",
+    "First confirmed by microscope-based studies in the 1950s.",
+    "They come in pairs, one from each parent."
+  ],
+  keywords: ["genetics", "chromosomes", "human", "DNA", "biology", "diploid"],
+  funFact: "Humans have 46 chromosomes — 44 autosomes and 2 sex chromosomes — in nearly every cell. This number was correctly established in the 1950s after decades of miscounting!"
+},
+  {
+  number: 206,
+  formatted: "206",
+  answer: "Bones in the human body",
+  clues: [
+    "The framework is all there — 206 strong.",
+    "This number supports posture, protection, and movement.",
+    "You might be familiar with it from an X-ray count."
+  ],
+  keywords: ["bones", "skeleton", "human", "anatomy", "x-ray", "osteology"],
+  funFact: "More than half of your 206 bones are in your hands and feet — 106 of them, to be exact. Your limbs are biomechanical masterpieces of structure and movement."
+},
+  {
+  number: 9.58,
+  formatted: "9.58s",
+  answer: "100m sprint world record",
+  clues: [
+    "This number left the competition in its dust — and the clock in disbelief.",
+    "Look again at the number - caught up to speed?",
+    "This world record was set in Berlin in 2009."
+  ],
+  revealFormattedAt: 2,
+  keywords: ["sprint", "100m", "track", "world record", "speed", "Usain Bolt", "athletics", "running"],
+  funFact: "Usain Bolt hit a top speed of 27.8 mph (44.7 km/h) during his 9.58-second 100m dash — faster than most electric scooters!"
+}
 ];
 
 export default puzzles;
