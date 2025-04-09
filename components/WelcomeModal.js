@@ -6,7 +6,7 @@ export default function WelcomeModal({ open, onOpenChange, showTutorial, setShow
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
 
-      <DialogContent className="w-full max-w-[480px] mx-auto rounded-xl">
+      <DialogContent className="w-full max-w-[400px] mx-auto rounded-xl">
 
 <DialogHeader>
   <p className="text-xl font-bold text-center">
