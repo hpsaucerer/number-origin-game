@@ -650,11 +650,10 @@ const renderCategoryPills = () => {
 <p className="text-sm text-gray-600 mb-3">Tap the buttons below to explore the categories in more detail.</p>
 {renderCategoryPills()}
 
-  </div>
 </div>
 
-        </DialogContent>
-      </Dialog>
+</DialogContent>
+</Dialog>
 
 {/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
