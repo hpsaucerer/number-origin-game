@@ -371,15 +371,16 @@ const renderCategoryPills = () => {
     e.stopPropagation();
     toggleTooltip(idx);
   }}
-  className={`category-pill flex items-center gap-2 px-3 py-1 rounded-full font-semibold ${cat.color}`}
+  className={`category-pill flex items-center justify-center gap-1 px-3 py-1 rounded-full font-semibold text-sm ${cat.color}`}
 >
   <img
     src={`/icons/${cat.label.toLowerCase()}.png`}
     alt={`${cat.label} icon`}
-    className="w-8 h-8"
+    className="w-9 h-9"
   />
-  {cat.label}
+  <span className="leading-none">{cat.label}</span>
 </button>
+
 
 
 
