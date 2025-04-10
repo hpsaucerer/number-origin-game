@@ -280,7 +280,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
     "A fictional physicist claimed it as the 'best number'."
   ],
   keywords: ["sheldon cooper", "prime", "binary", "73", "big bang theory"],
-  funFact: "In <div className="italic">The Big Bang Theory</div>, Sheldon declares 73 the best number: it's the 21st prime, its reverse (37) is the 12th prime, and 21 = 7×3. Geek heaven."
+  funFact: "In 'The Big Bang Theory', Sheldon declares 73 the best number: it's the 21st prime, its reverse (37) is the 12th prime, and 21 = 7×3. Geek heaven."
 },
   {
   number: 46,
