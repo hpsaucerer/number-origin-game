@@ -527,7 +527,6 @@ const renderCategoryPills = () => {
               else if (key === "Clear") setGuess("");
               else setGuess((prev) => prev + key.toLowerCase());
             }}
-          />
         </div>
         </div>
       </>
