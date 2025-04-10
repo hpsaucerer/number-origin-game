@@ -519,14 +519,16 @@ const renderCategoryPills = () => {
 
         {/* Mobile Keyboard */}
         <div className="block md:hidden w-full max-w-sm mx-auto px-2">
-          <OnScreenKeyboard
-            onKeyPress={(key) => {
-              if (key === "↵") handleGuess();
-              else if (key === "←") setGuess((prev) => prev.slice(0, -1));
-              else if (key === "␣") setGuess((prev) => prev + " ");
-              else if (key === "Clear") setGuess("");
-              else setGuess((prev) => prev + key.toLowerCase());
-            }}
+<OnScreenKeyboard
+  onKeyPress={(key) => {
+    if (key === "↵") handleGuess();
+    else if (key === "←") setGuess((prev) => prev.slice(0, -1));
+    else if (key === "␣") setGuess((prev) => prev + " ");
+    else if (key === "Clear") setGuess("");
+    else setGuess((prev) => prev + key.toLowerCase());
+  }}
+/>
+
         </div>
         </div>
       </>
