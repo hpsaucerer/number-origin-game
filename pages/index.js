@@ -534,9 +534,11 @@ const renderCategoryPills = () => {
         }}
       />
     </div>
-  </div> {/* closes the input wrapper */}
-)} {/* closes the conditional block */}  
-  </CardContent>
+    </div> {/* closes the input wrapper */}
+          </>
+  )} {/* closes the conditional check */}
+</CardContent>
+
 
 {isCorrect && (
   <Button
