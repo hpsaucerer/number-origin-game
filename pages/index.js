@@ -534,7 +534,7 @@ const renderCategoryPills = () => {
         }}
       />
     </div>
-     </>   
+  </>   
   </CardContent>
 
 {isCorrect && (
