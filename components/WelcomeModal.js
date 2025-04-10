@@ -16,7 +16,7 @@ export default function WelcomeModal({ open, onOpenChange, showTutorial, setShow
   <p className="text-xl font-bold text-center">
     Numerus
   </p>
-  <p className="text-center text-gray-600 text-base mt-1">
+  <p className="text-center text-gray-600 text-base mt-1 italic">
     The daily reverse trivia game.
   </p>
 </DialogHeader>
