@@ -739,7 +739,7 @@ const renderCategoryPills = () => {
               <Label content={renderCenterLabel} position="center" />
             </Pie>
                  </PieChart>
-      </div> {/* chart wrapper */}
+      </div>
 
     </DialogContent>
   </Dialog>
