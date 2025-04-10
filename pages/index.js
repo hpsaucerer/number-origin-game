@@ -678,96 +678,77 @@ const renderCategoryPills = () => {
 <Dialog open={showStats} onOpenChange={setShowStats}>
   <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-hidden">
 
-   {/* Title */}
+    {/* Title */}
     <h2 className="text-lg text-gray-800 mb-4">Statistics</h2>
-  
-{/* Dismiss Button */}
-<button
-  onClick={() => setShowStats(false)}
-  aria-label="Close"
-  className="absolute top-0 right-0 p-2 text-blue-500 hover:text-blue-600 transition"
->
-  <X size={28} />
-</button>
 
+    {/* Dismiss Button */}
+    <button
+      onClick={() => setShowStats(false)}
+      aria-label="Close"
+      className="absolute top-0 right-0 p-2 text-blue-500 hover:text-blue-600 transition"
+    >
+      <X size={28} />
+    </button>
 
-    {/* Formatted stat boxes */}
+    {/* Stat Boxes */}
     <div className="grid grid-cols-4 gap-4 text-center my-6">
-      <div>
-        <p className="text-3xl font-bold">{stats.gamesPlayed}</p>
-        <p className="text-sm text-gray-600">Played</p>
-      </div>
-      <div>
-        <p className="text-3xl font-bold">
-          {stats.gamesPlayed > 0
-            ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
-            : 0}
-        </p>
-        <p className="text-sm text-gray-600">Win %</p>
-      </div>
-      <div>
-        <p className="text-3xl font-bold">{stats.currentStreak}</p>
-        <p className="text-sm text-gray-600">Current<br />Streak</p>
-      </div>
-      <div>
-        <p className="text-3xl font-bold">{stats.maxStreak}</p>
-        <p className="text-sm text-gray-600">Max<br />Streak</p>
-      </div>
+      <div><p className="text-3xl font-bold">{stats.gamesPlayed}</p><p className="text-sm text-gray-600">Played</p></div>
+      <div><p className="text-3xl font-bold">{stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}</p><p className="text-sm text-gray-600">Win %</p></div>
+      <div><p className="text-3xl font-bold">{stats.currentStreak}</p><p className="text-sm text-gray-600">Current<br />Streak</p></div>
+      <div><p className="text-3xl font-bold">{stats.maxStreak}</p><p className="text-sm text-gray-600">Max<br />Streak</p></div>
     </div>
 
-    {/* Chart + Ring Icon */}
+    {/* Ring and Chart */}
     <div className="flex flex-col items-center space-y-4">
-      <img
-        src="/icons/Ring-icon.png"
-        alt="Ring o' Results"
-        className="w-36 h-36 mx-auto mb-[-64px]"
-      />
+      <img src="/icons/Ring-icon.png" alt="Ring o' Results" className="w-36 h-36 mx-auto mb-[-64px]" />
 
-
-{showChart && totalGames > 0 && (
-  <div
-    style={{
-      opacity: showChart ? 1 : 0,
-      transition: 'opacity 0.5s ease-in-out',
-      border: '2px solid red',
-      background: '#f8f8f8',
-      width: 320,
-      height: 320,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: '10px',
-      margin: '0 auto',
-    }}
-  >
-    <PieChart width={300} height={300}>
-      <Pie
-        key={`pie-${chartVersion}`}
-        data={data}
-        dataKey="value"
-        cx="50%"
-        cy="50%"
-        innerRadius={60}
-        outerRadius={100}
-        label={combinedLabel}
-        labelLine={false}
-        startAngle={90}
-        endAngle={-270}
-        isAnimationActive={true}
-      >
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-        ))}
-        <Label content={renderCenterLabel} position="center" />
-      </Pie>
-        </PieChart>
-      </div>
-    )}
+      {showChart && totalGames > 0 && (
+        <div
+          style={{
+            opacity: showChart ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out',
+            border: '2px solid red',
+            background: '#f8f8f8',
+            width: 320,
+            height: 320,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '10px',
+            margin: '0 auto',
+          }}
+        >
+          <PieChart width={300} height={300}>
+            <Pie
+              key={`pie-${chartVersion}`}
+              data={data}
+              dataKey="value"
+              cx="50%"
+              cy="50%"
+              innerRadius={60}
+              outerRadius={100}
+              label={combinedLabel}
+              labelLine={false}
+              startAngle={90}
+              endAngle={-270}
+              isAnimationActive={true}
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+              <Label content={renderCenterLabel} position="center" />
+            </Pie>
+          </PieChart>
+        </div>
+      )}
+    </div>
 
   </DialogContent>
 </Dialog>
+
 </>
 );
 }
+
 
 
