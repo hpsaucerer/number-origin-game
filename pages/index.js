@@ -737,30 +737,28 @@ const renderCategoryPills = () => {
       margin: '0 auto',
     }}
   >
-    <PieChart
-      width={300}
-      height={300}
-      key={`chart-${chartVersion}`}
-    >
-      <Pie
-        data={data}
-        dataKey="value"
-        cx="50%"
-        cy="50%"
-        innerRadius={60}
-        outerRadius={100}
-        startAngle={90}
-        endAngle={-270}
-        label={combinedLabel}
-        labelLine={false}
-        isAnimationActive={true}
-      >
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-        ))}
-        <Label content={renderCenterLabel} position="center" />
-      </Pie>
-    </PieChart>
+<PieChart width={300} height={300}>
+  <Pie
+    key={`pie-${chartVersion}`} // <- move key here
+    data={data}
+    dataKey="value"
+    cx="50%"
+    cy="50%"
+    innerRadius={60}
+    outerRadius={100}
+    startAngle={90}
+    endAngle={-270}
+    label={combinedLabel}
+    labelLine={false}
+    isAnimationActive={true}
+  >
+    {data.map((entry, index) => (
+      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+    ))}
+    <Label content={renderCenterLabel} position="center" />
+  </Pie>
+</PieChart>
+
   </div>
 )}
 
