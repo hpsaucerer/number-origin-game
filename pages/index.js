@@ -44,6 +44,7 @@ const colorClassMap = {
   const [showTutorial, setShowTutorial] = useState(false);
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
+  const animatedData = useMemo(() => [...data], [chartVersion]);
 
   const toggleTooltip = (idx) => {
   setOpenTooltip((prev) => (prev === idx ? null : idx));
@@ -719,7 +720,7 @@ const renderCategoryPills = () => {
   <ResponsiveContainer width={300} height={300}>
     <PieChart key={`chart-${chartVersion}`}>
       <Pie
-        data={data}
+        data={animatedData}
         dataKey="value"
         cx="50%"
         cy="50%"
