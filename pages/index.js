@@ -764,8 +764,4 @@ const renderCategoryPills = () => {
   </div>
 )}
 
-    </DialogContent>
-  </Dialog>
-</>
-
 
