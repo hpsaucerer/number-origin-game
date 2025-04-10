@@ -488,49 +488,55 @@ const renderCategoryPills = () => {
     ))}
 
     {/* Input and buttons */}
-    {!isCorrect && attempts < maxGuesses && (
-      <>
-        <div className="mt-4 flex flex-col space-y-2">
-          {inputError && <p className="text-red-500 text-sm text-center">{inputError}</p>}
 
-          <p className="text-sm text-gray-600 text-center">
-            {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
-          </p>
+{!isCorrect && attempts < maxGuesses && (
+  <>
+    <div className="mt-4 flex flex-col space-y-2">
+      {inputError && (
+        <p className="text-red-500 text-sm text-center">{inputError}</p>
+      )}
+      <p className="text-sm text-gray-600 mb-1 text-center">
+        {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
+      </p>
 
-          <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-            <Input
-              value={guess}
-              onChange={(e) => setGuess(e.target.value)}
-              placeholder="Enter your guess..."
-              className="flex-1"
-            />
-            <Button onClick={handleGuess} className="bg-[#3B82F6] text-white">
-              Submit
-            </Button>
-            <Button
-              onClick={handleClueReveal}
-              disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
-              variant="outline"
-            >
-              Reveal a Clue
-            </Button>
-          </div>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
+        <Input
+          value={guess}
+          onChange={(e) => setGuess(e.target.value)}
+          placeholder="Enter your guess..."
+          className="flex-1"
+        />
+        <Button onClick={handleGuess} className="bg-[#3B82F6] text-white">
+          Submit
+        </Button>
+        <Button
+          onClick={handleClueReveal}
+          disabled={
+            revealedClues.length >= puzzle.clues.length ||
+            attempts >= maxGuesses
+          }
+          variant="outline"
+        >
+          Reveal a Clue
+        </Button>
+      </div>
+    </div>
 
-        {/* Mobile Keyboard */}
-        <div className="block md:hidden w-full max-w-sm mx-auto px-2">
-<OnScreenKeyboard
-  onKeyPress={(key) => {
-    if (key === "↵") handleGuess();
-    else if (key === "←") setGuess((prev) => prev.slice(0, -1));
-    else if (key === "␣") setGuess((prev) => prev + " ");
-    else if (key === "Clear") setGuess("");
-    else setGuess((prev) => prev + key.toLowerCase());
-  }}
-/>
-
-</div>
+    {/* Mobile Keyboard */}
+    <div className="block md:hidden w-full max-w-sm mx-auto px-2">
+      <OnScreenKeyboard
+        onKeyPress={(key) => {
+          if (key === "↵") handleGuess();
+          else if (key === "←") setGuess((prev) => prev.slice(0, -1));
+          else if (key === "␣") setGuess((prev) => prev + " ");
+          else if (key === "Clear") setGuess("");
+          else setGuess((prev) => prev + key.toLowerCase());
+        }}
+      />
+    </div>
+  </>
 )}
+
 
 
   </CardContent>
