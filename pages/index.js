@@ -27,6 +27,18 @@ const colorClassMap = {
   red: "text-red-700 bg-red-100 hover:bg-red-200",
 };
 
+const KeyboardKey = ({ label, onClick, wide }) => (
+  <button
+    onClick={onClick}
+    className={`bg-gray-300 rounded text-black font-bold h-12 ${
+      wide ? "w-16" : "w-10"
+    } flex items-center justify-center text-sm hover:bg-gray-400 transition`}
+  >
+    {label}
+  </button>
+);
+
+
   export default function Home() {
     
   const [openTooltip, setOpenTooltip] = useState(null);
@@ -221,7 +233,17 @@ setGuess("");
     setRevealedClues([...revealedClues, puzzle.clues[revealedClues.length]]);
     setAttempts(attempts + 1);
   };
+const handleKeyPress = (key) => {
+  if (key === "↵") {
+    handleGuess();
+  } else if (key === "←") {
+    setGuess((prev) => prev.slice(0, -1));
+  } else {
+    setGuess((prev) => prev + key.toLowerCase());
+  }
+};
 
+    
 const shareTextHandler = () => {
   shareResult({ isCorrect, attempts, puzzle });
 
@@ -571,23 +593,55 @@ const renderCategoryPills = () => {
     </div>
   </div>
 
-  <div className="w-full max-w-sm mx-auto px-2">
-    <OnScreenKeyboard
-      onKeyPress={(key) => {
-        if (key === "↵") {
-          handleGuess();
-        } else if (key === "←") {
-          setGuess((prev) => prev.slice(0, -1));
-        } else if (key === "␣") {
-          setGuess((prev) => prev + " ");
-        } else if (key === "Clear") {
-          setGuess("");
-        } else {
-          setGuess((prev) => prev + key.toLowerCase());
-        }
-      }}
-    />
+{/* Mobile Keyboard */}
+<div className="block md:hidden w-full max-w-sm mx-auto px-2">
+  <OnScreenKeyboard
+    onKeyPress={(key) => {
+      if (key === "↵") {
+        handleGuess();
+      } else if (key === "←") {
+        setGuess((prev) => prev.slice(0, -1));
+      } else if (key === "␣") {
+        setGuess((prev) => prev + " ");
+      } else if (key === "Clear") {
+        setGuess("");
+      } else {
+        setGuess((prev) => prev + key.toLowerCase());
+      }
+    }}
+  />
+</div>
+
+{/* Desktop Keyboard */}
+<div className="hidden md:block mt-8">
+  <div className="flex flex-col items-center gap-2">
+    {/* Row 1 */}
+    <div className="flex gap-2">
+      {"QWERTYUIOP".split("").map((key) => (
+        <KeyboardKey key={key} label={key} onClick={() => handleKeyPress(key)} />
+      ))}
+    </div>
+
+    {/* Row 2 */}
+    <div className="flex gap-2 mt-1">
+      <div className="w-6" /> {/* Spacer for alignment */}
+      {"ASDFGHJKL".split("").map((key) => (
+        <KeyboardKey key={key} label={key} onClick={() => handleKeyPress(key)} />
+      ))}
+    </div>
+
+    {/* Row 3 */}
+    <div className="flex gap-2 mt-1">
+      <KeyboardKey label="ENTER" wide onClick={() => handleKeyPress("↵")} />
+      {"ZXCVBNM".split("").map((key) => (
+        <KeyboardKey key={key} label={key} onClick={() => handleKeyPress(key)} />
+      ))}
+      <KeyboardKey label="⌫" wide onClick={() => handleKeyPress("←")} />
+    </div>
   </div>
+</div>
+
+          
 </>
 )}
         </CardContent>
