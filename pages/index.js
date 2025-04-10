@@ -717,7 +717,7 @@ const renderCategoryPills = () => {
 
 {showChart && (
   <ResponsiveContainer width={300} height={300}>
-    <PieChart>
+    <PieChart key={showChart ? "animated" : "static"}>
       <Pie
         data={data}
         dataKey="value"
@@ -737,6 +737,7 @@ const renderCategoryPills = () => {
     </PieChart>
   </ResponsiveContainer>
 )}
+
 
           
     </div>
