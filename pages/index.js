@@ -65,6 +65,7 @@ const [countdown, setCountdown] = useState("");
   ];
 
     const animatedData = useMemo(() => [...data], [chartVersion]);
+
     
 useEffect(() => {
   const updateCountdown = () => {
