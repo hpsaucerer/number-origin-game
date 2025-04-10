@@ -626,7 +626,7 @@ const renderCategoryPills = () => {
       </DialogTitle>
     </DialogHeader>
 
-    <div className="mt-2 font-sans">
+    <div className="mt-2 font-vietnam">
       <ul className="list-decimal ml-6">
         <li>
           <strong>Look at the number.</strong><br />
