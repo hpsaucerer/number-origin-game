@@ -677,7 +677,6 @@ const renderCategoryPills = () => {
 {/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
   <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-hidden">
-
     {/* Title */}
     <h2 className="text-lg text-gray-800 mb-4">Statistics</h2>
 
@@ -738,14 +737,17 @@ const renderCategoryPills = () => {
               ))}
               <Label content={renderCenterLabel} position="center" />
             </Pie>
-                 </PieChart>
-      </div>
+          </PieChart>
+        </div>
+      )}
+    </div>
+  </DialogContent>
+</Dialog>
 
-    </DialogContent>
-  </Dialog>
-</>
+  </>
 );
 }
+
 
 
 
