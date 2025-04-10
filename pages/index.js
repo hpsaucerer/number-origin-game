@@ -3,7 +3,7 @@
 import WelcomeModal from "../components/WelcomeModal";
 import InteractiveTutorial from "../components/InteractiveTutorial";
 import OnScreenKeyboard from "../components/OnScreenKeyboard";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { BarChart, Share2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
@@ -38,13 +38,11 @@ const colorClassMap = {
   const [isCorrect, setIsCorrect] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
-  const [chartVersion, setChartVersion] = useState(0);
   const [inputError, setInputError] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
   const [showTutorial, setShowTutorial] = useState(false);
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
-  const [showChart, setShowChart] = useState(false);
 
   const toggleTooltip = (idx) => {
   setOpenTooltip((prev) => (prev === idx ? null : idx));
@@ -55,7 +53,6 @@ const colorClassMap = {
 
 const [countdown, setCountdown] = useState("");
 
-  
 useEffect(() => {
   const updateCountdown = () => {
     const now = new Date();
@@ -85,18 +82,6 @@ useEffect(() => {
     guessDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, failed: 0 },
   });
 
-  // Pie chart data
-  const guessDistribution = stats.guessDistribution || { 1: 0, 2: 0, 3: 0, 4: 0, failed: 0 };
-  const data = [
-    { name: "1 Guess", value: guessDistribution[1] },
-    { name: "2 Guesses", value: guessDistribution[2] },
-    { name: "3 Guesses", value: guessDistribution[3] },
-    { name: "4 Guesses", value: guessDistribution[4] },
-    { name: "Failed", value: guessDistribution.failed || 0 },
-  ];
-
-const totalGames = data.reduce((sum, entry) => sum + (entry?.value || 0), 0);
-    
   useEffect(() => {
      const savedStats = localStorage.getItem("numerusStats");
     if (savedStats) {
@@ -114,20 +99,7 @@ useEffect(() => {
   setDateString(new Date().toLocaleDateString());
 }, []);
 
-useEffect(() => {
-  let timeout;
-  if (showStats) {
-    timeout = setTimeout(() => {
-      setChartVersion(prev => prev + 1);
-      setShowChart(true); // 👈 Delay chart mount
-    }, 300); // Adjust if needed
-  } else {
-    setShowChart(false); // 👈 Immediately unmount on close
-  }
-  return () => clearTimeout(timeout);
-}, [showStats]);
-
-
+  
 useEffect(() => {
   const handleClickOutside = (event) => {
     if (
@@ -264,8 +236,17 @@ const shareTextHandler = () => {
 };
 
 
-  // Sum of all slices
+  // Pie chart data
+  const data = [
+    { name: "1 Guess", value: stats.guessDistribution[1] },
+    { name: "2 Guesses", value: stats.guessDistribution[2] },
+    { name: "3 Guesses", value: stats.guessDistribution[3] },
+    { name: "4 Guesses", value: stats.guessDistribution[4] },
+    { name: "Failed", value: stats.guessDistribution.failed || 0 },
+  ];
 
+  // Sum of all slices
+  const totalGames = data.reduce((sum, entry) => sum + entry.value, 0);
 
   const COLORS = ["#3B82F6", "#60A5FA", "#93C5FD", "#2563EB", "#F87171"];
 
@@ -358,7 +339,7 @@ const renderCategoryPills = () => {
     },
     {
       label: "Science",
-      color: "bg-orange-200 text-orange-800",
+      color: "bg-pink-200 text-pink-800",
       tooltip: "Atomic numbers, scientific constants, measurements. ",
     },
     {
@@ -632,7 +613,7 @@ const renderCategoryPills = () => {
   <DialogContent className="relative max-h-[90vh] overflow-y-auto p-4 sm:max-w-md w-full flex flex-col">
     {/* Dismiss Button */}
     <button
-      className="absolute top-0 right-0 p-2 text-blue-500 hover:text-blue-600 transition"
+      className="absolute top-4 right-4 p-2 text-blue-500 hover:text-blue-600 transition"
       onClick={() => setShowInstructions(false)}
       aria-label="Close"
     >
@@ -645,7 +626,7 @@ const renderCategoryPills = () => {
       </DialogTitle>
     </DialogHeader>
 
-    <div className="mt-2">
+    <div className="mt-2 font-sans">
       <ul className="list-decimal ml-6">
         <li>
           <strong>Look at the number.</strong><br />
@@ -677,76 +658,78 @@ const renderCategoryPills = () => {
 {/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
   <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-hidden">
-    {/* Title */}
-    <h2 className="text-lg text-gray-800 mb-4">Statistics</h2>
 
-    {/* Dismiss Button */}
+   {/* Title */}
+    <h2 className="text-lg text-gray-800 mb-4">Statistics</h2>
+  
+{/* Dismiss Button */}
     <button
+  className="absolute top-4 right-4 m-5 p-2 text-blue-500 hover:text-blue-600 transition">
+
       onClick={() => setShowStats(false)}
       aria-label="Close"
-      className="absolute top-0 right-0 p-2 text-blue-500 hover:text-blue-600 transition"
     >
       <X size={28} />
     </button>
 
-    {/* Stat Boxes */}
+    {/* Formatted stat boxes */}
     <div className="grid grid-cols-4 gap-4 text-center my-6">
-      <div><p className="text-3xl font-bold">{stats.gamesPlayed}</p><p className="text-sm text-gray-600">Played</p></div>
-      <div><p className="text-3xl font-bold">{stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}</p><p className="text-sm text-gray-600">Win %</p></div>
-      <div><p className="text-3xl font-bold">{stats.currentStreak}</p><p className="text-sm text-gray-600">Current<br />Streak</p></div>
-      <div><p className="text-3xl font-bold">{stats.maxStreak}</p><p className="text-sm text-gray-600">Max<br />Streak</p></div>
+      <div>
+        <p className="text-3xl font-bold">{stats.gamesPlayed}</p>
+        <p className="text-sm text-gray-600">Played</p>
+      </div>
+      <div>
+        <p className="text-3xl font-bold">
+          {stats.gamesPlayed > 0
+            ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
+            : 0}
+        </p>
+        <p className="text-sm text-gray-600">Win %</p>
+      </div>
+      <div>
+        <p className="text-3xl font-bold">{stats.currentStreak}</p>
+        <p className="text-sm text-gray-600">Current<br />Streak</p>
+      </div>
+      <div>
+        <p className="text-3xl font-bold">{stats.maxStreak}</p>
+        <p className="text-sm text-gray-600">Max<br />Streak</p>
+      </div>
     </div>
 
-    {/* Ring and Chart */}
+    {/* Chart + Ring Icon */}
     <div className="flex flex-col items-center space-y-4">
-      <img src="/icons/Ring-icon.png" alt="Ring o' Results" className="w-36 h-36 mx-auto mb-[-64px]" />
+      <img
+        src="/icons/Ring-icon.png"
+        alt="Ring o' Results"
+        className="w-36 h-36 mx-auto mb-[-64px]"
+      />
 
-      {showChart && totalGames > 0 && (
-        <div
-          style={{
-            opacity: showChart ? 1 : 0,
-            transition: 'opacity 0.5s ease-in-out',
-            border: '2px solid red',
-            background: '#f8f8f8',
-            width: 320,
-            height: 320,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '10px',
-            margin: '0 auto',
-          }}
-        >
-          <PieChart width={300} height={300}>
-            <Pie
-              key={`pie-${chartVersion}`}
-              data={data}
-              dataKey="value"
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={100}
-              label={combinedLabel}
-              labelLine={false}
-              startAngle={90}
-              endAngle={-270}
-              isAnimationActive={true}
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-              <Label content={renderCenterLabel} position="center" />
-            </Pie>
-          </PieChart>
-        </div>
-      )}
+      <ResponsiveContainer width={300} height={300}>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={100}
+            label={combinedLabel}
+            labelLine={false}
+            isAnimationActive={true}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+            <Label content={renderCenterLabel} position="center" />
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
     </div>
   </DialogContent>
 </Dialog>
-
+    </div>
   </>
 );
 }
 
-
-
+MASTR
