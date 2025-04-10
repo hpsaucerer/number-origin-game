@@ -732,7 +732,7 @@ const renderCategoryPills = () => {
         labelLine={false}
         isAnimationActive={true}
       >
-        {data.map((entry, index) => (
+        {animatedData.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
         ))}
         <Label content={renderCenterLabel} position="center" />
