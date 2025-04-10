@@ -575,14 +575,15 @@ const renderCategoryPills = () => {
               ))}
               <KeyboardKey label="⌫" wide onClick={() => handleKeyPress("←")} />
             </div>
-          <div className="flex flex-col items-center mt-4">
-            <p className="text-lg font-semibold">{dateString}</p>
-            <p className="text-md font-medium">No. {stats.gamesPlayed + 1}</p>
-  
-        </div> {/* closes md:flex keyboard wrapper */}
-      </div>   {/* closes .max-w-screen-lg main container */}
-    </>
-  );
+         
+            <div className="flex flex-col items-center mt-4">
+              <p className="text-lg font-semibold">{dateString}</p>
+              <p className="text-md font-medium">No. {stats.gamesPlayed + 1}</p>
+            </div>
+          </div> {/* closes md:flex keyboard wrapper */}
+        </div>   {/* closes .max-w-screen-lg main container */}
+      </>
+    );
 }
 
 
@@ -724,8 +725,6 @@ const renderCategoryPills = () => {
     </div>
   </DialogContent>
 </Dialog>
-  </div>
-  </div>
   </>
 );
 }
