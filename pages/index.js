@@ -54,19 +54,7 @@ const colorClassMap = {
 
 const [countdown, setCountdown] = useState("");
 
-  // Pie chart data
-  const guessDistribution = stats.guessDistribution || { 1: 0, 2: 0, 3: 0, 4: 0, failed: 0 };
-  const data = [
-    { name: "1 Guess", value: guessDistribution[1] },
-    { name: "2 Guesses", value: guessDistribution[2] },
-    { name: "3 Guesses", value: guessDistribution[3] },
-    { name: "4 Guesses", value: guessDistribution[4] },
-    { name: "Failed", value: guessDistribution.failed || 0 },
-  ];
-
-    const animatedData = useMemo(() => [...data], [chartVersion]);
-
-    
+  
 useEffect(() => {
   const updateCountdown = () => {
     const now = new Date();
@@ -96,6 +84,18 @@ useEffect(() => {
     guessDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, failed: 0 },
   });
 
+  // Pie chart data
+  const guessDistribution = stats.guessDistribution || { 1: 0, 2: 0, 3: 0, 4: 0, failed: 0 };
+  const data = [
+    { name: "1 Guess", value: guessDistribution[1] },
+    { name: "2 Guesses", value: guessDistribution[2] },
+    { name: "3 Guesses", value: guessDistribution[3] },
+    { name: "4 Guesses", value: guessDistribution[4] },
+    { name: "Failed", value: guessDistribution.failed || 0 },
+  ];
+
+ const animatedData = useMemo(() => [...data], [chartVersion]);
+    
   useEffect(() => {
      const savedStats = localStorage.getItem("numerusStats");
     if (savedStats) {
