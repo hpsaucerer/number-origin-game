@@ -725,7 +725,25 @@ const renderCategoryPills = () => {
       />
 
 {showChart && (
-<PieChart width={300} height={300} key={`chart-${chartVersion}`}>
+  <div
+    style={{
+      border: '2px solid red',         // 🔍 visible for layout debug
+      background: '#f8f8f8',           // 👁 clearer background to catch jumps
+      width: 320,
+      height: 320,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '10px',
+      margin: '0 auto',
+    }}
+  >
+    <PieChart
+      width={300}
+      height={300}
+      viewBox={{ x: 0, y: 0, width: 300, height: 300 }}
+      key={`chart-${chartVersion}`}
+    >
       <Pie
         data={animatedData}
         dataKey="value"
@@ -743,9 +761,8 @@ const renderCategoryPills = () => {
         <Label content={renderCenterLabel} position="center" />
       </Pie>
     </PieChart>
+  </div>
 )}
-
-
 
           
     </div>
