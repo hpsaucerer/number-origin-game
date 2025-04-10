@@ -318,6 +318,18 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   revealFormattedAt: 2,
   keywords: ["sprint", "100m", "track", "world record", "speed", "Usain Bolt", "athletics", "running"],
   funFact: "Usain Bolt hit a top speed of 27.8 mph (44.7 km/h) during his 9.58-second 100m dash — faster than most electric scooters!"
+},
+  {
+  number: 19,
+  formatted: "9.58s",
+  answer: "Number of weeks 'Old Town Road' topped the Billboard Hot 100",
+  clues: [
+    "A remix-powered reign that refused to end.",
+    "Country, trap, and meme culture fused into one unstoppable ride.",
+    "📈 It became the longest-running #1 single in U.S. chart history."
+  ],
+  keywords: ["Old Town Road", "Lil Nas X", "Billboard", "music", "charts", "record", "pop"],
+  funFact: "'Old Town Road' topped the Billboard Hot 100 for 19 weeks — the longest run at #1 in U.S. history — helped by viral memes, TikTok, and multiple remixes."
 }
 ];
 
