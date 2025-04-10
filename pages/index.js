@@ -744,17 +744,19 @@ const renderCategoryPills = () => {
       viewBox={{ x: 0, y: 0, width: 300, height: 300 }}
       key={`chart-${chartVersion}`}
     >
-      <Pie
-        data={animatedData}
-        dataKey="value"
-        cx="50%"
-        cy="50%"
-        innerRadius={60}
-        outerRadius={100}
-        label={combinedLabel}
-        labelLine={false}
-        isAnimationActive={true}
-      >
+<Pie
+  data={animatedData}
+  dataKey="value"
+  cx="50%"
+  cy="50%"
+  innerRadius={60}
+  outerRadius={100}
+  startAngle={90}
+  endAngle={-270} // Counter-clockwise for full rotation
+  label={combinedLabel}
+  labelLine={false}
+  isAnimationActive={true}
+>
         {animatedData.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
         ))}
