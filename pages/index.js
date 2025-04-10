@@ -639,7 +639,7 @@ const renderCategoryPills = () => {
       <img src="/icons/two.png" alt="Type Icon" className="w-6 h-6 mt-1" />
       <div>
         <strong>Make a guess. You have 4 in total.</strong><br />
-        Type what you think the number relates to (e.g., 'speed of light', 'year of the moon landing').
+        Type what you think the number relates to (e.g., 'light speed', 'year of the moon landing').
       </div>
     </li>
     <li className="flex items-start gap-3">
