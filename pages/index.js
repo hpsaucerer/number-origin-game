@@ -54,6 +54,18 @@ const colorClassMap = {
 
 const [countdown, setCountdown] = useState("");
 
+  // Pie chart data
+  const guessDistribution = stats.guessDistribution || { 1: 0, 2: 0, 3: 0, 4: 0, failed: 0 };
+  const data = [
+    { name: "1 Guess", value: guessDistribution[1] },
+    { name: "2 Guesses", value: guessDistribution[2] },
+    { name: "3 Guesses", value: guessDistribution[3] },
+    { name: "4 Guesses", value: guessDistribution[4] },
+    { name: "Failed", value: guessDistribution.failed || 0 },
+  ];
+
+    const animatedData = useMemo(() => [...data], [chartVersion]);
+    
 useEffect(() => {
   const updateCountdown = () => {
     const now = new Date();
@@ -246,18 +258,6 @@ const shareTextHandler = () => {
   }
 };
 
-
-  // Pie chart data
-  const guessDistribution = stats.guessDistribution || { 1: 0, 2: 0, 3: 0, 4: 0, failed: 0 };
-  const data = [
-    { name: "1 Guess", value: guessDistribution[1] },
-    { name: "2 Guesses", value: guessDistribution[2] },
-    { name: "3 Guesses", value: guessDistribution[3] },
-    { name: "4 Guesses", value: guessDistribution[4] },
-    { name: "Failed", value: guessDistribution.failed || 0 },
-  ];
-
-    const animatedData = useMemo(() => [...data], [chartVersion]);
 
   // Sum of all slices
   const totalGames = data.reduce((sum, entry) => sum + entry.value, 0);
