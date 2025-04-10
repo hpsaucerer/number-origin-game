@@ -529,9 +529,15 @@ const renderCategoryPills = () => {
             }}
           />
         </div>
+        </div>
+      </>
+    )}
 
+  </CardContent>
+</Card>
+          
         {/* Desktop Keyboard */}
-        <div className="hidden md:block mt-6 w-full overflow-x-auto">
+        <div className="hidden md:flex justify-center mt-6 w-full">
           <div className="flex flex-col items-center gap-2">
             {/* Row 1: Numbers */}
             <div className="flex gap-2">
@@ -564,14 +570,6 @@ const renderCategoryPills = () => {
               <KeyboardKey label="⌫" wide onClick={() => handleKeyPress("←")} />
             </div>
           </div>
-        </div>
-      </>
-    )}
-
-  </CardContent>
-</Card>
-          
-
       <div className="flex flex-col items-center mt-4">
         <p className="text-lg font-semibold">{dateString}</p>
         <p className="text-md font-medium">No. {stats.gamesPlayed + 1}</p>
