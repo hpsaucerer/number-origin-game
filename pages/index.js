@@ -534,13 +534,21 @@ const renderCategoryPills = () => {
         }}
       />
     </div>
-  </>
-)}
-
-
-
+        
   </CardContent>
+
+{isCorrect && (
+  <Button
+    onClick={shareTextHandler}
+    className="flex items-center space-x-2 mt-4"
+  >
+    <Share2 size={16} />
+    <span>Share</span>
+  </Button>
+)}
+          
 </Card>
+
           
         {/* Desktop Keyboard */}
         <div className="hidden md:flex justify-center mt-6 w-full">
@@ -587,14 +595,6 @@ const renderCategoryPills = () => {
 }
 
 
-{isCorrect && (
-<Button
-  onClick={shareTextHandler}
-  className="flex items-center space-x-2"
->
-  <Share2 size={16} />
-  <span>Share</span>
-</Button>
 
       )}
 
