@@ -530,7 +530,6 @@ const renderCategoryPills = () => {
 />
 
 </div>
-</div>
 )}
 
 
