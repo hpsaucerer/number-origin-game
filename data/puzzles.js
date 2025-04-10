@@ -321,7 +321,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
 },
   {
   number: 19,
-  formatted: "9.58s",
+  formatted: "19",
   answer: "Number of weeks 'Old Town Road' topped the Billboard Hot 100",
   clues: [
     "A remix-powered reign that refused to end.",
@@ -330,6 +330,18 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   keywords: ["Old Town Road", "Lil Nas X", "Billboard", "music", "charts", "record", "pop"],
   funFact: "'Old Town Road' topped the Billboard Hot 100 for 19 weeks — the longest run at #1 in U.S. history — helped by viral memes, TikTok, and multiple remixes."
+},
+  {
+  number: 6650,
+  formatted: "6,650km",
+  answer: "Length of the Nile River (in kilometers)",
+  clues: [
+    "This river flows through ancient history and modern nations.",
+    "Some say it’s the longest; others argue for the Amazon.",
+    "It winds through Egypt, Sudan, and Uganda.",
+  ],
+  keywords: ["Nile", "river", "Egypt", "Africa", "geography", "waterway", "longest river"],
+  funFact: "The Nile is one of the two longest rivers in the world, flowing over 6,650 km through northeastern Africa and supporting over 300 million people."
 }
 ];
 
