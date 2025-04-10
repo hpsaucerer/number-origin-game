@@ -3,7 +3,7 @@
 import WelcomeModal from "../components/WelcomeModal";
 import InteractiveTutorial from "../components/InteractiveTutorial";
 import OnScreenKeyboard from "../components/OnScreenKeyboard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { BarChart, Share2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
