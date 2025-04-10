@@ -326,7 +326,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   clues: [
     "A remix-powered reign that refused to end.",
     "Country, trap, and meme culture fused into one unstoppable ride.",
-    "📈 It became the longest-running #1 single in U.S. chart history."
+    "It became the longest-running #1 single in U.S. chart history."
   ],
   keywords: ["Old Town Road", "Lil Nas X", "Billboard", "music", "charts", "record", "pop"],
   funFact: "'Old Town Road' topped the Billboard Hot 100 for 19 weeks — the longest run at #1 in U.S. history — helped by viral memes, TikTok, and multiple remixes."
@@ -348,9 +348,9 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   formatted: "31,500sq mi",
   answer: "Surface area of the Caspian Sea (in square miles)",
   clues: [
-    "🌫️ It’s a sea by name, but not by saltwater standards.",
-    "🌍 Five countries touch this massive inland body of water.",
-    "📏 It’s larger than all the Great Lakes combined."
+    "It’s a sea by name, but not by saltwater standards.",
+    "Five countries touch this massive inland body of water.",
+    "It’s larger than all the Great Lakes combined."
   ],
   revealFormattedAt: 3,
   keywords: ["Caspian Sea", "lake", "largest lake", "surface area", "geography", "inland sea"],
@@ -375,7 +375,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   clues: [
     "It’s the bridge between the microscopic and the measurable.",
     "Used to count atoms the way you count eggs — by the dozen.",
-    "🧠 This number defines how many particles are in one mole."
+    "This number defines how many particles are in one mole."
   ],
   keywords: ["Avogadro", "mole", "chemistry", "constant", "atoms", "particles"],
   funFact: "One mole of a substance contains 6.022×10²³ entities — more than stars in the observable universe!"
