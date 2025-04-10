@@ -668,17 +668,17 @@ const renderCategoryPills = () => {
 <Dialog open={showStats} onOpenChange={setShowStats}>
   <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-hidden">
 
+    {/* Dismiss Button */}
+    <button
+      onClick={() => setShowStats(false)}
+      aria-label="Close"
+      className="absolute top-4 right-4 p-2 text-blue-500 hover:text-blue-600 transition"
+    >
+      <X size={28} />
+    </button>
    {/* Title */}
     <h2 className="text-lg text-gray-800 mb-4">Statistics</h2>
-  
-{/* Dismiss Button */}
-<button
-  onClick={() => setShowStats(false)}
-  aria-label="Close"
-  className="absolute top-4 right-4 m-5 p-2 text-blue-500 hover:text-blue-600 transition"
->
-  <X size={28} />
-</button>
+
 
     {/* Formatted stat boxes */}
     <div className="grid grid-cols-4 gap-4 text-center my-6">
