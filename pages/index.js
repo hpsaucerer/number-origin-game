@@ -118,7 +118,7 @@ useEffect(() => {
   if (showStats) {
     timeout = setTimeout(() => {
       setChartVersion(prev => prev + 1);
-    }, 200);
+    }, 400);
   }
   return () => clearTimeout(timeout);
 }, [showStats]);
