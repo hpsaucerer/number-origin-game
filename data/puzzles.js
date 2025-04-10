@@ -367,8 +367,19 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   keywords: ["periodic table", "elements", "chemistry", "oganesson", "atomic number"],
   funFact: "Element 118, Oganesson, is named after physicist Yuri Oganessian. It's incredibly unstable and was only confirmed in 2006."
+},
+  {
+  number: 6.022,
+  formatted: "6.022",
+  answer: "Avogadro’s number (short form)",
+  clues: [
+    "It’s the bridge between the microscopic and the measurable.",
+    "Used to count atoms the way you count eggs — by the dozen.",
+    "🧠 This number defines how many particles are in one mole."
+  ],
+  keywords: ["Avogadro", "mole", "chemistry", "constant", "atoms", "particles"],
+  funFact: "One mole of a substance contains 6.022×10²³ entities — more than stars in the observable universe!"
 }
-
 ];
 
 export default puzzles;
