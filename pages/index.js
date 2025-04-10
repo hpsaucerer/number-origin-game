@@ -723,51 +723,49 @@ const renderCategoryPills = () => {
         className="w-36 h-36 mx-auto mb-[-64px]"
       />
 
-<Dialog>
-  <DialogContent>
 
-    {showChart && totalGames > 0 && (
-      <div
-        style={{
-          opacity: showChart ? 1 : 0,
-          transition: 'opacity 0.5s ease-in-out',
-          border: '2px solid red',
-          background: '#f8f8f8',
-          width: 320,
-          height: 320,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '10px',
-          margin: '0 auto',
-        }}
+{showChart && totalGames > 0 && (
+  <div
+    style={{
+      opacity: showChart ? 1 : 0,
+      transition: 'opacity 0.5s ease-in-out',
+      border: '2px solid red',
+      background: '#f8f8f8',
+      width: 320,
+      height: 320,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '10px',
+      margin: '0 auto',
+    }}
+  >
+    <PieChart width={300} height={300}>
+      <Pie
+        key={`pie-${chartVersion}`}
+        data={data}
+        dataKey="value"
+        cx="50%"
+        cy="50%"
+        innerRadius={60}
+        outerRadius={100}
+        label={combinedLabel}
+        labelLine={false}
+        startAngle={90}
+        endAngle={-270}
+        isAnimationActive={true}
       >
-        <PieChart width={300} height={300}>
-          <Pie
-            key={`pie-${chartVersion}`}
-            data={data}
-            dataKey="value"
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={100}
-            label={combinedLabel}
-            labelLine={false}
-            startAngle={90}
-            endAngle={-270}
-            isAnimationActive={true}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-            <Label content={renderCenterLabel} position="center" />
-          </Pie>
-        </PieChart>
-      </div>
-    )}
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+        <Label content={renderCenterLabel} position="center" />
+      </Pie>
+    </PieChart>
+  </div>
+)}
 
-  </DialogContent>
-</Dialog>
-
+    </DialogContent>
+  </Dialog>
+</>
 
 
