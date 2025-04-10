@@ -724,19 +724,24 @@ const renderCategoryPills = () => {
       />
 
 {showChart && totalGames > 0 && (
-  <div
-    style={{
-      border: '2px solid red',
-      background: '#f8f8f8',
-      width: 320,
-      height: 320,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: '10px',
-      margin: '0 auto',
-    }}
-  >
+<div
+  style={{
+    opacity: showChart ? 1 : 0,
+    transition: 'opacity 0.5s ease-in-out',
+    border: '2px solid red',
+    background: '#f8f8f8',
+    width: 320,
+    height: 320,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '10px',
+    margin: '0 auto',
+  }}
+>
+  {/* Chart here */}
+</div>
+
 <PieChart width={300} height={300}>
   <Pie
     key={`pie-${chartVersion}`} // <- move key here
