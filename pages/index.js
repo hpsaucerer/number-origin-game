@@ -622,7 +622,7 @@ const renderCategoryPills = () => {
 
     <DialogHeader>
       <DialogTitle>
-        <h2 className="text-lg text-gray-800 mb-4">How To Play</h2>
+        <h2 className="text-lg text-gray-800 mb-1">How To Play</h2>
       </DialogTitle>
     </DialogHeader>
 
