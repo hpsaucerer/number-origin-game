@@ -613,7 +613,7 @@ const renderCategoryPills = () => {
   <DialogContent className="relative max-h-[90vh] overflow-y-auto p-4 sm:max-w-md w-full flex flex-col">
     {/* Dismiss Button */}
     <button
-      className="absolute top-4 right-4 p-2 text-blue-500 hover:text-blue-600 transition"
+      className="absolute top-2 right-2 p-2 text-blue-500 hover:text-blue-600 transition"
       onClick={() => setShowInstructions(false)}
       aria-label="Close"
     >
@@ -622,7 +622,7 @@ const renderCategoryPills = () => {
 
     <DialogHeader>
       <DialogTitle>
-        <h2 className="text-lg text-gray-800 mb-1">How To Play</h2>
+        <h2 className="text-lg text-gray-800 mb-0">How To Play</h2>
       </DialogTitle>
     </DialogHeader>
 
