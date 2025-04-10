@@ -740,7 +740,6 @@ const renderCategoryPills = () => {
           </PieChart>
         </div>
       )}
-    </div>
   </DialogContent>
 </Dialog>
 
