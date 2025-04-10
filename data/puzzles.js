@@ -342,6 +342,18 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   keywords: ["Nile", "river", "Egypt", "Africa", "geography", "waterway", "longest river"],
   funFact: "The Nile is one of the two longest rivers in the world, flowing over 6,650 km through northeastern Africa and supporting over 300 million people."
+},
+  {
+  number: 31500,
+  formatted: "31,500 sq mi",
+  answer: "Surface area of the Caspian Sea (in square miles)",
+  clues: [
+    "🌫️ It’s a sea by name, but not by saltwater standards.",
+    "🌍 Five countries touch this massive inland body of water.",
+    "📏 It’s larger than all the Great Lakes combined."
+  ],
+  keywords: ["Caspian Sea", "lake", "largest lake", "surface area", "geography", "inland sea"],
+  funFact: "Though called a sea, the Caspian is the world’s largest inland body of water by area — about the size of Germany — and is technically a lake!"
 }
 ];
 
