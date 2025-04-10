@@ -38,6 +38,7 @@ const colorClassMap = {
   const [isCorrect, setIsCorrect] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  const [showChart, setShowChart] = useState(false);
   const [inputError, setInputError] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
   const [showTutorial, setShowTutorial] = useState(false);
@@ -98,6 +99,16 @@ useEffect(() => {
   setPuzzle(puzzles[randomIndex]);
   setDateString(new Date().toLocaleDateString());
 }, []);
+
+useEffect(() => {
+  let timeout;
+  if (showStats) {
+    timeout = setTimeout(() => setShowChart(true), 200); // Delay chart to let modal render first
+  } else {
+    setShowChart(false);
+  }
+  return () => clearTimeout(timeout);
+}, [showStats]);
 
   
 useEffect(() => {
@@ -704,26 +715,30 @@ const renderCategoryPills = () => {
         className="w-36 h-36 mx-auto mb-[-64px]"
       />
 
-      <ResponsiveContainer width={300} height={300}>
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="value"
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={100}
-            label={combinedLabel}
-            labelLine={false}
-            isAnimationActive={true}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-            <Label content={renderCenterLabel} position="center" />
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
+{showChart && (
+  <ResponsiveContainer width={300} height={300}>
+    <PieChart>
+      <Pie
+        data={data}
+        dataKey="value"
+        cx="50%"
+        cy="50%"
+        innerRadius={60}
+        outerRadius={100}
+        label={combinedLabel}
+        labelLine={false}
+        isAnimationActive={true}
+      >
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+        <Label content={renderCenterLabel} position="center" />
+      </Pie>
+    </PieChart>
+  </ResponsiveContainer>
+)}
+
+          
     </div>
   </DialogContent>
 </Dialog>
