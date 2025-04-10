@@ -44,6 +44,8 @@ const colorClassMap = {
   const [showTutorial, setShowTutorial] = useState(false);
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
+  const [showChart, setShowChart] = useState(false);
+
 
   const toggleTooltip = (idx) => {
   setOpenTooltip((prev) => (prev === idx ? null : idx));
@@ -118,7 +120,10 @@ useEffect(() => {
   if (showStats) {
     timeout = setTimeout(() => {
       setChartVersion(prev => prev + 1);
-    }, 200);
+      setShowChart(true); // 👈 Delay chart mount
+    }, 300); // Adjust if needed
+  } else {
+    setShowChart(false); // 👈 Immediately unmount on close
   }
   return () => clearTimeout(timeout);
 }, [showStats]);
@@ -719,7 +724,7 @@ const renderCategoryPills = () => {
         className="w-36 h-36 mx-auto mb-[-64px]"
       />
 
-{showStats && (
+{showChart && (
   <ResponsiveContainer width={300} height={300}>
     <PieChart key={`chart-${chartVersion}`}>
       <Pie
@@ -741,6 +746,7 @@ const renderCategoryPills = () => {
     </PieChart>
   </ResponsiveContainer>
 )}
+
 
 
           
