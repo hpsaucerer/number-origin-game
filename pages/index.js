@@ -731,4 +731,3 @@ const renderCategoryPills = () => {
 );
 }
 
-MASTR
