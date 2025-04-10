@@ -27,18 +27,6 @@ const colorClassMap = {
   red: "text-red-700 bg-red-100 hover:bg-red-200",
 };
 
-const KeyboardKey = ({ label, onClick, wide }) => (
-  <button
-    onClick={onClick}
-    className={`bg-gray-300 rounded text-black font-bold h-12 ${
-      wide ? "w-16" : "w-10"
-    } flex items-center justify-center text-sm hover:bg-gray-400 transition`}
-  >
-    {label}
-  </button>
-);
-
-
   export default function Home() {
     
   const [openTooltip, setOpenTooltip] = useState(null);
@@ -123,13 +111,12 @@ useEffect(() => {
     }
   };
 
-  document.addEventListener("mousedown", handleClickOutside); // ✅ more responsive than click
+  document.addEventListener("click", handleClickOutside);
 
   return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
+    document.removeEventListener("click", handleClickOutside);
   };
-}, []); // ✅ empty array
-
+}, [openTooltip]);
 
 
   if (!puzzle) {
@@ -233,17 +220,7 @@ setGuess("");
     setRevealedClues([...revealedClues, puzzle.clues[revealedClues.length]]);
     setAttempts(attempts + 1);
   };
-const handleKeyPress = (key) => {
-  if (key === "↵") {
-    handleGuess();
-  } else if (key === "←") {
-    setGuess((prev) => prev.slice(0, -1));
-  } else {
-    setGuess((prev) => prev + key.toLowerCase());
-  }
-};
 
-    
 const shareTextHandler = () => {
   shareResult({ isCorrect, attempts, puzzle });
 
@@ -451,153 +428,183 @@ const renderCategoryPills = () => {
       <h1 className="text-2xl font-bold">Today's number is:</h1>
 
       <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
-  <CardContent className="overflow-hidden px-4 pb-6">
+        <CardContent className="overflow-hidden">
 
-    {/* Post-game modal (keep as is) */}
-    <PostGameModal
-      open={showPostGame}
-      onClose={() => setShowPostGame(false)}
-      isCorrect={isCorrect}
-      stats={stats}
-      puzzle={puzzle}
-      shareResult={shareTextHandler}
-      attempts={attempts}
-    />
+  <PostGameModal
+  open={showPostGame}
+  onClose={() => setShowPostGame(false)}
+  isCorrect={isCorrect}
+  stats={stats}
+  puzzle={puzzle}
+  shareResult={shareTextHandler}
+  attempts={attempts}
+/>      
+            
+<p className="text-4xl font-bold text-[#3B82F6] font-daysone">
+  {isCorrect ||
+  (puzzle.revealFormattedAt &&
+    revealedClues.length >= puzzle.revealFormattedAt)
+    ? puzzle.formatted
+    : puzzle.number}
+</p>
 
-    {/* Puzzle number */}
-    <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
-      {isCorrect ||
-      (puzzle.revealFormattedAt && revealedClues.length >= puzzle.revealFormattedAt)
-        ? puzzle.formatted
-        : puzzle.number}
+          <div className="flex space-x-2 mt-2">
+            {Array.from({ length: attempts }, (_, i) => (
+              <img
+                key={i}
+                src="/icons/guess-dot.png"
+                alt="Guess Icon"
+                className="w-5 h-5"
+              />
+            ))}
+          </div>
+
+{revealedClues.map((clue, index) => (
+  <p key={index} className="mt-2 text-gray-600">
+    <span className="font-semibold">Clue {index + 1}:</span>{" "}
+    {clue.replace("formatted", puzzle.formatted)}
+  </p>
+))}
+
+{isCorrect ? (
+  <>
+    <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
+
+<div className="mt-6 text-center space-y-3">
+  <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
+  <p className="text-sm text-gray-600">
+    Next puzzle in: <span className="font-mono">{countdown}</span>
+  </p>
+
+  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm">
+    <p className="text-sm text-blue-900 font-medium mb-2">
+      💬 Love Numerus? Loathe it? Let us know what you think!
+    </p>
+    <a
+      href="https://forms.gle/LifsBp42q2KBJRRK7"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
+    >
+    Fill out the Feedback Form
+    </a>
+  </div>
+</div>
+
+
+
+  </>
+) : attempts >= maxGuesses ? (
+
+            <>
+              <p className="text-red-600 mt-4">
+                Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
+              </p>
+
+<div className="mt-6 text-center space-y-3">
+  <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
+  <p className="text-sm text-gray-600">
+    Next puzzle in: <span className="font-mono">{countdown}</span>
+  </p>
+
+  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm">
+    <p className="text-sm text-blue-900 font-medium mb-2">
+      💬 Love Numerus? Loathe it? Let us know what you think!
+    </p>
+    <a
+      href="https://forms.gle/LifsBp42q2KBJRRK7"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
+    >
+      Fill out the Feedback Form
+    </a>
+  </div>
+</div>
+
+        
+
+            </>
+          ) : (
+            
+<>
+<WelcomeModal
+  open={showWelcome}
+  onOpenChange={setShowWelcome}
+  showTutorial={showTutorial}
+  setShowTutorial={setShowTutorial}
+/>
+
+<InteractiveTutorial
+  open={showTutorial}
+  onClose={() => setShowTutorial(false)}
+/>
+
+
+  <div className="mt-4 flex flex-col space-y-2">
+    {inputError && (
+      <p className="text-red-500 text-sm text-center">{inputError}</p>
+    )}
+
+    <p className="text-sm text-gray-600 mb-1 text-center">
+      {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
     </p>
 
-    {/* Guess dots */}
-    <div className="flex space-x-2 mt-2">
-      {Array.from({ length: attempts }, (_, i) => (
-        <img key={i} src="/icons/guess-dot.png" alt="Guess Icon" className="w-5 h-5" />
-      ))}
-    </div>
-
-    {/* Revealed clues */}
-    {revealedClues.map((clue, index) => (
-      <p key={index} className="mt-2 text-gray-600">
-        <span className="font-semibold">Clue {index + 1}:</span>{" "}
-        {clue.replace("formatted", puzzle.formatted)}
-      </p>
-    ))}
-
-    {/* Input and buttons */}
-
-{!isCorrect && attempts < maxGuesses && (
-  <>
-    <div className="mt-4 flex flex-col space-y-2">
-      {inputError && (
-        <p className="text-red-500 text-sm text-center">{inputError}</p>
-      )}
-      <p className="text-sm text-gray-600 mb-1 text-center">
-        {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
-      </p>
-
-      <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-        <Input
-          value={guess}
-          onChange={(e) => setGuess(e.target.value)}
-          placeholder="Enter your guess..."
-          className="flex-1"
-        />
-        <Button onClick={handleGuess} className="bg-[#3B82F6] text-white">
-          Submit
-        </Button>
-        <Button
-          onClick={handleClueReveal}
-          disabled={
-            revealedClues.length >= puzzle.clues.length ||
-            attempts >= maxGuesses
-          }
-          variant="outline"
-        >
-          Reveal a Clue
-        </Button>
-      </div>
-    </div>
-
-    {/* Mobile Keyboard */}
-    <div className="block md:hidden w-full max-w-sm mx-auto px-2">
-      <OnScreenKeyboard
-        onKeyPress={(key) => {
-          if (key === "↵") handleGuess();
-          else if (key === "←") setGuess((prev) => prev.slice(0, -1));
-          else if (key === "␣") setGuess((prev) => prev + " ");
-          else if (key === "Clear") setGuess("");
-          else setGuess((prev) => prev + key.toLowerCase());
-        }}
+    <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
+      <Input
+        value={guess}
+        onChange={(e) => setGuess(e.target.value)}
+        placeholder="Enter your guess..."
+        className="flex-1"
       />
+      <Button onClick={handleGuess} className="bg-[#3B82F6] text-white">
+        Submit
+      </Button>
+      <Button
+        onClick={handleClueReveal}
+        disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
+        variant="outline"
+      >
+        Reveal a Clue
+      </Button>
     </div>
-    </div> {/* closes the input wrapper */}
-          </>
-  )} {/* closes the conditional check */}
-</CardContent>
+  </div>
 
+  <div className="w-full max-w-sm mx-auto px-2">
+    <OnScreenKeyboard
+      onKeyPress={(key) => {
+        if (key === "↵") {
+          handleGuess();
+        } else if (key === "←") {
+          setGuess((prev) => prev.slice(0, -1));
+        } else if (key === "␣") {
+          setGuess((prev) => prev + " ");
+        } else if (key === "Clear") {
+          setGuess("");
+        } else {
+          setGuess((prev) => prev + key.toLowerCase());
+        }
+      }}
+    />
+  </div>
+</>
+)}
+        </CardContent>
+      </Card>
+
+      <div className="flex flex-col items-center mt-4">
+        <p className="text-lg font-semibold">{dateString}</p>
+        <p className="text-md font-medium">No. {stats.gamesPlayed + 1}</p>
+      </div>
 
 {isCorrect && (
-  <Button
-    onClick={shareTextHandler}
-    className="flex items-center space-x-2 mt-4"
-  >
-    <Share2 size={16} />
-    <span>Share</span>
-  </Button>
-)}
-          
-</Card>
-
-          
-        {/* Desktop Keyboard */}
-        <div className="hidden md:flex justify-center mt-6 w-full">
-          <div className="flex flex-col items-center gap-2">
-            {/* Row 1: Numbers */}
-            <div className="flex gap-2">
-              {"1234567890".split("").map((key) => (
-                <KeyboardKey key={key} label={key} onClick={() => handleKeyPress(key)} />
-              ))}
-            </div>
-
-            {/* Row 2: QWERTY */}
-            <div className="flex gap-2 mt-1">
-              {"QWERTYUIOP".split("").map((key) => (
-                <KeyboardKey key={key} label={key} onClick={() => handleKeyPress(key)} />
-              ))}
-            </div>
-
-            {/* Row 3: ASDF... */}
-            <div className="flex gap-2 mt-1">
-              <div className="w-6" /> {/* alignment spacer */}
-              {"ASDFGHJKL".split("").map((key) => (
-                <KeyboardKey key={key} label={key} onClick={() => handleKeyPress(key)} />
-              ))}
-            </div>
-
-            {/* Row 4: ENTER / ZXCV... / ⌫ */}
-            <div className="flex gap-2 mt-1">
-              <KeyboardKey label="ENTER" wide onClick={() => handleKeyPress("↵")} />
-              {"ZXCVBNM".split("").map((key) => (
-                <KeyboardKey key={key} label={key} onClick={() => handleKeyPress(key)} />
-              ))}
-              <KeyboardKey label="⌫" wide onClick={() => handleKeyPress("←")} />
-            </div>
-         
-            <div className="flex flex-col items-center mt-4">
-              <p className="text-lg font-semibold">{dateString}</p>
-              <p className="text-md font-medium">No. {stats.gamesPlayed + 1}</p>
-          
-          </div> {/* closes md:flex keyboard wrapper */}
-        </div>   {/* closes .max-w-screen-lg main container */}
-      </>
-    );
-}
-
-
+<Button
+  onClick={shareTextHandler}
+  className="flex items-center space-x-2"
+>
+  <Share2 size={16} />
+  <span>Share</span>
+</Button>
 
       )}
 
@@ -728,6 +735,7 @@ const renderCategoryPills = () => {
     </div>
   </DialogContent>
 </Dialog>
+    </div>
   </>
 );
 }
