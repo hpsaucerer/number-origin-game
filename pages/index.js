@@ -46,7 +46,6 @@ const colorClassMap = {
   const [showPostGame, setShowPostGame] = useState(false);
   const [showChart, setShowChart] = useState(false);
 
-
   const toggleTooltip = (idx) => {
   setOpenTooltip((prev) => (prev === idx ? null : idx));
 };
@@ -96,7 +95,7 @@ useEffect(() => {
     { name: "Failed", value: guessDistribution.failed || 0 },
   ];
 
- const animatedData = useMemo(() => [...data], [chartVersion]);
+const totalGames = data.reduce((sum, entry) => sum + (entry?.value || 0), 0);
     
   useEffect(() => {
      const savedStats = localStorage.getItem("numerusStats");
@@ -724,11 +723,11 @@ const renderCategoryPills = () => {
         className="w-36 h-36 mx-auto mb-[-64px]"
       />
 
-{showChart && (
+{showChart && totalGames > 0 && (
   <div
     style={{
-      border: '2px solid red',         // 🔍 visible for layout debug
-      background: '#f8f8f8',           // 👁 clearer background to catch jumps
+      border: '2px solid red',
+      background: '#f8f8f8',
       width: 320,
       height: 320,
       display: 'flex',
@@ -741,23 +740,22 @@ const renderCategoryPills = () => {
     <PieChart
       width={300}
       height={300}
-      viewBox={{ x: 0, y: 0, width: 300, height: 300 }}
       key={`chart-${chartVersion}`}
     >
-<Pie
-  data={animatedData}
-  dataKey="value"
-  cx="50%"
-  cy="50%"
-  innerRadius={60}
-  outerRadius={100}
-  startAngle={90}
-  endAngle={-270} // Counter-clockwise for full rotation
-  label={combinedLabel}
-  labelLine={false}
-  isAnimationActive={true}
->
-        {animatedData.map((entry, index) => (
+      <Pie
+        data={data}
+        dataKey="value"
+        cx="50%"
+        cy="50%"
+        innerRadius={60}
+        outerRadius={100}
+        startAngle={90}
+        endAngle={-270}
+        label={combinedLabel}
+        labelLine={false}
+        isAnimationActive={true}
+      >
+        {data.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
         ))}
         <Label content={renderCenterLabel} position="center" />
