@@ -379,6 +379,19 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   keywords: ["Avogadro", "mole", "chemistry", "constant", "atoms", "particles"],
   funFact: "One mole of a substance contains 6.022×10²³ entities — more than stars in the observable universe!"
+},
+  {
+  number: 273,
+  formatted: "-273°C",
+  answer: "Absolute zero in Celsius",
+  clues: [
+    "This number marks a total molecular shutdown.",
+    "You’ll never go colder in a lab.",
+    "It’s zero Kelvin on the absolute scale."
+  ],
+  revealFormattedAt: 2,
+  keywords: ["absolute zero", "temperature", "Kelvin", "Celsius", "physics", "molecules"],
+  funFact: "At −273.15°C, atoms stop vibrating — it's the coldest theoretical temperature possible, known as absolute zero."
 }
 ];
 
