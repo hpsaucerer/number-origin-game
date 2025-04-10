@@ -736,12 +736,17 @@ const renderCategoryPills = () => {
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
               <Label content={renderCenterLabel} position="center" />
-     </Pie>
-        </PieChart>
-      </div>
-    )}
+            </Pie>
+          </PieChart>
+        </div>
+      )}
+    </div>
+  </DialogContent>
+</Dialog>
+
   </>
 );
 }
+
 
 
