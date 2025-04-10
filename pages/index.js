@@ -626,21 +626,30 @@ const renderCategoryPills = () => {
       </DialogTitle>
     </DialogHeader>
 
-    <div className="mt-2 font-vietnam">
-      <ul className="list-decimal ml-6">
-        <li>
-          <strong>Look at the number.</strong><br />
-          What could it signify?<br /><br />
-        </li>
-        <li>
-          <strong>Make a guess. You have 4 in total.</strong><br />
-          Type what you think the number relates to (e.g., 'speed of light', 'year of the moon landing').<br /><br />
-        </li>
-        <li>
-          <strong>Stuck? Reveal a clue!</strong><br />
-          Remember though, this uses up a guess.<br /><br />
-        </li>
-      </ul>
+<div className="mt-2 font-vietnam">
+  <ul className="space-y-4">
+    <li className="flex items-start gap-3">
+      <img src="/icons/one.png" alt="Look Icon" className="w-6 h-6 mt-1" />
+      <div>
+        <strong>Look at the number.</strong><br />
+        What could it signify?
+      </div>
+    </li>
+    <li className="flex items-start gap-3">
+      <img src="/icons/two.png" alt="Type Icon" className="w-6 h-6 mt-1" />
+      <div>
+        <strong>Make a guess. You have 4 in total.</strong><br />
+        Type what you think the number relates to (e.g., 'speed of light', 'year of the moon landing').
+      </div>
+    </li>
+    <li className="flex items-start gap-3">
+      <img src="/icons/three.png" alt="Clue Icon" className="w-6 h-6 mt-1" />
+      <div>
+        <strong>Stuck? Reveal a clue!</strong><br />
+        Remember though, this uses up a guess.
+      </div>
+    </li>
+  </ul>
 
       <div className="flex justify-center mt-0">
         <div className="bg-gray-100 border border-gray-300 rounded-xl p-4 w-full max-w-md text-center shadow-md">
