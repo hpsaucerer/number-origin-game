@@ -575,11 +575,11 @@ const renderCategoryPills = () => {
               ))}
               <KeyboardKey label="⌫" wide onClick={() => handleKeyPress("←")} />
             </div>
-        <div className="flex flex-col items-center mt-4">
-          <p className="text-lg font-semibold">{dateString}</p>
-          <p className="text-md font-medium">No. {stats.gamesPlayed + 1}</p>
-        </div>
-      </div> {/* ✅ Now this closes the full keyboard block correctly */}
+  <div className="flex flex-col items-center mt-4">
+    <p className="text-lg font-semibold">{dateString}</p>
+    <p className="text-md font-medium">No. {stats.gamesPlayed + 1}</p>
+  </div>
+</div>  {/* ✅ This closes the full keyboard + footer wrapper */}
 
 
 {isCorrect && (
