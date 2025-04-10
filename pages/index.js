@@ -265,7 +265,7 @@ const shareTextHandler = () => {
 
 
   // Sum of all slices
-  const totalGames = data.reduce((sum, entry) => sum + entry.value, 0);
+
 
   const COLORS = ["#3B82F6", "#60A5FA", "#93C5FD", "#2563EB", "#F87171"];
 
