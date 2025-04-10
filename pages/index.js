@@ -38,7 +38,7 @@ const colorClassMap = {
   const [isCorrect, setIsCorrect] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
-  const [showChart, setShowChart] = useState(false);
+  const [chartVersion, setChartVersion] = useState(0);
   const [inputError, setInputError] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
   const [showTutorial, setShowTutorial] = useState(false);
@@ -103,14 +103,14 @@ useEffect(() => {
 useEffect(() => {
   let timeout;
   if (showStats) {
-    timeout = setTimeout(() => setShowChart(true), 200); // Delay chart to let modal render first
-  } else {
-    setShowChart(false);
+    timeout = setTimeout(() => {
+      setChartVersion(prev => prev + 1);
+    }, 200);
   }
   return () => clearTimeout(timeout);
 }, [showStats]);
 
-  
+
 useEffect(() => {
   const handleClickOutside = (event) => {
     if (
@@ -715,9 +715,9 @@ const renderCategoryPills = () => {
         className="w-36 h-36 mx-auto mb-[-64px]"
       />
 
-{showChart && (
+{showStats && (
   <ResponsiveContainer width={300} height={300}>
-    <PieChart key={showChart ? "chart-animate" : "chart-static"}>
+    <PieChart key={`chart-${chartVersion}`}>
       <Pie
         data={data}
         dataKey="value"
@@ -737,6 +737,7 @@ const renderCategoryPills = () => {
     </PieChart>
   </ResponsiveContainer>
 )}
+
 
           
     </div>
