@@ -355,7 +355,20 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   revealFormattedAt: 3,
   keywords: ["Caspian Sea", "lake", "largest lake", "surface area", "geography", "inland sea"],
   funFact: "Though called a sea, the Caspian is the world’s largest inland body of water by area — about the size of Germany — and is technically a lake!"
+},
+  {
+  number: 118,
+  formatted: "118",
+  answer: "Total number of elements in the periodic table",
+  clues: [
+    "The known building blocks of matter end here — for now.",
+    "This number includes the noble, the reactive, and the radioactive.",
+    "Oganesson is the last one, discovered in 2002."
+  ],
+  keywords: ["periodic table", "elements", "chemistry", "oganesson", "atomic number"],
+  funFact: "Element 118, Oganesson, is named after physicist Yuri Oganessian. It's incredibly unstable and was only confirmed in 2006."
 }
+
 ];
 
 export default puzzles;
