@@ -257,6 +257,8 @@ const shareTextHandler = () => {
     { name: "Failed", value: stats.guessDistribution.failed || 0 },
   ];
 
+    const animatedData = useMemo(() => [...data], [chartVersion]);
+
   // Sum of all slices
   const totalGames = data.reduce((sum, entry) => sum + entry.value, 0);
 
