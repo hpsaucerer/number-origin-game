@@ -339,7 +339,7 @@ const renderCategoryPills = () => {
     },
     {
       label: "Science",
-      color: "bg-pink-200 text-pink-800",
+      color: "bg-orange-200 text-pink-800",
       tooltip: "Atomic numbers, scientific constants, measurements. ",
     },
     {
