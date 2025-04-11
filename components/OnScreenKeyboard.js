@@ -52,7 +52,7 @@ export default function OnScreenKeyboard({ onKeyPress }) {
 
         <button
           onClick={() => onKeyPress("←")}
-          className="bg-red-400 text-white w-12 h-12 rounded-md text-base font-semibold hover:bg-red-500 transition"
+          className="bg-red-400 text-white w-15 h-12 rounded-md text-base font-semibold hover:bg-red-500 transition"
         >
           Delete
         </button>
