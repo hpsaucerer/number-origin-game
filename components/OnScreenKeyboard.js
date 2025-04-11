@@ -59,7 +59,7 @@ export default function OnScreenKeyboard({ onKeyPress }) {
 
         <button
           onClick={() => onKeyPress("↵")}
-          className="bg-[#2ECC71] text-white px-3 py-2 rounded text-sm font-medium flex-1"
+          className="bg-[#63c4a7] text-white px-3 py-2 rounded text-sm font-medium flex-1"
         >
           Enter
         </button>
