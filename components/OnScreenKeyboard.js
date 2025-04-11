@@ -26,7 +26,7 @@ export default function OnScreenKeyboard({ onKeyPress }) {
             <button
               key={key}
               onClick={() => onKeyPress(key)}
-              className="bg-[#3B82F6] text-white w-8 h-10 rounded text-sm font-semibold"
+              className="bg-blue-200 text-blue-800 w-8 h-10 rounded text-sm font-semibold hover:bg-blue-300 transition"
             >
               {key}
             </button>
