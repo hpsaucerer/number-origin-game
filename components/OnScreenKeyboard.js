@@ -38,28 +38,28 @@ export default function OnScreenKeyboard({ onKeyPress }) {
       <div className="flex justify-between space-x-2 mt-2 px-1">
         <button
           onClick={() => setMode(mode === "letters" ? "numbers" : "letters")}
-          className="bg-gray-300 text-black px-3 py-2 rounded text-sm font-medium flex-1"
+          className="bg-gray-300 text-black px-4 py-3 rounded text-sm font-medium flex-1"
         >
           {mode === "letters" ? "123" : "ABC"}
         </button>
 
         <button
           onClick={() => onKeyPress("␣")}
-          className="bg-gray-300 text-black px-3 py-2 rounded text-sm font-medium flex-[2_1_0%]"
+          className="bg-gray-300 text-black px-4 py-3 rounded text-sm font-medium flex-[2_1_0%]"
         >
           Space
         </button>
 
         <button
           onClick={() => onKeyPress("←")}
-          className="bg-red-400 text-white px-3 py-2 rounded text-sm font-medium flex-1"
+          className="bg-red-400 text-white px-4 py-3 rounded text-sm font-medium flex-1"
         >
           Delete
         </button>
 
         <button
           onClick={() => onKeyPress("↵")}
-          className="bg-[#63c4a7] text-white px-3 py-2 rounded text-sm font-medium flex-1"
+          className="bg-[#63c4a7] text-white px-4 py-3 rounded text-sm font-medium flex-1"
         >
           Enter
         </button>
