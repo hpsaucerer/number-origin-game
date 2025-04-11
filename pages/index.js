@@ -551,12 +551,17 @@ const renderCategoryPills = () => {
     </p>
 
     <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-      <Input
-        value={guess}
-        onChange={(e) => setGuess(e.target.value)}
-        placeholder="Enter your guess..."
-        className="flex-1"
-      />
+<Input
+  value={guess}
+  onChange={(e) => setGuess(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      handleGuess();
+    }
+  }}
+  placeholder="Enter your guess..."
+  className="flex-1"
+/>
       <Button onClick={handleGuess} className="bg-[#3B82F6] text-white">
         Submit
       </Button>
