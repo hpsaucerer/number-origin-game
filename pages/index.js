@@ -560,28 +560,28 @@ const renderCategoryPills = () => {
   />
 
   {/* Buttons in a row */}
-  <div className="flex flex-row justify-between gap-2">
-    <Button
-      onClick={handleClueReveal}
-      disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
-      variant="outline"
-      className={`w-full transition-transform duration-300 ease-in-out ${
-        !showWelcome &&
-        revealedClues.length < puzzle.clues.length &&
-        attempts < maxGuesses
-          ? "animate-pulse-grow"
-          : ""
-      }`}
-    >
-      Reveal a Clue
-    </Button>
+<div className="flex flex-row md:flex-col justify-between gap-2 w-full max-w-xs mx-auto">
+  <Button
+    onClick={handleClueReveal}
+    disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
+    variant="outline"
+    className={`w-full transition-transform duration-300 ease-in-out ${
+      !showWelcome &&
+      revealedClues.length < puzzle.clues.length &&
+      attempts < maxGuesses
+        ? "animate-pulse-grow"
+        : ""
+    }`}
+  >
+    Reveal a Clue
+  </Button>
 
-    <Button
-      onClick={handleGuess}
-      className="w-full bg-[#3B82F6] text-white"
-    >
-      Submit
-    </Button>
+  <Button
+    onClick={handleGuess}
+    className="w-full bg-[#3B82F6] text-white"
+  >
+    Submit
+  </Button>>
 </div>
 
     </div>
