@@ -697,9 +697,9 @@ const renderCategoryPills = () => {
       <X size={28} />
     </button>
    {/* Title */}
-    <DialogHeader className="flex flex-col items-start">
-  <DialogTitle>
-    <h2 className="text-lg text-gray-800 mb-4 text-left">Statistics</h2>
+<DialogHeader>
+  <DialogTitle className="text-left w-full">
+    <h2 className="text-lg text-gray-800 mb-4">Statistics</h2>
   </DialogTitle>
 </DialogHeader>
 
