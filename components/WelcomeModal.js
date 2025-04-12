@@ -10,7 +10,7 @@ export default function WelcomeModal({ open, onOpenChange }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {/* Overlay */}
-      <DialogOverlay className="fixed inset-0 bg-white/90 backdrop-blur-md z-[9997]" />
+      <DialogOverlay className="fixed inset-0 bg-white/95 backdrop-blur-md backdrop-saturate-150 z-[9997]" />
 
       {/* High z-index wrapper to contain modal and prevent button ghosting */}
       <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-12 px-4">
