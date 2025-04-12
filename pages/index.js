@@ -575,11 +575,12 @@ return (
     revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses
   }
   variant="outline"
-  className="flex-1 text-sm py-2 relative overflow-hidden"
+  className="flex-1 text-sm py-2 relative overflow-hidden bg-white"
 >
-  <span className="animate-shimmer block">Reveal a Clue</span>
+  <span className="block w-full h-full animate-shimmer">
+    Reveal a Clue
+  </span>
 </Button>
-
 
   </div>
 </div>
