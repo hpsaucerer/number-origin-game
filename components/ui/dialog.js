@@ -1,4 +1,5 @@
 export function Dialog({ open, onOpenChange, children }) {
+
   if (!open) return null;
 
   return (
@@ -24,6 +25,20 @@ export function Dialog({ open, onOpenChange, children }) {
   );
 }
 
+export function DialogOverlay({ className = "" }) {
+  return (
+    <div
+      className={className}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(255,255,255,0.9)",
+        backdropFilter: "blur(6px)",
+        zIndex: 40,
+      }}
+    />
+  );
+}
 
 export function DialogContent({ children, className = "", style = {} }) {
   return (
