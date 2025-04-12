@@ -686,7 +686,7 @@ const renderCategoryPills = () => {
 {/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
    <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
- <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-y-auto max-h-[90vh] flex flex-col items-start justify-center">
+ <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
 
     {/* Dismiss Button */}
     <button
@@ -697,11 +697,13 @@ const renderCategoryPills = () => {
       <X size={28} />
     </button>
    {/* Title */}
-<DialogHeader>
-  <DialogTitle className="text-left w-full">
-    <h2 className="text-lg text-gray-800 mb-4">Statistics</h2>
-  </DialogTitle>
-</DialogHeader>
+<div className="w-full flex flex-col items-start">
+  <DialogHeader>
+    <DialogTitle>
+      <h2 className="text-lg text-gray-800 mb-4 text-left">Statistics</h2>
+    </DialogTitle>
+  </DialogHeader>
+</div>
 
     {/* Formatted stat boxes */}
     <div className="grid grid-cols-4 gap-4 text-center my-6">
