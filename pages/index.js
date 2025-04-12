@@ -550,33 +550,38 @@ const renderCategoryPills = () => {
       {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
     </p>
 
-    <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-      <Input
-        value={guess}
-        onChange={(e) => setGuess(e.target.value)}
-        placeholder="Enter your guess..."
-        className="flex-1"
-      />
-<div className="flex flex-col sm:flex-row gap-3 justify-center mt-4">
-  <Button onClick={handleGuess} className="bg-[#3B82F6] text-white">
-    Submit
-  </Button>
+<div className="w-full max-w-md space-y-3">
+  {/* Input field */}
+  <Input
+    value={guess}
+    onChange={(e) => setGuess(e.target.value)}
+    placeholder="Enter your guess..."
+    className="w-full"
+  />
 
-  <Button
-    onClick={handleClueReveal}
-    disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
-    variant="outline"
-className={`transition-transform duration-300 ease-in-out ${
-  !showWelcome &&
-  revealedClues.length < puzzle.clues.length &&
-  attempts < maxGuesses
-    ? "animate-pulse-grow"
-    : ""
-}`}
+  {/* Buttons in a row */}
+  <div className="flex flex-row justify-between gap-2">
+    <Button
+      onClick={handleClueReveal}
+      disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
+      variant="outline"
+      className={`w-full transition-transform duration-300 ease-in-out ${
+        !showWelcome &&
+        revealedClues.length < puzzle.clues.length &&
+        attempts < maxGuesses
+          ? "animate-pulse-grow"
+          : ""
+      }`}
+    >
+      Reveal a Clue
+    </Button>
 
-  >
-    Reveal a Clue
-  </Button>
+    <Button
+      onClick={handleGuess}
+      className="w-full bg-[#3B82F6] text-white"
+    >
+      Submit
+    </Button>
 </div>
 
     </div>
