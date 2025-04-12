@@ -69,7 +69,7 @@ useEffect(() => {
 
   const interval = setInterval(updateCountdown, 1000);
   updateCountdown();
-  ) => clearInterval(interval);
+  return () => clearInterval(interval);
 }, []);
 
 
@@ -113,14 +113,14 @@ useEffect(() => {
 
   document.addEventListener("click", handleClickOutside);
 
-  ) => {
+  return () => {
     document.removeEventListener("click", handleClickOutside);
   };
 }, [openTooltip]);
 
 
   if (!puzzle) {
-    
+    return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <p>Loading puzzle...</p>
       </div>
@@ -302,9 +302,9 @@ const renderCenterLabel = ({ viewBox }) => {
   textAnchor="middle"
   dominantBaseline="central"
 >
-  {labelMap[index]}
-</text>
+  {labelMap[index] === "❌" ? "✖" : labelMap[index]}
 
+</text>
 
 
       {/* Label outside slice */}
@@ -339,7 +339,7 @@ const renderCategoryPills = () => {
     },
     {
       label: "Science",
-      color: "bg-orange-200 text-pink-800",
+      color: "bg-pink-200 text-pink-800",
       tooltip: "Atomic numbers, scientific constants, measurements. ",
     },
     {
@@ -402,13 +402,6 @@ const renderCategoryPills = () => {
   return (
 
 <>
-    <WelcomeModal
-      open={showWelcome}
-      onOpenChange={setShowWelcome}
-      showTutorial={showTutorial}
-      setShowTutorial={setShowTutorial}
-    />
-    
  <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
       <div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14">
         {/* Centered logo */}
@@ -532,81 +525,72 @@ const renderCategoryPills = () => {
         
 
             </>
-) : (
-  <>
+          ) : (
+            
+<>
+<WelcomeModal
+  open={showWelcome}
+  onOpenChange={setShowWelcome}
+  showTutorial={showTutorial}
+  setShowTutorial={setShowTutorial}
+/>
 
-    <InteractiveTutorial
-      open={showTutorial}
-      onClose={() => setShowTutorial(false)}
-    />
-
-    <div className="mt-4 flex flex-col space-y-2">
-      {inputError && (
-        <p className="text-red-500 text-sm text-center">{inputError}</p>
-      )}
-
-      <p className="text-sm text-gray-600 mb-1 text-center">
-        {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
-      </p>
-
-<div className="w-full flex flex-col space-y-2">
-  <Input
-    value={guess}
-    onChange={(e) => setGuess(e.target.value)}
-    onKeyDown={(e) => {
-      if (e.key === "Enter") handleGuess();
-    }}
-    placeholder="Enter your guess..."
-    className="w-full"
-  />
-
-  <div className="flex flex-row justify-between gap-2">
-    <Button
-      onClick={handleGuess}
-      className="flex-1 bg-[#3B82F6] text-white text-sm py-2"
-    >
-      Submit
-    </Button>
-<Button
-  onClick={handleClueReveal}
-  disabled={
-    revealedClues.length >= puzzle.clues.length ||
-    attempts >= maxGuesses
-  }
-  variant="outline"
-  className="flex-1 text-sm py-2 relative overflow-hidden animate-shimmer"
->
-  Reveal a Clue
-</Button>
-
-  </div>
-</div>
+<InteractiveTutorial
+  open={showTutorial}
+  onClose={() => setShowTutorial(false)}
+/>
 
 
+  <div className="mt-4 flex flex-col space-y-2">
+    {inputError && (
+      <p className="text-red-500 text-sm text-center">{inputError}</p>
+    )}
 
-    <div className="w-full max-w-sm mx-auto px-2">
-      <OnScreenKeyboard
-        onKeyPress={(key) => {
-          if (key === "↵") {
-            handleGuess();
-          } else if (key === "←") {
-            setGuess((prev) => prev.slice(0, -1));
-          } else if (key === "␣") {
-            setGuess((prev) => prev + " ");
-          } else if (key === "Clear") {
-            setGuess("");
-          } else {
-            setGuess((prev) => prev + key.toLowerCase());
-          }
-        }}
+    <p className="text-sm text-gray-600 mb-1 text-center">
+      {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
+    </p>
+
+    <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
+      <Input
+        value={guess}
+        onChange={(e) => setGuess(e.target.value)}
+        placeholder="Enter your guess..."
+        className="flex-1"
       />
+      <Button onClick={handleGuess} className="bg-[#3B82F6] text-white">
+        Submit
+      </Button>
+      <Button
+        onClick={handleClueReveal}
+        disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
+        variant="outline"
+      >
+        Reveal a Clue
+      </Button>
     </div>
-    </div>
-  </>
-)}
+  </div>
 
-</CardContent>
-</Card>
+  <div className="w-full max-w-sm mx-auto px-2">
+    <OnScreenKeyboard
+      onKeyPress={(key) => {
+        if (key === "↵") {
+          handleGuess();
+        } else if (key === "←") {
+          setGuess((prev) => prev.slice(0, -1));
+        } else if (key === "␣") {
+          setGuess((prev) => prev + " ");
+        } else if (key === "Clear") {
+          setGuess("");
+        } else {
+          setGuess((prev) => prev + key.toLowerCase());
+        }
+      }}
+    />
+  </div>
+</>
+)}
+        </CardContent>
+      </Card>
 
       <div className="flex flex-col items-center mt-4">
         <p className="text-lg font-semibold">{dateString}</p>
@@ -751,13 +735,8 @@ const renderCategoryPills = () => {
     </div>
   </DialogContent>
 </Dialog>
-
-<footer className="mt-8 text-xs text-gray-500 text-center">
-  © {new Date().getFullYear()} B Puzzled. All rights reserved.
-</footer>
-
-</div>
-</>
+    </div>
+  </>
 );
 }
 
