@@ -749,8 +749,8 @@ const renderCategoryPills = () => {
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
 </footer>
 
-</div> {/* closes .max-w-screen-lg wrapper */}
-</>     {/* closes main fragment */}
-);      {/* closes return() */}
+</div>
+</>
+);
 }
 
