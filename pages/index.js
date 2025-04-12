@@ -628,7 +628,7 @@ const renderCategoryPills = () => {
       {/* Instructions Popup */}
 <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
    <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-  <DialogContent className="relative max-h-[90vh] overflow-y-auto p-6 sm:max-w-md w-full flex flex-col items-center justify-center">
+  <DialogContent className="relative max-h-[90vh] overflow-y-auto p-6 sm:max-w-md w-full flex flex-col items-start justify-center">
     {/* Dismiss Button */}
     <button
       className="absolute top-1 right-1 p-2 text-blue-500 hover:text-blue-600 transition"
@@ -686,7 +686,7 @@ const renderCategoryPills = () => {
 {/* Stats Popup */}
 <Dialog open={showStats} onOpenChange={setShowStats}>
    <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
- <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
+ <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-y-auto max-h-[90vh] flex flex-col items-start justify-center">
 
     {/* Dismiss Button */}
     <button
