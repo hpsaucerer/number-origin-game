@@ -574,18 +574,15 @@ return (
   disabled={
     revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses
   }
-  variant="outline"
-  className="flex-1 text-sm py-2 relative overflow-hidden bg-white"
+  className="flex-1 text-sm py-2 px-4 relative overflow-hidden bg-white border border-gray-300 rounded-md"
 >
-  <span className="block w-full h-full animate-shimmer">
-    Reveal a Clue
-  </span>
+  <div className="absolute inset-0 animate-shimmer z-0"></div>
+  <span className="relative z-10">Reveal a Clue</span>
 </Button>
+
 
   </div>
 </div>
-
-
 
     <div className="w-full max-w-sm mx-auto px-2">
       <OnScreenKeyboard
