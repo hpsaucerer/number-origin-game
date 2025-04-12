@@ -679,6 +679,7 @@ const renderCategoryPills = () => {
     </div>
 
   </DialogContent>
+</div>
 </Dialog>
 
 
@@ -753,6 +754,7 @@ const renderCategoryPills = () => {
       </ResponsiveContainer>
     </div>
   </DialogContent>
+</div>
 </Dialog>
     </div>
   </>
