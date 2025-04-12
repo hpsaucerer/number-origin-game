@@ -577,9 +577,13 @@ return (
   }
   className="flex-1 text-sm py-2 relative overflow-hidden border border-gray-300 text-black rounded-md shadow-inner bg-white"
 >
-  <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-[#ffffff22] via-[#ffffff66] to-[#ffffff22] bg-[length:200%_100%] pointer-events-none" />
+  {/* Only show shimmer when active */}
+  {revealedClues.length < puzzle.clues.length && attempts < maxGuesses && (
+    <div className="absolute inset-0 animate-shimmer pointer-events-none" />
+  )}
   <span className="relative z-10">Reveal a Clue</span>
 </Button>
+
 
 
   </div>
