@@ -596,7 +596,7 @@ const renderCategoryPills = () => {
       />
     </div>
   </>
-)} {/* ← this is important! closes the ternary expression properly */}
+)}
 
 </CardContent>
 </Card>
