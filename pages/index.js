@@ -525,80 +525,79 @@ const renderCategoryPills = () => {
         
 
             </>
-          ) : (
-            
-<>
-<WelcomeModal
-  open={showWelcome}
-  onOpenChange={setShowWelcome}
-  showTutorial={showTutorial}
-  setShowTutorial={setShowTutorial}
-/>
-
-<InteractiveTutorial
-  open={showTutorial}
-  onClose={() => setShowTutorial(false)}
-/>
-
-
-  <div className="mt-4 flex flex-col space-y-2">
-    {inputError && (
-      <p className="text-red-500 text-sm text-center">{inputError}</p>
-    )}
-
-    <p className="text-sm text-gray-600 mb-1 text-center">
-      {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
-    </p>
-
-<div className="flex flex-row flex-wrap items-center justify-center gap-2 w-full">
-  <Input
-    value={guess}
-    onChange={(e) => setGuess(e.target.value)}
-    onKeyDown={(e) => {
-      if (e.key === "Enter") handleGuess();
-    }}
-    placeholder="Enter your guess..."
-    className="flex-1 min-w-0"
-  />
-  <Button
-    onClick={handleGuess}
-    className="whitespace-nowrap px-3 py-2 text-sm bg-[#3B82F6] text-white"
-  >
-    Submit
-  </Button>
-  <Button
-    onClick={handleClueReveal}
-    disabled={
-      revealedClues.length >= puzzle.clues.length ||
-      attempts >= maxGuesses
-    }
-    variant="outline"
-    className="whitespace-nowrap px-3 py-2 text-sm"
-  >
-    Reveal a Clue
-  </Button>
-</div>
-
-
-  <div className="w-full max-w-sm mx-auto px-2">
-    <OnScreenKeyboard
-      onKeyPress={(key) => {
-        if (key === "↵") {
-          handleGuess();
-        } else if (key === "←") {
-          setGuess((prev) => prev.slice(0, -1));
-        } else if (key === "␣") {
-          setGuess((prev) => prev + " ");
-        } else if (key === "Clear") {
-          setGuess("");
-        } else {
-          setGuess((prev) => prev + key.toLowerCase());
-        }
-      }}
+) : (
+  <>
+    <WelcomeModal
+      open={showWelcome}
+      onOpenChange={setShowWelcome}
+      showTutorial={showTutorial}
+      setShowTutorial={setShowTutorial}
     />
-  </div>
-</>
-)}
+
+    <InteractiveTutorial
+      open={showTutorial}
+      onClose={() => setShowTutorial(false)}
+    />
+
+    <div className="mt-4 flex flex-col space-y-2">
+      {inputError && (
+        <p className="text-red-500 text-sm text-center">{inputError}</p>
+      )}
+
+      <p className="text-sm text-gray-600 mb-1 text-center">
+        {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
+      </p>
+
+      <div className="flex flex-row flex-wrap items-center justify-center gap-2 w-full">
+        <Input
+          value={guess}
+          onChange={(e) => setGuess(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleGuess();
+          }}
+          placeholder="Enter your guess..."
+          className="flex-1 min-w-0"
+        />
+        <Button
+          onClick={handleGuess}
+          className="whitespace-nowrap px-3 py-2 text-sm bg-[#3B82F6] text-white"
+        >
+          Submit
+        </Button>
+        <Button
+          onClick={handleClueReveal}
+          disabled={
+            revealedClues.length >= puzzle.clues.length ||
+            attempts >= maxGuesses
+          }
+          variant="outline"
+          className="whitespace-nowrap px-3 py-2 text-sm"
+        >
+          Reveal a Clue
+        </Button>
+      </div>
+    </div>
+
+    <div className="w-full max-w-sm mx-auto px-2">
+      <OnScreenKeyboard
+        onKeyPress={(key) => {
+          if (key === "↵") {
+            handleGuess();
+          } else if (key === "←") {
+            setGuess((prev) => prev.slice(0, -1));
+          } else if (key === "␣") {
+            setGuess((prev) => prev + " ");
+          } else if (key === "Clear") {
+            setGuess("");
+          } else {
+            setGuess((prev) => prev + key.toLowerCase());
+          }
+        }}
+      />
+    </div>
+  </>
+)
+
         </CardContent>
       </Card>
 
