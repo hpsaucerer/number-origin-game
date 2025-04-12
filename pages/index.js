@@ -575,10 +575,12 @@ return (
   disabled={
     revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses
   }
-  className="flex-1 text-sm py-2 relative overflow-hidden bg-gradient-to-r from-[#ffffff22] via-[#ffffff66] to-[#ffffff22] bg-[length:200%_100%] animate-shimmer border border-gray-300 text-black rounded-md shadow-inner"
+  className="flex-1 text-sm py-2 relative overflow-hidden border border-gray-300 text-black rounded-md shadow-inner bg-white"
 >
-  Reveal a Clue
+  <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-[#ffffff22] via-[#ffffff66] to-[#ffffff22] bg-[length:200%_100%] pointer-events-none" />
+  <span className="relative z-10">Reveal a Clue</span>
 </Button>
+
 
   </div>
 </div>
