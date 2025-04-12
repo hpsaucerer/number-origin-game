@@ -6,6 +6,8 @@ export default function WelcomeModal({ open, onOpenChange, showTutorial, setShow
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
 
+<DialogOverlay className="fixed inset-0 bg-white z-40" />
+  
 <DialogContent
   className="mx-auto rounded-xl shadow-xl bg-white/90 backdrop-blur-md z-50"
   style={{ maxWidth: "500px", width: "100%" }}
