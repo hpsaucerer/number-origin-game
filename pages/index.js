@@ -757,7 +757,7 @@ return (
 <footer className="mt-8 text-xs text-gray-500 text-center">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
 </footer>
-
+</div>
 </div>
 </>
 );
