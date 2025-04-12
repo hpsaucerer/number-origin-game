@@ -640,7 +640,7 @@ const renderCategoryPills = () => {
 
     <DialogHeader>
       <DialogTitle>
-        <h2 className="text-lg text-gray-800 -mb-2">How To Play</h2>
+        <h2 className="text-lg text-gray-800 -mb-2 text-left">How To Play</h2>
       </DialogTitle>
     </DialogHeader>
 
@@ -697,8 +697,7 @@ const renderCategoryPills = () => {
       <X size={28} />
     </button>
    {/* Title */}
-    <h2 className="text-lg text-gray-800 mb-4">Statistics</h2>
-
+    <h2 className="text-lg text-gray-800 mb-4 text-left">Statistics</h2>
 
     {/* Formatted stat boxes */}
     <div className="grid grid-cols-4 gap-4 text-center my-6">
