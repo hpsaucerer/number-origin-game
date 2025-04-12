@@ -744,11 +744,13 @@ const renderCategoryPills = () => {
     </div>
   </DialogContent>
 </Dialog>
+
 <footer className="mt-8 text-xs text-gray-500 text-center">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
-</footer>       
-</div>
-  </>
-);
+</footer>
+
+</div> {/* closes .max-w-screen-lg wrapper */}
+</>     {/* closes main fragment */}
+);      {/* closes return() */}
 }
 
