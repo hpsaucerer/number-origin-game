@@ -566,17 +566,18 @@ const renderCategoryPills = () => {
     >
       Submit
     </Button>
-    <Button
-      onClick={handleClueReveal}
-      disabled={
-        revealedClues.length >= puzzle.clues.length ||
-        attempts >= maxGuesses
-      }
-      variant="outline"
-      className="flex-1 text-sm py-2"
-    >
-      Reveal a Clue
-    </Button>
+<Button
+  onClick={handleClueReveal}
+  disabled={
+    revealedClues.length >= puzzle.clues.length ||
+    attempts >= maxGuesses
+  }
+  variant="outline"
+  className="flex-1 text-sm py-2 relative overflow-hidden animate-shimmer"
+>
+  Reveal a Clue
+</Button>
+
   </div>
 </div>
 
