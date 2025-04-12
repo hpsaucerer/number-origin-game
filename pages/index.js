@@ -399,18 +399,10 @@ const renderCategoryPills = () => {
 };
 
 
-return (
+  return (
+
 <>
-  <WelcomeModal
-    open={showWelcome}
-    onOpenChange={setShowWelcome}
-    showTutorial={showTutorial}
-    setShowTutorial={setShowTutorial}
-  />
-
-  <div className={showWelcome ? "invisible" : "visible"}>
-    <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
-
+ <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
       <div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14">
         {/* Centered logo */}
         <div className="flex flex-1 justify-center">
@@ -535,7 +527,12 @@ return (
             </>
 ) : (
   <>
-
+    <WelcomeModal
+      open={showWelcome}
+      onOpenChange={setShowWelcome}
+      showTutorial={showTutorial}
+      setShowTutorial={setShowTutorial}
+    />
 
     <InteractiveTutorial
       open={showTutorial}
@@ -561,8 +558,7 @@ return (
     placeholder="Enter your guess..."
     className="w-full"
   />
-<div className="animate-test w-full h-10 rounded-md mt-4" />
-      
+
   <div className="flex flex-row justify-between gap-2">
     <Button
       onClick={handleGuess}
@@ -570,12 +566,22 @@ return (
     >
       Submit
     </Button>
-<Button className="animate-shimmer">
+<Button
+  onClick={handleClueReveal}
+  disabled={
+    revealedClues.length >= puzzle.clues.length ||
+    attempts >= maxGuesses
+  }
+  variant="outline"
+  className="flex-1 text-sm py-2 relative overflow-hidden animate-shimmer"
+>
   Reveal a Clue
 </Button>
 
   </div>
 </div>
+
+
 
     <div className="w-full max-w-sm mx-auto px-2">
       <OnScreenKeyboard
@@ -748,7 +754,7 @@ return (
 <footer className="mt-8 text-xs text-gray-500 text-center">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
 </footer>
-</div>
+
 </div>
 </>
 );
