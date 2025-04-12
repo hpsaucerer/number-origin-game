@@ -561,7 +561,8 @@ return (
     placeholder="Enter your guess..."
     className="w-full"
   />
-
+<div className="animate-test w-full h-10 rounded-md mt-4" />
+      
   <div className="flex flex-row justify-between gap-2">
     <Button
       onClick={handleGuess}
