@@ -570,19 +570,8 @@ return (
     >
       Submit
     </Button>
-<Button
-  onClick={handleClueReveal}
-  disabled={
-    revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses
-  }
-  className={`flex-1 text-sm py-2 relative border border-gray-300 text-black rounded-md shadow-inner bg-white ${
-    revealedClues.length < puzzle.clues.length && attempts < maxGuesses ? "overflow-hidden" : ""
-  }`}
->
-  {revealedClues.length < puzzle.clues.length && attempts < maxGuesses && (
-    <div className="absolute inset-0 animate-shimmer z-0" />
-  )}
- <Button className="animate-shimmer">Reveal a Clue</Button>
+<Button className="animate-shimmer">
+  Reveal a Clue
 </Button>
 
   </div>
