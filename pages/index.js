@@ -69,7 +69,7 @@ useEffect(() => {
 
   const interval = setInterval(updateCountdown, 1000);
   updateCountdown();
-  return () => clearInterval(interval);
+  ) => clearInterval(interval);
 }, []);
 
 
@@ -113,14 +113,14 @@ useEffect(() => {
 
   document.addEventListener("click", handleClickOutside);
 
-  return () => {
+  ) => {
     document.removeEventListener("click", handleClickOutside);
   };
 }, [openTooltip]);
 
 
   if (!puzzle) {
-    return (
+    
       <div className="flex flex-col items-center justify-center min-h-screen">
         <p>Loading puzzle...</p>
       </div>
@@ -402,6 +402,13 @@ const renderCategoryPills = () => {
   return (
 
 <>
+    <WelcomeModal
+      open={showWelcome}
+      onOpenChange={setShowWelcome}
+      showTutorial={showTutorial}
+      setShowTutorial={setShowTutorial}
+    />
+    
  <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
       <div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14">
         {/* Centered logo */}
@@ -527,12 +534,6 @@ const renderCategoryPills = () => {
             </>
 ) : (
   <>
-    <WelcomeModal
-      open={showWelcome}
-      onOpenChange={setShowWelcome}
-      showTutorial={showTutorial}
-      setShowTutorial={setShowTutorial}
-    />
 
     <InteractiveTutorial
       open={showTutorial}
