@@ -595,8 +595,8 @@ const renderCategoryPills = () => {
         }}
       />
     </div>
-  </>
-)}
+    </div>
+    )}
 
 </CardContent>
 </Card>
