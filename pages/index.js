@@ -566,11 +566,14 @@ const renderCategoryPills = () => {
     onClick={handleClueReveal}
     disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
     variant="outline"
-    className={`transition-transform duration-300 ease-in-out ${
-      revealedClues.length < puzzle.clues.length && attempts < maxGuesses
-        ? "animate-pulse-grow"
-        : ""
-    }`}
+className={`transition-transform duration-300 ease-in-out ${
+  !showWelcome &&
+  revealedClues.length < puzzle.clues.length &&
+  attempts < maxGuesses
+    ? "animate-pulse-grow"
+    : ""
+}`}
+
   >
     Reveal a Clue
   </Button>
