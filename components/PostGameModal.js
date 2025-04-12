@@ -46,8 +46,9 @@ const imagePathFor = (attempts, isCorrect) => {
 
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-<DialogContent className="w-full max-w-md mx-auto px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl">
+<Dialog open={open} onOpenChange={onClose}>
+  <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
+    <DialogContent className="w-full max-w-md px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
 
 
   <div className="relative">
@@ -100,6 +101,7 @@ const imagePathFor = (attempts, isCorrect) => {
           </Button>
         </div>
       </DialogContent>
+      </div>
     </Dialog>
   );
 }
