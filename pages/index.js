@@ -550,30 +550,35 @@ const renderCategoryPills = () => {
       {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
     </p>
 
-    <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-<Input
-  value={guess}
-  onChange={(e) => setGuess(e.target.value)}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      handleGuess();
+<div className="flex flex-row flex-wrap items-center justify-center gap-2 w-full">
+  <Input
+    value={guess}
+    onChange={(e) => setGuess(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") handleGuess();
+    }}
+    placeholder="Enter your guess..."
+    className="flex-1 min-w-0"
+  />
+  <Button
+    onClick={handleGuess}
+    className="whitespace-nowrap px-3 py-2 text-sm bg-[#3B82F6] text-white"
+  >
+    Submit
+  </Button>
+  <Button
+    onClick={handleClueReveal}
+    disabled={
+      revealedClues.length >= puzzle.clues.length ||
+      attempts >= maxGuesses
     }
-  }}
-  placeholder="Enter your guess..."
-  className="flex-1"
-/>
-      <Button onClick={handleGuess} className="bg-[#3B82F6] text-white">
-        Submit
-      </Button>
-      <Button
-        onClick={handleClueReveal}
-        disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
-        variant="outline"
-      >
-        Reveal a Clue
-      </Button>
-    </div>
-  </div>
+    variant="outline"
+    className="whitespace-nowrap px-3 py-2 text-sm"
+  >
+    Reveal a Clue
+  </Button>
+</div>
+
 
   <div className="w-full max-w-sm mx-auto px-2">
     <OnScreenKeyboard
