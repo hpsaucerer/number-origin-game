@@ -572,14 +572,14 @@ return (
 <Button
   onClick={handleClueReveal}
   disabled={
-    revealedClues.length >= puzzle.clues.length ||
-    attempts >= maxGuesses
+    revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses
   }
   variant="outline"
-  className="flex-1 text-sm py-2 relative overflow-hidden animate-shimmer"
+  className="flex-1 text-sm py-2 relative overflow-hidden"
 >
-  Reveal a Clue
+  <span className="animate-shimmer block">Reveal a Clue</span>
 </Button>
+
 
   </div>
 </div>
