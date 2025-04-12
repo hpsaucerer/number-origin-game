@@ -57,18 +57,21 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   }
 }
 
-.animate-shimmer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 200%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
-  pointer-events: none;
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #ffffff22, #ffffff66, #ffffff22);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
 
 
 @tailwind base;
