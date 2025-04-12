@@ -582,7 +582,7 @@ return (
   {revealedClues.length < puzzle.clues.length && attempts < maxGuesses && (
     <div className="absolute inset-0 animate-shimmer z-0" />
   )}
-  <span className="relative z-10">Reveal a Clue</span>
+ <Button className="animate-shimmer">Reveal a Clue</Button>
 </Button>
 
   </div>
