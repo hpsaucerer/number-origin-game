@@ -557,17 +557,24 @@ const renderCategoryPills = () => {
         placeholder="Enter your guess..."
         className="flex-1"
       />
-      <Button onClick={handleGuess} className="bg-[#3B82F6] text-white">
-        Submit
-      </Button>
-      <Button
-        onClick={handleClueReveal}
-        disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
-        variant="outline"
-      >
-        Reveal a Clue
-      </Button>
-    </div>
+<div className="flex gap-2 mt-2">
+  <Button
+    onClick={handleGuess}
+    className="flex-1 bg-[#3B82F6] text-white text-sm py-2"
+  >
+    Submit
+  </Button>
+  <Button
+    onClick={handleClueReveal}
+    disabled={
+      revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses
+    }
+    className="flex-1 text-sm py-2 border border-gray-300 text-black rounded-md shadow-inner bg-white"
+  >
+    Reveal a Clue
+  </Button>
+</div>
+
   </div>
 
   <div className="w-full max-w-sm mx-auto px-2">
