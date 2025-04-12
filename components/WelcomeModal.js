@@ -7,7 +7,7 @@ export default function WelcomeModal({ open, onOpenChange, showTutorial, setShow
     <Dialog open={open} onOpenChange={onOpenChange}>
 
 <DialogContent
-  className="mx-auto rounded-xl shadow-xl"
+  className="mx-auto rounded-xl shadow-xl bg-white z-50"
   style={{ maxWidth: "500px", width: "100%" }}
 >
 
