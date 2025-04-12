@@ -581,7 +581,7 @@ const renderCategoryPills = () => {
     className="w-full bg-[#3B82F6] text-white"
   >
     Submit
-  </Button>>
+  </Button>
 </div>
 
     </div>
