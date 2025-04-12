@@ -70,6 +70,18 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   background-size: 200% 100%;
 }
 
+@keyframes pulse-grow {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-pulse-grow {
+  animation: pulse-grow 1s ease-in-out infinite;
+}
 
 
 @tailwind base;
