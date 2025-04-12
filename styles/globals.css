@@ -57,14 +57,6 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
 
 .animate-shimmer {
   background: linear-gradient(90deg, #ffffff22, #ffffff66, #ffffff22);
