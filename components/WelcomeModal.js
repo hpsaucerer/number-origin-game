@@ -13,7 +13,7 @@ export default function WelcomeModal({ open, onOpenChange }) {
       <DialogOverlay className="fixed inset-0 bg-white/95 backdrop-blur-md backdrop-saturate-150 z-[9997]" />
 
       {/* High z-index wrapper to contain modal and prevent button ghosting */}
-      <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-12 px-4">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-6">
         <DialogContent
           className="rounded-xl shadow-xl bg-white w-full max-w-md"
           style={{ zIndex: 9999 }}
