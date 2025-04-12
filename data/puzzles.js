@@ -390,7 +390,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   clues: [
     "This number reflects a legacy of kings, daggers, and mistaken identities.",
     "It spans comedies, tragedies, and histories — and a few debates among scholars.",
-    "From Hamlet to The Tempest, this is the total count of works attributed to one playwright.",
+    "From Hamlet to The Tempest, this is the total count of works attributed to one playwright."
   ],
   keywords: ["shakespeare", "plays", "bard", "hamlet", "macbeth", "comedies", "tragedies", "histories"],
   funFact: "In A Midsummer Night’s Dream, a hilariously bad play-within-a-play features a character named “Wall” — one of the earliest examples of meta-theater."
@@ -406,6 +406,30 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   keywords: ["chess", "board", "squares", "tiles", "black and white", "strategy", "checkmate"],
   funFact: "“Checkmate” comes from the Persian phrase shāh māt, meaning “the king is helpless” — not dead, as often assumed. The game’s deep roots stretch back over 1,500 years."
+},
+{
+  number: 54,
+  formatted: "54",
+  answer: "Rubik's Cube Squares",
+  clues: [
+    "This number is a patchwork of color, symmetry, and frustration.",
+    "It’s made up of 6 sides, each a perfect 3 by 3.",
+    "You’ll find it on a cube known for twisting minds and fingers alike."
+  ],
+  keywords: ["rubik's cube", "cube", "colors", "puzzle", "faces", "3x3", "squares", "twist"],
+  funFact: "A standard Rubik’s Cube has 54 colored squares — 9 on each of its 6 faces. There are over **43 quintillion** possible combinations, but any cube can be solved in **20 moves or fewer**!"
+},
+{
+  number: 1215,
+  formatted: "1215",
+  answer: "Signing of the Magna Carta",
+  clues: [
+    "This number marks a moment when royal power met resistance.",
+    "It’s tied to a king, a group of barons, and a meadow called Runnymede.",
+    "Often seen as the birth year of constitutional law and civil liberties."
+  ],
+  keywords: ["magna carta", "king john", "runnymede", "british history", "liberty", "rights", "1215"],
+  funFact: "In 2007, a 700-year-old copy of the Magna Carta was discovered in a British town council’s archive — folded up in a desk, unnoticed for decades. It was later valued at over £20 million."
 }
 ];
 
