@@ -560,23 +560,22 @@ const renderCategoryPills = () => {
   />
 
   <div className="flex flex-row justify-between gap-2">
-    <Button
-      onClick={handleGuess}
-      className="flex-1 bg-[#3B82F6] text-white text-sm py-2"
-    >
-      Submit
-    </Button>
 <Button
   onClick={handleClueReveal}
   disabled={
-    revealedClues.length >= puzzle.clues.length ||
-    attempts >= maxGuesses
+    revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses
   }
   variant="outline"
-  className="flex-1 text-sm py-2 relative overflow-hidden animate-shimmer"
+  className={`flex-1 text-sm py-2 ${
+    revealedClues.length < puzzle.clues.length &&
+    attempts < maxGuesses
+      ? "animate-shimmer"
+      : ""
+  }`}
 >
   Reveal a Clue
 </Button>
+
 
   </div>
 </div>
