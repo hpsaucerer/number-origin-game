@@ -575,16 +575,15 @@ return (
   disabled={
     revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses
   }
-  className="flex-1 text-sm py-2 relative overflow-hidden border border-gray-300 text-black rounded-md shadow-inner bg-white"
+  className={`flex-1 text-sm py-2 relative border border-gray-300 text-black rounded-md shadow-inner bg-white ${
+    revealedClues.length < puzzle.clues.length && attempts < maxGuesses ? "overflow-hidden" : ""
+  }`}
 >
-  {/* Only show shimmer when active */}
   {revealedClues.length < puzzle.clues.length && attempts < maxGuesses && (
-    <div className="absolute inset-0 animate-shimmer pointer-events-none" />
+    <div className="absolute inset-0 animate-shimmer z-0" />
   )}
   <span className="relative z-10">Reveal a Clue</span>
 </Button>
-
-
 
   </div>
 </div>
