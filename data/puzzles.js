@@ -34,6 +34,7 @@ const puzzles = [
     "A long run with an ancient origin.",
     "London. New York. Boston."
   ],
+  revealFormattedAt: 3,
   answer: "Marathon distance",
   keywords: ["marathon", "26.2", "miles", "race", "distance"],
 funFact: "The event was born out of the legend of the Athenian courier Pheidippides, who in 490BC ran from the site of the battle of marathon to Athens with the message of Nike ('Victory') before promptly collapsing and dying."
@@ -83,6 +84,7 @@ funFact: "'Elementary, my dear Watson', the phrase most associated with Holmes n
     "Chomolungma by another name.",
     "The highest point above sea level on Earth."
   ],
+  revealFormattedAt: 3,
   answer: "Height of Mount Everest",
   keywords: ["8848", "everest", "mount everest", "mt everest", "highest mountain", "height"],
 funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gains about 4mm each year as the Indian Plate pushes under the Eurasian Plate. It's literally still growing!"
@@ -147,7 +149,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   revealFormattedAt: 1,
   answer: "The temperature at which paper burns (Fahrenheit 451)",
   keywords: ["paper burns", "Ray", "Bradbury", "book", "Fahrenheit", "451"],
-  funFact: "Written in 1953, Fahrenheit 451 featured wall-sized televisions, interactive soap operas, and “seashells” that fed sound directly into the ear — eerily close to flat-screens, binge shows, and AirPods."
+  funFact: "During WWII, the U.S. military tested flame-resistant secret documents that wouldn’t ignite below 600°F, just in case they were intercepted."
 },
   {
   number: "1776",
@@ -178,7 +180,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   formatted: "6,371km",
   clues: [
     "This number is used in calculations for GPS and satellite positioning.",
-    "Look again at the number - measured in km it's a cut above, or more accurately 'below'.",
+    "Look again at the number - measured in km it's a cut above, (or more accurately 'below').",
     "It's the average distance from the surface to the core — not the circumference!"
   ],
   revealFormattedAt: 2,
@@ -211,17 +213,17 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   funFact: "Douglas Adams picked 42 arbitrarily. He later said, 'I sat down at my desk, stared out the window, and thought: 42 will do.'"
 },
 {
-  number: 742,
-  formatted: "742",
-  answer: "The Simpsons’ House",
+  number: 33,
+  formatted: "33",
+  answer: "Vertebrae in the Human Spine",
   clues: [
-    "This number appears in Springfield, just off Evergreen Terrace.",
-    "It’s where a yellow family with four fingers lives.",
-    "Homer calls it home (when he's not at Moe’s)."
+    "This number is tied to balance, motion, and structural support.",
+    "It’s a count of segmented bones crucial for standing upright.",
+    "Grouped into five regions: cervical, thoracic, lumbar, sacral, coccygeal.",
   ],
-  keywords: ["simpsons", "742 evergreen", "homer", "marge", "springfield"],
-  funFact: "The full address of The Simpsons is 742 Evergreen Terrace — a number creator Matt Groening picked from a street near his own childhood home."
-}, 
+  keywords: ["vertebrae", "spine", "back", "backbone", "skeletal", "anatomy", "bones", "human skeleton"],
+  funFact: "While the human spine has 33 vertebrae, only 24 are truly movable — the rest are fused into the sacrum and coccyx. Fun twist: giraffes also have just 7 neck vertebrae, just like humans!"
+},
  {
   number: 11034,
   formatted: "11,034",
@@ -246,17 +248,17 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   keywords: ["grand canyon", "colorado river", "arizona", "canyon", "depth"],
   funFact: "The Grand Canyon is so vast, it creates its own weather patterns — you can see sun, snow, and storms in different parts at the same time."
 },
-  {
-  number: 3.14159,
-  formatted: "3.14159",
-  answer: "Pi",
+{
+  number: 687,
+  formatted: "687",
+  answer: "Martian Year",
   clues: [
-    "This number is never-ending, never-repeating.",
-    "It relates to both pies and circles.",
-    "March 14 is its unofficial holiday."
+    "This number is closely tied to dusty red landscapes and cosmic orbits.",
+    "It marks how long something would take to go full circle — far from home.",
+    "If you moved here, you'd only have a birthday every 687 Earth days.",
   ],
-  keywords: ["pi", "π", "circle", "irrational", "math constant"],
-  funFact: "The digits of Pi go on forever — but in 2019, Google calculated it to 31.4 trillion digits. That’s a lot of dessert."
+  keywords: ["mars", "martian", "orbit", "sun", "planet", "solar system", "earth days", "space"],
+  funFact: "Sunsets on Mars are blue. Fine dust in its atmosphere scatters red light away, letting blue light pass through — the opposite of Earth."
 },
   {
   number: 6174,
@@ -269,18 +271,6 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   ],
   keywords: ["kaprekar", "kaprekar's constant", "6174", "math trick", "number magic"],
   funFact: "Almost any 4-digit number (with at least two different digits) will reach 6174 in 7 steps or less. It’s like math’s version of gravity."
-},
- {
-  number: 73,
-  formatted: "73",
-  answer: "The Best Number (Sheldon Cooper)",
-  clues: [
-    "It’s a prime number, but with prime quirks.",
-    "Its mirror (37) and binary (1001001) are also primes.",
-    "A fictional physicist claimed it as the 'best number'."
-  ],
-  keywords: ["sheldon cooper", "prime", "binary", "73", "big bang theory"],
-  funFact: "In 'The Big Bang Theory', Sheldon declares 73 the best number: it's the 21st prime, its reverse (37) is the 12th prime, and 21 = 7×3. Geek heaven."
 },
   {
   number: 46,
@@ -341,7 +331,7 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
     "It winds through Egypt, Sudan, and Uganda.",
   ],
   keywords: ["Nile", "river", "Egypt", "Africa", "geography", "waterway", "longest river"],
-  funFact: "The Nile is one of the two longest rivers in the world, flowing over 6,650 km through northeastern Africa and supporting over 300 million people."
+  funFact: "Unlike most major rivers, the Nile flows northward, from Central Africa toward the Mediterranean Sea — a direction that once confused early European explorers."
 },
   {
   number: 31500,
@@ -392,6 +382,30 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
   revealFormattedAt: 2,
   keywords: ["absolute zero", "temperature", "Kelvin", "Celsius", "physics", "molecules"],
   funFact: "At −273.15°C, atoms stop vibrating — it's the coldest theoretical temperature possible, known as absolute zero."
+},
+{
+  number: 39,
+  formatted: "39",
+  answer: "Shakespeare's Plays",
+  clues: [
+    "This number reflects a legacy of kings, daggers, and mistaken identities.",
+    "It spans comedies, tragedies, and histories — and a few debates among scholars.",
+    "From Hamlet to The Tempest, this is the total count of works attributed to one playwright.",
+  ],
+  keywords: ["shakespeare", "plays", "bard", "hamlet", "macbeth", "comedies", "tragedies", "histories"],
+  funFact: "In A Midsummer Night’s Dream, a hilariously bad play-within-a-play features a character named “Wall” — one of the earliest examples of meta-theater."
+},
+{
+  number: 64,
+  formatted: "64",
+  answer: "Tiles on a Chessboard",
+  clues: [
+    "It’s a perfect square, often seen but rarely counted.",
+    "This number sits at the heart of a battlefield — equal parts black and white.",
+    "It’s part of a grid that has seen kings fall and pawns rise."
+  ],
+  keywords: ["chess", "board", "squares", "tiles", "black and white", "strategy", "checkmate"],
+  funFact: "“Checkmate” comes from the Persian phrase shāh māt, meaning “the king is helpless” — not dead, as often assumed. The game’s deep roots stretch back over 1,500 years."
 }
 ];
 
