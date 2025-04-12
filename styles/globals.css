@@ -72,6 +72,12 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   animation: shimmer 2s infinite linear;
 }
 
+.animate-test {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(90deg, red, yellow, red);
+  background-size: 200% 100%;
+}
+
 
 
 @tailwind base;
