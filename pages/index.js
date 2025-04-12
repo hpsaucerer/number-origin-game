@@ -548,7 +548,7 @@ const renderCategoryPills = () => {
         {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
       </p>
 
-  <div className="w-full flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-2 sm:space-y-0">
+<div className="w-full flex flex-col space-y-2">
   <Input
     value={guess}
     onChange={(e) => setGuess(e.target.value)}
@@ -556,26 +556,30 @@ const renderCategoryPills = () => {
       if (e.key === "Enter") handleGuess();
     }}
     placeholder="Enter your guess..."
-    className="flex-1 min-w-0"
+    className="w-full"
   />
-  <Button
-    onClick={handleGuess}
-    className="bg-[#3B82F6] text-white whitespace-nowrap text-sm px-4 py-2"
-  >
-    Submit
-  </Button>
-  <Button
-    onClick={handleClueReveal}
-    disabled={
-      revealedClues.length >= puzzle.clues.length ||
-      attempts >= maxGuesses
-    }
-    variant="outline"
-    className="whitespace-nowrap text-sm px-4 py-2"
-  >
-    Reveal a Clue
-  </Button>
+
+  <div className="flex flex-row justify-between gap-2">
+    <Button
+      onClick={handleGuess}
+      className="flex-1 bg-[#3B82F6] text-white text-sm py-2"
+    >
+      Submit
+    </Button>
+    <Button
+      onClick={handleClueReveal}
+      disabled={
+        revealedClues.length >= puzzle.clues.length ||
+        attempts >= maxGuesses
+      }
+      variant="outline"
+      className="flex-1 text-sm py-2"
+    >
+      Reveal a Clue
+    </Button>
+  </div>
 </div>
+
 
 
     <div className="w-full max-w-sm mx-auto px-2">
