@@ -6,7 +6,7 @@ const getDayIndex = (startDateStr) => {
   return Math.floor((today - launchDate) / (1000 * 60 * 60 * 24));
 };
 
-export const useDailyPuzzle = (puzzles, startDate = "2024-04-22") => {
+export const useDailyPuzzle = (puzzles, startDate = "2025-04-13") => {
   const [puzzle, setPuzzle] = useState(null);
   const [puzzleNumber, setPuzzleNumber] = useState(null);
 
