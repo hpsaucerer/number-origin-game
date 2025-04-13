@@ -6,7 +6,7 @@ import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 import PostGameHeader from "@/components/PostGameHeader";
 
-export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle, shareResult, attempts }) {
+export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle, puzzleNumber, attempts }) {
 
   if (!puzzle || !stats) return null;
 
@@ -93,12 +93,19 @@ const imagePathFor = (attempts, isCorrect) => {
 
         {/* 📤 Share */}
         <div className="flex justify-center mt-4">
-          <Button
-            onClick={() => shareResult()}
-            className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
-          >
-            <Share2 size={16} /> Share
-          </Button>
+<Button
+  onClick={() =>
+    shareResult({
+      isCorrect,
+      guessCount: attempts + 1,
+      puzzleNumber,
+    })
+  }
+  className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
+>
+  <Share2 size={16} /> Share
+</Button>
+
         </div>
       </DialogContent>
       </div>
