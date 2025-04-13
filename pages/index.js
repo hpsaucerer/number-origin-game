@@ -32,7 +32,6 @@ const colorClassMap = {
   export default function Home() {
     
   const [openTooltip, setOpenTooltip] = useState(null);
-  const [puzzle, setPuzzle] = useState(null);
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState(0);
@@ -45,6 +44,7 @@ const colorClassMap = {
   const [showTutorial, setShowTutorial] = useState(false);
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
+  const { puzzle, puzzleNumber } = useDailyPuzzle(puzzles, "2024-04-22"); // replace with your real launch date
 
   const toggleTooltip = (idx) => {
   setOpenTooltip((prev) => (prev === idx ? null : idx));
@@ -94,12 +94,6 @@ useEffect(() => {
   useEffect(() => {
     localStorage.setItem("numerusStats", JSON.stringify(stats));
   }, [stats]);
-
-useEffect(() => {
-  const randomIndex = Math.floor(Math.random() * puzzles.length);
-  setPuzzle(puzzles[randomIndex]);
-  setDateString(new Date().toLocaleDateString());
-}, []);
 
   
 useEffect(() => {
@@ -612,8 +606,9 @@ const renderCategoryPills = () => {
       </Card>
 
       <div className="flex flex-col items-center mt-4">
-        <p className="text-lg font-semibold">{dateString}</p>
-        <p className="text-md font-medium">No. {stats.gamesPlayed + 1}</p>
+      <p className="text-lg font-semibold">{new Date().toLocaleDateString()}</p>
+      <p className="text-md font-medium">Puzzle #{puzzleNumber}</p>
+
       </div>
 
 {isCorrect && (
