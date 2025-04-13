@@ -606,7 +606,7 @@ const renderCategoryPills = () => {
 
       <div className="flex flex-col items-center mt-4">
       <p className="text-lg font-semibold">{new Date().toLocaleDateString()}</p>
-      <p className="text-md font-medium">Puzzle #{puzzleNumber}</p>
+      <p className="text-md font-medium">Numerus #{puzzleNumber}</p>
 
       </div>
 
