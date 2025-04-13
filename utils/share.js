@@ -2,9 +2,10 @@ export function shareResult({ isCorrect, attempts, puzzle }) {
   const guessCount = isCorrect ? attempts + 1 : "X";
   const puzzleId = puzzle?.id ?? "?";
 
+export function shareResult({ isCorrect, guessCount, puzzleNumber }) {
   const shareText = isCorrect
-    ? `I cracked Numerus #${puzzleId} in ${guessCount} ${guessCount === 1 ? "guess" : "guesses"}! 🧠`
-    : `Numerus #${puzzleId} stumped me today! 😅`;
+    ? `I cracked Numerus #${puzzleNumber} in ${guessCount} ${guessCount === 1 ? "guess" : "guesses"}! 🧠`
+    : `Numerus #${puzzleNumber} stumped me today! 😅`;
 
   const fullMessage = `${shareText}\nPlay it here: https://numerus.site`;
 
