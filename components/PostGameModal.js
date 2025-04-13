@@ -6,7 +6,7 @@ import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 import PostGameHeader from "@/components/PostGameHeader";
 
-export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle, puzzleNumber, attempts }) {
+export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle, puzzleNumber, shareResult, attempts }) {
 
   if (!puzzle || !stats) return null;
 
