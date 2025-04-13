@@ -94,13 +94,14 @@ const imagePathFor = (attempts, isCorrect) => {
         {/* 📤 Share */}
         <div className="flex justify-center mt-4">
 <Button
-  onClick={() =>
-    shareResult({
-      isCorrect,
-      guessCount: attempts + 1,
-      puzzleNumber,
-    })
-  }
+onClick={() =>
+  shareResult({
+    isCorrect,
+    guessCount: isCorrect ? attempts + 1 : 4, // 4 attempts used if failed
+    puzzleNumber,
+  })
+}
+
   className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
 >
   <Share2 size={16} /> Share
