@@ -16,6 +16,8 @@ import FunFactBox from "../components/FunFactBox";
 import PostGameModal from "../components/PostGameModal";
 import { X } from "lucide-react";
 import { shareResult } from "../utils/share";
+import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
+import puzzles from "@/data/puzzles"; // adjust path if needed
 
 
 const colorClassMap = {
