@@ -217,7 +217,12 @@ setGuess("");
   };
 
 const shareTextHandler = () => {
-  shareResult({ isCorrect, attempts, puzzle });
+  shareResult({
+  isCorrect,
+  guessCount: attempts + 1,    // ✅ Convert attempts to final guess count
+  puzzleNumber,                // ✅ Pass the actual puzzle number
+});
+
 
 
   // Optional analytics tracking
@@ -436,7 +441,7 @@ const renderCategoryPills = () => {
       <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
         <CardContent className="overflow-hidden">
 
-  <PostGameModal
+<PostGameModal
   open={showPostGame}
   onClose={() => setShowPostGame(false)}
   isCorrect={isCorrect}
@@ -444,7 +449,9 @@ const renderCategoryPills = () => {
   puzzle={puzzle}
   shareResult={shareTextHandler}
   attempts={attempts}
-/>      
+  puzzleNumber={puzzleNumber} // ✅ Add this
+/>
+    
             
 <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
   {isCorrect ||
