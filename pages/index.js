@@ -608,8 +608,6 @@ const renderCategoryPills = () => {
       <p className="text-lg font-semibold">{new Date().toLocaleDateString()}</p>
       <p className="text-md font-medium">Numerus #{puzzleNumber}</p>
 
-</p>
-
       </div>
 
 {isCorrect && (
