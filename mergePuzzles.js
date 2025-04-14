@@ -39,7 +39,7 @@ const validNew = incoming.filter((p) => {
 });
 
 // Merge and sort by number
-const merged = [...existing, ...validNew].sort((a, b) => a.number - b.number);
+const merged = [...existing, ...validNew];
 
 // Save merged file
 const output = `const puzzles = ${JSON.stringify(merged, null, 2)};\n\nexport default puzzles;\n`;
