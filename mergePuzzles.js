@@ -46,3 +46,11 @@ const output = `const puzzles = ${JSON.stringify(merged, null, 2)};\n\nexport de
 fs.writeFileSync(existingPath, output);
 
 console.log(`✅ Merged ${validNew.length} new puzzle(s) into puzzles.js`);
+
+// Overwrite newPuzzles.js with an empty export
+fs.writeFileSync(
+  newPath,
+  "module.exports = [];\n"
+);
+console.log("🧹 Cleared newPuzzles.js after merge.");
+
