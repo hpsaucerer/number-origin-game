@@ -2,6 +2,7 @@ const newPuzzles = [
   {
     number: 1492,
     answer: "Christopher Columbus",
+    formatted: "1492",
     clues: [
       "This year changed world history.",
       "A Spanish-funded expedition left Palos de la Frontera.",
@@ -13,5 +14,4 @@ const newPuzzles = [
   }
 ];
 
-export default newPuzzles;
-
+module.exports = newPuzzles; // ✅ CommonJS export
