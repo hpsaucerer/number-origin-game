@@ -1,17 +1,16 @@
 const newPuzzles = [
-  {
-    number: 1492,
-    answer: "Christopher Columbus",
-    formatted: "1492",
-    clues: [
-      "This year changed world history.",
-      "A Spanish-funded expedition left Palos de la Frontera.",
-      "The Niña, the Pinta, and the Santa María.",
-      "The explorer mistakenly thought he had reached Asia."
-    ],
-    keywords: ["columbus", "explorer", "spain", "discovery"],
-    funFact: "1492 marked the beginning of European exploration of the Americas - a monumental moment in history."
-  }
+ {
+  number: 73,
+  formatted: "73",
+  answer: "The Best Number (Sheldon Cooper)",
+  clues: [
+    "It’s a prime number, but with prime quirks.",
+    "Its mirror (37) and binary (1001001) are also primes.",
+    "A fictional physicist claimed it as the 'best number'."
+  ],
+  keywords: ["sheldon cooper", "prime", "binary", "73", "big bang theory"],
+  funFact: "In 'The Big Bang Theory', Sheldon declares 73 the best number: it's the 21st prime, its reverse (37) is the 12th prime, and 21 = 7×3. Geek heaven."
+}
 ];
 
 module.exports = newPuzzles; // ✅ CommonJS export
