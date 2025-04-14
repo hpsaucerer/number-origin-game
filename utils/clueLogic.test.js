@@ -1,15 +1,7 @@
+import { revealNextClue } from "./game";
+
 const MAX_ATTEMPTS = 4;
 
-function revealNextClue(puzzle, revealedClues, attempts) {
-  if (
-    attempts >= MAX_ATTEMPTS ||
-    revealedClues.length >= puzzle.clues.length
-  ) {
-    return revealedClues;
-  }
-
-  return [...revealedClues, puzzle.clues[revealedClues.length]];
-}
 
 describe("Clue Reveal Logic", () => {
   const puzzle = {
