@@ -9,7 +9,7 @@ const newPuzzles = [
     "A fictional physicist claimed it as the 'best number'."
   ],
   keywords: ["sheldon cooper", "prime", "binary", "73", "big bang theory"],
-  funFact: "In 'The Big Bang Theory', Sheldon declares 73 to be the best number: it's the 21st prime, its reverse (37) is the 12th prime, and 21 = 7×3. Geek heaven."
+  funFact: "In 'The Big Bang Theory', Sheldon declares 73 the best number: it's the 21st prime, its reverse (37) is the 12th prime, and 21 = 7×3. Geek heaven."
 }
 ];
 
