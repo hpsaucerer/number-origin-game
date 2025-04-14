@@ -1,4 +1,5 @@
-import { updateStats } from "./game";
+const { isCorrectGuess } = require("./game");
+
 
 describe("Streak Tracking", () => {
   const baseStats = {
