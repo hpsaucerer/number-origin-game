@@ -617,13 +617,15 @@ const renderCategoryPills = () => {
 
       </div>
 
-<Button
-  onClick={shareTextHandler}
-  className="flex items-center space-x-2"
->
-  <Share2 size={16} />
-  <span>Share</span>
-</Button>
+{gameOver && (
+  <Button
+    onClick={shareTextHandler}
+    className="flex items-center space-x-2"
+  >
+    <Share2 size={16} />
+    <span>Share</span>
+  </Button>
+)}
 
 
       {/* Instructions Popup */}
