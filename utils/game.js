@@ -1,10 +1,10 @@
-export function isCorrectGuess(guess, answer, keywords = []) {
+function isCorrectGuess(guess, answer, keywords = []) {
   const cleaned = guess.trim().toLowerCase();
   if (cleaned === answer.trim().toLowerCase()) return true;
   return keywords.some((k) => cleaned.includes(k.toLowerCase()));
 }
 
-export function revealNextClue(puzzle, revealedClues, attempts, maxAttempts = 4) {
+function revealNextClue(puzzle, revealedClues, attempts, maxAttempts = 4) {
   if (
     attempts >= maxAttempts ||
     revealedClues.length >= puzzle.clues.length
@@ -15,7 +15,7 @@ export function revealNextClue(puzzle, revealedClues, attempts, maxAttempts = 4)
   return [...revealedClues, puzzle.clues[revealedClues.length]];
 }
 
-export function updateStats(stats, didWin, attempts) {
+function updateStats(stats, didWin, attempts) {
   const updated = { ...stats };
 
   updated.gamesPlayed += 1;
@@ -33,6 +33,13 @@ export function updateStats(stats, didWin, attempts) {
   return updated;
 }
 
-export function isValidGuess(guess) {
+function isValidGuess(guess) {
   return guess.trim().length > 0;
 }
+
+module.exports = {
+  isCorrectGuess,
+  revealNextClue,
+  updateStats,
+  isValidGuess,
+};
