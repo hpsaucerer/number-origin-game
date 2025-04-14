@@ -1,6 +1,4 @@
-function isValidGuess(guess) {
-  return guess.trim().length > 0;
-}
+import { isValidGuess } from "./game";
 
 describe("Input validation", () => {
   it("rejects empty input", () => {
