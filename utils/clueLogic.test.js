@@ -1,5 +1,4 @@
-const { isCorrectGuess } = require("./game");
-
+const { revealNextClue } = require("./game");
 
 const MAX_ATTEMPTS = 4;
 
