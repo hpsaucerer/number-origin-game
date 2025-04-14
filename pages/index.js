@@ -17,6 +17,12 @@ import PostGameModal from "../components/PostGameModal";
 import { X } from "lucide-react";
 import { shareResult } from "../utils/share";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
+import {
+  isCorrectGuess,
+  isValidGuess,
+  revealNextClue,
+  updateStats
+} from "../utils/game";
 
 
 const colorClassMap = {
@@ -123,92 +129,38 @@ useEffect(() => {
   }
 
 
-   const handleGuess = () => {
-   const cleanedGuess = guess.trim();
+const handleGuess = () => {
+  if (!isValidGuess(guess)) {
+    setInputError("Please enter a guess before submitting.");
+    return;
+  }
 
-    if (!cleanedGuess) {
-      setInputError("Please enter a guess before submitting.");
-      return;
+  setInputError(""); // Clear error
+
+  const didWin =
+    isCorrectGuess(guess, puzzle.answer, puzzle.keywords || []);
+
+  if (didWin) {
+    setIsCorrect(true);
+    setStats((prev) => updateStats(prev, true, attempts + 1));
+  } else {
+    const newAttempts = attempts + 1;
+    setAttempts(newAttempts);
+
+    if (newAttempts <= puzzle.clues.length) {
+      setRevealedClues((prev) =>
+        revealNextClue(puzzle, prev, newAttempts, maxGuesses)
+      );
     }
 
-    setInputError(""); // Clear error if guess is valid
-
-    if (
-      cleanedGuess.toLowerCase() === puzzle.answer.toLowerCase().trim() ||
-      puzzle.keywords?.some((keyword) =>
-        cleanedGuess.toLowerCase().includes(keyword.toLowerCase())
-      )
-    ) {
-      // Correct guess
-      setIsCorrect(true);
-      setStats((prev) => ({
-        ...prev,
-        gamesPlayed: prev.gamesPlayed + 1,
-        gamesWon: prev.gamesWon + 1,
-        currentStreak: prev.currentStreak + 1,
-        maxStreak: Math.max(prev.maxStreak, prev.currentStreak + 1),
-        guessDistribution: {
-          ...prev.guessDistribution,
-          [attempts + 1]: (prev.guessDistribution[attempts + 1] || 0) + 1,
-        },
-      }));
-
-      } else {
-   const nextAttempts = attempts + 1;
-
-  setAttempts(nextAttempts);
-
-  // Reveal a clue
-  if (nextAttempts <= puzzle.clues.length) {
-    setRevealedClues((prev) => [...prev, puzzle.clues[nextAttempts - 1]]);
+    if (newAttempts >= maxGuesses) {
+      setStats((prev) => updateStats(prev, false));
+    }
   }
 
-  // Final guess = mark as failed
-  if (nextAttempts >= maxGuesses) {
-    setStats((prev) => ({
-      ...prev,
-      gamesPlayed: prev.gamesPlayed + 1,
-      currentStreak: 0,
-      guessDistribution: {
-        ...prev.guessDistribution,
-        failed: (prev.guessDistribution.failed || 0) + 1,
-      },
-    }));
-  }
+  setGuess("");
+};
 
-  // Always trigger post-game modal if final guess is made
-  if (nextAttempts >= maxGuesses) {
-    setTimeout(() => setShowPostGame(true), 500);
-  }
-}
-
-
-// Trigger modal after final guess or correct answer
-let finalGuessMade = false;
-
-if (
-  cleanedGuess.toLowerCase() === puzzle.answer.toLowerCase().trim() ||
-  puzzle.keywords?.some((keyword) =>
-    cleanedGuess.toLowerCase().includes(keyword.toLowerCase())
-  )
-) {
-  finalGuessMade = true;
-} else {
-   const newAttempts = attempts + 1;
-
-  if (newAttempts >= maxGuesses) {
-    finalGuessMade = true;
-  }
-}
-
-// Slight delay to allow feedback before showing modal
-if (finalGuessMade) {
-  setTimeout(() => setShowPostGame(true), 500);
-}
-
-setGuess("");
-
-  };
 
   const handleClueReveal = () => {
     if (attempts >= maxGuesses || revealedClues.length >= puzzle.clues.length) return;
