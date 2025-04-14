@@ -137,12 +137,14 @@ const handleGuess = () => {
 
   setInputError(""); // Clear error
 
-  const didWin =
-    isCorrectGuess(guess, puzzle.answer, puzzle.keywords || []);
+  const didWin = isCorrectGuess(guess, puzzle.answer, puzzle.keywords || []);
 
   if (didWin) {
     setIsCorrect(true);
     setStats((prev) => updateStats(prev, true, attempts + 1));
+
+    // ✅ Show modal after a correct guess
+    setTimeout(() => setShowPostGame(true), 500);
   } else {
     const newAttempts = attempts + 1;
     setAttempts(newAttempts);
@@ -155,11 +157,15 @@ const handleGuess = () => {
 
     if (newAttempts >= maxGuesses) {
       setStats((prev) => updateStats(prev, false));
+
+      // ✅ Show modal after final incorrect guess
+      setTimeout(() => setShowPostGame(true), 500);
     }
   }
 
   setGuess("");
 };
+
 
 
   const handleClueReveal = () => {
