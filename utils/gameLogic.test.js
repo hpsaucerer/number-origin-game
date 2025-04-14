@@ -1,8 +1,4 @@
-function isCorrectGuess(guess, answer, keywords = []) {
-  const cleaned = guess.trim().toLowerCase();
-  if (cleaned === answer.trim().toLowerCase()) return true;
-  return keywords.some((k) => cleaned.includes(k.toLowerCase()));
-}
+import { isCorrectGuess } from "./game";
 
 describe("Guess checking logic", () => {
   it("should match exact answer", () => {
