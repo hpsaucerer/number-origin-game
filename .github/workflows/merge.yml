@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "data/newPuzzles.js"
+      - ".github/workflows/merge.yml"
+      - "mergePuzzles.js"
 
 jobs:
   build-and-validate:
@@ -20,6 +24,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Merge puzzles
+        run: node mergePuzzles.js
 
       - name: Run build
         run: npm run build
