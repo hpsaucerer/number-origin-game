@@ -44,6 +44,7 @@ const colorClassMap = {
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
   const { puzzle, puzzleNumber } = useDailyPuzzle(puzzles, "2025-04-13"); // replace with your real launch date
+  const gameOver = isCorrect || attempts >= maxGuesses;
 
   const toggleTooltip = (idx) => {
   setOpenTooltip((prev) => (prev === idx ? null : idx));
