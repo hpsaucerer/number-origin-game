@@ -1,4 +1,4 @@
-const { isCorrectGuess } = require("./game");
+const { isValidGuess } = require("./game");
 
 
 describe("Input validation", () => {
