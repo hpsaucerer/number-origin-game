@@ -1,4 +1,4 @@
-import { isCorrectGuess } from "./game";
+const { isCorrectGuess } = require("./game");
 
 describe("Guess checking logic", () => {
   it("should match exact answer", () => {
