@@ -1,5 +1,4 @@
-const { isCorrectGuess } = require("./game");
-
+const { updateStats } = require("./game");
 
 describe("Streak Tracking", () => {
   const baseStats = {
