@@ -6,8 +6,8 @@ on:
       - main
     paths:
       - "data/newPuzzles.js"
-      - ".github/workflows/merge.yml"
       - "mergePuzzles.js"
+      - ".github/workflows/merge.yml"
 
 jobs:
   build-and-validate:
@@ -27,6 +27,15 @@ jobs:
 
       - name: Merge puzzles
         run: node mergePuzzles.js
+
+      - name: Commit merged puzzles
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add data/puzzles.js data/newPuzzles.js
+          git commit -m "🤖 Auto-merge new puzzle(s)"
+          git push
+        continue-on-error: true
 
       - name: Run build
         run: npm run build
