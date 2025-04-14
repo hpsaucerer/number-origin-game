@@ -1,4 +1,5 @@
-import { revealNextClue } from "./game";
+const { isCorrectGuess } = require("./game");
+
 
 const MAX_ATTEMPTS = 4;
 
