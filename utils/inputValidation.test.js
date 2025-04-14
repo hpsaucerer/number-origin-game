@@ -1,4 +1,5 @@
-import { isValidGuess } from "./game";
+const { isCorrectGuess } = require("./game");
+
 
 describe("Input validation", () => {
   it("rejects empty input", () => {
