@@ -30,12 +30,13 @@ jobs:
 
       - name: Commit merged puzzles
         run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/puzzles.js data/newPuzzles.js
-          git commit -m "🤖 Auto-merge new puzzle(s)"
+          git commit -m "🤖 Auto-merge new puzzle(s)" || echo "No changes to commit"
           git push
-        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run build
         run: npm run build
