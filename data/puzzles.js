@@ -433,4 +433,5 @@ funFact: "Everest isn’t a fixed height — thanks to tectonic activity, it gai
 }
 ];
 
-export default puzzles;
+module.exports = puzzles;
+
