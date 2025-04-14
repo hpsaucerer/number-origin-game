@@ -617,7 +617,6 @@ const renderCategoryPills = () => {
 
       </div>
 
-{isCorrect && (
 <Button
   onClick={shareTextHandler}
   className="flex items-center space-x-2"
@@ -626,7 +625,6 @@ const renderCategoryPills = () => {
   <span>Share</span>
 </Button>
 
-      )}
 
       {/* Instructions Popup */}
 <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
