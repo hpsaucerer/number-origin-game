@@ -10,7 +10,7 @@ const newPuzzles = [
       "The explorer mistakenly thought he had reached Asia."
     ],
     keywords: ["columbus", "explorer", "spain", "discovery"],
-    funFact: "1492 marked the beginning of European exploration of the Americas."
+    funFact: "1492 marked the beginning of European exploration of the Americas - a monumental moment in history."
   }
 ];
 
