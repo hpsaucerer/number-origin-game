@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react";
 
-const getDayIndex = (startDateStr) => {
-  const launchDate = new Date(startDateStr);
-  const today = new Date();
-  return Math.floor((today - launchDate) / (1000 * 60 * 60 * 24));
-};
-
-export const useDailyPuzzle = (puzzles, startDate = "2025-04-13") => {
+export const useDailyPuzzle = (puzzles) => {
   const [puzzle, setPuzzle] = useState(null);
   const [puzzleNumber, setPuzzleNumber] = useState(null);
 
   useEffect(() => {
-    const dayIndex = getDayIndex(startDate);
+    const today = new Date().toLocaleDateString("en-CA"); // e.g., "2025-04-15"
+    const todayPuzzle = puzzles.find((p) => p.date === today);
 
-    if (dayIndex >= 0 && dayIndex < puzzles.length) {
-      setPuzzle(puzzles[dayIndex]);
-      setPuzzleNumber(dayIndex + 1);
+    if (todayPuzzle) {
+      setPuzzle(todayPuzzle);
+      // Get index in case you still want to show puzzle #n
+      const index = puzzles.findIndex((p) => p.date === today);
+      setPuzzleNumber(index + 1);
     } else {
-      setPuzzle(null); // Optional: set a fallback puzzle or error state
+      setPuzzle(null);
+      setPuzzleNumber(null);
+      console.warn("⚠️ No puzzle found for today’s date:", today);
     }
-  }, [puzzles, startDate]);
+  }, [puzzles]);
 
   return { puzzle, puzzleNumber };
 };
-
