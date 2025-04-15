@@ -137,13 +137,11 @@ const handleGuess = () => {
 
   setInputError(""); // Clear error
 
-  const guessLower = guess.toLowerCase().trim();
-const didWin =
-  guessLower === puzzle.answer.toLowerCase().trim() ||
-  puzzle.acceptableGuesses?.some(
-    (alt) => guessLower === alt.toLowerCase().trim()
-  );
-
+const didWin = isCorrectGuess(
+  guess,
+  puzzle.answer,
+  puzzle.acceptableGuesses || []
+);
 
   if (didWin) {
     setIsCorrect(true);
