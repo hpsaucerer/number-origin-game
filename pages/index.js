@@ -36,7 +36,7 @@ const colorClassMap = {
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState(0);
-  const [revealedClues, setRevealedClues] = useState([]);
+  const [revealedClues, ] = useState([]);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
@@ -101,12 +101,6 @@ useEffect(() => {
     localStorage.setItem("numerusStats", JSON.stringify(stats));
   }, [stats]);
 
-// Reveal the first clue when the puzzle loads
-useEffect(() => {
-  if (puzzle && revealedClues.length === 0) {
-    setRevealedClues([puzzle.clues[0]]);
-  }
-}, [puzzle]);
 
 // Check if the user already completed this puzzle
 useEffect(() => {
