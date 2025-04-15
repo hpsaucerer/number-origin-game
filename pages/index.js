@@ -17,12 +17,8 @@ import PostGameModal from "../components/PostGameModal";
 import { X } from "lucide-react";
 import { shareResult } from "../utils/share";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
-import {
-  isCorrectGuess,
-  isValidGuess,
-  revealNextClue,
-  updateStats
-} from "../utils/game";
+import { isCorrectGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
+import ComingSoon from "./components/ComingSoon";
 
 
 const colorClassMap = {
@@ -58,26 +54,32 @@ const colorClassMap = {
   const maxGuesses = 4;
   const gameOver = isCorrect || attempts >= maxGuesses;
 
-const [countdown, setCountdown] = useState("");
+const getCountdownToMidnightUK = () => {
+  const now = new Date();
+  const ukNow = new Date(now.toLocaleString("en-US", { timeZone: "Europe/London" }));
+
+  const midnightUK = new Date(ukNow);
+  midnightUK.setHours(24, 0, 0, 0); // midnight UK time
+
+  const diff = midnightUK - ukNow;
+
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+};
+
+const [countdown, setCountdown] = useState(getCountdownToMidnightUK());
 
 useEffect(() => {
-  const updateCountdown = () => {
-    const now = new Date();
-    const nextMidnight = new Date();
-    nextMidnight.setHours(24, 0, 0, 0);
-    const diff = nextMidnight - now;
+  const interval = setInterval(() => {
+    setCountdown(getCountdownToMidnightUK());
+  }, 1000);
 
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    setCountdown(`${hours}h ${minutes}m ${seconds}s`);
-  };
-
-  const interval = setInterval(updateCountdown, 1000);
-  updateCountdown();
   return () => clearInterval(interval);
 }, []);
+
 
 
     
@@ -120,14 +122,9 @@ useEffect(() => {
 }, [openTooltip]);
 
 
-  if (!puzzle) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <p>Loading puzzle...</p>
-      </div>
-    );
-  }
-
+if (!puzzle) {
+  return <ComingSoon nextDate={countdown} />;
+}
 
 const handleGuess = () => {
   if (!isValidGuess(guess)) {
