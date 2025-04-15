@@ -5,7 +5,7 @@ export const useDailyPuzzle = (puzzles) => {
   const [puzzleNumber, setPuzzleNumber] = useState(null);
 
   useEffect(() => {
-    const today = new Date().toLocaleDateString("en-CA"); // e.g., "2025-04-15"
+    const today = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/London" });
     const todayPuzzle = puzzles.find((p) => p.date === today);
 
     if (todayPuzzle) {
