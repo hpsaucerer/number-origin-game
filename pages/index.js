@@ -17,7 +17,7 @@ import PostGameModal from "../components/PostGameModal";
 import { X } from "lucide-react";
 import { shareResult } from "../utils/share";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
-import { isCorrectGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
+import { isCorrectGuess, isCloseGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
 import ComingSoon from "../components/ComingSoon";
 
 
@@ -153,7 +153,10 @@ const didWin = isCorrectGuess(
   puzzle.keywords || []
 );
 
+const wasClose = isCloseGuess(guess, puzzle.keywords || []);
+setInputError(!didWin && wasClose ? "💡 That’s close! Try again." : "");
 
+  
   if (didWin) {
     setIsCorrect(true);
     localStorage.setItem(`completed-${puzzle.date}`, "true");
