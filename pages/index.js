@@ -34,7 +34,7 @@ const colorClassMap = {
     
   const [openTooltip, setOpenTooltip] = useState(null);
   const [dateString, setDateString] = useState("");
-  const [guess, setGuess] = useState("");
+  const [guess, ] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [revealedClues, setRevealedClues] = useState([]);
   const [isCorrect, setIsCorrect] = useState(false);
@@ -532,12 +532,21 @@ const renderCategoryPills = () => {
 
 <div className="w-full max-w-md space-y-3">
   {/* Input field */}
-  <Input
-    value={guess}
-    onChange={(e) => setGuess(e.target.value)}
-    placeholder="Enter your guess..."
-    className="w-full"
-  />
+<Input
+  value={guess}
+  onChange={(e) => setGuess(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (!isCorrect && guess.trim()) {
+        handleGuess();
+      }
+    }
+  }}
+  placeholder="Enter your guess..."
+  className="w-full"
+/>
+
 
   {/* Buttons in a row */}
 <div className="flex flex-row md:flex-col justify-between gap-2 w-full max-w-xs mx-auto">
