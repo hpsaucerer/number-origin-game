@@ -183,7 +183,7 @@ const didWin = isCorrectGuess(
     }
   }
 
-  setGuess("");
+  ("");
 };
 
 
@@ -535,17 +535,12 @@ const renderCategoryPills = () => {
 <Input
   value={guess}
   onChange={(e) => setGuess(e.target.value)}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (!isCorrect && guess.trim()) {
-        handleGuess();
-      }
-    }
-  }}
+  onKeyDown={...}
   placeholder="Enter your guess..."
   className="w-full"
+  // disabled={isCorrect} ← comment this out temporarily
 />
+
 
 
   {/* Buttons in a row */}
