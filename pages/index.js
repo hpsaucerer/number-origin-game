@@ -574,7 +574,9 @@ const renderCategoryPills = () => {
       </Card>
 
       <div className="flex flex-col items-center mt-4">
-      <p className="text-lg font-semibold">{new Date().toLocaleDateString()}</p>
+      <p className="text-lg font-semibold">
+  {new Date().toLocaleDateString("en-GB", { timeZone: "Europe/London" })}
+</p>
       <p className="text-md font-medium">Numerus #{puzzleNumber}</p>
 
       </div>
