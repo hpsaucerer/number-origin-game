@@ -33,7 +33,7 @@ const puzzles = [
     number: "7",
     formatted: "7",
     answer: "Number of continents",
-    acceptableGuesses: ["seven continents", "7 continents", "number of continents"],
+    acceptableGuesses: ["Continents", "seven continents", "7 continents", "number of continents"],
     date: "2025-04-16",
     category: "geography",
     clues: [
@@ -41,7 +41,7 @@ const puzzles = [
       "They split the world’s landmasses.",
       "Asia. Africa. Europe."
     ],
-    keywords: ["continents", "landmasses", "earth"],
+    keywords: ["landmasses", "earth"],
     funFact: "Zealandia is a mostly submerged landmass beneath New Zealand — and some scientists argue it qualifies as an eighth continent. It’s 93% underwater, making it easy to miss!"
   },
   {
@@ -64,7 +64,7 @@ const puzzles = [
     number: "9.81",
     formatted: "9.81 m/s²",
     answer: "Gravitational acceleration on Earth",
-    acceptableGuesses: ["gravity", "earth gravity", "gravitational acceleration", "9.81"],
+    acceptableGuesses: ["gravity on earth", "gravity earth", "earth gravity", "gravity acceleration", "gravitational acceleration"],
     date: "2025-04-18",
     category: "science",
     clues: [
@@ -80,7 +80,7 @@ const puzzles = [
     number: 19,
     formatted: "19",
     answer: "Number of weeks 'Old Town Road' topped the Billboard Hot 100",
-    acceptableGuesses: ["old town road record", "19 weeks billboard", "longest #1 single"],
+    acceptableGuesses: ["old town road record", "old town road", "ol town road", "19 weeks billboard", "longest #1 single"],
     date: "2025-04-19",
     category: "culture",
     clues: [
@@ -95,7 +95,7 @@ const puzzles = [
     number: "23",
     formatted: "23",
     answer: "Michael Jordan's jersey number",
-    acceptableGuesses: ["michael jordan", "jordan jersey", "number 23"],
+    acceptableGuesses: ["michael jordan", "jordan jersey", "jordan number 23"],
     date: "2025-04-20",
     category: "sport",
     clues: [
@@ -103,14 +103,14 @@ const puzzles = [
       "Iconic in basketball and worn by greatness.",
       "Abducted by Bugs Bunny in Space Jam (1996)."
     ],
-    keywords: ["nba", "basketball", "jordan"],
+    keywords: ["nba", "basketball", "jordan", "MJ"],
     funFact: "After retiring from the NBA, Jordan played baseball with the Birmingham Barons, impressing with a 13-game hitting streak and 30 stolen bases — then returned to the Bulls and led them to another championship."
   },
   {
     number: "26.2",
     formatted: "26.2 miles",
     answer: "Marathon distance",
-    acceptableGuesses: ["marathon distance", "26.2", "run 26.2 miles"],
+    acceptableGuesses: ["marathon distance", "marathon race", "marathon run", "run 26.2 miles"],
     date: "2025-04-21",
     category: "sport",
     clues: [
