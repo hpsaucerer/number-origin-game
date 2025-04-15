@@ -20,6 +20,8 @@ import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { isCorrectGuess, isCloseGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
 import ComingSoon from "../components/ComingSoon";
 
+const DEV_MODE = true; // Set to false to disable puzzle picker in production
+
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
@@ -45,7 +47,13 @@ const colorClassMap = {
   const [showTutorial, setShowTutorial] = useState(false);
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
-  const { puzzle, puzzleNumber } = useDailyPuzzle(puzzles, "2025-04-13"); // replace with your real launch date
+  const { puzzle: dailyPuzzle, puzzleNumber: dailyNumber } = useDailyPuzzle(puzzles);
+
+  const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
+
+  const puzzle = selectedPuzzleIndex !== null ? puzzles[selectedPuzzleIndex] : dailyPuzzle;
+  const puzzleNumber = selectedPuzzleIndex !== null ? selectedPuzzleIndex + 1 : dailyNumber;
+
 
   const toggleTooltip = (idx) => {
   setOpenTooltip((prev) => (prev === idx ? null : idx));
@@ -412,6 +420,29 @@ const renderCategoryPills = () => {
         </div>
       </div>
 
+{DEV_MODE && (
+  <div className="mb-2 flex flex-col items-center">
+    <label htmlFor="puzzleSelector" className="text-sm font-medium mb-1 text-gray-700">🛠 Dev: Select a Puzzle</label>
+    <select
+      id="puzzleSelector"
+      value={selectedPuzzleIndex ?? ""}
+      onChange={(e) => {
+        const value = e.target.value;
+        setSelectedPuzzleIndex(value === "" ? null : parseInt(value));
+      }}
+      className="border px-2 py-1 rounded text-sm text-gray-700"
+    >
+      <option value="">Today’s puzzle</option>
+      {puzzles.map((p, i) => (
+        <option key={p.date} value={i}>
+          #{i + 1} — {p.date} — {p.number}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
+              
       <h1 className="text-2xl font-bold">Today's number is:</h1>
 
       <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
