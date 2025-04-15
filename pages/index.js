@@ -149,8 +149,10 @@ const handleGuess = () => {
 const didWin = isCorrectGuess(
   guess,
   puzzle.answer,
-  puzzle.acceptableGuesses || []
+  puzzle.acceptableGuesses || [],
+  puzzle.keywords || []
 );
+
 
   if (didWin) {
     setIsCorrect(true);
