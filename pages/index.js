@@ -535,11 +535,19 @@ const renderCategoryPills = () => {
 <Input
   value={guess}
   onChange={(e) => setGuess(e.target.value)}
-  onKeyDown={...}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (!isCorrect && guess.trim()) {
+        handleGuess();
+      }
+    }
+  }}
   placeholder="Enter your guess..."
   className="w-full"
-  // disabled={isCorrect} ← comment this out temporarily
+  // disabled={isCorrect}
 />
+
 
 
 
