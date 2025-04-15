@@ -1,8 +1,12 @@
-function isCorrectGuess(guess, answer, keywords = []) {
+function isCorrectGuess(guess, answer, acceptableGuesses = []) {
   const cleaned = guess.trim().toLowerCase();
-  if (cleaned === answer.trim().toLowerCase()) return true;
-  return keywords.some((k) => cleaned.includes(k.toLowerCase()));
+
+  return (
+    cleaned === answer.trim().toLowerCase() ||
+    acceptableGuesses.some((alt) => cleaned === alt.toLowerCase())
+  );
 }
+
 
 function revealNextClue(puzzle, revealedClues, attempts, maxAttempts = 4) {
   if (
