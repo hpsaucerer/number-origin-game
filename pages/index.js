@@ -18,7 +18,7 @@ import { X } from "lucide-react";
 import { shareResult } from "../utils/share";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { isCorrectGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
-import ComingSoon from "./components/ComingSoon";
+import ComingSoon from "../components/ComingSoon";
 
 
 const colorClassMap = {
