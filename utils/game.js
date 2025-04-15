@@ -8,6 +8,11 @@ function isCorrectGuess(guess, answer, acceptableGuesses = [], keywords = []) {
   );
 }
 
+function isCloseGuess(guess, keywords = []) {
+  const cleaned = guess.trim().toLowerCase();
+  return keywords.some((kw) => cleaned.includes(kw.toLowerCase()));
+}
+
 function revealNextClue(puzzle, revealedClues, attempts, maxAttempts = 4) {
   if (
     attempts >= maxAttempts ||
@@ -43,6 +48,7 @@ function isValidGuess(guess) {
 
 module.exports = {
   isCorrectGuess,
+  isCloseGuess,
   revealNextClue,
   updateStats,
   isValidGuess,
