@@ -1,10 +1,9 @@
-function isCorrectGuess(guess, answer, acceptableGuesses = [], keywords = []) {
+function isCorrectGuess(guess, answer, acceptableGuesses = []) {
   const cleaned = guess.trim().toLowerCase();
 
   return (
     cleaned === answer.trim().toLowerCase() ||
-    acceptableGuesses.some((alt) => cleaned === alt.toLowerCase()) ||
-    keywords.some((kw) => cleaned.includes(kw.toLowerCase()))
+    acceptableGuesses.some((alt) => cleaned === alt.toLowerCase())
   );
 }
 
