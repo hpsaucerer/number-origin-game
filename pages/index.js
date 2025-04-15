@@ -149,14 +149,13 @@ const handleGuess = () => {
 const didWin = isCorrectGuess(
   guess,
   puzzle.answer,
-  puzzle.acceptableGuesses || [],
-  puzzle.keywords || []
+  puzzle.acceptableGuesses || []
 );
 
 const wasClose = isCloseGuess(guess, puzzle.keywords || []);
 setInputError(!didWin && wasClose ? "💡 That’s close! Try again." : "");
 
-  
+
   if (didWin) {
     setIsCorrect(true);
     localStorage.setItem(`completed-${puzzle.date}`, "true");
