@@ -121,6 +121,18 @@ useEffect(() => {
   }
 }, [puzzle]);
 
+    useEffect(() => {
+  if (puzzle && DEV_MODE) {
+    // 🔁 Reset game state when switching puzzles in dev mode
+    localStorage.removeItem(`completed-${puzzle.date}`);
+    setIsCorrect(false);
+    setAttempts(0);
+    setRevealedClues([]);
+    setGuess("");
+    setInputError("");
+  }
+}, [puzzle]);
+
     
   
 useEffect(() => {
