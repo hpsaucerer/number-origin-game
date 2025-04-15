@@ -34,7 +34,7 @@ const colorClassMap = {
     
   const [openTooltip, setOpenTooltip] = useState(null);
   const [dateString, setDateString] = useState("");
-  const [guess, ] = useState("");
+  const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [revealedClues, setRevealedClues] = useState([]);
   const [isCorrect, setIsCorrect] = useState(false);
@@ -545,9 +545,8 @@ const renderCategoryPills = () => {
   }}
   placeholder="Enter your guess..."
   className="w-full"
-  // disabled={isCorrect}
+  disabled={isCorrect}
 />
-
 
 
 
