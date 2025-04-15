@@ -81,7 +81,6 @@ useEffect(() => {
 }, []);
 
 
-
     
   const [stats, setStats] = useState({
     gamesPlayed: 0,
@@ -102,6 +101,25 @@ useEffect(() => {
     localStorage.setItem("numerusStats", JSON.stringify(stats));
   }, [stats]);
 
+// Reveal the first clue when the puzzle loads
+useEffect(() => {
+  if (puzzle && revealedClues.length === 0) {
+    setRevealedClues([puzzle.clues[0]]);
+  }
+}, [puzzle]);
+
+// Check if the user already completed this puzzle
+useEffect(() => {
+  if (puzzle) {
+    const alreadyCompleted =
+      localStorage.getItem(`completed-${puzzle.date}`) === "true";
+    if (alreadyCompleted) {
+      setIsCorrect(true);
+    }
+  }
+}, [puzzle]);
+
+    
   
 useEffect(() => {
   const handleClickOutside = (event) => {
@@ -142,6 +160,7 @@ const didWin = isCorrectGuess(
 
   if (didWin) {
     setIsCorrect(true);
+    localStorage.setItem(`completed-${puzzle.date}`, "true");
     setStats((prev) => updateStats(prev, true, attempts + 1));
 
     // ✅ Show modal after a correct guess
