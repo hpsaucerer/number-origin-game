@@ -20,7 +20,7 @@ import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { isCorrectGuess, isCloseGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
 import ComingSoon from "../components/ComingSoon";
 
-const DEV_MODE = true; // Set to false to disable puzzle picker in production
+const DEV_MODE = false; // Set to false to disable puzzle picker in production
 
 
 const colorClassMap = {
