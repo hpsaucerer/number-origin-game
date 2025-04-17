@@ -45,7 +45,7 @@ export default function Header({ onHelpClick, onStatsClick }) {
     <img
       src="/logo.svg"
       alt="Game Logo"
-      className="h-20 sm:h-24 md:h-28 lg:h-52 w-auto"
+     className="h-18 sm:h-16 md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
     />
   </Link>
 </div>
