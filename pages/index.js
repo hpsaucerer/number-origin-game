@@ -430,7 +430,7 @@ const renderCategoryPills = () => {
   <img
     src="/logo.svg"
     alt="Game Logo"
-    className="h-18 sm:h-16 md:h-20 lg:h-24 w-auto translate-y-4"
+    className="h-16 sm:h-14 md:h-18 lg:h-22 w-auto translate-y-4"
   />
 </Link>
 
