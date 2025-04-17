@@ -448,7 +448,7 @@ const renderCategoryPills = () => {
       </div>
 
       {/* Logo */}
-      <Link href="/" className="flex items-center">
+      <Link href="/" className="flex items-center ml-[-4px] sm:ml-0">
         <img
           src="/logo.svg"
           alt="Game Logo"
