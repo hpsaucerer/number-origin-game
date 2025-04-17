@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FaInstagram, FaTwitter, FaGithub } from "react-icons/fa";
-import Header from "../components/ui/Header";
+import Header from "../components/ui/header";
 
 export default function HomePage() {
   return (
