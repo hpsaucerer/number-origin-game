@@ -426,13 +426,14 @@ const renderCategoryPills = () => {
   </button>
 
   {/* Center Logo Image */}
-<Link href="/about" className="flex items-center justify-center flex-1 h-full">
+<Link href="/about" className="flex justify-center flex-1">
   <img
     src="/logo.svg"
     alt="Game Logo"
-    className="h-16 sm:h-14 md:h-18 lg:h-22 w-auto translate-y-4"
+    className="h-8 sm:h-10 md:h-14 lg:h-20 xl:h-24 w-auto translate-y-2"
   />
 </Link>
+
 
   {/* Right-side icon buttons */}
   <div className="flex items-center space-x-3">
