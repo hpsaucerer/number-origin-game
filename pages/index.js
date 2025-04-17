@@ -22,7 +22,7 @@ import ComingSoon from "../components/ComingSoon";
 import Link from "next/link";
 import { HelpCircle } from "lucide-react";
 import { BookOpen } from "lucide-react";
-
+import Header from "@/components/ui/header";
 const DEV_MODE = false; // Set to false to disable puzzle picker in production
 
 
