@@ -505,7 +505,7 @@ const renderCategoryPills = () => {
 )}
 
               
-      <h1 className="text-2xl font-bold">Today's number is:</h1>
+      <h1 className="text-2xl font-bold mt-2">Today's number is:</h1>
 
       <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
         <CardContent className="overflow-hidden">
