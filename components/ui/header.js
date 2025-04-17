@@ -1,80 +1,70 @@
-import { useState } from "react";
 import Link from "next/link";
-import { BarChart, BookOpen, Menu } from "lucide-react";
+import { useState } from "react";
+import { BookOpen, BarChart } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Header({ onHelpClick, onStatsClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="bg-[#3B82F6] p-2 relative z-50">
-      <div className="flex items-center justify-between h-14">
-        {/* Hamburger Icon */}
-        <div className="flex items-center">
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="text-white text-2xl ml-2 focus:outline-none"
-            aria-label="Menu"
-          >
-            <Menu />
-          </button>
-        </div>
+    <div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14 relative">
+      {/* Hamburger Icon */}
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="text-white text-2xl font-bold px-2 hover:text-blue-200"
+        aria-label="Toggle menu"
+      >
+        ☰
+      </button>
 
-        {/* Logo */}
-        <Link href="/about" className="flex justify-center flex-1">
-          <img
-            src="/logo.svg"
-            alt="Game Logo"
-            className="h-18 sm:h-16 md:h-20 lg:h-28 xl:h-36 w-auto translate-y-4"
-          />
-        </Link>
+      {/* Center Logo */}
+      <Link href="/about" className="flex justify-center flex-1">
+        <img
+          src="/logo.svg"
+          alt="Game Logo"
+          className="h-18 sm:h-16 md:h-20 lg:h-28 xl:h-36 w-auto translate-y-4"
+        />
+      </Link>
 
-        {/* Right: Icons */}
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={onHelpClick}
-            className="bg-white p-2 rounded shadow"
-            aria-label="How to Play"
-          >
-            <BookOpen className="text-[#3B82F6]" />
-          </button>
-          <button
-            onClick={onStatsClick}
-            className="bg-white p-2 rounded shadow"
-            aria-label="Stats"
-          >
-            <BarChart className="text-[#3B82F6]" />
-          </button>
-        </div>
+      {/* Right Icons */}
+      <div className="flex items-center space-x-3">
+        <Button
+          onClick={onHelpClick}
+          className="bg-white border border-[#3B82F6] px-3 py-2 rounded-lg hover:bg-[#3B82F6] hover:text-white transition shadow-md"
+          title="How to Play"
+          aria-label="How to Play"
+        >
+          <BookOpen size={20} strokeWidth={2.25} className="text-[#3B82F6]" />
+        </Button>
+        <Button
+          onClick={onStatsClick}
+          className="group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+          title="Your Stats"
+          aria-label="Your Stats"
+        >
+          <BarChart size={20} className="text-[#3B82F6] group-hover:text-white transition" />
+        </Button>
       </div>
 
       {/* Dropdown Menu */}
       {menuOpen && (
-        <div className="absolute top-full left-2 bg-white rounded shadow-md mt-2 py-2 px-4 space-y-2 w-44">
+        <div className="absolute top-14 left-2 bg-white shadow-md rounded-md z-50 w-40">
           <Link
-            href="/game"
-            className="block text-[#3B82F6] hover:underline"
+            href="/"
+            className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
             onClick={() => setMenuOpen(false)}
           >
-            Game
+            Daily Puzzle
           </Link>
           <Link
             href="/about"
-            className="block text-[#3B82F6] hover:underline"
+            className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
             onClick={() => setMenuOpen(false)}
           >
             About
           </Link>
-          <a
-            href="https://example.com/feedback"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block text-[#3B82F6] hover:underline"
-            onClick={() => setMenuOpen(false)}
-          >
-            Feedback
-          </a>
         </div>
       )}
-    </header>
+    </div>
   );
 }
