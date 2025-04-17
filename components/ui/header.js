@@ -1,7 +1,7 @@
 // components/Header.js
 import Link from "next/link";
 import { BarChart } from "lucide-react";
-import { BookOpen } from "react-icons/fa";
+import { BookOpen } from "lucide-react";
 
 export default function Header({ onHelpClick, onStatsClick }) {
   return (
