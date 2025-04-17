@@ -412,7 +412,6 @@ const renderCategoryPills = () => {
   onClose={() => setShowTutorial(false)}
 />
  <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
-      <div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14">
         {/* Centered logo */}
 <div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14 relative">
   {/* Hamburger Icon */}
