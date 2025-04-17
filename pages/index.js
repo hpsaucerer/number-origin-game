@@ -418,7 +418,7 @@ const renderCategoryPills = () => {
     {/* Left Side: Hamburger + Logo */}
     <div className="flex items-center gap-1 sm:gap-3">
       {/* Hamburger + Dropdown */}
-      <div className="relative flex items-start mr-2">
+      <div className="relative flex items-start">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="text-white text-2xl font-bold px-1 hover:text-blue-200"
