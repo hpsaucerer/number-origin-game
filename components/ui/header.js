@@ -7,7 +7,7 @@ export default function Header({ onHelpClick, onStatsClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14 relative">
+    <div className="bg-[#3B82F6] p-2 flex items-center justify-between h-14 relative max-w-screen-lg w-full mx-auto px-4">
       {/* Hamburger Icon */}
       <button
         onClick={() => setMenuOpen(!menuOpen)}
