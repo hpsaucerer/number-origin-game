@@ -1,5 +1,11 @@
+import { useState } from "react";
+import Link from "next/link";
+import { BookOpen, BarChart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 export default function Header({ onHelpClick, onStatsClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
+
 
   return (
     <header>
