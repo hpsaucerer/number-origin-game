@@ -9,45 +9,47 @@ export default function Header({ onHelpClick, onStatsClick }) {
   return (
     <header>
       <div className="bg-[#3B82F6] px-4 py-2 flex items-center justify-between h-16 max-w-screen-lg w-full mx-auto">
-        {/* Left Side: Hamburger + Logo */}
-        <div className="flex items-center space-x-3">
-          {/* Hamburger + Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="text-white text-2xl font-bold px-1 hover:text-blue-200"
-              aria-label="Toggle menu"
-            >
-              ☰
-            </button>
+{/* Left Side: Hamburger + Logo */}
+<div className="flex items-center space-x-3">
+  {/* Hamburger only */}
+  <div className="relative flex items-center">
+    <button
+      onClick={() => setMenuOpen(!menuOpen)}
+      className="text-white text-2xl font-bold px-1 hover:text-blue-200"
+      aria-label="Toggle menu"
+    >
+      ☰
+    </button>
 
-            {menuOpen && (
-              <div className="absolute top-full right-0 mt-2 w-44 bg-white rounded-xl shadow-lg z-50 transition-all duration-200 ease-out">
-                <Link
-                  href="/"
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
-                >
-                  Daily Puzzle
-                </Link>
-                <Link
-                  href="/about"
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
-                >
-                  About
-                </Link>
-              </div>
-            )}
-          </div>
+    {/* Menu dropdown positioned under the button */}
+    {menuOpen && (
+      <div className="absolute left-0 top-full mt-2 w-44 bg-white rounded-xl shadow-lg z-50 transition-all duration-200 ease-out">
+        <Link
+          href="/"
+          className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+        >
+          Daily Puzzle
+        </Link>
+        <Link
+          href="/about"
+          className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+        >
+          About
+        </Link>
+      </div>
+    )}
+  </div>
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <img
-              src="/logo.svg"
-              alt="Game Logo"
-              className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto"
-            />
-          </Link>
-        </div>
+  {/* Logo */}
+  <Link href="/" className="flex items-center">
+    <img
+      src="/logo.svg"
+      alt="Game Logo"
+      className="h-20 sm:h-24 md:h-28 lg:h-52 w-auto"
+    />
+  </Link>
+</div>
+
 
         {/* Right-side icon buttons */}
         <div className="flex items-center space-x-3">
