@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FaInstagram, FaTwitter, FaGithub } from "react-icons/fa";
 import Header from "../components/ui/header";
 
-export default function HomePage() {
+export default function AboutPage() {
   return (
     <>
       <Header />
