@@ -445,18 +445,19 @@ const renderCategoryPills = () => {
   title="How to Play"
   aria-label="How to Play"
 >
-  <BookOpen size={20} strokeWidth={2.25} />
+  <BookOpen size={20} strokeWidth={2.25} className="text-[#3B82F6]" />
 </Button>
 
     {/* Stats Icon */}
-    <Button
-      onClick={() => setShowStats(true)}
-      className="bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
-      title="Your Stats"
-      aria-label="Your Stats"
-    >
-      <BarChart size={20} />
-    </Button>
+<Button
+  onClick={() => setShowStats(true)}
+  className="group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+  title="Your Stats"
+  aria-label="Your Stats"
+>
+  <BarChart size={20} className="text-[#3B82F6] group-hover:text-white transition" />
+</Button>
+
   </div>
 
   {/* Dropdown Menu */}
