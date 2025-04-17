@@ -416,9 +416,9 @@ const renderCategoryPills = () => {
 <header>
   <div className="bg-[#3B82F6] px-4 py-2 flex items-center justify-between h-16 max-w-screen-lg w-full mx-auto">
     {/* Left Side: Hamburger + Logo */}
-    <div className="flex items-center space-x-3">
-      {/* Hamburger only */}
-      <div className="relative flex items-start">
+    <div className="flex items-center">
+      {/* Hamburger + Dropdown */}
+      <div className="relative flex items-start mr-2">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="text-white text-2xl font-bold px-1 hover:text-blue-200"
@@ -448,7 +448,7 @@ const renderCategoryPills = () => {
       </div>
 
       {/* Logo */}
-      <Link href="/" className="flex items-center ml-[-4px] sm:ml-0">
+      <Link href="/" className="flex items-center">
         <img
           src="/logo.svg"
           alt="Game Logo"
