@@ -21,6 +21,7 @@ import { isCorrectGuess, isCloseGuess, isValidGuess, revealNextClue, updateStats
 import ComingSoon from "../components/ComingSoon";
 import Link from "next/link";
 import { HelpCircle } from "lucide-react";
+import { CircleHelp } from "lucide-react";
 
 const DEV_MODE = false; // Set to false to disable puzzle picker in production
 
