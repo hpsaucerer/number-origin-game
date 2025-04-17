@@ -19,6 +19,7 @@ import { shareResult } from "../utils/share";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { isCorrectGuess, isCloseGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
 import ComingSoon from "../components/ComingSoon";
+import Link from "next/link";
 
 const DEV_MODE = false; // Set to false to disable puzzle picker in production
 
@@ -48,6 +49,7 @@ const colorClassMap = {
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
   const { puzzle: dailyPuzzle, puzzleNumber: dailyNumber } = useDailyPuzzle(puzzles);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
 
@@ -412,25 +414,69 @@ const renderCategoryPills = () => {
  <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
       <div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14">
         {/* Centered logo */}
-        <div className="flex flex-1 justify-center">
-          <img src="/logo.svg" alt="Game Logo" className="h-40 w-auto max-h-full mt-6" />
-        </div>
-        {/* Buttons on the right */}
-        <div className="flex space-x-4">
-          <Button
-            onClick={() => setShowInstructions(true)}
-            className="bg-white text-black font-bold border border-[#3B82F6] px-4 py-2 rounded-lg hover:bg-[#3B82F6] hover:text-white transition"
-          >
-            How to Play
-          </Button>
-          <Button
-            onClick={() => setShowStats(true)}
-            className="bg-white border border-[#3B82F6] px-4 py-2 rounded-lg hover:bg-[#3B82F6] hover:text-white transition"
-          >
-            <BarChart size={20} />
-          </Button>
-        </div>
-      </div>
+<div className="w-full bg-[#3B82F6] p-2 flex items-center justify-between h-14 relative">
+  {/* Hamburger Icon */}
+  <button
+    onClick={() => setMenuOpen(!menuOpen)}
+    className="text-white text-2xl font-bold px-2 hover:text-blue-200"
+    aria-label="Toggle menu"
+  >
+    ☰
+  </button>
+
+  {/* Center Logo Image */}
+  <Link href="/about" className="flex justify-center flex-1">
+    <img
+      src="/logo.svg"
+      alt="Numerus logo"
+      className="h-10 w-auto cursor-pointer hover:opacity-80 transition"
+    />
+  </Link>
+
+  {/* Right-side icon buttons */}
+  <div className="flex items-center space-x-3">
+    {/* How to Play Icon */}
+    <button
+      onClick={() => setShowInstructions(true)}
+      className="text-white text-lg hover:text-blue-200 transition"
+      title="How to Play"
+      aria-label="How to Play"
+    >
+      ❔
+    </button>
+
+    {/* Stats Icon */}
+    <Button
+      onClick={() => setShowStats(true)}
+      className="bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+      title="Your Stats"
+      aria-label="Your Stats"
+    >
+      <BarChart size={20} />
+    </Button>
+  </div>
+
+  {/* Dropdown Menu */}
+  {menuOpen && (
+    <div className="absolute top-14 left-2 bg-white shadow-md rounded-md z-50 w-40">
+      <Link
+        href="/"
+        className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
+        onClick={() => setMenuOpen(false)}
+      >
+        Daily Puzzle
+      </Link>
+      <Link
+        href="/about"
+        className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
+        onClick={() => setMenuOpen(false)}
+      >
+        About
+      </Link>
+    </div>
+  )}
+</div>
+
 
 {DEV_MODE && (
   <div className="mb-2 flex flex-col items-center">
