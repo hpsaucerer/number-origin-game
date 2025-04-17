@@ -21,7 +21,7 @@ import { isCorrectGuess, isCloseGuess, isValidGuess, revealNextClue, updateStats
 import ComingSoon from "../components/ComingSoon";
 import Link from "next/link";
 import { HelpCircle } from "lucide-react";
-import { CircleHelp } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 const DEV_MODE = false; // Set to false to disable puzzle picker in production
 
@@ -430,7 +430,7 @@ const renderCategoryPills = () => {
 <img
   src="/logo.svg"
   alt="Game Logo"
-  className="h-16 sm:h-16 md:h-20 lg:h-24 w-auto mt-2"
+  className="h-18 sm:h-16 md:h-20 lg:h-24 w-auto mt-2"
 />
   </Link>
 
@@ -443,7 +443,7 @@ const renderCategoryPills = () => {
   title="How to Play"
   aria-label="How to Play"
 >
-  <CircleHelp size={20} strokeWidth={2.25} />
+  <BookOpen size={20} strokeWidth={2.25} />
 </Button>
 
     {/* Stats Icon */}
