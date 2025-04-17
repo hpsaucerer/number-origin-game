@@ -416,7 +416,7 @@ const renderCategoryPills = () => {
 <header>
   <div className="bg-[#3B82F6] px-4 py-2 flex items-center justify-between h-16 max-w-screen-lg w-full mx-auto">
     {/* Left Side: Hamburger + Logo */}
-    <div className="flex items-center gap-1 sm:gap-3">
+    <div className="flex items-center gap-0 sm:gap-3">
       {/* Hamburger + Dropdown */}
       <div className="relative flex items-start">
         <button
