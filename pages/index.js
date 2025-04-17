@@ -438,13 +438,12 @@ const renderCategoryPills = () => {
     {/* How to Play Icon */}
 <Button
   onClick={() => setShowInstructions(true)}
-  className="bg-white border border-[#3B82F6] px-3 py-2 rounded-lg hover:bg-[#3B82F6] hover:text-white transition"
+  className="bg-white border border-[#3B82F6] px-3 py-2 rounded-lg hover:bg-[#3B82F6] hover:text-white transition shadow-md"
   title="How to Play"
   aria-label="How to Play"
 >
-  <HelpCircle size={20} />
+  <CircleHelp size={20} strokeWidth={2.25} />
 </Button>
-
 
     {/* Stats Icon */}
     <Button
