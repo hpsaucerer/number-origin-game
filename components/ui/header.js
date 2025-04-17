@@ -6,13 +6,11 @@ import { Button } from "@/components/ui/button";
 export default function Header({ onHelpClick, onStatsClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
-
   return (
     <header>
-      {/* Logo and Menu Row */}
       <div className="bg-[#3B82F6] px-4 py-2 flex items-center justify-between h-16 max-w-screen-lg w-full mx-auto">
         {/* Left Side: Hamburger + Logo */}
-        <div className="flex items-center space-x-3">
+        <div className="relative">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="text-white text-2xl font-bold px-1 hover:text-blue-200"
@@ -21,13 +19,22 @@ export default function Header({ onHelpClick, onStatsClick }) {
             ☰
           </button>
 
-          <Link href="/" className="flex items-center">
-            <img
-              src="/logo.svg"
-              alt="Game Logo"
-              className="h-18 sm:h-16 md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
-            />
-          </Link>
+          {menuOpen && (
+            <div className="absolute top-full right-0 mt-2 w-44 bg-white rounded-xl shadow-lg z-50 transition-all duration-200 ease-out">
+              <Link
+                href="/"
+                className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+              >
+                Daily Puzzle
+              </Link>
+              <Link
+                href="/about"
+                className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+              >
+                About
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Right-side icon buttons */}
@@ -51,26 +58,6 @@ export default function Header({ onHelpClick, onStatsClick }) {
           </Button>
         </div>
       </div>
-
-      {/* Dropdown Menu */}
-      {menuOpen && (
-        <div className="absolute top-14 left-2 bg-white shadow-md rounded-md z-50 w-40">
-          <Link
-            href="/"
-            className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
-            onClick={() => setMenuOpen(false)}
-          >
-            Daily Puzzle
-          </Link>
-          <Link
-            href="/about"
-            className="block px-4 py-2 text-gray-800 hover:bg-blue-100"
-            onClick={() => setMenuOpen(false)}
-          >
-            About
-          </Link>
-        </div>
-      )}
     </header>
   );
 }
