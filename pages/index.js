@@ -20,6 +20,7 @@ import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { isCorrectGuess, isCloseGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
 import ComingSoon from "../components/ComingSoon";
 import Link from "next/link";
+import { HelpCircle } from "lucide-react";
 
 const DEV_MODE = false; // Set to false to disable puzzle picker in production
 
@@ -425,24 +426,25 @@ const renderCategoryPills = () => {
 
   {/* Center Logo Image */}
   <Link href="/about" className="flex justify-center flex-1">
-    <img
-      src="/logo.svg"
-      alt="Numerus logo"
-      className="h-10 w-auto cursor-pointer hover:opacity-80 transition"
-    />
+<img
+  src="/logo.svg"
+  alt="Game Logo"
+  className="h-12 sm:h-16 md:h-20 lg:h-24 w-auto mt-2"
+/>
   </Link>
 
   {/* Right-side icon buttons */}
   <div className="flex items-center space-x-3">
     {/* How to Play Icon */}
-    <button
-      onClick={() => setShowInstructions(true)}
-      className="text-white text-lg hover:text-blue-200 transition"
-      title="How to Play"
-      aria-label="How to Play"
-    >
-      ❔
-    </button>
+<Button
+  onClick={() => setShowInstructions(true)}
+  className="bg-white border border-[#3B82F6] px-3 py-2 rounded-lg hover:bg-[#3B82F6] hover:text-white transition"
+  title="How to Play"
+  aria-label="How to Play"
+>
+  <HelpCircle size={20} />
+</Button>
+
 
     {/* Stats Icon */}
     <Button
