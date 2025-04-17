@@ -12,13 +12,13 @@ export default function Header({ onHelpClick, onStatsClick }) {
       </div>
 
       {/* Center: Logo */}
-      <Link href="/" className="flex-1 flex justify-center">
-        <img
-          src="/logo.svg"
-          alt="Game Logo"
-          className="h-10 sm:h-12 lg:h-14 w-auto translate-y-2"
-        />
-      </Link>
+<Link href="/about" className="flex justify-center flex-1">
+  <img
+    src="/logo.svg"
+    alt="Game Logo"
+    className="h-18 sm:h-16 md:h-20 lg:h-28 xl:h-36 w-auto translate-y-4"
+  />
+</Link>
 
       {/* Right: Icons */}
       <div className="flex items-center space-x-2">
