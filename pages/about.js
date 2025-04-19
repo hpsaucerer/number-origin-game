@@ -6,6 +6,7 @@ import InstructionsModal from "@/components/modals/InstructionsModal";
 import CategoryPills from "@/components/CategoryPills";
 import StatsModal from "@/components/modals/StatsModal";
 import useStats from "@/hooks/useStats";
+import { track } from '@vercel/analytics';
 
 export default function AboutPage() {
   const [showInstructions, setShowInstructions] = useState(false);
@@ -36,23 +37,48 @@ export default function AboutPage() {
           </p>
         </section>
 
-        <section className="mb-12">
-          <h2 className="text-xl font-semibold text-gray-800 mb-3">Follow Us</h2>
-<div className="flex justify-center space-x-4 mt-4 text-2xl text-[#3B82F6]">
-  <a href="https://instagram.com/numerusgame" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-    <FaInstagram />
-  </a>
-  <a href="https://x.com/NumerusGame" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
-    <FaXTwitter />
-  </a>
-  <a href="https://facebook.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-    <FaFacebook />
-  </a>
-  <a href="https://tiktok.com/@YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-    <FaTiktok />
-  </a>
-</div>
-        </section>
+<section className="mb-12">
+  <h2 className="text-xl font-semibold text-gray-800 mb-3">Follow Us</h2>
+  <div className="flex justify-center space-x-4 mt-4 text-2xl text-[#3B82F6]">
+    <a
+      href="https://instagram.com/numerusgame"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Instagram"
+      onClick={() => track('Click Instagram')}
+    >
+      <FaInstagram />
+    </a>
+    <a
+      href="https://x.com/numerusgame"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Twitter"
+      onClick={() => track('Click Twitter')}
+    >
+      <FaXTwitter />
+    </a>
+    <a
+      href="https://facebook.com/numerusgame"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Facebook"
+      onClick={() => track('Click Facebook')}
+    >
+      <FaFacebook />
+    </a>
+    <a
+      href="https://tiktok.com/@numerusgame"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="TikTok"
+      onClick={() => track('Click TikTok')}
+    >
+      <FaTiktok />
+    </a>
+  </div>
+</section>
+
 
         <Link href="/">
           <button className="mt-1 px-6 py-2 text-white rounded transition" style={{ backgroundColor: '#63c4a7' }}>
