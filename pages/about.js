@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaInstagram, FaTwitter, FaGithub } from "react-icons/fa";
+import { FaInstagram, FaXTwitter, FaFacebook, FaTiktok } from "react-icons/fa6";
 import Header from "../components/ui/header";
 
 export default function AboutPage() {
@@ -29,17 +29,20 @@ export default function AboutPage() {
 
         <section className="mb-12">
           <h2 className="text-xl font-semibold text-gray-800 mb-3">Follow Us</h2>
-          <div className="flex justify-center gap-6 text-2xl text-gray-600">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-              <FaInstagram className="hover:text-pink-500" />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-              <FaTwitter className="hover:text-blue-400" />
-            </a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-              <FaGithub className="hover:text-black" />
-            </a>
-          </div>
+<div className="flex justify-center space-x-4 mt-4 text-2xl text-[#3B82F6]">
+  <a href="https://instagram.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+    <FaInstagram />
+  </a>
+  <a href="https://x.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+    <FaXTwitter />
+  </a>
+  <a href="https://facebook.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+    <FaFacebook />
+  </a>
+  <a href="https://tiktok.com/@YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+    <FaTiktok />
+  </a>
+</div>
         </section>
 
         <Link href="/game">
