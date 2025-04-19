@@ -44,7 +44,7 @@ export default function AboutPage() {
         </section>
 
         <Link href="/">
-          <button className="mt-3 px-6 py-2 text-white rounded transition" style={{ backgroundColor: '#63c4a7' }}>
+          <button className="mt-1 px-6 py-2 text-white rounded transition" style={{ backgroundColor: '#63c4a7' }}>
             Start Playing
           </button>
         </Link>
