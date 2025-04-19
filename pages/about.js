@@ -22,7 +22,7 @@ export default function AboutPage() {
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">The Story</h2>
           <p className="text-gray-600 leading-relaxed">
           Created by a former teacher with a love for trivia, board games, and curious facts, Numerus blends number-based puzzles with clever clues. 
-          It’s a daily challenge built for curious minds — what are you waiting for, join the fun!
+          It’s a daily challenge built for curious minds — so, what are you waiting for,? Join the fun!
           </p>
         </section>
 
