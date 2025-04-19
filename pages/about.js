@@ -42,7 +42,7 @@ export default function AboutPage() {
   <a href="https://instagram.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
     <FaInstagram />
   </a>
-  <a href="https://x.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+  <a href="https://x.com/NumerusGame" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
     <FaXTwitter />
   </a>
   <a href="https://facebook.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
