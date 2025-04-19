@@ -24,6 +24,7 @@ import { HelpCircle } from "lucide-react";
 import { BookOpen } from "lucide-react";
 import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
+import { track } from '@vercel/analytics';
 
 const DEV_MODE = false; // Set to false to disable puzzle picker in production
 
