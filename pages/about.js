@@ -6,7 +6,7 @@ export default function AboutPage() {
   return (
     <>
       <Header />
-      <main className="max-w-3xl mx-auto px-6 py-12 text-center">
+      <main className="max-w-3xl mx-auto px-6 pt-4 pb-12 text-center">
 
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Numerus</h1>
 
