@@ -18,12 +18,11 @@ export default function AboutPage() {
           “Numbers rule the universe.” — Pythagoras
         </blockquote>
 
-        <section className="text-left mb-12">
+        <section className="text-center mb-12 max-w-3xl mx-auto px-4">
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">The Story</h2>
           <p className="text-gray-600 leading-relaxed">
-            Numerus was born from a fascination with the hidden stories behind the numbers that shape our world — 
-            from the scientific constants we rely on to the quirky digits in pop culture and sport. 
-            Every puzzle is a chance to guess what a number means, with clues to lead the way.
+          Created by a former teacher with a soft spot for trivia, board games, and curious facts, Numerus blends number-based puzzles with clever clues. 
+          It’s a daily challenge built for curious minds — where every number has a hidden story, and every clue brings you closer to the “aha!”
           </p>
         </section>
 
