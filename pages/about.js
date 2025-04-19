@@ -5,11 +5,12 @@ import { useState } from "react";
 import InstructionsModal from "@/components/modals/InstructionsModal";
 import CategoryPills from "@/components/CategoryPills";
 import StatsModal from "@/components/modals/StatsModal";
+import useStats from "@/hooks/useStats";
 
 export default function AboutPage() {
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
-
+  const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
   return (
     <>
       <Header
