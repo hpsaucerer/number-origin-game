@@ -23,6 +23,8 @@ import Link from "next/link";
 import { HelpCircle } from "lucide-react";
 import { BookOpen } from "lucide-react";
 import Header from "@/components/ui/header";
+import useStats from "@/hooks/useStats";
+
 const DEV_MODE = false; // Set to false to disable puzzle picker in production
 
 
@@ -36,7 +38,7 @@ const colorClassMap = {
 };
 
   export default function Home() {
-    
+  const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats(); 
   const [openTooltip, setOpenTooltip] = useState(null);
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
@@ -92,28 +94,7 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
-
     
-  const [stats, setStats] = useState({
-    gamesPlayed: 0,
-    gamesWon: 0,
-    currentStreak: 0,
-    maxStreak: 0,
-    guessDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, failed: 0 },
-  });
-
-  useEffect(() => {
-     const savedStats = localStorage.getItem("numerusStats");
-    if (savedStats) {
-      setStats(JSON.parse(savedStats));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("numerusStats", JSON.stringify(stats));
-  }, [stats]);
-
-
 // Check if the user already completed this puzzle
 useEffect(() => {
   if (puzzle) {
@@ -235,95 +216,6 @@ const shareTextHandler = () => {
   }
 };
 
-
-  // Pie chart data
-  const data = [
-    { name: "1 Guess", value: stats.guessDistribution[1] },
-    { name: "2 Guesses", value: stats.guessDistribution[2] },
-    { name: "3 Guesses", value: stats.guessDistribution[3] },
-    { name: "4 Guesses", value: stats.guessDistribution[4] },
-    { name: "Failed", value: stats.guessDistribution.failed || 0 },
-  ];
-
-  // Sum of all slices
-  const totalGames = data.reduce((sum, entry) => sum + entry.value, 0);
-
-  const COLORS = ["#3B82F6", "#60A5FA", "#93C5FD", "#2563EB", "#F87171"];
-
-const renderCenterLabel = ({ viewBox }) => {
-  const { cx, cy } = viewBox;
-
-  return (
-    <text
-      x={cx}
-      y={cy}
-      textAnchor="middle"
-      dominantBaseline="middle"
-      fill="#3B82F6"
-      fontSize={16}
-      fontWeight="bold"
-      fontFamily="sans-serif"
-    >
-      <tspan x={cx} dy="-0.6em">Guess</tspan>
-      <tspan x={cx} dy="1.2em">Distribution</tspan>
-    </text>
-  );
-};
-
-
-  const combinedLabel = ({
-  cx, cy, midAngle, innerRadius, outerRadius, percent, index, value
-}) => {
-  if (!value) return null;
-
-  const RADIAN = Math.PI / 180;
-  const labelMap = ["1", "2", "3", "4", "✖"];
-
-  // Inner label position
-  const innerRadiusMid = innerRadius + (outerRadius - innerRadius) / 2;
-  const xInner = cx + innerRadiusMid * Math.cos(-midAngle * RADIAN);
-  const yInner = cy + innerRadiusMid * Math.sin(-midAngle * RADIAN);
-
-  // Outer percentage label position
-  const xOuter = cx + (outerRadius + 14) * Math.cos(-midAngle * RADIAN);
-  const yOuter = cy + (outerRadius + 14) * Math.sin(-midAngle * RADIAN);
-
-
-
-  return (
-    <>
-      {/* Label inside slice */}
-<text
-  x={xInner}
-  y={yInner}
-  fill="#FFFFFF" 
-  fontSize={14}
-  fontWeight="bold"
-  textAnchor="middle"
-  dominantBaseline="central"
->
-  {labelMap[index] === "❌" ? "✖" : labelMap[index]}
-
-</text>
-
-
-      {/* Label outside slice */}
-      {percent > 0 && (
-        <text
-          x={xOuter}
-          y={yOuter}
-          fill="#000000"
-          fontSize={12}
-          fontWeight="bold"
-          textAnchor="middle"
-          dominantBaseline="central"
-        >
-          {`${(percent * 100).toFixed(0)}%`}
-        </text>
-      )}
-    </>
-  );
-};
 
 const renderCategoryPills = () => {
   const categories = [
