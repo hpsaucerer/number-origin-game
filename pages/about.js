@@ -8,7 +8,7 @@ export default function AboutPage() {
       <Header />
       <main className="max-w-3xl mx-auto px-6 py-12 text-center">
 
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Numerus</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">Numerus</h1>
 
         <p className="text-lg text-gray-600 mb-6">
           A reverse trivia game that celebrates the magic, mystery, and meaning behind numbers.
