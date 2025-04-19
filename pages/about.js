@@ -39,7 +39,7 @@ export default function AboutPage() {
         <section className="mb-12">
           <h2 className="text-xl font-semibold text-gray-800 mb-3">Follow Us</h2>
 <div className="flex justify-center space-x-4 mt-4 text-2xl text-[#3B82F6]">
-  <a href="https://instagram.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+  <a href="https://instagram.com/numerusgame" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
     <FaInstagram />
   </a>
   <a href="https://x.com/NumerusGame" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
