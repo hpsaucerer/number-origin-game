@@ -4,10 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Share2, X } from "lucide-react";
 import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
-import PostGameHeader from "@/components/PostGameHeader";
 
-export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle, puzzleNumber, shareResult, attempts }) {
-
+export default function PostGameModal({
+  open,
+  onClose,
+  isCorrect,
+  stats,
+  puzzle,
+  puzzleNumber,
+  shareResult,
+  attempts,
+}) {
   if (!puzzle || !stats) return null;
 
   const [countdown, setCountdown] = useState("");
@@ -31,48 +38,42 @@ export default function PostGameModal({ open, onClose, isCorrect, stats, puzzle,
     return () => clearInterval(interval);
   }, []);
 
-
-const imagePathFor = (attempts, isCorrect) => {
-  const key = isCorrect ? attempts + 1 : "failed";
-  const map = {
-    1: "/gotitinone.png",
-    2: "/second.png",
-    3: "/thirdtime.png",
-    4: "/squeaky.png",
-    failed: "/tomorrow.png",
+  const imagePathFor = (attempts, isCorrect) => {
+    const key = isCorrect ? attempts + 1 : "failed";
+    const map = {
+      1: "/gotitinone.png",
+      2: "/second.png",
+      3: "/thirdtime.png",
+      4: "/squeaky.png",
+      failed: "/tomorrow.png",
+    };
+    return map[key];
   };
-  return map[key];
-};
-
 
   return (
-<Dialog open={open} onOpenChange={onClose}>
-  <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-    <DialogContent className="w-full max-w-md px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="w-full max-w-md px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
 
+        {/* ❌ Close Button */}
+        <button
+          className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <X size={28} />
+        </button>
 
-  <div className="relative">
-    {/* ❌ Close Button */}
-    <button
-      className="absolute top-0 right-0 text-blue-500 hover:text-blue-600 transition z-50"
-      onClick={onClose}
-      aria-label="Close"
-    >
-      <X size={28} />
-    </button>
-
-{/* Result Image & Guess Count */}
-<div className="flex flex-col items-center pt-2 pb-1">
-  <img
-    src={imagePathFor(attempts, isCorrect)}
-    alt=""
-    className="w-36 h-auto block"
-  />
-  <p className="mt-1 text-sm font-semibold text-gray-800">
-    {isCorrect ? `${attempts + 1} of 4 guesses` : `All 4 guesses used`}
-  </p>
-</div>
-  </div>
+        {/* Result Image & Guess Count */}
+        <div className="flex flex-col items-center pt-2 pb-1">
+          <img
+            src={imagePathFor(attempts, isCorrect)}
+            alt=""
+            className="w-36 h-auto block"
+          />
+          <p className="mt-1 text-sm font-semibold text-gray-800">
+            {isCorrect ? `${attempts + 1} of 4 guesses` : `All 4 guesses used`}
+          </p>
+        </div>
 
         {/* Fun Fact */}
         <FunFactBox puzzle={puzzle} />
@@ -81,8 +82,8 @@ const imagePathFor = (attempts, isCorrect) => {
         <div className="text-center mt-6">
           <p className="text-sm text-gray-700 font-semibold">🔥 Current Streak</p>
           <p className="text-3xl font-bold text-amber-500">
-           {stats?.currentStreak ?? 0} day{stats?.currentStreak === 1 ? "" : "s"}
-</p>
+            {stats?.currentStreak ?? 0} day{stats?.currentStreak === 1 ? "" : "s"}
+          </p>
         </div>
 
         {/* ⏳ Countdown */}
@@ -91,25 +92,22 @@ const imagePathFor = (attempts, isCorrect) => {
           <p className="text-lg font-mono text-gray-900">{countdown}</p>
         </div>
 
-        {/* 📤 Share */}
+        {/* 📤 Share Button */}
         <div className="flex justify-center mt-4">
-<Button
-onClick={() =>
-  shareResult({
-    isCorrect,
-    guessCount: isCorrect ? attempts + 1 : 4, // 4 attempts used if failed
-    puzzleNumber,
-  })
-}
-
-  className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
->
-  <Share2 size={16} /> Share
-</Button>
-
+          <Button
+            onClick={() =>
+              shareResult({
+                isCorrect,
+                guessCount: isCorrect ? attempts + 1 : 4,
+                puzzleNumber,
+              })
+            }
+            className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
+          >
+            <Share2 size={16} /> Share
+          </Button>
         </div>
       </DialogContent>
-      </div>
     </Dialog>
   );
 }
