@@ -1,15 +1,16 @@
-function isCorrectGuess(guess, answer, acceptableGuesses = []) {
-  const cleaned = guess.trim().toLowerCase();
+function normalize(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]/gi, "").trim();
+}
 
-  return (
-    cleaned === answer.trim().toLowerCase() ||
-    acceptableGuesses.some((alt) => cleaned === alt.toLowerCase())
-  );
+function isCorrectGuess(guess, answer, acceptableGuesses = []) {
+  const normalizedGuess = normalize(guess);
+  const allAcceptables = [answer, ...acceptableGuesses].map(normalize);
+  return allAcceptables.includes(normalizedGuess);
 }
 
 function isCloseGuess(guess, keywords = []) {
-  const cleaned = guess.trim().toLowerCase();
-  return keywords.some((kw) => cleaned.includes(kw.toLowerCase()));
+  const normalizedGuess = normalize(guess);
+  return keywords.some((kw) => normalizedGuess.includes(normalize(kw)));
 }
 
 function revealNextClue(puzzle, revealedClues, attempts, maxAttempts = 4) {
