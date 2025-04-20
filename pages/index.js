@@ -25,8 +25,6 @@ import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
-import { useEffect, useState } from "react";
-
 
 const DEV_MODE = true;
 
