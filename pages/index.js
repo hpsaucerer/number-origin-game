@@ -220,19 +220,6 @@ if (didWin) {
     });
   }
 
-if (didWin) {
-  setIsCorrect(true);
-  localStorage.setItem(`completed-${puzzle.date}`, "true");
-  setStats((prev) => updateStats(prev, true, attempts + 1));
-
-  // ✅ Track success
-  if (typeof track === "function") {
-    track("puzzle_completed", {
-      correct: true,
-      guessCount: attempts + 1,
-      puzzleId: puzzle?.id ?? null,
-    });
-
     track("puzzle_guess_count", {
       guessCount: attempts + 1,
       puzzleId: puzzle?.id ?? null,
@@ -570,8 +557,6 @@ return !hasMounted ? (
     </a>
   </div>
 </div>
-
-
 
   </>
 ) : attempts >= maxGuesses ? (
