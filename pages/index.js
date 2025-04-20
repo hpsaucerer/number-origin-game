@@ -365,6 +365,14 @@ const renderCategoryPills = () => {
             >
               About
             </Link>
+                <Link
+  href="/contact"
+  onClick={() => setMenuOpen(false)}
+  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+>
+  Contact
+</Link>
+
           </div>
         )}
       </div>
