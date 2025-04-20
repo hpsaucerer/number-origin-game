@@ -30,7 +30,7 @@ export default function AboutPage() {
           “Numbers rule the universe.” — Pythagoras
         </blockquote>
 
-        <section className="text-center mb-12 max-w-3xl mx-auto px-4">
+        <section className="text-center mb-8 max-w-3xl mx-auto px-4">
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">The Story</h2>
           <p className="text-gray-600 leading-relaxed">
           Created by a former teacher with a love for trivia, board games, and curious facts, Numerus blends number-based puzzles with clever clues.
