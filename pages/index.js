@@ -62,6 +62,15 @@ const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
 const [puzzleNumber, setPuzzleNumber] = useState(null);
 
+const [localDate, setLocalDate] = useState("");
+
+useEffect(() => {
+  const now = new Date().toLocaleDateString("en-GB", {
+    timeZone: "Europe/London",
+  });
+  setLocalDate(now);
+}, []);
+
 useEffect(() => {
   setHasMounted(true);
 }, []);
@@ -653,9 +662,10 @@ const renderCategoryPills = () => {
       </Card>
 
       <div className="flex flex-col items-center mt-4">
-      <p className="text-lg font-semibold">
-  {new Date().toLocaleDateString("en-GB", { timeZone: "Europe/London" })}
-</p>
+{localDate && (
+  <p className="text-lg font-semibold">{localDate}</p>
+)}
+
       <p className="text-md font-medium">Numerus #{puzzleNumber}</p>
 
       </div>
