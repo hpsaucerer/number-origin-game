@@ -66,6 +66,7 @@ useEffect(() => {
   setHasMounted(true);
 }, []);
 
+// ⚠️ Important: This must stay above all hooks and logic in the component body.
 if (!hasMounted) return null;
 
 useEffect(() => {
