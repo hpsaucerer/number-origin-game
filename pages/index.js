@@ -75,7 +75,6 @@ useEffect(() => {
 }, []);
 
 // ⚠️ Important: This must stay above all hooks and logic in the component body.
-if (!hasMounted) return <div suppressHydrationWarning></div>;
 
 
 useEffect(() => {
@@ -182,10 +181,6 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-
-if (!puzzle) {
-  return <ComingSoon nextDate={countdown} />;
-}
 
 const handleGuess = () => {
   if (!isValidGuess(guess)) {
@@ -363,8 +358,11 @@ const renderCategoryPills = () => {
   );
 };
 
-
-  return (
+return !hasMounted ? (
+  <div className="text-center py-10 text-gray-500">Loading...</div>
+) : !puzzle ? (
+  <ComingSoon nextDate={countdown} />
+) : (
 <>
 <WelcomeModal
   open={showWelcome}
