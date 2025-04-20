@@ -193,7 +193,7 @@ const handleGuess = () => {
 const didWin = isCorrectGuess(
   guess,
   puzzle.answer,
-  puzzle.acceptable_Guesses || []
+  puzzle.acceptableGuesses || puzzle.acceptable_guesses || []
 );
 
 const wasClose = isCloseGuess(guess, puzzle.keywords || []);
