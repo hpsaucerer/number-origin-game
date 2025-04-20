@@ -219,6 +219,8 @@ if (didWin) {
   }
 
   // ✅ Show modal after a correct guess
+  console.log("✅ Showing post game modal");
+
   setTimeout(() => setShowPostGame(true), 500);
 } else {
   const newAttempts = attempts + 1;
@@ -248,6 +250,8 @@ if (didWin) {
     }
 
     // ✅ Show modal after final incorrect guess
+    console.log("✅ Showing post game modal");
+
     setTimeout(() => setShowPostGame(true), 500);
   }
 }
