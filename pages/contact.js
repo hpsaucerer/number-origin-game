@@ -25,18 +25,19 @@ export default function ContactPage() {
           Have a question, suggestion, or just want to say hi? We'd love to hear from you!
         </p>
 
-        <p className="text-blue-600 underline mb-6">
-          <a href="mailto:hello@numerus.site">📬 info@numerus.site</a>
-        </p>
+<p className="text-blue-600 underline mb-6">
+  <a href="mailto:info@numerus.site">📬 info@numerus.site</a>
+</p>
+
 
         <div className="bg-blue-50 p-4 rounded-lg shadow-md mb-10">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">💬 Feedback</h2>
           <p className="text-gray-600 mb-2">
-            Help us improve by filling out our feedback form.
+            Love Numerus? Loathe it? Let us know what you think!
           </p>
           <Link href="https://forms.gle/tiei52osD5KNW3BE7" target="_blank">
             <button className="mt-2 px-6 py-2 bg-[#3B82F6] text-white rounded hover:bg-blue-700 transition">
-              Give Feedback
+              Fill out the Feedback Form
             </button>
           </Link>
         </div>
