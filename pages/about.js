@@ -37,7 +37,7 @@ export default function AboutPage() {
           </p>
         </section>
 
-<section className="mb-6">
+<section className="mb-10">
   <h2 className="text-xl font-semibold text-gray-800 mb-3">Follow Us</h2>
   <div className="flex justify-center space-x-4 mt-4 text-2xl text-[#3B82F6]">
     <a
