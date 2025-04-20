@@ -24,7 +24,8 @@ import { BookOpen } from "lucide-react";
 import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
-import { fetchTodayPuzzle } from "@/lib/api";
+import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
+
 
 const DEV_MODE = true;
 
@@ -57,7 +58,29 @@ const colorClassMap = {
   const [selectedPuzzleId, setSelectedPuzzleId] = useState(null);
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
 
-const { puzzle, puzzleNumber } = useDailyPuzzle(DEV_MODE ? selectedPuzzleId : null);
+const [allPuzzles, setAllPuzzles] = useState([]);
+const [puzzle, setPuzzle] = useState(null);
+const [puzzleNumber, setPuzzleNumber] = useState(null);
+
+useEffect(() => {
+  const loadPuzzles = async () => {
+    const all = await fetchAllPuzzles(); // ← get everything
+    setAllPuzzles(all);
+
+    if (DEV_MODE && selectedPuzzleIndex !== null) {
+      const devPuzzle = all[selectedPuzzleIndex];
+      setPuzzle(devPuzzle);
+      setPuzzleNumber(selectedPuzzleIndex + 1);
+    } else {
+      const today = await fetchTodayPuzzle(); // ← just today’s
+      setPuzzle(today.puzzle);
+      setPuzzleNumber(today.puzzleNumber);
+    }
+  };
+
+  loadPuzzles();
+}, [selectedPuzzleIndex]);
+
 
 
 
@@ -425,11 +448,12 @@ const renderCategoryPills = () => {
       className="border px-2 py-1 rounded text-sm text-gray-700"
     >
       <option value="">Today’s puzzle</option>
-      {puzzles.map((p, i) => (
-        <option key={p.date} value={i}>
-          #{i + 1} — {p.date} — {p.number}
-        </option>
-      ))}
+{allPuzzles.map((p, i) => (
+  <option key={p.id} value={i}>
+    #{i + 1} — {p.date} — {p.number}
+  </option>
+))}
+
     </select>
   </div>
 )}
