@@ -496,9 +496,9 @@ return !hasMounted ? (
     
             
 <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
-  {isCorrect ||
-  (puzzle.revealFormattedAt &&
-    revealedClues.length >= puzzle.revealFormattedAt)
+  {(isCorrect ||
+    (puzzle.revealFormattedAt &&
+      revealedClues.length >= puzzle.revealFormattedAt))
     ? puzzle.formatted
     : puzzle.number}
 </p>
