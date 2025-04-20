@@ -10,7 +10,6 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent } from "../components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "recharts";
-import puzzles from "../data/puzzles";
 import { useRef } from "react";
 import FunFactBox from "../components/FunFactBox";
 import PostGameModal from "../components/PostGameModal";
@@ -25,9 +24,9 @@ import { BookOpen } from "lucide-react";
 import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
+import { fetchTodayPuzzle } from "@/lib/api";
 
-const DEV_MODE = false; // Set to false to disable puzzle picker in production
-
+const DEV_MODE = true;
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
@@ -53,13 +52,13 @@ const colorClassMap = {
   const [showTutorial, setShowTutorial] = useState(false);
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
-  const { puzzle: dailyPuzzle, puzzleNumber: dailyNumber } = useDailyPuzzle(puzzles);
+  const { puzzle: dailyPuzzle, puzzleNumber: dailyNumber } = useDailyPuzzle();
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const [selectedPuzzleId, setSelectedPuzzleId] = useState(null);
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
 
-  const puzzle = selectedPuzzleIndex !== null ? puzzles[selectedPuzzleIndex] : dailyPuzzle;
-  const puzzleNumber = selectedPuzzleIndex !== null ? selectedPuzzleIndex + 1 : dailyNumber;
+const { puzzle, puzzleNumber } = useDailyPuzzle(DEV_MODE ? selectedPuzzleId : null);
+
 
 
   const toggleTooltip = (idx) => {
