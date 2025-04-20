@@ -37,6 +37,14 @@ export default function Header({ onHelpClick, onStatsClick }) {
                 >
                   About
                 </Link>
+                <Link
+                  href="/contact"
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Contact
+                  </Link>
+
               </div>
             )}
           </div>
