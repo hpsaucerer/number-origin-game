@@ -26,7 +26,7 @@ import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
 
-const DEV_MODE = true;
+const DEV_MODE = false;
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
@@ -75,7 +75,8 @@ useEffect(() => {
 }, []);
 
 // ⚠️ Important: This must stay above all hooks and logic in the component body.
-if (!hasMounted) return null;
+if (!hasMounted) return <div suppressHydrationWarning></div>;
+
 
 useEffect(() => {
   const loadPuzzles = async () => {
