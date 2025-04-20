@@ -161,31 +161,60 @@ const didWin = isCorrectGuess(
 const wasClose = isCloseGuess(guess, puzzle.keywords || []);
 setInputError(!didWin && wasClose ? "💡 That’s close! Try again." : "");
 
+if (didWin) {
+  setIsCorrect(true);
+  localStorage.setItem(`completed-${puzzle.date}`, "true");
+  setStats((prev) => updateStats(prev, true, attempts + 1));
 
-  if (didWin) {
-    setIsCorrect(true);
-    localStorage.setItem(`completed-${puzzle.date}`, "true");
-    setStats((prev) => updateStats(prev, true, attempts + 1));
+  // ✅ Track correct guess
+  if (typeof track === "function") {
+    track("puzzle_completed", {
+      correct: true,
+      guessCount: attempts + 1,
+      puzzleId: puzzle?.id ?? null,
+    });
 
-    // ✅ Show modal after a correct guess
-    setTimeout(() => setShowPostGame(true), 500);
-  } else {
-    const newAttempts = attempts + 1;
-    setAttempts(newAttempts);
-
-    if (newAttempts <= puzzle.clues.length) {
-      setRevealedClues((prev) =>
-        revealNextClue(puzzle, prev, newAttempts, maxGuesses)
-      );
-    }
-
-    if (newAttempts >= maxGuesses) {
-      setStats((prev) => updateStats(prev, false));
-
-      // ✅ Show modal after final incorrect guess
-      setTimeout(() => setShowPostGame(true), 500);
-    }
+    track("puzzle_guess_count", {
+      guessCount: attempts + 1,
+      puzzleId: puzzle?.id ?? null,
+    });
   }
+
+  // ✅ Show modal after a correct guess
+  setTimeout(() => setShowPostGame(true), 500);
+} else {
+  const newAttempts = attempts + 1;
+  setAttempts(newAttempts);
+
+  if (newAttempts <= puzzle.clues.length) {
+    setRevealedClues((prev) =>
+      revealNextClue(puzzle, prev, newAttempts, maxGuesses)
+    );
+  }
+
+  if (newAttempts >= maxGuesses) {
+    setStats((prev) => updateStats(prev, false));
+
+    // ❌ Track failed game
+    if (typeof track === "function") {
+      track("puzzle_failed", {
+        correct: false,
+        attempts: newAttempts,
+        puzzleId: puzzle?.id ?? null,
+      });
+
+      track("puzzle_guess_count", {
+        guessCount: "✖",
+        puzzleId: puzzle?.id ?? null,
+      });
+    }
+
+    // ✅ Show modal after final incorrect guess
+    setTimeout(() => setShowPostGame(true), 500);
+  }
+}
+
+
 
   ("");
 };
