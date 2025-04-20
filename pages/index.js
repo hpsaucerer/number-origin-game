@@ -25,6 +25,7 @@ import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
+import { useEffect, useState } from "react";
 
 
 const DEV_MODE = true;
@@ -58,9 +59,16 @@ const colorClassMap = {
   const [selectedPuzzleId, setSelectedPuzzleId] = useState(null);
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
 
+const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
 const [puzzleNumber, setPuzzleNumber] = useState(null);
+
+useEffect(() => {
+  setHasMounted(true);
+}, []);
+
+if (!hasMounted) return null;
 
 useEffect(() => {
   const loadPuzzles = async () => {
