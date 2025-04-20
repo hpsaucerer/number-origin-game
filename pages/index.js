@@ -52,7 +52,6 @@ const colorClassMap = {
   const [showTutorial, setShowTutorial] = useState(false);
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
-  const { puzzle: dailyPuzzle, puzzleNumber: dailyNumber } = useDailyPuzzle();
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedPuzzleId, setSelectedPuzzleId] = useState(null);
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
@@ -80,7 +79,7 @@ if (!hasMounted) return null;
 
 useEffect(() => {
   const loadPuzzles = async () => {
-    const all = await fetchAllPuzzles(); // ← get everything
+    const all = await fetchAllPuzzles();
     setAllPuzzles(all);
 
     if (DEV_MODE && selectedPuzzleIndex !== null) {
@@ -88,16 +87,22 @@ useEffect(() => {
       setPuzzle(devPuzzle);
       setPuzzleNumber(selectedPuzzleIndex + 1);
     } else {
-      const today = await fetchTodayPuzzle(); // ← just today’s
-      setPuzzle(today.puzzle);
-      setPuzzleNumber(today.puzzleNumber);
+const today = await fetchTodayPuzzle();
+if (today) {
+  setPuzzle(today);
+
+  // Optionally find the puzzle index if needed
+  const index = all.findIndex((p) => p.id === today.id);
+  setPuzzleNumber(index + 1);
+} else {
+  console.warn("⚠️ No puzzle returned for today.");
+}
+
     }
   };
 
   loadPuzzles();
 }, [selectedPuzzleIndex]);
-
-
 
 
   const toggleTooltip = (idx) => {
@@ -157,7 +162,6 @@ useEffect(() => {
   }
 }, [puzzle]);
 
-    
   
 useEffect(() => {
   const handleClickOutside = (event) => {
