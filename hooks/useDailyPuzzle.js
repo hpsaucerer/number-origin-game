@@ -26,7 +26,7 @@ export const useDailyPuzzle = (puzzles) => {
       setPuzzleNumber(null);
       console.warn("⚠️ No puzzle found for today’s date:", date);
     }
-  }, [puzzles, LAUNCH_DATE]);
+ }, [puzzles]);
 
   return { puzzle, puzzleNumber };
 };
