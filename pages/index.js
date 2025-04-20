@@ -26,7 +26,7 @@ import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
 
-const DEV_MODE = false;
+const DEV_MODE = true;
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
