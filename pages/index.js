@@ -204,6 +204,8 @@ if (didWin) {
   localStorage.setItem(`completed-${puzzle.date}`, "true");
   setStats((prev) => updateStats(prev, true, attempts + 1));
 
+  console.log("🎉 Correct guess! Showing post-game modal...");
+
   // ✅ Track correct guess
   if (typeof track === "function") {
     track("puzzle_completed", {
@@ -218,24 +220,44 @@ if (didWin) {
     });
   }
 
-  // ✅ Show modal after a correct guess
-  console.log("✅ Showing post game modal");
+if (didWin) {
+  setIsCorrect(true);
+  localStorage.setItem(`completed-${puzzle.date}`, "true");
+  setStats((prev) => updateStats(prev, true, attempts + 1));
 
+  // ✅ Track success
+  if (typeof track === "function") {
+    track("puzzle_completed", {
+      correct: true,
+      guessCount: attempts + 1,
+      puzzleId: puzzle?.id ?? null,
+    });
+
+    track("puzzle_guess_count", {
+      guessCount: attempts + 1,
+      puzzleId: puzzle?.id ?? null,
+    });
+  }
+
+  console.log("✅ Correct guess — showing post-game modal...");
   setTimeout(() => setShowPostGame(true), 500);
+
 } else {
   const newAttempts = attempts + 1;
   setAttempts(newAttempts);
 
-  if (newAttempts <= puzzle.clues.length) {
+  const canReveal = newAttempts <= puzzle.clues.length;
+  if (canReveal) {
     setRevealedClues((prev) =>
       revealNextClue(puzzle, prev, newAttempts, maxGuesses)
     );
   }
 
-  if (newAttempts >= maxGuesses) {
+  const isGameOver = newAttempts >= maxGuesses;
+  if (isGameOver) {
     setStats((prev) => updateStats(prev, false));
 
-    // ❌ Track failed game
+    // ❌ Track failure
     if (typeof track === "function") {
       track("puzzle_failed", {
         correct: false,
@@ -249,12 +271,11 @@ if (didWin) {
       });
     }
 
-    // ✅ Show modal after final incorrect guess
-    console.log("✅ Showing post game modal");
-
+    console.log("❌ Max attempts reached — showing post-game modal...");
     setTimeout(() => setShowPostGame(true), 500);
   }
 }
+
 
 
 
