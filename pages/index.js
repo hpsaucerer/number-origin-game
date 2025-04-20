@@ -220,12 +220,6 @@ if (didWin) {
     });
   }
 
-    track("puzzle_guess_count", {
-      guessCount: attempts + 1,
-      puzzleId: puzzle?.id ?? null,
-    });
-  }
-
   console.log("✅ Correct guess — showing post-game modal...");
   setTimeout(() => setShowPostGame(true), 500);
 
@@ -263,13 +257,7 @@ if (didWin) {
   }
 }
 
-
-
-
-  ("");
 };
-
-
 
   const handleClueReveal = () => {
     if (attempts >= maxGuesses || revealedClues.length >= puzzle.clues.length) return;
