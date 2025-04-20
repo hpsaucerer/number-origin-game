@@ -7,6 +7,7 @@ import CategoryPills from "@/components/CategoryPills";
 import StatsModal from "@/components/modals/StatsModal";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
+import Footer from "@/components/ui/Footer";
 
 export default function AboutPage() {
   const [showInstructions, setShowInstructions] = useState(false);
@@ -108,6 +109,7 @@ export default function AboutPage() {
     renderCenterLabel={renderCenterLabel}
   />
 )}
+<Footer />
 
     </>
   );
