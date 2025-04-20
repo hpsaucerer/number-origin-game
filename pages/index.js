@@ -38,7 +38,7 @@ const colorClassMap = {
 };
 
   export default function Home() {
-  const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats(); 
+  const { stats, setStats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
   const [openTooltip, setOpenTooltip] = useState(null);
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
