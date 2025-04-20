@@ -5,6 +5,7 @@ import InstructionsModal from "@/components/modals/InstructionsModal";
 import CategoryPills from "@/components/CategoryPills";
 import StatsModal from "@/components/modals/StatsModal";
 import useStats from "@/hooks/useStats";
+import { FaEnvelope } from "react-icons/fa";
 
 export default function ContactPage() {
   const [showInstructions, setShowInstructions] = useState(false);
@@ -25,9 +26,10 @@ export default function ContactPage() {
           Have a question, suggestion, or just want to say hi? We'd love to hear from you!
         </p>
 
-<p className="text-blue-600 underline mb-6">
-  <a href="mailto:info@numerus.site">📬 info@numerus.site</a>
-</p>
+<div className="flex items-center justify-center gap-2 text-blue-600 underline mb-6">
+  <FaEnvelope />
+  <a href="mailto:info@numerus.site">info@numerus.site</a>
+</div>
 
 
         <div className="bg-blue-50 p-4 rounded-lg shadow-md mb-10">
