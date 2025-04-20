@@ -20,8 +20,10 @@ export default function AboutPage() {
 />
       <main className="max-w-3xl mx-auto px-6 pt-4 pb-12 text-center">
 
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome to Numerus</h1>
+
         <p className="text-lg text-gray-600 mb-6">
-          Numerus is a reverse trivia game that celebrates the magic, mystery, and meaning behind numbers.
+          A reverse trivia game that celebrates the magic, mystery, and meaning behind numbers.
         </p>
 
         <blockquote className="italic text-gray-500 mb-10">
@@ -35,7 +37,7 @@ export default function AboutPage() {
           </p>
         </section>
 
-<section className="mb-12">
+<section className="mb-6">
   <h2 className="text-xl font-semibold text-gray-800 mb-3">Follow Us</h2>
   <div className="flex justify-center space-x-4 mt-4 text-2xl text-[#3B82F6]">
     <a
