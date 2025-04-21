@@ -61,4 +61,3 @@ export function DialogTitle({ children }) {
   return <h2 style={{ marginBottom: "0.5rem" }}>{children}</h2>;
 }
 
-DIALOG.js
