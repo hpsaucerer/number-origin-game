@@ -45,6 +45,8 @@ const synonymMap = {
   "100 metre": "100m",
   dash: "sprint",
   run: "sprint",
+  murdered: "assassination",
+  killed: "assassination",
 };
 
 const normalize = (str) =>
