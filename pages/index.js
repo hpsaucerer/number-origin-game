@@ -79,6 +79,7 @@ const colorClassMap = {
   const [attempts, setAttempts] = useState(0);
   const [revealedClues, setRevealedClues] = useState([]);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [nearMisses, setNearMisses] = useState([]);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [inputError, setInputError] = useState("");
@@ -219,56 +220,46 @@ useEffect(() => {
 // ✅ Use your existing normalize() and synonymMap here
 
 const handleGuess = () => {
-  const normalizedGuess = normalize(guess);
-  if (!normalizedGuess) {
-    setInputError("Please enter a guess before submitting.");
-    return;
-  }
+ const normalizedGuess = normalize(guess);
+if (!normalizedGuess) {
+  setInputError("Please enter a guess before submitting.");
+  return;
+}
 
-  setInputError("");
+const allAnswers = [
+  normalize(puzzle.answer),
+  ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map(normalize),
+];
 
-  const allAnswers = [
-    normalize(puzzle.answer),
-    ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map(normalize),
-  ];
+const fuse = new Fuse(allAnswers, {
+  includeScore: true,
+  threshold: 0.4,
+  useExtendedSearch: true,
+});
 
-  const fuse = new Fuse(allAnswers, {
-    includeScore: true,
-    threshold: 0.4, // adjust this as needed
+const result = fuse.search(normalizedGuess);
+const didWin = result.length > 0 && result[0].score <= 0.4;
+
+// Optional: near miss feedback
+if (!didWin && result.length && result[0].score <= 0.5) {
+  setInputError("💡 That’s close! Try again.");
+  setNearMisses((prev) => [
+    ...prev,
+    {
+      puzzleId: puzzle?.id ?? null,
+      guess: normalizedGuess,
+      closestMatch: result[0].item,
+      score: result[0].score.toFixed(3),
+      timestamp: new Date().toISOString(),
+    },
+  ]);
+  console.log("👀 Near miss:", {
+    guess: normalizedGuess,
+    closestMatch: result[0].item,
+    score: result[0].score.toFixed(3),
   });
+}
 
-  const result = fuse.search(normalizedGuess);
-  const didWin = result.length > 0 && result[0].score <= 0.35;
-
-  if (didWin) {
-    setIsCorrect(true);
-    localStorage.setItem(`completed-${puzzle.date}`, "true");
-    setStats((prev) => updateStats(prev, true, attempts + 1));
-
-    if (typeof track === "function") {
-      track("puzzle_completed", {
-        correct: true,
-        guessCount: attempts + 1,
-        puzzleId: puzzle?.id ?? null,
-      });
-
-      track("puzzle_guess_count", {
-        guessCount: attempts + 1,
-        puzzleId: puzzle?.id ?? null,
-      });
-    }
-
-    setTimeout(() => setShowPostGame(true), 500);
-  } else {
-    // Near match logging + "close" feedback
-    if (result.length && result[0].score <= 0.5) {
-      setInputError("💡 That’s close! Try again.");
-      console.log("👀 Near miss:", {
-        guess: normalizedGuess,
-        closestMatch: result[0].item,
-        score: result[0].score.toFixed(3),
-      });
-    }
 
     const newAttempts = attempts + 1;
     setAttempts(newAttempts);
