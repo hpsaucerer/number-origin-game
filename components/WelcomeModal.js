@@ -38,9 +38,18 @@ export default function WelcomeModal({ open, onOpenChange }) {
           </div>
 
           <div className="flex justify-center mt-6">
-            <Button onClick={() => onOpenChange(false)}>
-              Got it — Let’s Play!
-            </Button>
+<Button
+  onClick={() => onOpenChange(false)}
+  className="hover:brightness-110"
+  style={{
+    backgroundColor: "#63c4a7",
+    color: "white",
+    border: "none",
+  }}
+>
+  Got it — Let’s Play!
+</Button>
+
           </div>
         </DialogContent>
       </div>
