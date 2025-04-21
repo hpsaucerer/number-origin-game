@@ -63,7 +63,7 @@ export default function PostGameModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-md px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
+      <DialogContent className="w-full max-w-md mt-16 px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
 
         {/* ❌ Close Button */}
         <button
