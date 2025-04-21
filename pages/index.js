@@ -396,7 +396,11 @@ const renderCategoryPills = () => {
   );
 };
 
-if (!hasMounted || !countdown) {
+if (!hasMounted) {
+  return null; // Avoid rendering on server
+}
+
+if (!countdown) {
   return <div className="text-center py-10 text-gray-500">Loading...</div>;
 }
 
@@ -406,7 +410,6 @@ if (!puzzle) {
 
 return (
   <>
-
 
 <WelcomeModal
   open={showWelcome}
