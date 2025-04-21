@@ -73,6 +73,12 @@ const colorClassMap = {
 
   export default function Home() {
   const { stats, setStats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
+    const incorrectGuessMessages = [
+    "Incorrect - here's a clue to help you!",
+    "Hmm, not quite. Keep thinking!",
+    "Last clue! Take a deep breath and go for it.",
+  ];
+    
   const [openTooltip, setOpenTooltip] = useState(null);
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
@@ -282,10 +288,12 @@ const handleGuess = () => {
         similarity: bestMatch.score.toFixed(3),
         essentialsPassed: hasEssentials,
       });
-        } else {
+  } else {
     // ❌ Fully incorrect and not close
-    setInputError("Incorrect - here's a clue!");
-    }
+    const fallbackMessage =
+      incorrectGuessMessages[attempts] || "Not quite — try again!";
+    setInputError(fallbackMessage);
+  }
 
     // ❌ Incorrect or Incomplete
     const newAttempts = attempts + 1;
