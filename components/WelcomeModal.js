@@ -26,7 +26,7 @@ export default function WelcomeModal({ open, onOpenChange }) {
           </DialogHeader>
 
           <p className="text-base text-center mt-2">
-             Ready to get started? Watch this quick tutorial! ⬇️
+             Ready to get started? Watch this quick tutorial below ⬇️
           </p>
 
           <div className="mt-4 flex justify-center">
