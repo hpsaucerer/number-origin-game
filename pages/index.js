@@ -225,6 +225,7 @@ const handleGuess = () => {
 
   setInputError("");
 
+  // Normalize all answers
   const allAnswers = [
     { label: normalize(puzzle.answer) },
     ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
@@ -234,13 +235,19 @@ const handleGuess = () => {
 
   const fuse = new Fuse(allAnswers, {
     keys: ["label"],
-    threshold: 0.35,
+    threshold: 0.45,
     includeScore: true,
   });
 
   const [bestMatch] = fuse.search(cleanedGuess);
 
-  if (bestMatch && bestMatch.score <= 0.35) {
+  // 🔍 Check for essential keywords (normalized)
+  const essentialWords = (puzzle.essential_keywords || []).map(normalize);
+  const hasEssentials = essentialWords.every((word) =>
+    cleanedGuess.includes(word)
+  );
+
+  if (bestMatch && bestMatch.score <= 0.45 && hasEssentials) {
     // ✅ Correct guess
     setIsCorrect(true);
     localStorage.setItem(`completed-${puzzle.date}`, "true");
@@ -261,15 +268,23 @@ const handleGuess = () => {
     console.log("✅ Correct guess — showing post-game modal...");
     setTimeout(() => setShowPostGame(true), 500);
   } else {
-    if (bestMatch && bestMatch.score <= 0.5) {
-      setInputError("💡 That’s close! Try again.");
+    // 🟡 Close guess?
+    if (bestMatch && bestMatch.score <= 0.6) {
+      setInputError(
+        hasEssentials
+          ? "💡 That’s close! Try again."
+          : "💡 You’re close, but missing a key word."
+      );
+
       console.log("👀 Near miss:", {
         guess: cleanedGuess,
         bestMatch: bestMatch.item.label,
         similarity: bestMatch.score.toFixed(3),
+        essentialsPassed: hasEssentials,
       });
     }
 
+    // ❌ Incorrect or Incomplete
     const newAttempts = attempts + 1;
     setAttempts(newAttempts);
 
