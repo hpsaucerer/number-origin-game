@@ -25,7 +25,7 @@ import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
-import Fuse from "fuse.js";
+import stringSimilarity from "string-similarity";
 
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
@@ -43,8 +43,6 @@ const synonymMap = {
   smallest: "lowest",
   "100 meter": "100m",
   "100 metre": "100m",
-  mens: "men",
-  "men's": "men",
   dash: "sprint",
   run: "sprint",
   murdered: "assassination",
@@ -79,7 +77,6 @@ const colorClassMap = {
   const [attempts, setAttempts] = useState(0);
   const [revealedClues, setRevealedClues] = useState([]);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [nearMisses, setNearMisses] = useState([]);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [inputError, setInputError] = useState("");
@@ -173,7 +170,7 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
-    
+   
 // Check if the user already completed this puzzle
 useEffect(() => {
   if (puzzle) {
@@ -197,7 +194,7 @@ useEffect(() => {
   }
 }, [puzzle]);
 
-  
+ 
 useEffect(() => {
   const handleClickOutside = (event) => {
     if (
@@ -216,51 +213,59 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-
-// ✅ Use your existing normalize() and synonymMap here
-
 const handleGuess = () => {
- const normalizedGuess = normalize(guess);
-if (!normalizedGuess) {
-  setInputError("Please enter a guess before submitting.");
-  return;
-}
+  const cleanedGuess = normalize(guess);
 
-const allAnswers = [
-  normalize(puzzle.answer),
-  ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map(normalize),
-];
+  if (!cleanedGuess) {
+    setInputError("Please enter a guess before submitting.");
+    return;
+  }
 
-const fuse = new Fuse(allAnswers, {
-  includeScore: true,
-  threshold: 0.4,
-  useExtendedSearch: true,
-});
+  setInputError("");
 
-const result = fuse.search(normalizedGuess);
-const didWin = result.length > 0 && result[0].score <= 0.4;
+  const allAnswers = [
+    normalize(puzzle.answer),
+    ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map(normalize),
+  ];
 
-// Optional: near miss feedback
-if (!didWin && result.length && result[0].score <= 0.5) {
-  setInputError("💡 That’s close! Try again.");
-  setNearMisses((prev) => [
-    ...prev,
-    {
-      puzzleId: puzzle?.id ?? null,
-      guess: normalizedGuess,
-      closestMatch: result[0].item,
-      score: result[0].score.toFixed(3),
-      timestamp: new Date().toISOString(),
-    },
-  ]);
+  const match = stringSimilarity.findBestMatch(cleanedGuess, allAnswers);
+  const bestMatchScore = match.bestMatch.rating;
+
+  if (bestMatchScore > 0.8) {
+    // ✅ Correct guess
+    setIsCorrect(true);
+    localStorage.setItem(`completed-${puzzle.date}`, "true");
+    setStats((prev) => updateStats(prev, true, attempts + 1));
+
+    if (typeof track === "function") {
+      track("puzzle_completed", {
+        correct: true,
+        guessCount: attempts + 1,
+        puzzleId: puzzle?.id ?? null,
+      });
+
+      track("puzzle_guess_count", {
+        guessCount: attempts + 1,
+        puzzleId: puzzle?.id ?? null,
+      });
+    }
+
+    console.log("✅ Correct guess — showing post-game modal...");
+    setTimeout(() => setShowPostGame(true), 500);
+  } else {
+    // 🟡 Close guess hint
+    if (bestMatchScore > 0.6) {
+      setInputError("💡 That’s close! Try again.");
+   
+      // 👀 Log near miss for review
   console.log("👀 Near miss:", {
-    guess: normalizedGuess,
-    closestMatch: result[0].item,
-    score: result[0].score.toFixed(3),
+    guess: cleanedGuess,
+    bestMatch: match.bestMatch.target,
+    similarity: bestMatchScore.toFixed(3),
   });
 }
 
-
+    // ❌ Incorrect guess
     const newAttempts = attempts + 1;
     setAttempts(newAttempts);
 
@@ -288,13 +293,13 @@ if (!didWin && result.length && result[0].score <= 0.5) {
         });
       }
 
+      console.log("❌ Max attempts reached — showing post-game modal...");
       setTimeout(() => setShowPostGame(true), 500);
     }
   }
 
   setGuess("");
 };
-
 
 
   const handleClueReveal = () => {
@@ -363,7 +368,7 @@ const renderCategoryPills = () => {
   <div key={idx} className="relative"
   ref={(el) => (tooltipRefs.current[idx] = el)}
   >
-  
+ 
 <button
   onClick={(e) => {
     e.stopPropagation();
@@ -396,21 +401,12 @@ const renderCategoryPills = () => {
   );
 };
 
-if (!hasMounted) {
-  return null; // Avoid rendering on server
-}
-
-if (!countdown) {
-  return <div className="text-center py-10 text-gray-500">Loading...</div>;
-}
-
-if (!puzzle) {
-  return <ComingSoon nextDate={countdown} />;
-}
-
-return (
-  <>
-
+return !hasMounted ? (
+  <div className="text-center py-10 text-gray-500">Loading...</div>
+) : !puzzle ? (
+  <ComingSoon nextDate={countdown} />
+) : (
+<>
 <WelcomeModal
   open={showWelcome}
   onOpenChange={setShowWelcome}
@@ -498,7 +494,7 @@ return (
   </div>
 </header>
 
-    
+   
  <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
 
 {DEV_MODE && (
@@ -524,7 +520,7 @@ return (
   </div>
 )}
 
-              
+             
       <h1 className="text-2xl font-bold mt-2">Today's number is:</h1>
 
       <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
@@ -540,8 +536,8 @@ return (
   attempts={attempts}
   puzzleNumber={puzzleNumber} // ✅ Add this
 />
-    
-            
+   
+           
 <p className="text-4xl font-bold text-[#3B82F6] font-daysone">
   {(isCorrect ||
     (puzzle.revealFormattedAt &&
@@ -622,11 +618,11 @@ return (
   </div>
 </div>
 
-        
+       
 
             </>
           ) : (
-            
+           
 <>
 
 
@@ -872,4 +868,3 @@ return (
   </>
 );
 }
-  
