@@ -25,7 +25,7 @@ import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
-import stringSimilarity from "string-similarity";
+import Fuse from "fuse.js";
 
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
@@ -224,14 +224,21 @@ const handleGuess = () => {
   setInputError("");
 
   const allAnswers = [
-    normalize(puzzle.answer),
-    ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map(normalize),
+    { label: normalize(puzzle.answer) },
+    ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
+      label: normalize(g),
+    })),
   ];
 
-  const match = stringSimilarity.findBestMatch(cleanedGuess, allAnswers);
-  const bestMatchScore = match.bestMatch.rating;
+  const fuse = new Fuse(allAnswers, {
+    keys: ["label"],
+    threshold: 0.35,
+    includeScore: true,
+  });
 
-  if (bestMatchScore > 0.8) {
+  const [bestMatch] = fuse.search(cleanedGuess);
+
+  if (bestMatch && bestMatch.score <= 0.35) {
     // ✅ Correct guess
     setIsCorrect(true);
     localStorage.setItem(`completed-${puzzle.date}`, "true");
@@ -243,7 +250,6 @@ const handleGuess = () => {
         guessCount: attempts + 1,
         puzzleId: puzzle?.id ?? null,
       });
-
       track("puzzle_guess_count", {
         guessCount: attempts + 1,
         puzzleId: puzzle?.id ?? null,
@@ -253,19 +259,15 @@ const handleGuess = () => {
     console.log("✅ Correct guess — showing post-game modal...");
     setTimeout(() => setShowPostGame(true), 500);
   } else {
-    // 🟡 Close guess hint
-    if (bestMatchScore > 0.6) {
+    if (bestMatch && bestMatch.score <= 0.5) {
       setInputError("💡 That’s close! Try again.");
-   
-      // 👀 Log near miss for review
-  console.log("👀 Near miss:", {
-    guess: cleanedGuess,
-    bestMatch: match.bestMatch.target,
-    similarity: bestMatchScore.toFixed(3),
-  });
-}
+      console.log("👀 Near miss:", {
+        guess: cleanedGuess,
+        bestMatch: bestMatch.item.label,
+        similarity: bestMatch.score.toFixed(3),
+      });
+    }
 
-    // ❌ Incorrect guess
     const newAttempts = attempts + 1;
     setAttempts(newAttempts);
 
@@ -276,8 +278,7 @@ const handleGuess = () => {
       );
     }
 
-    const isGameOver = newAttempts >= maxGuesses;
-    if (isGameOver) {
+    if (newAttempts >= maxGuesses) {
       setStats((prev) => updateStats(prev, false));
 
       if (typeof track === "function") {
@@ -286,7 +287,6 @@ const handleGuess = () => {
           attempts: newAttempts,
           puzzleId: puzzle?.id ?? null,
         });
-
         track("puzzle_guess_count", {
           guessCount: "✖",
           puzzleId: puzzle?.id ?? null,
@@ -300,6 +300,7 @@ const handleGuess = () => {
 
   setGuess("");
 };
+
 
 
   const handleClueReveal = () => {
