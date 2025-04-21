@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Share2, X } from "lucide-react";
 import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
+import confetti from "canvas-confetti";
 
 export default function PostGameModal({
   open,
@@ -38,6 +39,16 @@ export default function PostGameModal({
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+  if (open && isCorrect) {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  }
+}, [open, isCorrect]);
+  
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
     const map = {
@@ -74,6 +85,13 @@ export default function PostGameModal({
             {isCorrect ? `${attempts + 1} of 4 guesses` : `All 4 guesses used`}
           </p>
         </div>
+
+{/* ✅ Answer Bubble */}
+<div className="mt-4 w-full flex justify-center">
+  <div className="bg-green-100 border border-green-300 text-green-800 text-center px-4 py-2 rounded-xl shadow-sm font-semibold text-lg max-w-xs w-full">
+    The answer was: <span className="block text-xl font-bold mt-1">{puzzle.answer}</span>
+  </div>
+</div>
 
         {/* Fun Fact */}
         <FunFactBox puzzle={puzzle} />
