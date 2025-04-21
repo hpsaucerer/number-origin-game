@@ -14,10 +14,10 @@ export default function WelcomeModal({ open, onOpenChange }) {
 
       {/* High z-index wrapper to contain modal and prevent button ghosting */}
       <div className="fixed inset-0 z-[9999] overflow-y-auto px-4 min-h-screen flex justify-center items-start pt-[10vh]">
-        <DialogContent
-          className="rounded-xl shadow-xl bg-white w-full max-w-md"
-          style={{ zIndex: 9999 }}
-        >
+<DialogContent
+  className="mt-0 max-h-[90vh] overflow-y-auto rounded-xl shadow-xl bg-white w-full max-w-md"
+  style={{ zIndex: 9999 }}
+>
           <DialogHeader>
             <p className="text-xl font-bold text-center">Numerus</p>
             <p className="text-center text-gray-600 text-base mt-1 italic">
