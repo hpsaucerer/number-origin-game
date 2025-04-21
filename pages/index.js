@@ -507,7 +507,7 @@ return !hasMounted ? (
         <img
           src="/logo.svg"
           alt="Game Logo"
-          className="h-18 sm:h-16 md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
+          className="h-18 sm:h-20 md:h-24 lg:h-28 xl:h-52 w-auto translate-y-4"
         />
       </Link>
     </div>
