@@ -43,6 +43,8 @@ const synonymMap = {
   smallest: "lowest",
   "100 meter": "100m",
   "100 metre": "100m",
+  mens: "men",
+  "men's": "men",
   dash: "sprint",
   run: "sprint",
   murdered: "assassination",
@@ -232,7 +234,7 @@ const handleGuess = () => {
 
   const fuse = new Fuse(allAnswers, {
     includeScore: true,
-    threshold: 0.35, // adjust this as needed
+    threshold: 0.4, // adjust this as needed
   });
 
   const result = fuse.search(normalizedGuess);
