@@ -40,7 +40,7 @@ export default function WelcomeModal({ open, onOpenChange }) {
           <div className="flex justify-center mt-6">
 <Button
   onClick={() => onOpenChange(false)}
-  style={{ backgroundColor: "63c4a7", color: "white" }}
+  style={{ backgroundColor: "#63c4a7", color: "white" }}
 >
   Got it — Let’s Play!
 </Button>
