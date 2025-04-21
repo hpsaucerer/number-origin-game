@@ -40,12 +40,7 @@ export default function WelcomeModal({ open, onOpenChange }) {
           <div className="flex justify-center mt-6">
 <Button
   onClick={() => onOpenChange(false)}
-  className="hover:brightness-110"
-  style={{
-    backgroundColor: "#63c4a7",
-    color: "white",
-    border: "none",
-  }}
+  style={{ backgroundColor: "63c4a7", color: "white" }}
 >
   Got it — Let’s Play!
 </Button>
