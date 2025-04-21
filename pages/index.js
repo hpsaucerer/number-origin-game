@@ -25,6 +25,36 @@ import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
+import stringSimilarity from "string-similarity";
+
+// 🔁 Synonym replacement map for flexible matching
+const synonymMap = {
+  quickest: "fastest",
+  rapid: "fast",
+  speedy: "fast",
+  rubix: "rubik",
+  rubicks: "rubik",
+  "rubik's": "rubik",
+  usa: "united states",
+  uk: "united kingdom",
+  number: "amount",
+  figure: "amount",
+  largest: "biggest",
+  smallest: "lowest",
+  "100 meter": "100m",
+  "100 metre": "100m",
+  dash: "sprint",
+  run: "sprint",
+};
+
+const normalize = (str) =>
+  str
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "") // strip punctuation
+    .split(" ")
+    .map((word) => synonymMap[word] || word)
+    .join(" ")
+    .trim();
 
 const DEV_MODE = true;
 
@@ -181,83 +211,94 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-
 const handleGuess = () => {
-  if (!isValidGuess(guess)) {
+  const cleanedGuess = normalize(guess);
+
+  if (!cleanedGuess) {
     setInputError("Please enter a guess before submitting.");
     return;
   }
 
-  setInputError(""); // Clear error
+  setInputError("");
 
-const didWin = isCorrectGuess(
-  guess,
-  puzzle.answer,
-  puzzle.acceptableGuesses || puzzle.acceptable_guesses || []
-);
+  const allAnswers = [
+    normalize(puzzle.answer),
+    ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map(normalize),
+  ];
 
-const wasClose = isCloseGuess(guess, puzzle.keywords || []);
-setInputError(!didWin && wasClose ? "💡 That’s close! Try again." : "");
+  const match = stringSimilarity.findBestMatch(cleanedGuess, allAnswers);
+  const bestMatchScore = match.bestMatch.rating;
 
-if (didWin) {
-  setIsCorrect(true);
-  localStorage.setItem(`completed-${puzzle.date}`, "true");
-  setStats((prev) => updateStats(prev, true, attempts + 1));
+  if (bestMatchScore > 0.8) {
+    // ✅ Correct guess
+    setIsCorrect(true);
+    localStorage.setItem(`completed-${puzzle.date}`, "true");
+    setStats((prev) => updateStats(prev, true, attempts + 1));
 
-  console.log("🎉 Correct guess! Showing post-game modal...");
-
-  // ✅ Track correct guess
-  if (typeof track === "function") {
-    track("puzzle_completed", {
-      correct: true,
-      guessCount: attempts + 1,
-      puzzleId: puzzle?.id ?? null,
-    });
-
-    track("puzzle_guess_count", {
-      guessCount: attempts + 1,
-      puzzleId: puzzle?.id ?? null,
-    });
-  }
-
-  console.log("✅ Correct guess — showing post-game modal...");
-  setTimeout(() => setShowPostGame(true), 500);
-
-} else {
-  const newAttempts = attempts + 1;
-  setAttempts(newAttempts);
-
-  const canReveal = newAttempts <= puzzle.clues.length;
-  if (canReveal) {
-    setRevealedClues((prev) =>
-      revealNextClue(puzzle, prev, newAttempts, maxGuesses)
-    );
-  }
-
-  const isGameOver = newAttempts >= maxGuesses;
-  if (isGameOver) {
-    setStats((prev) => updateStats(prev, false));
-
-    // ❌ Track failure
     if (typeof track === "function") {
-      track("puzzle_failed", {
-        correct: false,
-        attempts: newAttempts,
+      track("puzzle_completed", {
+        correct: true,
+        guessCount: attempts + 1,
         puzzleId: puzzle?.id ?? null,
       });
 
       track("puzzle_guess_count", {
-        guessCount: "✖",
+        guessCount: attempts + 1,
         puzzleId: puzzle?.id ?? null,
       });
     }
 
-    console.log("❌ Max attempts reached — showing post-game modal...");
+    console.log("✅ Correct guess — showing post-game modal...");
     setTimeout(() => setShowPostGame(true), 500);
-  }
+  } else {
+    // 🟡 Close guess hint
+    if (bestMatchScore > 0.6) {
+      setInputError("💡 That’s close! Try again.");
+   
+      // 👀 Log near miss for review
+  console.log("👀 Near miss:", {
+    guess: cleanedGuess,
+    bestMatch: match.bestMatch.target,
+    similarity: bestMatchScore.toFixed(3),
+  });
 }
 
+    // ❌ Incorrect guess
+    const newAttempts = attempts + 1;
+    setAttempts(newAttempts);
+
+    const canReveal = newAttempts <= puzzle.clues.length;
+    if (canReveal) {
+      setRevealedClues((prev) =>
+        revealNextClue(puzzle, prev, newAttempts, maxGuesses)
+      );
+    }
+
+    const isGameOver = newAttempts >= maxGuesses;
+    if (isGameOver) {
+      setStats((prev) => updateStats(prev, false));
+
+      if (typeof track === "function") {
+        track("puzzle_failed", {
+          correct: false,
+          attempts: newAttempts,
+          puzzleId: puzzle?.id ?? null,
+        });
+
+        track("puzzle_guess_count", {
+          guessCount: "✖",
+          puzzleId: puzzle?.id ?? null,
+        });
+      }
+
+      console.log("❌ Max attempts reached — showing post-game modal...");
+      setTimeout(() => setShowPostGame(true), 500);
+    }
+  }
+
+  setGuess("");
 };
+
 
   const handleClueReveal = () => {
     if (attempts >= maxGuesses || revealedClues.length >= puzzle.clues.length) return;
