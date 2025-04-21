@@ -87,10 +87,11 @@ export default function PostGameModal({
         </div>
 
 {/* ✅ Answer Bubble */}
-<div className="mt-4 w-full flex justify-center">
-  <div className="bg-green-100 border border-green-300 text-green-800 text-center px-4 py-2 rounded-xl shadow-sm font-semibold text-lg max-w-xs w-full">
-    The answer was: <span className="block text-xl font-bold mt-1">{puzzle.answer}</span>
-  </div>
+<div className="bg-green-100 border border-green-300 text-green-800 text-center px-4 py-2 rounded-xl shadow-sm font-semibold text-sm max-w-xs w-full">
+  The answer was:
+  <span className="block text-lg font-bold mt-1">{puzzle.answer}</span>
+</div>
+
 </div>
 
         {/* Fun Fact */}
