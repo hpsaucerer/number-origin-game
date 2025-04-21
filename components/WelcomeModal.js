@@ -26,7 +26,7 @@ export default function WelcomeModal({ open, onOpenChange }) {
           </DialogHeader>
 
           <p className="text-base text-center mt-2">
-            Strengthen your trivia muscle, one number at a time. Here's how it works: 
+             Here's how the game works: 
           </p>
 
           <div className="mt-4 flex justify-center">
