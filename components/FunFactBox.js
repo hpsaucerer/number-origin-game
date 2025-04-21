@@ -13,7 +13,7 @@ export default function FunFactBox({ puzzle }) {
           alt="Fun Fact Icon"
           className="w-24 h-24 -mt-6 -mb-2"
         />
-        <p className="text-base md:text-lg leading-relaxed text-center text-gray-800">
+        <p className="text-sm md:text-lg leading-relaxed text-center text-gray-800">
           {funFact}
         </p>
       </div>
