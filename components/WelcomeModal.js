@@ -13,11 +13,12 @@ export default function WelcomeModal({ open, onOpenChange }) {
       <DialogOverlay className="fixed inset-0 bg-white/95 backdrop-blur-md backdrop-saturate-150 z-[9997]" />
 
       {/* High z-index wrapper to contain modal and prevent button ghosting */}
-      <div className="fixed inset-0 z-[9999] overflow-y-auto px-4 min-h-screen flex justify-center items-start pt-[10vh]">
-<DialogContent
-  className="mt-0 max-h-[90vh] overflow-y-auto rounded-xl shadow-xl bg-white w-full max-w-md"
-  style={{ zIndex: 9999 }}
->
+<div className="fixed inset-0 z-[9999] overflow-y-auto px-4 min-h-screen flex justify-center">
+  <div className="mt-[8vh] w-full max-w-md">
+    <DialogContent
+      className="max-h-[90vh] overflow-y-auto rounded-xl shadow-xl bg-white w-full"
+      style={{ zIndex: 9999, margin: 0 }}
+    >
           <DialogHeader>
             <p className="text-xl font-bold text-center">Numerus</p>
             <p className="text-center text-gray-600 text-base mt-1 italic">
