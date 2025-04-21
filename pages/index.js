@@ -396,12 +396,18 @@ const renderCategoryPills = () => {
   );
 };
 
-return !hasMounted ? (
-  <div className="text-center py-10 text-gray-500">Loading...</div>
-) : !puzzle ? (
-  <ComingSoon nextDate={countdown} />
-) : (
-<>
+if (!hasMounted || !countdown) {
+  return <div className="text-center py-10 text-gray-500">Loading...</div>;
+}
+
+if (!puzzle) {
+  return <ComingSoon nextDate={countdown} />;
+}
+
+return (
+  <>
+
+
 <WelcomeModal
   open={showWelcome}
   onOpenChange={setShowWelcome}
