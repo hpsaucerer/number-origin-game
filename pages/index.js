@@ -95,6 +95,7 @@ const colorClassMap = {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedPuzzleId, setSelectedPuzzleId] = useState(null);
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
+  const [revealDisabled, setRevealDisabled] = useState(false);
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
@@ -330,12 +331,23 @@ const handleGuess = () => {
 };
 
 
+const handleClueReveal = () => {
+  if (
+    revealDisabled ||
+    attempts >= maxGuesses ||
+    revealedClues.length >= puzzle.clues.length
+  ) return;
 
-  const handleClueReveal = () => {
-    if (attempts >= maxGuesses || revealedClues.length >= puzzle.clues.length) return;
-    setRevealedClues([...revealedClues, puzzle.clues[revealedClues.length]]);
-    setAttempts(attempts + 1);
-  };
+  setRevealDisabled(true);
+
+  setRevealedClues([...revealedClues, puzzle.clues[revealedClues.length]]);
+  setAttempts(attempts + 1);
+
+  setTimeout(() => {
+    setRevealDisabled(false);
+  }, 1000); // 1 second lockout to prevent double taps
+};
+
 
 const shareTextHandler = () => {
   shareResult({
@@ -688,7 +700,11 @@ return !hasMounted ? (
 <div className="flex flex-row md:flex-col justify-between gap-2 w-full max-w-xs mx-auto">
   <Button
     onClick={handleClueReveal}
-    disabled={revealedClues.length >= puzzle.clues.length || attempts >= maxGuesses}
+    disabled={
+  revealDisabled ||
+  revealedClues.length >= puzzle.clues.length ||
+  attempts >= maxGuesses
+}
     variant="outline"
     className={`w-full transition-transform duration-300 ease-in-out ${
       !showWelcome &&
