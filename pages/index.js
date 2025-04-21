@@ -25,7 +25,7 @@ import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
-import stringSimilarity from "string-similarity";
+import Fuse from "fuse.js";
 
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
@@ -213,10 +213,12 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-const handleGuess = () => {
-  const cleanedGuess = normalize(guess);
 
-  if (!cleanedGuess) {
+// ✅ Use your existing normalize() and synonymMap here
+
+const handleGuess = () => {
+  const normalizedGuess = normalize(guess);
+  if (!normalizedGuess) {
     setInputError("Please enter a guess before submitting.");
     return;
   }
@@ -228,11 +230,15 @@ const handleGuess = () => {
     ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map(normalize),
   ];
 
-  const match = stringSimilarity.findBestMatch(cleanedGuess, allAnswers);
-  const bestMatchScore = match.bestMatch.rating;
+  const fuse = new Fuse(allAnswers, {
+    includeScore: true,
+    threshold: 0.35, // adjust this as needed
+  });
 
-  if (bestMatchScore > 0.8) {
-    // ✅ Correct guess
+  const result = fuse.search(normalizedGuess);
+  const didWin = result.length > 0 && result[0].score <= 0.35;
+
+  if (didWin) {
     setIsCorrect(true);
     localStorage.setItem(`completed-${puzzle.date}`, "true");
     setStats((prev) => updateStats(prev, true, attempts + 1));
@@ -250,22 +256,18 @@ const handleGuess = () => {
       });
     }
 
-    console.log("✅ Correct guess — showing post-game modal...");
     setTimeout(() => setShowPostGame(true), 500);
   } else {
-    // 🟡 Close guess hint
-    if (bestMatchScore > 0.6) {
+    // Near match logging + "close" feedback
+    if (result.length && result[0].score <= 0.5) {
       setInputError("💡 That’s close! Try again.");
-   
-      // 👀 Log near miss for review
-  console.log("👀 Near miss:", {
-    guess: cleanedGuess,
-    bestMatch: match.bestMatch.target,
-    similarity: bestMatchScore.toFixed(3),
-  });
-}
+      console.log("👀 Near miss:", {
+        guess: normalizedGuess,
+        closestMatch: result[0].item,
+        score: result[0].score.toFixed(3),
+      });
+    }
 
-    // ❌ Incorrect guess
     const newAttempts = attempts + 1;
     setAttempts(newAttempts);
 
@@ -293,13 +295,13 @@ const handleGuess = () => {
         });
       }
 
-      console.log("❌ Max attempts reached — showing post-game modal...");
       setTimeout(() => setShowPostGame(true), 500);
     }
   }
 
   setGuess("");
 };
+
 
 
   const handleClueReveal = () => {
