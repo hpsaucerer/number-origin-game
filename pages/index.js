@@ -282,6 +282,9 @@ const handleGuess = () => {
         similarity: bestMatch.score.toFixed(3),
         essentialsPassed: hasEssentials,
       });
+        } else {
+    // ❌ Fully incorrect and not close
+    setInputError("Incorrect - here's a clue!");
     }
 
     // ❌ Incorrect or Incomplete
