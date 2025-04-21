@@ -43,6 +43,8 @@ const synonymMap = {
   smallest: "lowest",
   "100 meter": "100m",
   "100 metre": "100m",
+  mens: "men's",
+  "men's": "mens",
   dash: "sprint",
   run: "sprint",
   murdered: "assassination",
