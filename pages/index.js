@@ -1,7 +1,5 @@
 "use client";
 
-import WelcomeModal from "../components/WelcomeModal";
-import InteractiveTutorial from "../components/InteractiveTutorial";
 import OnScreenKeyboard from "../components/OnScreenKeyboard";
 import { useState, useEffect } from "react";
 import { BarChart, Share2 } from "lucide-react";
@@ -89,8 +87,6 @@ const colorClassMap = {
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [inputError, setInputError] = useState("");
-  const [showWelcome, setShowWelcome] = useState(true);
-  const [showTutorial, setShowTutorial] = useState(false);
   const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -107,7 +103,7 @@ const [localDate, setLocalDate] = useState("");
 
 const [showTour, setShowTour] = useState(false);
 const [stepIndex, setStepIndex] = useState(0);
-const [tourKey, setTourKey] = useState(Date.now()); // forces Joyride reset if needed
+const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
@@ -515,20 +511,6 @@ return !hasMounted ? (
   }}
 />
 
-
-
-<WelcomeModal
-  open={showWelcome}
-  onOpenChange={setShowWelcome}
-  showTutorial={showTutorial}
-  setShowTutorial={setShowTutorial}
-/>
-
-
-<InteractiveTutorial
-  open={showTutorial}
-  onClose={() => setShowTutorial(false)}
-/>
 
 <header>
   <div className="bg-[#3B82F6] px-4 py-2 flex items-center justify-between h-16 max-w-screen-lg w-full mx-auto">
