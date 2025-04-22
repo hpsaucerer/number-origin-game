@@ -106,6 +106,8 @@ const [puzzleNumber, setPuzzleNumber] = useState(null);
 
 const [localDate, setLocalDate] = useState("");
 
+const [showTour, setShowTour] = useState(false);
+
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
   if (!seenTour) {
