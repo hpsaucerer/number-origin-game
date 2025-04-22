@@ -214,8 +214,7 @@ useEffect(() => {
   }
 }, [puzzle]);
 
- 
-useEffect(() => {
+ useEffect(() => {
   const handleClickOutside = (event) => {
     if (
       tooltipRefs.current.every(
@@ -226,12 +225,15 @@ useEffect(() => {
     }
   };
 
-  document.addEventListener("click", handleClickOutside);
+  if (openTooltip !== null) {
+    document.addEventListener("click", handleClickOutside);
+  }
 
   return () => {
     document.removeEventListener("click", handleClickOutside);
   };
 }, [openTooltip]);
+
 
 const handleGuess = () => {
   const cleanedGuess = normalize(guess);
