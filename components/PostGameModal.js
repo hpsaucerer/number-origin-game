@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Share2, X } from "lucide-react";
 import FunFactBox from "./FunFactBox";
@@ -40,59 +40,55 @@ export default function PostGameModal({
   }, []);
 
   useEffect(() => {
-  if (open && isCorrect) {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
-  }
-}, [open, isCorrect]);
+    if (open && isCorrect) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }
+  }, [open, isCorrect]);
 
-useEffect(() => {
-  const scrollY = window.scrollY;
+  useEffect(() => {
+    const scrollY = window.scrollY;
 
-  const lockScroll = () => {
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.overflow = 'hidden';
-    document.body.style.width = '100%';
+    const lockScroll = () => {
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      document.body.style.width = '100%';
 
-    // iOS fix
-    document.addEventListener('touchmove', preventScroll, { passive: false });
-  };
+      document.addEventListener('touchmove', preventScroll, { passive: false });
+    };
 
-  const unlockScroll = () => {
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.overflow = '';
-    document.body.style.width = '';
+    const unlockScroll = () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.style.width = '';
 
-    window.scrollTo(0, scrollY);
+      window.scrollTo(0, scrollY);
+      document.removeEventListener('touchmove', preventScroll);
+    };
 
-    // iOS fix
-    document.removeEventListener('touchmove', preventScroll);
-  };
+    const preventScroll = (e) => {
+      e.preventDefault();
+    };
 
-  const preventScroll = (e) => {
-    e.preventDefault();
-  };
+    if (open) {
+      lockScroll();
+    } else {
+      unlockScroll();
+    }
 
-  if (open) {
-    lockScroll();
-  } else {
-    unlockScroll();
-  }
-
-  return () => {
-    unlockScroll();
-  };
-}, [open]);
-
+    return () => {
+      unlockScroll();
+    };
+  }, [open]);
 
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
@@ -109,67 +105,69 @@ useEffect(() => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-  className="w-full max-w-md mt-16 px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-[calc(100dvh-4rem)] overscroll-contain">
-
-        {/* ❌ Close Button */}
-        <button
-          className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
-          onClick={onClose}
-          aria-label="Close"
-        >
-          <X size={28} />
-        </button>
-
-        {/* Result Image & Guess Count */}
-        <div className="flex flex-col items-center pt-2 pb-1">
-          <img
-            src={imagePathFor(attempts, isCorrect)}
-            alt=""
-            className="w-36 h-auto block"
-          />
-          <p className="mt-1 text-sm font-semibold text-gray-800">
-            {isCorrect ? `${attempts + 1} of 4 guesses` : `All 4 guesses used`}
-          </p>
-        </div>
-
-{/* ✅ Answer Bubble */}
-<div className="mt-4 w-full flex justify-center">
-  <div className="bg-green-100 border border-green-300 text-green-800 text-center px-4 py-2 rounded-xl shadow-sm font-semibold text-base max-w-xs w-full">
-    The answer was: <span className="block text-sm font-bold mt-1">{puzzle.answer}</span>
-  </div>
-</div>
-
-        {/* Fun Fact */}
-        <FunFactBox puzzle={puzzle} />
-
-        {/* 🔥 Streak Count */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-700 font-semibold">🔥 Current Streak</p>
-          <p className="text-3xl font-bold text-amber-500">
-            {stats?.currentStreak ?? 0} day{stats?.currentStreak === 1 ? "" : "s"}
-          </p>
-        </div>
-
-        {/* ⏳ Countdown */}
-        <div className="mt-4 text-center">
-          <p className="text-sm font-semibold text-gray-700">Next puzzle in:</p>
-          <p className="text-lg font-mono text-gray-900">{countdown}</p>
-        </div>
-
-        {/* 📤 Share Button */}
-        <div className="flex justify-center mt-4">
-          <Button
-            onClick={() =>
-              shareResult({
-                isCorrect,
-                guessCount: isCorrect ? attempts + 1 : 4,
-                puzzleNumber,
-              })
-            }
-            className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
+        className="w-full max-w-md mt-16 px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl"
+      >
+        <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto w-full overscroll-contain">
+          {/* ❌ Close Button */}
+          <button
+            className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
+            onClick={onClose}
+            aria-label="Close"
           >
-            <Share2 size={16} /> Share
-          </Button>
+            <X size={28} />
+          </button>
+
+          {/* Result Image & Guess Count */}
+          <div className="flex flex-col items-center pt-2 pb-1">
+            <img
+              src={imagePathFor(attempts, isCorrect)}
+              alt=""
+              className="w-36 h-auto block"
+            />
+            <p className="mt-1 text-sm font-semibold text-gray-800">
+              {isCorrect ? `${attempts + 1} of 4 guesses` : `All 4 guesses used`}
+            </p>
+          </div>
+
+          {/* ✅ Answer Bubble */}
+          <div className="mt-4 w-full flex justify-center">
+            <div className="bg-green-100 border border-green-300 text-green-800 text-center px-4 py-2 rounded-xl shadow-sm font-semibold text-base max-w-xs w-full">
+              The answer was: <span className="block text-sm font-bold mt-1">{puzzle.answer}</span>
+            </div>
+          </div>
+
+          {/* Fun Fact */}
+          <FunFactBox puzzle={puzzle} />
+
+          {/* 🔥 Streak Count */}
+          <div className="text-center mt-6">
+            <p className="text-sm text-gray-700 font-semibold">🔥 Current Streak</p>
+            <p className="text-3xl font-bold text-amber-500">
+              {stats?.currentStreak ?? 0} day{stats?.currentStreak === 1 ? "" : "s"}
+            </p>
+          </div>
+
+          {/* ⏳ Countdown */}
+          <div className="mt-4 text-center">
+            <p className="text-sm font-semibold text-gray-700">Next puzzle in:</p>
+            <p className="text-lg font-mono text-gray-900">{countdown}</p>
+          </div>
+
+          {/* 📤 Share Button */}
+          <div className="flex justify-center mt-4">
+            <Button
+              onClick={() =>
+                shareResult({
+                  isCorrect,
+                  guessCount: isCorrect ? attempts + 1 : 4,
+                  puzzleNumber,
+                })
+              }
+              className="bg-[#3B82F6] hover:bg-[#2563EB] text-white flex items-center gap-2"
+            >
+              <Share2 size={16} /> Share
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
