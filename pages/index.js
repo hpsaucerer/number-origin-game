@@ -773,7 +773,7 @@ return !hasMounted ? (
       <X size={28} />
     </button>
 
-<DialogHeader className="w-full pt-2 px-4">
+<DialogHeader className="w-full">
   <DialogTitle>
     <h2 className="text-lg text-gray-800 text-left">How To Play</h2>
   </DialogTitle>
