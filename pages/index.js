@@ -392,7 +392,7 @@ const renderCategoryPills = () => {
     {
       label: "Geography",
       color: "bg-green-200 text-green-800",
-      tooltip: "Distances, coordinates, elevations, .",
+      tooltip: "Distances, coordinates, elevations.",
     },
     {
       label: "Science",
