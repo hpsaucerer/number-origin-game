@@ -488,6 +488,11 @@ return !hasMounted ? (
     overlay: {
       backgroundColor: "rgba(0, 0, 0, 0.7)",
     },
+    spotlight: {
+      animation: "none", // 🛑 disables pulsing
+      backgroundColor: "transparent", // optional: removes white glow
+      borderRadius: 6,
+    },
   }}
   callback={(data) => {
     if (data.status === "finished" || data.status === "skipped") {
@@ -496,6 +501,7 @@ return !hasMounted ? (
     }
   }}
 />
+
 
 
 <WelcomeModal
