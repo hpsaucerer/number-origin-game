@@ -110,7 +110,7 @@ useEffect(() => {
   if (!seenTour) {
     setShowTour(true);
     setStepIndex(0);
-    setTourKey(Date.now()); // refresh Joyride if needed
+    setTourKey(Date.now()); // refresh  if needed
   }
 }, []);
     
@@ -465,7 +465,7 @@ return !hasMounted ? (
     {
     target: ".daily-number",
     content: "Welcome to Numerus - the daily reverse trivia game. This is today's number. Can you figure out what it represents?",
-    placement: "bottom",
+    disableBeacon: true,
    },
    {
       target: ".guess-input",
