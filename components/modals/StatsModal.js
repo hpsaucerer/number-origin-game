@@ -18,11 +18,12 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 
           {/* Title */}
 <div className="w-full flex flex-col items-start">
-  <DialogHeader>
-    <DialogTitle>
-      <h2 className="text-lg text-gray-800 mb-4 text-left">Statistics</h2>
-    </DialogTitle>
-  </DialogHeader>
+<DialogHeader className="w-full">
+  <DialogTitle className="text-lg text-gray-800 text-left">
+    Statistics
+  </DialogTitle>
+</DialogHeader>
+
 </div>
 
           {/* Stat boxes */}
