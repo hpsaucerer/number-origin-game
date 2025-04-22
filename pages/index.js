@@ -255,7 +255,7 @@ const handleGuess = () => {
 
   const fuse = new Fuse(allAnswers, {
     keys: ["label"],
-    threshold: 0.85,
+    threshold: 0.45,
     includeScore: true,
   });
 
