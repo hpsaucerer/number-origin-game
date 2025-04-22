@@ -110,7 +110,7 @@ const [showTour, setShowTour] = useState(false);
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
   if (!seenTour) {
-    setShowTour(true);
+    setTimeout(() => setShowTour(true), 500); // 0.5 second delay
   }
 }, []);
     
