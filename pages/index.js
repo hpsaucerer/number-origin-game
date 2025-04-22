@@ -106,11 +106,15 @@ const [puzzleNumber, setPuzzleNumber] = useState(null);
 const [localDate, setLocalDate] = useState("");
 
 const [showTour, setShowTour] = useState(false);
+const [stepIndex, setStepIndex] = useState(0);
+const [tourKey, setTourKey] = useState(Date.now()); // forces Joyride reset if needed
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
   if (!seenTour) {
-    setTimeout(() => setShowTour(true), 500); // 0.5 second delay
+    setShowTour(true);
+    setStepIndex(0);
+    setTourKey(Date.now()); // refresh Joyride if needed
   }
 }, []);
     
@@ -459,7 +463,8 @@ return !hasMounted ? (
 ) : (
 <>
 
-  <Joyride
+ <Joyride
+  key={tourKey} // ensures it resets cleanly
   steps={[
     {
       target: ".guess-input",
@@ -475,13 +480,14 @@ return !hasMounted ? (
     },
   ]}
   run={showTour}
-  stepIndex={0}              // 👈 Start from first step
-  showBeacon={false}         // 👈 Skip beacon, start immediately
+  stepIndex={stepIndex}
   continuous
   showSkipButton
   showProgress
+  scrollToFirstStep
   disableOverlayClose
   spotlightClicks={false}
+  showBeacon={false}
   styles={{
     options: {
       primaryColor: "#3B82F6",
@@ -491,8 +497,7 @@ return !hasMounted ? (
       backgroundColor: "rgba(0, 0, 0, 0.7)",
     },
     spotlight: {
-      boxShadow: "none",
-      backgroundColor: "transparent",
+      boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.7)",
     },
   }}
   callback={(data) => {
@@ -500,8 +505,13 @@ return !hasMounted ? (
       setShowTour(false);
       localStorage.setItem("seenTour", "true");
     }
+
+    if (data.type === "step:after" || data.type === "target:notFound") {
+      setStepIndex((prev) => prev + 1);
+    }
   }}
 />
+
 
 
 <WelcomeModal
