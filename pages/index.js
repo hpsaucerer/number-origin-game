@@ -478,13 +478,15 @@ return !hasMounted ? (
   continuous
   showSkipButton
   showProgress
+  disableOverlayClose
+  spotlightClicks
   styles={{
     options: {
       primaryColor: "#3B82F6",
       zIndex: 99999,
     },
     overlay: {
-      backgroundColor: "rgba(0, 0, 0, 0.7)", // 🌑 darker background
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
     },
   }}
   callback={(data) => {
@@ -494,6 +496,7 @@ return !hasMounted ? (
     }
   }}
 />
+
 
 <WelcomeModal
   open={showWelcome}
@@ -754,11 +757,10 @@ return !hasMounted ? (
     attempts >= maxGuesses
   }
   variant="outline"
-className="w-full transition-transform duration-300 ease-in-out"
+  className="reveal-button w-full transition-transform duration-300 ease-in-out"
 >
   Reveal a Clue
 </Button>
-
 
   <Button
     onClick={handleGuess}
