@@ -25,6 +25,7 @@ import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
 import Fuse from "fuse.js";
 import Joyride from "react-joyride";
+import StatsModal from "@/components/StatsModal";
 
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
@@ -389,7 +390,7 @@ const renderCategoryPills = () => {
     {
       label: "Geography",
       color: "bg-green-200 text-green-800",
-      tooltip: "Distances, coordinates, elevations, statistics.",
+      tooltip: "Distances, coordinates, elevations, .",
     },
     {
       label: "Science",
@@ -816,85 +817,17 @@ return !hasMounted ? (
 </div>
 </Dialog>
 
+<StatsModal
+  open={showStats}
+  onClose={() => setShowStats(false)}
+  stats={stats}
+  data={data}
+  COLORS={COLORS}
+  renderCenterLabel={renderCenterLabel}
+  combinedLabel={combinedLabel}
+/>
 
-{/* Stats Popup */}
-<Dialog open={showStats} onOpenChange={setShowStats}>
-   <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
- <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
 
-    {/* Dismiss Button */}
-    <button
-      onClick={() => setShowStats(false)}
-      aria-label="Close"
-      className="absolute top-1 right-1 p-2 text-blue-500 hover:text-blue-600 transition"
-    >
-      <X size={28} />
-    </button>
-   {/* Title */}
-<div className="w-full flex flex-col items-start">
-  <DialogHeader>
-    <DialogTitle>
-      <h2 className="text-lg text-gray-800 mb-4 text-left">Statistics</h2>
-    </DialogTitle>
-  </DialogHeader>
-</div>
-
-    {/* Formatted stat boxes */}
-    <div className="grid grid-cols-4 gap-4 text-center my-6">
-      <div>
-        <p className="text-3xl font-bold">{stats.gamesPlayed}</p>
-        <p className="text-sm text-gray-600">Played</p>
-      </div>
-      <div>
-        <p className="text-3xl font-bold">
-          {stats.gamesPlayed > 0
-            ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
-            : 0}
-        </p>
-        <p className="text-sm text-gray-600">Win %</p>
-      </div>
-      <div>
-        <p className="text-3xl font-bold">{stats.currentStreak}</p>
-        <p className="text-sm text-gray-600">Current<br />Streak</p>
-      </div>
-      <div>
-        <p className="text-3xl font-bold">{stats.maxStreak}</p>
-        <p className="text-sm text-gray-600">Max<br />Streak</p>
-      </div>
-    </div>
-
-    {/* Chart + Ring Icon */}
-    <div className="flex flex-col items-center space-y-4">
-      <img
-        src="/icons/Ring-icon.png"
-        alt="Ring o' Results"
-        className="w-36 h-36 mx-auto mb-[-64px]"
-      />
-
-      <ResponsiveContainer width={300} height={300}>
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="value"
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={100}
-            label={combinedLabel}
-            labelLine={false}
-            isAnimationActive={true}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-            <Label content={renderCenterLabel} position="center" />
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
-  </DialogContent>
-</div>
-</Dialog>
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
 </footer>
