@@ -49,44 +49,15 @@ export default function PostGameModal({
     }
   }, [open, isCorrect]);
 
+  // ✅ Prevent background scroll on mobile when modal is open
   useEffect(() => {
-    const scrollY = window.scrollY;
-
-    const lockScroll = () => {
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.overflow = 'hidden';
-      document.body.style.width = '100%';
-
-      document.addEventListener('touchmove', preventScroll, { passive: false });
-    };
-
-    const unlockScroll = () => {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.overflow = '';
-      document.body.style.width = '';
-
-      window.scrollTo(0, scrollY);
-      document.removeEventListener('touchmove', preventScroll);
-    };
-
-    const preventScroll = (e) => {
-      e.preventDefault();
-    };
-
     if (open) {
-      lockScroll();
+      document.body.style.overflow = "hidden";
     } else {
-      unlockScroll();
+      document.body.style.overflow = "";
     }
-
     return () => {
-      unlockScroll();
+      document.body.style.overflow = "";
     };
   }, [open]);
 
@@ -105,9 +76,11 @@ export default function PostGameModal({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="w-full max-w-md mt-16 px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl"
+        className="w-full max-w-md mt-16 px-0 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-hidden"
       >
-        <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto w-full overscroll-contain">
+        {/* 🔁 Scrollable inner wrapper */}
+        <div className="overflow-y-auto max-h-[calc(100dvh-8rem)] px-4 overscroll-contain">
+
           {/* ❌ Close Button */}
           <button
             className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
@@ -117,7 +90,7 @@ export default function PostGameModal({
             <X size={28} />
           </button>
 
-          {/* Result Image & Guess Count */}
+          {/* 🎯 Image & Guess Count */}
           <div className="flex flex-col items-center pt-2 pb-1">
             <img
               src={imagePathFor(attempts, isCorrect)}
@@ -129,17 +102,17 @@ export default function PostGameModal({
             </p>
           </div>
 
-          {/* ✅ Answer Bubble */}
+          {/* ✅ Answer */}
           <div className="mt-4 w-full flex justify-center">
             <div className="bg-green-100 border border-green-300 text-green-800 text-center px-4 py-2 rounded-xl shadow-sm font-semibold text-base max-w-xs w-full">
               The answer was: <span className="block text-sm font-bold mt-1">{puzzle.answer}</span>
             </div>
           </div>
 
-          {/* Fun Fact */}
+          {/* 🧠 Fun Fact */}
           <FunFactBox puzzle={puzzle} />
 
-          {/* 🔥 Streak Count */}
+          {/* 🔥 Streak */}
           <div className="text-center mt-6">
             <p className="text-sm text-gray-700 font-semibold">🔥 Current Streak</p>
             <p className="text-3xl font-bold text-amber-500">
@@ -153,8 +126,8 @@ export default function PostGameModal({
             <p className="text-lg font-mono text-gray-900">{countdown}</p>
           </div>
 
-          {/* 📤 Share Button */}
-          <div className="flex justify-center mt-4">
+          {/* 📤 Share */}
+          <div className="flex justify-center mt-4 mb-2">
             <Button
               onClick={() =>
                 shareResult({
@@ -168,6 +141,7 @@ export default function PostGameModal({
               <Share2 size={16} /> Share
             </Button>
           </div>
+
         </div>
       </DialogContent>
     </Dialog>
