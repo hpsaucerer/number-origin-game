@@ -773,11 +773,11 @@ return !hasMounted ? (
       <X size={28} />
     </button>
 
-    <DialogHeader>
-      <DialogTitle>
-        <h2 className="text-lg text-gray-800 -mb-2 text-left">How To Play</h2>
-      </DialogTitle>
-    </DialogHeader>
+<DialogHeader className="w-full pt-2 px-4">
+  <DialogTitle>
+    <h2 className="text-lg text-gray-800 text-left">How To Play</h2>
+  </DialogTitle>
+</DialogHeader>
 
 <div className="mt-2 font-vietnam">
   <ul className="space-y-4">
