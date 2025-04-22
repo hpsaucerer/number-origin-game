@@ -50,16 +50,49 @@ export default function PostGameModal({
 }, [open, isCorrect]);
 
 useEffect(() => {
+  const scrollY = window.scrollY;
+
+  const lockScroll = () => {
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+    document.body.style.width = '100%';
+
+    // iOS fix
+    document.addEventListener('touchmove', preventScroll, { passive: false });
+  };
+
+  const unlockScroll = () => {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.overflow = '';
+    document.body.style.width = '';
+
+    window.scrollTo(0, scrollY);
+
+    // iOS fix
+    document.removeEventListener('touchmove', preventScroll);
+  };
+
+  const preventScroll = (e) => {
+    e.preventDefault();
+  };
+
   if (open) {
-    document.body.style.overflow = "hidden";
+    lockScroll();
   } else {
-    document.body.style.overflow = "";
+    unlockScroll();
   }
 
   return () => {
-    document.body.style.overflow = "";
+    unlockScroll();
   };
 }, [open]);
+
 
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
