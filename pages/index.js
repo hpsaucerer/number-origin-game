@@ -459,7 +459,7 @@ return !hasMounted ? (
 ) : (
 <>
 
-<Joyride
+  <Joyride
   steps={[
     {
       target: ".guess-input",
@@ -475,6 +475,8 @@ return !hasMounted ? (
     },
   ]}
   run={showTour}
+  stepIndex={0}              // 👈 Start from first step
+  showBeacon={false}         // 👈 Skip beacon, start immediately
   continuous
   showSkipButton
   showProgress
@@ -489,12 +491,18 @@ return !hasMounted ? (
       backgroundColor: "rgba(0, 0, 0, 0.7)",
     },
     spotlight: {
-      animation: "none", // ✅ disables pulsing
-      boxShadow: "0 0 0 4px rgba(255, 255, 255, 0.75)", // optional: clean ring
-      borderRadius: 8,
+      boxShadow: "none",
+      backgroundColor: "transparent",
     },
   }}
+  callback={(data) => {
+    if (data.status === "finished" || data.status === "skipped") {
+      setShowTour(false);
+      localStorage.setItem("seenTour", "true");
+    }
+  }}
 />
+
 
 <WelcomeModal
   open={showWelcome}
