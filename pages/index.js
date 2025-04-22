@@ -51,7 +51,6 @@ const synonymMap = {
   murdered: "assassination",
   killed: "assassination",
 };
-const [showTour, setShowTour] = useState(true); // ✅ default to true or control via localStorage
 
 const normalize = (str) =>
   str
