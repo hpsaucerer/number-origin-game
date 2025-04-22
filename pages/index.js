@@ -339,7 +339,8 @@ if (bestMatch && bestMatch.score <= 0.65 && hasEnoughEssentials) {
 }
 
 setGuess("");
-
+};
+    
 const handleClueReveal = () => {
   if (
     revealDisabled ||
