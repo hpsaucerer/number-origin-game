@@ -735,10 +735,9 @@ return !hasMounted ? (
     }
   }}
   placeholder="Enter your guess..."
-  className="w-full"
+  className="w-full guess-input" // 👈 add this class
   disabled={isCorrect}
 />
-
 
 
   {/* Buttons in a row */}
