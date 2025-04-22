@@ -463,20 +463,23 @@ return !hasMounted ? (
 ) : (
 <>
 
- <Joyride
-  key={tourKey} // ensures it resets cleanly
+<Joyride
+  key={tourKey}
   steps={[
     {
       target: ".guess-input",
       content: "Type what you think the number represents!",
+      disableBeacon: true,
     },
     {
       target: ".reveal-button",
       content: "Need help? Reveal a clue — but it counts as a guess!",
+      disableBeacon: true,
     },
     {
       target: ".stats-button",
       content: "Track your daily streaks and puzzle stats here.",
+      disableBeacon: true,
     },
   ]}
   run={showTour}
@@ -487,7 +490,7 @@ return !hasMounted ? (
   scrollToFirstStep
   disableOverlayClose
   spotlightClicks={false}
-  showBeacon={false}
+  showBeacon={false} // <- double guarantee
   styles={{
     options: {
       primaryColor: "#3B82F6",
