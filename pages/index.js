@@ -255,13 +255,13 @@ const handleGuess = () => {
 
   const fuse = new Fuse(allAnswers, {
     keys: ["label"],
-    threshold: 0.6,
+    threshold: 0.65,
     includeScore: true,
   });
 
   const [bestMatch] = fuse.search(cleanedGuess);
 
-  if (bestMatch && bestMatch.score <= 0.55) {
+  if (bestMatch && bestMatch.score <= 0.65) {
   const matchedLabel = bestMatch.item.label;
   // ...
 }
