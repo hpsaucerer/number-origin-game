@@ -214,7 +214,7 @@ useEffect(() => {
   }
 }, [puzzle]);
 
- useEffect(() => {
+useEffect(() => {
   const handleClickOutside = (event) => {
     if (
       tooltipRefs.current.every(
@@ -226,11 +226,11 @@ useEffect(() => {
   };
 
   if (openTooltip !== null) {
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside); // 👈 changed from 'click'
   }
 
   return () => {
-    document.removeEventListener("click", handleClickOutside);
+    document.removeEventListener("mousedown", handleClickOutside);
   };
 }, [openTooltip]);
 
