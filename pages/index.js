@@ -483,6 +483,9 @@ return !hasMounted ? (
       primaryColor: "#3B82F6",
       zIndex: 99999,
     },
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.7)", // 🌑 darker background
+    },
   }}
   callback={(data) => {
     if (data.status === "finished" || data.status === "skipped") {
@@ -751,13 +754,7 @@ return !hasMounted ? (
     attempts >= maxGuesses
   }
   variant="outline"
-  className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
-    !showWelcome &&
-    revealedClues.length < puzzle.clues.length &&
-    attempts < maxGuesses
-      ? "animate-pulse-grow"
-      : ""
-  }`}
+className="w-full transition-transform duration-300 ease-in-out"
 >
   Reveal a Clue
 </Button>
