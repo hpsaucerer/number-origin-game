@@ -489,20 +489,12 @@ return !hasMounted ? (
       backgroundColor: "rgba(0, 0, 0, 0.7)",
     },
     spotlight: {
-      animation: "none", // 🛑 disables pulsing
-      backgroundColor: "transparent", // optional: removes white glow
-      borderRadius: 6,
+      animation: "none", // ✅ disables pulsing
+      boxShadow: "0 0 0 4px rgba(255, 255, 255, 0.75)", // optional: clean ring
+      borderRadius: 8,
     },
   }}
-  callback={(data) => {
-    if (data.status === "finished" || data.status === "skipped") {
-      setShowTour(false);
-      localStorage.setItem("seenTour", "true");
-    }
-  }}
 />
-
-
 
 <WelcomeModal
   open={showWelcome}
@@ -763,7 +755,9 @@ return !hasMounted ? (
     attempts >= maxGuesses
   }
   variant="outline"
-  className="reveal-button w-full transition-transform duration-300 ease-in-out"
+  className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
+    revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
+  }`}
 >
   Reveal a Clue
 </Button>
