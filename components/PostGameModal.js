@@ -75,7 +75,7 @@ useEffect(() => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-md mt-4 px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-screen">
+      <DialogContent className="w-full max-w-md mt-4 px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-screen overscroll-contain">
         {/* ❌ Close Button */}
         <button
           className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
