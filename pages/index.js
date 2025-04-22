@@ -26,6 +26,7 @@ import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
 import Fuse from "fuse.js";
+import Joyride from "react-joyride";
 
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
@@ -50,6 +51,7 @@ const synonymMap = {
   murdered: "assassination",
   killed: "assassination",
 };
+const [showTour, setShowTour] = useState(true); // ✅ default to true or control via localStorage
 
 const normalize = (str) =>
   str
@@ -104,6 +106,13 @@ const [puzzleNumber, setPuzzleNumber] = useState(null);
 
 const [localDate, setLocalDate] = useState("");
 
+useEffect(() => {
+  const seenTour = localStorage.getItem("seenTour");
+  if (!seenTour) {
+    setShowTour(true);
+  }
+}, []);
+    
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
     timeZone: "Europe/London",
@@ -448,12 +457,47 @@ return !hasMounted ? (
   <ComingSoon nextDate={countdown} />
 ) : (
 <>
+
+<Joyride
+  steps={[
+    {
+      target: ".guess-input",
+      content: "Type what you think the number represents!",
+    },
+    {
+      target: ".reveal-button",
+      content: "Need help? Reveal a clue — but it counts as a guess!",
+    },
+    {
+      target: ".stats-button",
+      content: "Track your daily streaks and puzzle stats here.",
+    },
+  ]}
+  run={showTour}
+  continuous
+  showSkipButton
+  showProgress
+  styles={{
+    options: {
+      primaryColor: "#3B82F6",
+      zIndex: 99999,
+    },
+  }}
+  callback={(data) => {
+    if (data.status === "finished" || data.status === "skipped") {
+      setShowTour(false);
+      localStorage.setItem("seenTour", "true");
+    }
+  }}
+/>
+
 <WelcomeModal
   open={showWelcome}
   onOpenChange={setShowWelcome}
   showTutorial={showTutorial}
   setShowTutorial={setShowTutorial}
 />
+
 
 <InteractiveTutorial
   open={showTutorial}
