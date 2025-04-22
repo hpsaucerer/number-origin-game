@@ -48,7 +48,19 @@ export default function PostGameModal({
     });
   }
 }, [open, isCorrect]);
-  
+
+useEffect(() => {
+  if (open) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
+
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [open]);
+
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
     const map = {
@@ -63,8 +75,7 @@ export default function PostGameModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-md mt-16 px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-[90vh]">
-
+      <DialogContent className="w-full max-w-md mt-4 px-4 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-y-auto max-h-screen">
         {/* ❌ Close Button */}
         <button
           className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
