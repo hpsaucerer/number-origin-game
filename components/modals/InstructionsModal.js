@@ -5,7 +5,7 @@ export default function InstructionsModal({ open, onClose, renderCategoryPills }
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-        <DialogContent className="relative max-h-[90vh] overflow-y-auto p-6 sm:max-w-md w-full flex flex-col items-start justify-center">
+        <DialogContent className="relative max-h-[90vh] overflow-y-auto pt-3 px-4 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center">
           {/* Dismiss Button */}
           <button
             className="absolute top-1 right-1 p-2 text-blue-500 hover:text-blue-600 transition"
@@ -15,11 +15,11 @@ export default function InstructionsModal({ open, onClose, renderCategoryPills }
             <X size={28} />
           </button>
 
-          <DialogHeader>
-            <DialogTitle>
-              <h2 className="text-lg text-gray-800 -mb-2 text-left">How To Play</h2>
-            </DialogTitle>
-          </DialogHeader>
+<DialogHeader className="w-full">
+  <DialogTitle>
+    <h2 className="text-lg text-gray-800 text-left">How To Play</h2>
+  </DialogTitle>
+</DialogHeader>
 
           <div className="mt-2 font-vietnam">
             <ul className="space-y-4">
