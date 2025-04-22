@@ -6,7 +6,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-        <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-10 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
+        <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-4 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
           {/* Dismiss Button */}
           <button
             onClick={onClose}
