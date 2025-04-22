@@ -479,7 +479,7 @@ return !hasMounted ? (
   showSkipButton
   showProgress
   disableOverlayClose
-  spotlightClicks
+  spotlightClicks={false}
   styles={{
     options: {
       primaryColor: "#3B82F6",
