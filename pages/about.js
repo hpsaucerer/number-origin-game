@@ -21,7 +21,7 @@ export default function AboutPage() {
 />
       <main className="max-w-3xl mx-auto px-6 pt-4 pb-12 text-center">
 
-      <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome to Numerus</h1>
+      <h1 className="text-xl font-bold text-gray-800 mb-2">Welcome to Numerus</h1>
 
         <p className="text-lg text-gray-600 mb-6">
           A reverse trivia game that celebrates the magic, mystery, and meaning behind numbers.
