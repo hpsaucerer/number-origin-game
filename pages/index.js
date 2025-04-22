@@ -469,7 +469,7 @@ return !hasMounted ? (
    },
    {
       target: ".guess-input",
-      content: "Type what you think the number could relate to, e.g. 'keys on a piano', 'moon landing' etc. <strong>You have 4 guesses to solve the puzzle.</strong>",
+      content: "Type what you think the number could relate to, e.g. 'keys on a piano', 'moon landing' etc.<br /> <strong>You have 4 guesses to solve the puzzle.</strong>",
       disableBeacon: true,
     },
     {
