@@ -463,8 +463,13 @@ return !hasMounted ? (
   key={tourKey}
   steps={[
     {
+    target: ".daily-number",
+    content: "Welcome to Numerus - the daily reverse trivia game. This is today's number. Can you figure out what it represents?",
+    placement: "bottom",
+   },
+   {
       target: ".guess-input",
-      content: "Type what you think the number represents!",
+      content: "Type what you think the number could relate to, e.g. 'keys on a piano', 'moon landing' etc.",
       disableBeacon: true,
     },
     {
@@ -632,7 +637,7 @@ return !hasMounted ? (
 />
    
            
-<p className="text-4xl font-bold text-[#3B82F6] font-daysone">
+<p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
   {(isCorrect ||
     (puzzle.revealFormattedAt &&
       revealedClues.length >= puzzle.revealFormattedAt))
