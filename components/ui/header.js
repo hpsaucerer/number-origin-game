@@ -70,12 +70,13 @@ export default function Header({ onHelpClick, onStatsClick }) {
             <BookOpen size={20} strokeWidth={2.25} className="text-[#3B82F6]" />
           </Button>
 
-          <Button
-            onClick={onStatsClick}
-            className="group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
-            title="Your Stats"
-            aria-label="Your Stats"
-          >
+<Button
+  onClick={onStatsClick}
+  className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+  title="Your Stats"
+  aria-label="Your Stats"
+>
+
             <BarChart size={20} className="text-[#3B82F6] group-hover:text-white transition" />
           </Button>
         </div>
