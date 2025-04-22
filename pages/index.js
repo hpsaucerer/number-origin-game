@@ -255,11 +255,16 @@ const handleGuess = () => {
 
   const fuse = new Fuse(allAnswers, {
     keys: ["label"],
-    threshold: 0.45,
+    threshold: 0.6,
     includeScore: true,
   });
 
   const [bestMatch] = fuse.search(cleanedGuess);
+
+  if (bestMatch && bestMatch.score <= 0.55) {
+  const matchedLabel = bestMatch.item.label;
+  // ...
+}
 
   // 🔍 Check for essential keywords (normalized)
   const essentialWords = (puzzle.essential_keywords || []).map(normalize);
