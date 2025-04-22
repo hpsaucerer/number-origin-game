@@ -468,11 +468,19 @@ return !hasMounted ? (
     disableBeacon: true,
    },
    {
-      target: ".guess-input",
-      content: "Type what you think the number could relate to, e.g. 'keys on a piano', 'moon landing' etc.<br /> <strong>You have 4 guesses to solve the puzzle.</strong>",
-      disableBeacon: true,
-    },
-    {
+       target: ".guess-input",
+    content: (
+      <div>
+        <p>
+          Type what you think the number could relate to, e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
+        </p>
+        <p>
+          <strong>You have 4 guesses to solve the puzzle.</strong>
+        </p>
+      </div>
+    ),
+  },
+  {
       target: ".reveal-button",
       content: "Need help? Reveal a clue! Remember though, this counts as one of your 4 guesses.",
       disableBeacon: true,
