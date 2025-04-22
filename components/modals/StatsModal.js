@@ -17,13 +17,13 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
           </button>
 
           {/* Title */}
-          <div className="w-full flex flex-col items-start">
-            <DialogHeader>
-              <DialogTitle>
-                <h2 className="text-lg text-gray-800 mb-4 text-left">Statistics</h2>
-              </DialogTitle>
-            </DialogHeader>
-          </div>
+<div className="w-full flex flex-col items-start">
+  <DialogHeader>
+    <DialogTitle>
+      <h2 className="text-lg text-gray-800 mb-4 text-left">Statistics</h2>
+    </DialogTitle>
+  </DialogHeader>
+</div>
 
           {/* Stat boxes */}
           <div className="grid grid-cols-4 gap-4 text-center my-6">
