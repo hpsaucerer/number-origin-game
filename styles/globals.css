@@ -83,6 +83,12 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   animation: pulse-grow 1s ease-in-out infinite;
 }
 
+/* 🔇 Remove the default Joyride beacon and spotlight */
+.joyride-beacon,
+.joyride-tooltip__spotlight {
+  display: none !important;
+}
+
 
 @tailwind base;
 @tailwind components;
