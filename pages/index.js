@@ -25,7 +25,7 @@ import { track } from '@vercel/analytics';
 import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
 import Fuse from "fuse.js";
 import Joyride from "react-joyride";
-import StatsModal from "@/components/StatsModal";
+import StatsModal from "../components/StatsModal";
 
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
