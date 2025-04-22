@@ -568,14 +568,15 @@ return !hasMounted ? (
         <BookOpen size={20} strokeWidth={2.25} className="text-[#3B82F6]" />
       </Button>
 
-      <Button
-        onClick={() => setShowStats(true)}
-        className="group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
-        title="Your Stats"
-        aria-label="Your Stats"
-      >
-        <BarChart size={20} className="text-[#3B82F6] group-hover:text-white transition" />
-      </Button>
+<Button
+  onClick={() => setShowStats(true)}
+  className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+  title="Your Stats"
+  aria-label="Your Stats"
+>
+  <BarChart size={20} className="text-[#3B82F6] group-hover:text-white transition" />
+</Button>
+
     </div>
   </div>
 </header>
@@ -742,24 +743,25 @@ return !hasMounted ? (
 
   {/* Buttons in a row */}
 <div className="flex flex-row md:flex-col justify-between gap-2 w-full max-w-xs mx-auto">
-  <Button
-    onClick={handleClueReveal}
-    disabled={
-  revealDisabled ||
-  revealedClues.length >= puzzle.clues.length ||
-  attempts >= maxGuesses
-}
-    variant="outline"
-    className={`w-full transition-transform duration-300 ease-in-out ${
-      !showWelcome &&
-      revealedClues.length < puzzle.clues.length &&
-      attempts < maxGuesses
-        ? "animate-pulse-grow"
-        : ""
-    }`}
-  >
-    Reveal a Clue
-  </Button>
+<Button
+  onClick={handleClueReveal}
+  disabled={
+    revealDisabled ||
+    revealedClues.length >= puzzle.clues.length ||
+    attempts >= maxGuesses
+  }
+  variant="outline"
+  className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
+    !showWelcome &&
+    revealedClues.length < puzzle.clues.length &&
+    attempts < maxGuesses
+      ? "animate-pulse-grow"
+      : ""
+  }`}
+>
+  Reveal a Clue
+</Button>
+
 
   <Button
     onClick={handleGuess}
