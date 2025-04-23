@@ -741,6 +741,8 @@ return !hasMounted ? (
     <FeedbackBox />
   </div>
 )}
+</CardContent>
+</Card>
 
       <div className="flex flex-col items-center mt-4">
 {localDate && (
