@@ -106,32 +106,32 @@ const [localDate, setLocalDate] = useState("");
 const [showTour, setShowTour] = useState(false);
 const [stepIndex, setStepIndex] = useState(0);
 const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
+const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
   if (seenTour) return;
 
-  // Set up an observer to check for the .guess-input element
-  const observer = new MutationObserver(() => {
-    const input = document.querySelector(".guess-input");
-    if (input) {
-      setShowTour(true);
+  const checkIfAllTargetsExist = () => {
+    return (
+      document.querySelector(".daily-number") &&
+      document.querySelector(".guess-input") &&
+      document.querySelector(".reveal-button") &&
+      document.querySelector(".stats-button")
+    );
+  };
+
+  const interval = setInterval(() => {
+    if (checkIfAllTargetsExist()) {
+      clearInterval(interval);
+      setReadyToRunTour(true);
       setStepIndex(0);
       setTourKey(Date.now());
-      localStorage.setItem("tourTriggeredOnce", "true");
-      observer.disconnect();
     }
-  });
+  }, 100); // check every 100ms
 
-  // Observe changes in the body
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  return () => observer.disconnect();
+  return () => clearInterval(interval);
 }, []);
-
     
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
@@ -481,24 +481,24 @@ return !hasMounted ? (
   key={tourKey}
   steps={[
     {
-    target: ".daily-number",
-    content: "Welcome to Numerus - the daily reverse trivia game. This is today's number. Can you figure out what it represents?",
-    disableBeacon: true,
-   },
-   {
-       target: ".guess-input",
-    content: (
-      <div>
-        <p>
-          Type what you think the number could relate to, e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
-        </p>
-        <p>
-          <strong>You have 4 guesses to solve the puzzle.</strong>
-        </p>
-      </div>
-    ),
-  },
-  {
+      target: ".daily-number",
+      content: "Welcome to Numerus - the daily reverse trivia game. This is today's number. Can you figure out what it represents?",
+      disableBeacon: true,
+    },
+    {
+      target: ".guess-input",
+      content: (
+        <div>
+          <p>
+            Type what you think the number could relate to, e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
+          </p>
+          <p>
+            <strong>You have 4 guesses to solve the puzzle.</strong>
+          </p>
+        </div>
+      ),
+    },
+    {
       target: ".reveal-button",
       content: "Need help? Reveal a clue! Remember though, this counts as one of your 4 guesses.",
       disableBeacon: true,
@@ -509,7 +509,7 @@ return !hasMounted ? (
       disableBeacon: true,
     },
   ]}
-  run={showTour}
+  run={showTour && readyToRunTour} // ✅ Only run when all elements exist
   stepIndex={stepIndex}
   continuous
   showSkipButton
@@ -517,7 +517,7 @@ return !hasMounted ? (
   scrollToFirstStep
   disableOverlayClose
   spotlightClicks={false}
-  showBeacon={false} // <- double guarantee
+  showBeacon={false}
   styles={{
     options: {
       primaryColor: "#3B82F6",
@@ -530,24 +530,24 @@ return !hasMounted ? (
       boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.7)",
     },
   }}
+  callback={(data) => {
+    const stepsLength = 4;
 
-callback={(data) => {
-  const stepsLength = 4;
+    if (
+      (data.status === "finished" || data.status === "skipped") &&
+      data.index === stepsLength - 1 &&
+      data.type !== "target:notFound"
+    ) {
+      setShowTour(false);
+      localStorage.setItem("seenTour", "true");
+    }
 
-  // Prevent ending the tour if the next step's target wasn't found
-  if (
-    (data.status === "finished" || data.status === "skipped") &&
-    data.index === stepsLength - 1 &&
-    data.type !== "target:notFound"
-  ) {
-    setShowTour(false);
-    localStorage.setItem("seenTour", "true");
-  }
+    if (data.type === "step:after" || data.type === "target:notFound") {
+      setStepIndex((prev) => prev + 1);
+    }
+  }}
+/>
 
-  if (data.type === "step:after" || data.type === "target:notFound") {
-    setStepIndex((prev) => prev + 1);
-  }
-}}
 
 />
 
