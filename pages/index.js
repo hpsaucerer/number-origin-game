@@ -717,12 +717,9 @@ return !hasMounted ? (
     }
   }}
   placeholder="Enter your guess..."
-  className={`w-full guess-input ${
-    !puzzle || !hasMounted ? "invisible absolute -z-10" : ""
-  }`}
+  className="w-full guess-input" // ✅ keep always mounted and visible
   disabled={!puzzle || isCorrect}
 />
-
 
   {/* Buttons in a row */}
 <div className="flex flex-row md:flex-col justify-between gap-2 w-full max-w-xs mx-auto">
@@ -730,13 +727,12 @@ return !hasMounted ? (
   onClick={handleClueReveal}
   disabled={
     revealDisabled ||
-    revealedClues.length >= puzzle?.clues?.length ||
+    !puzzle ||
+    revealedClues.length >= puzzle.clues.length ||
     attempts >= maxGuesses
   }
   variant="outline"
   className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
-    !puzzle || !hasMounted ? "invisible absolute -z-10" : ""
-  } ${
     revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
   }`}
 >
