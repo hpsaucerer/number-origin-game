@@ -662,12 +662,12 @@ return !hasMounted ? (
     {clue.replace("formatted", puzzle.formatted)}
   </p>
 ))}
-    <p className="text-sm text-gray-600 mb-1 text-center">
-      {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
-    </p>
 
 {!isCorrect && attempts < maxGuesses && (
   <div className="w-full max-w-md space-y-3 mt-6">
+      <p className="text-sm text-gray-600 mb-1 text-center">
+      {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
+    </p>
     <Input
       value={guess}
       onChange={(e) => setGuess(e.target.value)}
@@ -685,7 +685,6 @@ return !hasMounted ? (
     />
   </div>
 )}
-
 
 {/* Conditional Game Feedback */}
 {isCorrect ? (
