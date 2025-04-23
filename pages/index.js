@@ -110,39 +110,38 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
-  console.log("🔍 seenTour in localStorage:", seenTour);
+  if (seenTour || !puzzle || !hasMounted) return;
 
-  if (seenTour) return;
-
-  const checkIfAllTargetsExist = () => {
+  const observer = new MutationObserver(() => {
     const daily = document.querySelector(".daily-number");
     const input = document.querySelector(".guess-input");
     const clue = document.querySelector(".reveal-button");
     const stats = document.querySelector(".stats-button");
 
-    console.log("📌 Target check:", {
+    console.log("📌 Mutation check:", {
       daily: !!daily,
       input: !!input,
       clue: !!clue,
       stats: !!stats,
     });
 
-    return daily && input && clue && stats;
-  };
-
-  const interval = setInterval(() => {
-    if (checkIfAllTargetsExist()) {
-      console.log("✅ All targets found. Starting tour.");
-      clearInterval(interval);
-      setReadyToRunTour(true);
+    if (daily && input && clue && stats) {
+      observer.disconnect();
+      console.log("✅ Joyride elements found. Starting tour.");
       setStepIndex(0);
       setTourKey(Date.now());
-      setShowTour(true); // 👈 Needed to actually trigger Joyride
+      setShowTour(true);
     }
-  }, 200);
+  });
 
-  return () => clearInterval(interval);
-}, []);
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  return () => observer.disconnect();
+}, [puzzle, hasMounted]);
+
 
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
