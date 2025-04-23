@@ -109,17 +109,29 @@ const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
-  if (!seenTour) {
-    // Wait a little to ensure .guess-input and others are mounted
-    const timeout = setTimeout(() => {
+  if (seenTour) return;
+
+  // Set up an observer to check for the .guess-input element
+  const observer = new MutationObserver(() => {
+    const input = document.querySelector(".guess-input");
+    if (input) {
       setShowTour(true);
       setStepIndex(0);
       setTourKey(Date.now());
-    }, 500); // 500ms delay
+      localStorage.setItem("tourTriggeredOnce", "true");
+      observer.disconnect();
+    }
+  });
 
-    return () => clearTimeout(timeout);
-  }
+  // Observe changes in the body
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  return () => observer.disconnect();
 }, []);
+
     
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
