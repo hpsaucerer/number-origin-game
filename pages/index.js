@@ -741,30 +741,31 @@ return !hasMounted ? (
       <p className="text-red-500 text-sm text-center mt-4">{inputError}</p>
     )}
 
-    <div className="flex flex-row md:flex-col justify-between gap-2 w-full max-w-xs mx-auto">
-      <Button
-        onClick={handleClueReveal}
-        disabled={
-          revealDisabled ||
-          !puzzle ||
-          revealedClues.length >= puzzle.clues.length ||
-          attempts >= maxGuesses
-        }
-        variant="outline"
-        className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
-          revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
-        }`}
-      >
-        Reveal a Clue
-      </Button>
+    <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
+  <Button
+    onClick={handleClueReveal}
+    disabled={
+      revealDisabled ||
+      !puzzle ||
+      revealedClues.length >= puzzle.clues.length ||
+      attempts >= maxGuesses
+    }
+    variant="outline"
+    className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
+      revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
+    }`}
+  >
+    Reveal a Clue
+  </Button>
 
-      <Button
-        onClick={handleGuess}
-        className="w-full bg-[#3B82F6] text-white"
-      >
-        Submit
-      </Button>
-       </div>
+  <Button
+    onClick={handleGuess}
+    className="w-full bg-[#3B82F6] text-white"
+  >
+    Submit
+  </Button>
+</div>
+
   </>
 )} {/* 👈 closes the conditional correctly */}
 
