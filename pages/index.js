@@ -110,29 +110,40 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
+  console.log("🔍 seenTour in localStorage:", seenTour);
+
   if (seenTour) return;
 
   const checkIfAllTargetsExist = () => {
-    return (
-      document.querySelector(".daily-number") &&
-      document.querySelector(".guess-input") &&
-      document.querySelector(".reveal-button") &&
-      document.querySelector(".stats-button")
-    );
+    const daily = document.querySelector(".daily-number");
+    const input = document.querySelector(".guess-input");
+    const clue = document.querySelector(".reveal-button");
+    const stats = document.querySelector(".stats-button");
+
+    console.log("📌 Target check:", {
+      daily: !!daily,
+      input: !!input,
+      clue: !!clue,
+      stats: !!stats,
+    });
+
+    return daily && input && clue && stats;
   };
 
   const interval = setInterval(() => {
     if (checkIfAllTargetsExist()) {
+      console.log("✅ All targets found. Starting tour.");
       clearInterval(interval);
       setReadyToRunTour(true);
       setStepIndex(0);
       setTourKey(Date.now());
+      setShowTour(true); // 👈 Needed to actually trigger Joyride
     }
-  }, 100); // check every 100ms
+  }, 200);
 
   return () => clearInterval(interval);
 }, []);
-    
+
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
     timeZone: "Europe/London",
@@ -143,8 +154,6 @@ useEffect(() => {
 useEffect(() => {
   setHasMounted(true);
 }, []);
-
-// ⚠️ Important: This must stay above all hooks and logic in the component body.
 
 
 useEffect(() => {
