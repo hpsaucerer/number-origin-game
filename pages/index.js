@@ -564,9 +564,7 @@ callback={(data) => {
     console.warn("🚫 Joyride target not found for step", data.index);
   }
 }}
-
-
-
+/>
 <Header
   onHelpClick={() => setShowInstructions(true)}
   onStatsClick={() => setShowStats(true)}
