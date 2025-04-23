@@ -561,7 +561,8 @@ return !hasMounted ? (
       boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.7)",
     },
   }}
-    last: "Play", // 🔥 CHANGES the 'Last' button text to 'Play'
+  locale={{                      // ✅ Moved inside the Joyride component props
+    last: "Play",
     back: "Back",
     next: "Next",
     skip: "Skip",
