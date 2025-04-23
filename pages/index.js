@@ -739,8 +739,7 @@ return !hasMounted ? (
   } ${
     revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
   }`}
-/>
-
+>
   Reveal a Clue
 </Button>
 
