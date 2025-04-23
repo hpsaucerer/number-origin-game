@@ -110,9 +110,14 @@ const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
   if (!seenTour) {
-    setShowTour(true);
-    setStepIndex(0);
-    setTourKey(Date.now()); // refresh  if needed
+    // Wait a little to ensure .guess-input and others are mounted
+    const timeout = setTimeout(() => {
+      setShowTour(true);
+      setStepIndex(0);
+      setTourKey(Date.now());
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timeout);
   }
 }, []);
     
@@ -513,12 +518,15 @@ return !hasMounted ? (
       boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.7)",
     },
   }}
-callback={(data) => {
-  const stepsLength = 4; // Make sure this matches the actual number of steps defined
 
+callback={(data) => {
+  const stepsLength = 4;
+
+  // Prevent ending the tour if the next step's target wasn't found
   if (
     (data.status === "finished" || data.status === "skipped") &&
-    data.index === stepsLength - 1
+    data.index === stepsLength - 1 &&
+    data.type !== "target:notFound"
   ) {
     setShowTour(false);
     localStorage.setItem("seenTour", "true");
