@@ -753,9 +753,7 @@ return !hasMounted ? (
     </div>
   </>
 )}
-
-    </div>
-  </div>
+</CardContent>
 
   <div className="w-full max-w-sm mx-auto px-2">
     <OnScreenKeyboard
