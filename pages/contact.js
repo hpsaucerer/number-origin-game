@@ -21,7 +21,7 @@ export default function ContactPage() {
       />
 
       <main className="max-w-3xl mx-auto px-6 pt-4 pb-12 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Get in Touch</h1>
+        <h1 className="text-xl font-bold text-gray-800 mb-4">Get in Touch</h1>
 
         <p className="text-gray-600 mb-6">
           Have a question, suggestion, or just want to say hi? We'd love to hear from you!
