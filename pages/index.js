@@ -487,7 +487,6 @@ return !hasMounted ? (
   <ComingSoon nextDate={countdown} />
 ) : (
 <>
-{console.log("🎮 Joyride running?", showTour, "Ready?", readyToRunTour)}
 <Joyride
   key={tourKey}
   steps={[
