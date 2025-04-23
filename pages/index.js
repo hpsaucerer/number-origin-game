@@ -513,18 +513,23 @@ return !hasMounted ? (
       boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.7)",
     },
   }}
-  callback={(data) => {
-    if (data.status === "finished" || data.status === "skipped") {
-      setShowTour(false);
-      localStorage.setItem("seenTour", "true");
-    }
+callback={(data) => {
+  const stepsLength = 4; // Make sure this matches the actual number of steps defined
 
-    if (data.type === "step:after" || data.type === "target:notFound") {
-      setStepIndex((prev) => prev + 1);
-    }
-  }}
+  if (
+    (data.status === "finished" || data.status === "skipped") &&
+    data.index === stepsLength - 1
+  ) {
+    setShowTour(false);
+    localStorage.setItem("seenTour", "true");
+  }
+
+  if (data.type === "step:after" || data.type === "target:notFound") {
+    setStepIndex((prev) => prev + 1);
+  }
+}}
+
 />
-
 
 <Header
   onHelpClick={() => setShowInstructions(true)}
