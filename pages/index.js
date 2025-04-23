@@ -110,7 +110,7 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
-  if (seenTour || !puzzle || !hasMounted) return;
+  if (seenTour) return;
 
   const observer = new MutationObserver(() => {
     const daily = document.querySelector(".daily-number");
@@ -118,7 +118,7 @@ useEffect(() => {
     const clue = document.querySelector(".reveal-button");
     const stats = document.querySelector(".stats-button");
 
-    console.log("📌 Mutation check:", {
+    console.log("📌 Target check:", {
       daily: !!daily,
       input: !!input,
       clue: !!clue,
@@ -126,12 +126,14 @@ useEffect(() => {
     });
 
     if (daily && input && clue && stats) {
-      observer.disconnect();
-      console.log("✅ Joyride elements found. Starting tour.");
-      setStepIndex(0);
-      setTourKey(Date.now());
-      setShowTour(true);
-    }
+  observer.disconnect();
+  console.log("✅ Joyride elements found. Starting tour.");
+  setReadyToRunTour(true); // ✅ This was missing!
+  setStepIndex(0);
+  setTourKey(Date.now());
+  setShowTour(true);
+}
+
   });
 
   observer.observe(document.body, {
@@ -140,7 +142,8 @@ useEffect(() => {
   });
 
   return () => observer.disconnect();
-}, [puzzle, hasMounted]);
+}, []);
+
 
 
 useEffect(() => {
@@ -484,7 +487,7 @@ return !hasMounted ? (
   <ComingSoon nextDate={countdown} />
 ) : (
 <>
-
+{console.log("🎮 Joyride running?", showTour, "Ready?", readyToRunTour)}
 <Joyride
   key={tourKey}
   steps={[
