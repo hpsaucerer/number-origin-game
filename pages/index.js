@@ -549,8 +549,6 @@ return !hasMounted ? (
 />
 
 
-/>
-
 <Header
   onHelpClick={() => setShowInstructions(true)}
   onStatsClick={() => setShowStats(true)}
