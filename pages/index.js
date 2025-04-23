@@ -97,6 +97,7 @@ const joyrideSteps = [
     target: ".reveal-button",
     content: "Need help? Reveal a clue! Remember though, this counts as one of your 4 guesses.",
     disableBeacon: true,
+    disableScrolling: true,
   },
   {
     target: ".stats-button",
