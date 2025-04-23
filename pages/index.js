@@ -98,6 +98,7 @@ const joyrideSteps = [
     content: "Need help? Reveal a clue! Remember though, this counts as one of your 4 guesses.",
     disableBeacon: true,
     disableScrolling: true,
+    wait: 500
   },
   {
     target: ".stats-button",
