@@ -718,11 +718,10 @@ return !hasMounted ? (
   }}
   placeholder="Enter your guess..."
   className={`w-full guess-input ${
-    !puzzle || isCorrect ? "invisible absolute -z-10" : ""
+    !puzzle || !hasMounted ? "invisible absolute -z-10" : ""
   }`}
-  disabled={isCorrect}
+  disabled={!puzzle || isCorrect}
 />
-
 
 
   {/* Buttons in a row */}
@@ -731,16 +730,17 @@ return !hasMounted ? (
   onClick={handleClueReveal}
   disabled={
     revealDisabled ||
-    revealedClues.length >= puzzle.clues.length ||
+    revealedClues.length >= puzzle?.clues?.length ||
     attempts >= maxGuesses
   }
   variant="outline"
   className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
-    !puzzle || isCorrect ? "invisible absolute -z-10" : ""
+    !puzzle || !hasMounted ? "invisible absolute -z-10" : ""
   } ${
     revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
   }`}
->
+/>
+
   Reveal a Clue
 </Button>
 
