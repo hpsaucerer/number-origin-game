@@ -541,23 +541,31 @@ return !hasMounted ? (
       boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.7)",
     },
   }}
-  callback={(data) => {
-    const stepsLength = 4;
+callback={(data) => {
+  console.log("🔄 Joyride event:", data); // ✅ Move this inside the function
 
-    if (
-      (data.status === "finished" || data.status === "skipped") &&
-      data.index === stepsLength - 1 &&
-      data.type !== "target:notFound"
-    ) {
-      setShowTour(false);
-      localStorage.setItem("seenTour", "true");
-    }
+  const stepsLength = 4;
 
-    if (data.type === "step:after" || data.type === "target:notFound") {
-      setStepIndex((prev) => prev + 1);
-    }
-  }}
-/>
+  if (
+    data.status === "finished" ||
+    data.status === "skipped"
+  ) {
+    setShowTour(false);
+    localStorage.setItem("seenTour", "true");
+    return;
+  }
+
+  // Only move to next step if the current target was found
+  if (data.type === "step:after" && !data.step?.targetNotFound) {
+    setStepIndex((prev) => prev + 1);
+  }
+
+  // Handle error if target wasn't found (optional log)
+  if (data.type === "target:notFound") {
+    console.warn("🚫 Joyride target not found for step", data.index);
+  }
+}}
+
 
 
 <Header
