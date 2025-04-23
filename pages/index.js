@@ -61,7 +61,7 @@ const normalize = (str) =>
     .join(" ")
     .trim();
 
-const DEV_MODE = true;
+const DEV_MODE = false;
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
