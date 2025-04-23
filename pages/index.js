@@ -73,6 +73,38 @@ const colorClassMap = {
 };
 
   export default function Home() {
+
+const joyrideSteps = [
+  {
+    target: ".daily-number",
+    content: "Welcome to Numerus - the daily reverse trivia game. This is today's number. Can you figure out what it represents?",
+    disableBeacon: true,
+  },
+  {
+    target: ".guess-input",
+    content: (
+      <div>
+        <p>
+          Type what you think the number could relate to, e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
+        </p>
+        <p>
+          <strong>You have 4 guesses to solve the puzzle.</strong>
+        </p>
+      </div>
+    ),
+  },
+  {
+    target: ".reveal-button",
+    content: "Need help? Reveal a clue! Remember though, this counts as one of your 4 guesses.",
+    disableBeacon: true,
+  },
+  {
+    target: ".stats-button",
+    content: "Track your daily streaks and puzzle stats here.",
+    disableBeacon: true,
+  },
+];
+    
   const { stats, setStats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
     const incorrectGuessMessages = [
     "Incorrect - here's a clue to help you!",
@@ -487,39 +519,11 @@ return !hasMounted ? (
   <ComingSoon nextDate={countdown} />
 ) : (
 <>
-<Joyride
+
+ <Joyride
   key={tourKey}
-  steps={[
-    {
-      target: ".daily-number",
-      content: "Welcome to Numerus - the daily reverse trivia game. This is today's number. Can you figure out what it represents?",
-      disableBeacon: true,
-    },
-    {
-      target: ".guess-input",
-      content: (
-        <div>
-          <p>
-            Type what you think the number could relate to, e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
-          </p>
-          <p>
-            <strong>You have 4 guesses to solve the puzzle.</strong>
-          </p>
-        </div>
-      ),
-    },
-    {
-      target: ".reveal-button",
-      content: "Need help? Reveal a clue! Remember though, this counts as one of your 4 guesses.",
-      disableBeacon: true,
-    },
-    {
-      target: ".stats-button",
-      content: "Track your daily streaks and puzzle stats here.",
-      disableBeacon: true,
-    },
-  ]}
-  run={showTour && readyToRunTour} // ✅ Only run when all elements exist
+  steps={joyrideSteps}
+  run={showTour && readyToRunTour}
   stepIndex={stepIndex}
   continuous
   showSkipButton
@@ -540,27 +544,34 @@ return !hasMounted ? (
       boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.7)",
     },
   }}
-callback={(data) => {
-  console.log("🔄 Joyride event:", data);
+  callback={(data) => {
+    console.log("🔄 Joyride event:", data);
 
-  const stepsLength = 4;
+    // End tour
+    if (data.status === "finished" || data.status === "skipped") {
+      setShowTour(false);
+      localStorage.setItem("seenTour", "true");
+      return;
+    }
 
-  if (data.status === "finished" || data.status === "skipped") {
-    setShowTour(false);
-    localStorage.setItem("seenTour", "true");
-    return;
-  }
+    // Advance only if next step exists
+    if (data.type === "step:after") {
+      const nextStep = stepIndex + 1;
+      const nextTarget = document.querySelector(joyrideSteps[nextStep]?.target);
 
-  if (data.type === "step:after") {
-    setStepIndex((prev) => prev + 1);
-  }
+      if (nextTarget) {
+        setStepIndex(nextStep);
+      } else {
+        console.warn("❌ Next Joyride step target missing:", joyrideSteps[nextStep]?.target);
+        setShowTour(false);
+      }
+    }
 
-  if (data.type === "target:notFound") {
-    console.warn("🚫 Joyride target not found for step", data.index);
-    setStepIndex((prev) => prev + 1); // ⬅️ Skip to next step
-  }
-}}
-
+    if (data.type === "target:notFound") {
+      console.warn("🚫 Joyride target not found:", data.step.target);
+      setShowTour(false);
+    }
+  }}
 />
 <Header
   onHelpClick={() => setShowInstructions(true)}
