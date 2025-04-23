@@ -663,24 +663,26 @@ return !hasMounted ? (
   </p>
 ))}
 
-{/* 🔐 Always-rendered input for Joyride compatibility */}
-<div className="w-full max-w-md space-y-3 mt-6">
-  <Input
-    value={guess}
-    onChange={(e) => setGuess(e.target.value)}
-    onKeyDown={(e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        if (!isCorrect && guess.trim()) {
-          handleGuess();
+{!isCorrect && attempts < maxGuesses && (
+  <div className="w-full max-w-md space-y-3 mt-6">
+    <Input
+      value={guess}
+      onChange={(e) => setGuess(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (guess.trim()) {
+            handleGuess();
+          }
         }
-      }
-    }}
-    placeholder="Enter your guess..."
-    className="w-full guess-input"
-    disabled={!puzzle || isCorrect || attempts >= maxGuesses}
-  />
-</div>
+      }}
+      placeholder="Enter your guess..."
+      className="w-full guess-input"
+      disabled={!puzzle}
+    />
+  </div>
+)}
+
 
 {/* Conditional Game Feedback */}
 {isCorrect ? (
