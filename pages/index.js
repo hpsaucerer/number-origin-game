@@ -663,116 +663,84 @@ return !hasMounted ? (
   </p>
 ))}
 
+{/* 🔄 Active Game UI */}
 {!isCorrect && attempts < maxGuesses && (
-  <div className="w-full max-w-md space-y-3 mt-6">
-      <p className="text-sm text-gray-600 mb-1 text-center">
+  <div className="w-full max-w-md space-y-4 mt-6">
+    {/* Guess count */}
+    <p className="text-sm text-gray-600 text-center">
       {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
     </p>
+
+    {/* Guess input */}
     <Input
       value={guess}
       onChange={(e) => setGuess(e.target.value)}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           e.preventDefault();
-          if (guess.trim()) {
-            handleGuess();
-          }
+          if (guess.trim()) handleGuess();
         }
       }}
       placeholder="Enter your guess..."
-      className="w-full guess-input mb-3"
+      className="w-full guess-input"
       disabled={!puzzle}
     />
+
+    {/* Buttons */}
+    {inputError && (
+      <p className="text-red-500 text-sm text-center">{inputError}</p>
+    )}
+
+    <div className="flex flex-col gap-3 w-full max-w-xs mx-auto mt-2">
+      <Button
+        onClick={handleClueReveal}
+        disabled={
+          revealDisabled ||
+          !puzzle ||
+          revealedClues.length >= puzzle.clues.length ||
+          attempts >= maxGuesses
+        }
+        variant="outline"
+        className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
+          revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
+        }`}
+      >
+        Reveal a Clue
+      </Button>
+
+      <Button
+        onClick={handleGuess}
+        className="w-full bg-[#3B82F6] text-white"
+      >
+        Submit
+      </Button>
+    </div>
   </div>
 )}
 
-{/* Conditional Game Feedback */}
-{isCorrect ? (
-  <>
-    <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
-    <div className="mt-6 text-center space-y-3">
-      <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
-      <p className="text-sm text-gray-600">
-        Next puzzle in: <span className="font-mono">{countdown}</span>
-      </p>
-      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm">
-        <p className="text-sm text-blue-900 font-medium mb-2">
-          💬 Love Numerus? Loathe it? Let us know what you think!
-        </p>
-        <a
-          href="https://forms.gle/LifsBp42q2KBJRRK7"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
-        >
-          Fill out the Feedback Form
-        </a>
-      </div>
-    </div>
-  </>
-) : attempts >= maxGuesses ? (
-  <>
-    <p className="text-red-600 mt-4">
-      Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
+{/* ✅ Correct Answer UI */}
+{isCorrect && (
+  <div className="mt-6 text-center space-y-3">
+    <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
+    <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
+    <p className="text-sm text-gray-600">
+      Next puzzle in: <span className="font-mono">{countdown}</span>
     </p>
-    <div className="mt-6 text-center space-y-3">
-      <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
-      <p className="text-sm text-gray-600">
-        Next puzzle in: <span className="font-mono">{countdown}</span>
-      </p>
-      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm">
-        <p className="text-sm text-blue-900 font-medium mb-2">
-          💬 Love Numerus? Loathe it? Let us know what you think!
-        </p>
-        <a
-          href="https://forms.gle/LifsBp42q2KBJRRK7"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
-        >
-          Fill out the Feedback Form
-        </a>
-      </div>
-    </div>
-  </>
-) : (
-  <>
-    {inputError && (
-      <p className="text-red-500 text-sm text-center mt-4">{inputError}</p>
-    )}
+    <FeedbackBox />
+  </div>
+)}
 
-    <div className="flex flex-col gap-3 w-full max-w-xs mx-auto">
-  <Button
-    onClick={handleClueReveal}
-    disabled={
-      revealDisabled ||
-      !puzzle ||
-      revealedClues.length >= puzzle.clues.length ||
-      attempts >= maxGuesses
-    }
-    variant="outline"
-    className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
-      revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
-    }`}
-  >
-    Reveal a Clue
-  </Button>
-
-  <Button
-    onClick={handleGuess}
-    className="w-full bg-[#3B82F6] text-white"
-  >
-    Submit
-  </Button>
-</div>
-
-  </>
-)} {/* 👈 closes the conditional correctly */}
-
-
-</CardContent> {/* ✅ only one closing CardContent */}
-
-      </Card>
+{/* ❌ Out of Guesses UI */}
+{!isCorrect && attempts >= maxGuesses && (
+  <div className="mt-6 text-center space-y-3">
+    <p className="text-red-600">Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.</p>
+    <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
+    <p className="text-sm text-gray-600">
+      Next puzzle in: <span className="font-mono">{countdown}</span>
+    </p>
+    <FeedbackBox />
+  </div>
+)}
 
       <div className="flex flex-col items-center mt-4">
 {localDate && (
