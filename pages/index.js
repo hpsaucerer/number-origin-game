@@ -750,31 +750,30 @@ return !hasMounted ? (
       >
         Submit
       </Button>
-    </div>
+       </div>
   </>
-)}
-</CardContent>
+)} {/* 👈 closes the conditional correctly */}
 
-  <div className="w-full max-w-sm mx-auto px-2">
-    <OnScreenKeyboard
-      onKeyPress={(key) => {
-        if (key === "↵") {
-          handleGuess();
-        } else if (key === "←") {
-          setGuess((prev) => prev.slice(0, -1));
-        } else if (key === "␣") {
-          setGuess((prev) => prev + " ");
-        } else if (key === "Clear") {
-          setGuess("");
-        } else {
-          setGuess((prev) => prev + key.toLowerCase());
-        }
-      }}
-    />
-  </div>
-</>
-)}
-        </CardContent>
+<div className="w-full max-w-sm mx-auto px-2">
+  <OnScreenKeyboard
+    onKeyPress={(key) => {
+      if (key === "↵") {
+        handleGuess();
+      } else if (key === "←") {
+        setGuess((prev) => prev.slice(0, -1));
+      } else if (key === "␣") {
+        setGuess((prev) => prev + " ");
+      } else if (key === "Clear") {
+        setGuess("");
+      } else {
+        setGuess((prev) => prev + key.toLowerCase());
+      }
+    }}
+  />
+</div>
+
+</CardContent> {/* ✅ only one closing CardContent */}
+
       </Card>
 
       <div className="flex flex-col items-center mt-4">
