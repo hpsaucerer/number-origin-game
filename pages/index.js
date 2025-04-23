@@ -333,7 +333,7 @@ const handleGuess = () => {
 
   const fuse = new Fuse(allAnswers, {
   keys: ["label"],
-  threshold: 0.65, // loosened for better fuzzy matching
+  threshold: 0.45, // loosened for better fuzzy matching
   includeScore: true,
 });
 
@@ -344,7 +344,7 @@ const essentialWords = (puzzle.essential_keywords || []).map(normalize);
 const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
 const hasEnoughEssentials = matchCount >= 2; // Allow 2 out of 3 to match
 
-if (bestMatch && bestMatch.score <= 0.65 && hasEnoughEssentials) {
+if (bestMatch && bestMatch.score <= 0.5 && hasEnoughEssentials) {
   // ✅ Correct guess
   setIsCorrect(true);
   localStorage.setItem(`completed-${puzzle.date}`, "true");
