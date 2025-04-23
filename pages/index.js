@@ -144,9 +144,10 @@ useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
   if (seenTour) return;
 
-  // 🔁 Delay the start of observer itself by 100ms
+  let observer; // declare so we can disconnect later
+
   const delayObserver = setTimeout(() => {
-    const observer = new MutationObserver(() => {
+    observer = new MutationObserver(() => {
       const daily = document.querySelector(".daily-number");
       const input = document.querySelector(".guess-input");
       const clue = document.querySelector(".reveal-button");
@@ -176,23 +177,15 @@ useEffect(() => {
       childList: true,
       subtree: true,
     });
+  }, 100); // delay observer start
 
-    // Cleanup function
-    return () => observer.disconnect();
-  }, 100); // 👈 delay before even creating the observer
-
-  // Clear timeout if component unmounts early
-  return () => clearTimeout(delayObserver);
+  // ✅ Correct cleanup
+  return () => {
+    clearTimeout(delayObserver);
+    if (observer) observer.disconnect();
+  };
 }, []);
 
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  return () => observer.disconnect();
-}, []);
 
 
 
