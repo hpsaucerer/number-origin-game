@@ -541,29 +541,26 @@ return !hasMounted ? (
     },
   }}
 callback={(data) => {
-  console.log("🔄 Joyride event:", data); // ✅ Move this inside the function
+  console.log("🔄 Joyride event:", data);
 
   const stepsLength = 4;
 
-  if (
-    data.status === "finished" ||
-    data.status === "skipped"
-  ) {
+  if (data.status === "finished" || data.status === "skipped") {
     setShowTour(false);
     localStorage.setItem("seenTour", "true");
     return;
   }
 
-  // Only move to next step if the current target was found
-  if (data.type === "step:after" && !data.step?.targetNotFound) {
+  if (data.type === "step:after") {
     setStepIndex((prev) => prev + 1);
   }
 
-  // Handle error if target wasn't found (optional log)
   if (data.type === "target:notFound") {
     console.warn("🚫 Joyride target not found for step", data.index);
+    setStepIndex((prev) => prev + 1); // ⬅️ Skip to next step
   }
 }}
+
 />
 <Header
   onHelpClick={() => setShowInstructions(true)}
