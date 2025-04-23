@@ -26,6 +26,7 @@ import Fuse from "fuse.js";
 import Joyride from "react-joyride";
 import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
+import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
 
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
@@ -313,9 +314,24 @@ useEffect(() => {
 }, [openTooltip]);
 
 
-const handleGuess = () => {
+const handleGuess = async () => {
   const cleanedGuess = normalize(guess);
 
+  // 🔁 Log to Supabase
+try {
+  await supabase.from("Player_responses").insert({
+    puzzle_id: puzzle?.id ?? null,
+    raw_guess: guess,
+    cleaned_guess: cleanedGuess,
+    is_correct: false, // Temporary placeholder — will update below if correct
+    attempt: attempts + 1,
+    created_at: new Date().toISOString(),
+    device_id: localStorage.getItem("anon_id") ?? null,
+  });
+} catch (error) {
+  console.error("❌ Failed to log guess to Supabase:", error);
+}
+  
   if (!cleanedGuess) {
     setInputError("Please enter a guess before submitting.");
     return;
