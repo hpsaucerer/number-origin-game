@@ -85,7 +85,7 @@ const joyrideSteps = [
     content: (
       <div>
         <p>
-          Type what you think the number could relate to, e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
+          Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
         </p>
         <p>
           <strong>You have 4 guesses to solve the puzzle.</strong>
@@ -561,6 +561,11 @@ return !hasMounted ? (
       boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.7)",
     },
   }}
+    last: "Play", // 🔥 CHANGES the 'Last' button text to 'Play'
+    back: "Back",
+    next: "Next",
+    skip: "Skip",
+  }}
   callback={(data) => {
     console.log("🔄 Joyride event:", data);
 
@@ -797,7 +802,7 @@ return !hasMounted ? (
       <img src="/icons/two.png" alt="Type Icon" className="w-6 h-6 mt-1" />
       <div>
         <strong>Make a guess. You have 4 in total.</strong><br />
-        Type what you think the number relates to (e.g. 'light speed', 'year of the moon landing').
+        Type what you think the number relates to; e.g. 'keys on a piano', 'moon landing'.
       </div>
     </li>
     <li className="flex items-start gap-3">
