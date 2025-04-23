@@ -662,6 +662,9 @@ return !hasMounted ? (
     {clue.replace("formatted", puzzle.formatted)}
   </p>
 ))}
+    <p className="text-sm text-gray-600 mb-1 text-center">
+      {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
+    </p>
 
 {!isCorrect && attempts < maxGuesses && (
   <div className="w-full max-w-md space-y-3 mt-6">
@@ -738,9 +741,7 @@ return !hasMounted ? (
     {inputError && (
       <p className="text-red-500 text-sm text-center mt-4">{inputError}</p>
     )}
-    <p className="text-sm text-gray-600 mb-1 text-center">
-      {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
-    </p>
+
     <div className="flex flex-row md:flex-col justify-between gap-2 w-full max-w-xs mx-auto">
       <Button
         onClick={handleClueReveal}
