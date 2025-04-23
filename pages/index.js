@@ -680,7 +680,7 @@ return !hasMounted ? (
         }
       }}
       placeholder="Enter your guess..."
-      className="w-full guess-input"
+      className="w-full guess-input mb-3"
       disabled={!puzzle}
     />
   </div>
