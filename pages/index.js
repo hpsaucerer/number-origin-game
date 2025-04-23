@@ -157,13 +157,17 @@ useEffect(() => {
       stats: !!stats,
     });
 
-    if (daily && input && clue && stats) {
+if (daily && input && clue && stats) {
   observer.disconnect();
-  console.log("✅ Joyride elements found. Starting tour.");
-  setReadyToRunTour(true); // ✅ This was missing!
-  setStepIndex(0);
-  setTourKey(Date.now());
-  setShowTour(true);
+  console.log("✅ All Joyride elements found. Delaying tour start...");
+
+  // Delay start slightly to avoid race condition
+  setTimeout(() => {
+    setReadyToRunTour(true);
+    setStepIndex(0);
+    setTourKey(Date.now());
+    setShowTour(true);
+  }, 100); // 👈 delay by 100ms
 }
 
   });
