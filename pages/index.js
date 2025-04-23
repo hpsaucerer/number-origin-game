@@ -144,33 +144,47 @@ useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
   if (seenTour) return;
 
-  const observer = new MutationObserver(() => {
-    const daily = document.querySelector(".daily-number");
-    const input = document.querySelector(".guess-input");
-    const clue = document.querySelector(".reveal-button");
-    const stats = document.querySelector(".stats-button");
+  // 🔁 Delay the start of observer itself by 100ms
+  const delayObserver = setTimeout(() => {
+    const observer = new MutationObserver(() => {
+      const daily = document.querySelector(".daily-number");
+      const input = document.querySelector(".guess-input");
+      const clue = document.querySelector(".reveal-button");
+      const stats = document.querySelector(".stats-button");
 
-    console.log("📌 Target check:", {
-      daily: !!daily,
-      input: !!input,
-      clue: !!clue,
-      stats: !!stats,
+      console.log("📌 Target check:", {
+        daily: !!daily,
+        input: !!input,
+        clue: !!clue,
+        stats: !!stats,
+      });
+
+      if (daily && input && clue && stats) {
+        observer.disconnect();
+        console.log("✅ All Joyride elements found. Delaying tour start...");
+
+        setTimeout(() => {
+          setReadyToRunTour(true);
+          setStepIndex(0);
+          setTourKey(Date.now());
+          setShowTour(true);
+        }, 100);
+      }
     });
 
-if (daily && input && clue && stats) {
-  observer.disconnect();
-  console.log("✅ All Joyride elements found. Delaying tour start...");
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
-  // Delay start slightly to avoid race condition
-  setTimeout(() => {
-    setReadyToRunTour(true);
-    setStepIndex(0);
-    setTourKey(Date.now());
-    setShowTour(true);
-  }, 100); // 👈 delay by 100ms
-}
+    // Cleanup function
+    return () => observer.disconnect();
+  }, 100); // 👈 delay before even creating the observer
 
-  });
+  // Clear timeout if component unmounts early
+  return () => clearTimeout(delayObserver);
+}, []);
+
 
   observer.observe(document.body, {
     childList: true,
