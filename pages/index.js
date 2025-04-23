@@ -651,120 +651,108 @@ return !hasMounted ? (
   </p>
 ))}
 
+{/* 🔐 Always-rendered input for Joyride compatibility */}
+<div className="w-full max-w-md space-y-3 mt-6">
+  <Input
+    value={guess}
+    onChange={(e) => setGuess(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (!isCorrect && guess.trim()) {
+          handleGuess();
+        }
+      }
+    }}
+    placeholder="Enter your guess..."
+    className="w-full guess-input"
+    disabled={!puzzle || isCorrect || attempts >= maxGuesses}
+  />
+</div>
+
+{/* Conditional Game Feedback */}
 {isCorrect ? (
   <>
     <p className="text-green-600 mt-4">Correct! The answer is {puzzle.answer}.</p>
-
-<div className="mt-6 text-center space-y-3">
-  <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
-  <p className="text-sm text-gray-600">
-    Next puzzle in: <span className="font-mono">{countdown}</span>
-  </p>
-
-  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm">
-    <p className="text-sm text-blue-900 font-medium mb-2">
-      💬 Love Numerus? Loathe it? Let us know what you think!
-    </p>
-    <a
-      href="https://forms.gle/LifsBp42q2KBJRRK7"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
-    >
-    Fill out the Feedback Form
-    </a>
-  </div>
-</div>
-
+    <div className="mt-6 text-center space-y-3">
+      <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
+      <p className="text-sm text-gray-600">
+        Next puzzle in: <span className="font-mono">{countdown}</span>
+      </p>
+      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm">
+        <p className="text-sm text-blue-900 font-medium mb-2">
+          💬 Love Numerus? Loathe it? Let us know what you think!
+        </p>
+        <a
+          href="https://forms.gle/LifsBp42q2KBJRRK7"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
+        >
+          Fill out the Feedback Form
+        </a>
+      </div>
+    </div>
   </>
 ) : attempts >= maxGuesses ? (
-
-            <>
-              <p className="text-red-600 mt-4">
-                Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
-              </p>
-
-<div className="mt-6 text-center space-y-3">
-  <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
-  <p className="text-sm text-gray-600">
-    Next puzzle in: <span className="font-mono">{countdown}</span>
-  </p>
-
-  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm">
-    <p className="text-sm text-blue-900 font-medium mb-2">
-      💬 Love Numerus? Loathe it? Let us know what you think!
+  <>
+    <p className="text-red-600 mt-4">
+      Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.
     </p>
-    <a
-      href="https://forms.gle/LifsBp42q2KBJRRK7"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
-    >
-      Fill out the Feedback Form
-    </a>
-  </div>
-</div>
-
-       
-
-            </>
-          ) : (
-           
-<>
-
-
-  <div className="mt-4 flex flex-col space-y-2">
+    <div className="mt-6 text-center space-y-3">
+      <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
+      <p className="text-sm text-gray-600">
+        Next puzzle in: <span className="font-mono">{countdown}</span>
+      </p>
+      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm">
+        <p className="text-sm text-blue-900 font-medium mb-2">
+          💬 Love Numerus? Loathe it? Let us know what you think!
+        </p>
+        <a
+          href="https://forms.gle/LifsBp42q2KBJRRK7"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-blue-700 transition"
+        >
+          Fill out the Feedback Form
+        </a>
+      </div>
+    </div>
+  </>
+) : (
+  <>
     {inputError && (
-      <p className="text-red-500 text-sm text-center">{inputError}</p>
+      <p className="text-red-500 text-sm text-center mt-4">{inputError}</p>
     )}
-
     <p className="text-sm text-gray-600 mb-1 text-center">
       {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
     </p>
+    <div className="flex flex-row md:flex-col justify-between gap-2 w-full max-w-xs mx-auto">
+      <Button
+        onClick={handleClueReveal}
+        disabled={
+          revealDisabled ||
+          !puzzle ||
+          revealedClues.length >= puzzle.clues.length ||
+          attempts >= maxGuesses
+        }
+        variant="outline"
+        className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
+          revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
+        }`}
+      >
+        Reveal a Clue
+      </Button>
 
-<div className="w-full max-w-md space-y-3">
-  {/* Input field */}
-<Input
-  value={guess}
-  onChange={(e) => setGuess(e.target.value)}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (!isCorrect && guess.trim()) {
-        handleGuess();
-      }
-    }
-  }}
-  placeholder="Enter your guess..."
-  className="w-full guess-input" // ✅ keep always mounted and visible
-  disabled={!puzzle || isCorrect}
-/>
-
-  {/* Buttons in a row */}
-<div className="flex flex-row md:flex-col justify-between gap-2 w-full max-w-xs mx-auto">
-<Button
-  onClick={handleClueReveal}
-  disabled={
-    revealDisabled ||
-    !puzzle ||
-    revealedClues.length >= puzzle.clues.length ||
-    attempts >= maxGuesses
-  }
-  variant="outline"
-  className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
-    revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
-  }`}
->
-  Reveal a Clue
-</Button>
-
-  <Button
-    onClick={handleGuess}
-    className="w-full bg-[#3B82F6] text-white"
-  >
-    Submit
-  </Button>
-</div>
+      <Button
+        onClick={handleGuess}
+        className="w-full bg-[#3B82F6] text-white"
+      >
+        Submit
+      </Button>
+    </div>
+  </>
+)}
 
     </div>
   </div>
