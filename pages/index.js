@@ -717,9 +717,12 @@ return !hasMounted ? (
     }
   }}
   placeholder="Enter your guess..."
-  className="w-full guess-input" // 👈 add this class
+  className={`w-full guess-input ${
+    !puzzle || isCorrect ? "invisible absolute -z-10" : ""
+  }`}
   disabled={isCorrect}
 />
+
 
 
   {/* Buttons in a row */}
@@ -733,6 +736,8 @@ return !hasMounted ? (
   }
   variant="outline"
   className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
+    !puzzle || isCorrect ? "invisible absolute -z-10" : ""
+  } ${
     revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
   }`}
 >
