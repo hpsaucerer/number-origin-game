@@ -1,6 +1,5 @@
 "use client";
 
-import OnScreenKeyboard from "../components/OnScreenKeyboard";
 import { useState, useEffect } from "react";
 import { BarChart, Share2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
@@ -769,23 +768,6 @@ return !hasMounted ? (
   </>
 )} {/* 👈 closes the conditional correctly */}
 
-<div className="w-full max-w-sm mx-auto px-2">
-  <OnScreenKeyboard
-    onKeyPress={(key) => {
-      if (key === "↵") {
-        handleGuess();
-      } else if (key === "←") {
-        setGuess((prev) => prev.slice(0, -1));
-      } else if (key === "␣") {
-        setGuess((prev) => prev + " ");
-      } else if (key === "Clear") {
-        setGuess("");
-      } else {
-        setGuess((prev) => prev + key.toLowerCase());
-      }
-    }}
-  />
-</div>
 
 </CardContent> {/* ✅ only one closing CardContent */}
 
