@@ -160,17 +160,21 @@ useEffect(() => {
         stats: !!stats,
       });
 
-      if (daily && input && clue && stats) {
-        observer.disconnect();
-        console.log("✅ All Joyride elements found. Delaying tour start...");
+if (daily && input && clue && stats) {
+  observer.disconnect();
+  console.log("✅ All Joyride elements found. Delaying tour start...");
 
-        setTimeout(() => {
-          setReadyToRunTour(true);
-          setStepIndex(0);
-          setTourKey(Date.now());
-          setShowTour(true);
-        }, 100);
-      }
+  // Ensure layout + rendering are done
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      setReadyToRunTour(true);
+      setStepIndex(0);
+      setTourKey(Date.now());
+      setShowTour(true);
+    }, 300); // slightly longer delay
+  });
+}
+
     });
 
     observer.observe(document.body, {
