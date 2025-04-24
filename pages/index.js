@@ -333,25 +333,54 @@ const handleGuess = async (isClueReveal = false) => {
   setInputError("");
 
   try {
-    const res = await fetch("/api/validate-guess", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        guess: cleanedGuess,
-        attempt: attempts,
-        puzzleId,
-        isClueReveal,
-      }),
+    // If just revealing a clue, skip match checking
+    if (isClueReveal) {
+      const res = await fetch("/api/validate-guess", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          guess: cleanedGuess,
+          attempt: attempts,
+          puzzleId,
+          isClueReveal,
+        }),
+      });
+
+      const result = await res.json();
+      if (result.nextClue) {
+        setRevealedClues((prev) => [...prev, result.nextClue]);
+      }
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+      return;
+    }
+
+    // --- Enhanced client-side guess checking ---
+    const allAnswers = [
+      { label: normalize(puzzle.answer) },
+      ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
+        label: normalize(g),
+      })),
+    ];
+
+    const fuse = new Fuse(allAnswers, {
+      keys: ["label"],
+      threshold: 0.5,
+      includeScore: true,
     });
 
-    const result = await res.json();
+    const [bestMatch] = fuse.search(cleanedGuess);
 
-    if (result.correct) {
+    const essentialWords = (puzzle.essential_keywords || []).map(normalize);
+    const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
+    const hasEnoughEssentials = matchCount >= 2;
+
+    if (bestMatch && bestMatch.score <= 0.55 && hasEnoughEssentials) {
+      // ✅ Correct guess
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
       setStats((prev) => updateStats(prev, true, attempts + 1));
+
       if (typeof track === "function") {
         track("puzzle_completed", {
           correct: true,
@@ -363,20 +392,19 @@ const handleGuess = async (isClueReveal = false) => {
           puzzleId,
         });
       }
+
       setTimeout(() => setShowPostGame(true), 500);
     } else {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
-      if (result.nextClue) {
-        setRevealedClues((prev) => [...prev, result.nextClue]);
+      // Reveal clue if one is available
+      const clueToReveal = puzzle.clues?.[revealedClues.length];
+      if (clueToReveal) {
+        setRevealedClues((prev) => [...prev, clueToReveal]);
       }
 
-      if (result.feedbackMessage && !isClueReveal) {
-        setInputError(result.feedbackMessage);
-      }
-
-      if (result.gameOver) {
+      if (newAttempts >= maxGuesses) {
         setStats((prev) => updateStats(prev, false));
         if (typeof track === "function") {
           track("puzzle_failed", {
@@ -390,12 +418,14 @@ const handleGuess = async (isClueReveal = false) => {
           });
         }
         setTimeout(() => setShowPostGame(true), 500);
+      } else {
+        setInputError("Hmm, not quite. Try again or reveal a clue!");
       }
     }
 
     setGuess("");
   } catch (error) {
-    console.error("❌ Error validating guess:", error);
+    console.error("❌ Error in handleGuess:", error);
     setInputError("Something went wrong. Try again!");
   }
 };
