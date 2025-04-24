@@ -52,6 +52,7 @@ const synonymMap = {
   killed: "assassination",
   length: "distance",
   domains: "kingdoms",
+  movies: "films",
 };
 
 const normalize = (str) =>
