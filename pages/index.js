@@ -401,7 +401,11 @@ const handleGuess = async (isClueReveal = false) => {
 
 
 const handleClueReveal = () => {
-  if (revealDisabled || attempts >= maxGuesses) return;
+    if (
+    revealDisabled || 
+    attempts >= maxGuesses || 
+    revealedClues.length >= puzzle?.clues?.length // 👈 prevent over-revealing
+  ) return;
 
   setRevealDisabled(true);
   setAnimateClueButton(false);
@@ -681,9 +685,9 @@ return !hasMounted ? (
   disabled={
     revealDisabled ||
     !puzzle ||
-    gameOver
+    gameOver ||
+    revealedClues.length >= puzzle?.clues?.length
   }
-
   variant="outline"
   className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
     animateClueButton && revealedClues.length < puzzle.clues.length
@@ -691,7 +695,7 @@ return !hasMounted ? (
       : ""
   }`}
 >
-  Reveal a Clue
+  {revealedClues.length >= puzzle?.clues?.length ? "No more clues" : "Reveal a Clue"}
 </Button>
 
       <Button
