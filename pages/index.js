@@ -146,14 +146,15 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
+
+  // ✅ Exit early if already seen
   if (seenTour === "true") {
-  setShowTour(false);
-  setReadyToRunTour(false);
-  return;
-}
+    setShowTour(false);
+    setReadyToRunTour(false);
+    return;
+  }
 
-  let observer; // declare so we can disconnect later
-
+  let observer;
   const delayObserver = setTimeout(() => {
     observer = new MutationObserver(() => {
       const daily = document.querySelector(".daily-number");
@@ -161,44 +162,33 @@ useEffect(() => {
       const clue = document.querySelector(".reveal-button");
       const stats = document.querySelector(".stats-button");
 
-      console.log("📌 Target check:", {
-        daily: !!daily,
-        input: !!input,
-        clue: !!clue,
-        stats: !!stats,
-      });
+      if (daily && input && clue && stats) {
+        observer.disconnect();
+        console.log("✅ All Joyride elements found. Starting tour...");
 
-if (daily && input && clue && stats) {
-  observer.disconnect();
-  console.log("✅ All Joyride elements found. Delaying tour start...");
-
-  // Ensure layout + rendering are done
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      setReadyToRunTour(true);
-      setStepIndex(0);
-      setTourKey(Date.now());
-      setShowTour(true);
-    }, 300); // slightly longer delay
-  });
-}
-
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            setReadyToRunTour(true);
+            setStepIndex(0);
+            setTourKey(Date.now());
+            setShowTour(true);
+          }, 300);
+        });
+      }
     });
 
     observer.observe(document.body, {
       childList: true,
       subtree: true,
     });
-  }, 100); // delay observer start
+  }, 100);
 
-  // ✅ Correct cleanup
   return () => {
     clearTimeout(delayObserver);
     if (observer) observer.disconnect();
   };
 }, []);
-
-
+  
 
 
 useEffect(() => {
@@ -357,18 +347,17 @@ const handleGuess = async () => {
   setInputError("");
 
   try {
-    const res = await fetch("/api/validate-guess", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-body: JSON.stringify({
-  guess: cleanedGuess,
-  attempt: attempts,
-  puzzleId,
-}),
-
-    });
+const res = await fetch("/api/validate-guess", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    guess: cleanedGuess,
+    attempt: attempts,
+    puzzleId,
+  }),
+});
 
     const result = await res.json();
 
