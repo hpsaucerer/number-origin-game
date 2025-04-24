@@ -330,18 +330,17 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-
 const handleGuess = async () => {
   const cleanedGuess = normalize(guess);
   const puzzleId = puzzle?.id ?? 0;
 
-  // Log guess to Supabase (same as before)
+  // Log guess to Supabase
   try {
     await supabase.from("Player_responses").insert({
       puzzle_id: puzzleId,
       raw_guess: guess,
       cleaned_guess: cleanedGuess,
-      is_correct: false, // Temporary, will update if correct
+      is_correct: false,
       attempt: attempts + 1,
       created_at: new Date().toISOString(),
       device_id: localStorage.getItem("anon_id") ?? null,
@@ -357,26 +356,26 @@ const handleGuess = async () => {
 
   setInputError("");
 
-const res = await fetch("/api/validate-guess", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    guess: cleanedGuess,
-    attempt: attempts,
-    puzzleId: puzzle?.id ?? 0, // ✅ this is what the API expects
-  }),
-});
+  try {
+    const res = await fetch("/api/validate-guess", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+body: JSON.stringify({
+  guess: cleanedGuess,
+  attempt: attempts,
+  puzzleId,
+}),
+
+    });
 
     const result = await res.json();
 
     if (result.correct) {
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
-
       setStats((prev) => updateStats(prev, true, attempts + 1));
-
       if (typeof track === "function") {
         track("puzzle_completed", {
           correct: true,
@@ -388,7 +387,6 @@ const res = await fetch("/api/validate-guess", {
           puzzleId,
         });
       }
-
       console.log("✅ Correct guess — showing post-game modal...");
       setTimeout(() => setShowPostGame(true), 500);
     } else {
@@ -405,7 +403,6 @@ const res = await fetch("/api/validate-guess", {
 
       if (result.gameOver) {
         setStats((prev) => updateStats(prev, false));
-
         if (typeof track === "function") {
           track("puzzle_failed", {
             correct: false,
@@ -417,18 +414,19 @@ const res = await fetch("/api/validate-guess", {
             puzzleId,
           });
         }
-
         console.log("❌ Max attempts reached — showing post-game modal...");
         setTimeout(() => setShowPostGame(true), 500);
       }
     }
 
-    setGuess("");
+    setGuess(""); // ✅ This line is fine
   } catch (error) {
     console.error("❌ Error validating guess:", error);
     setInputError("Something went wrong. Try again!");
   }
-};
+}; // ✅ this closes handleGuess
+
+
 
     
 const handleClueReveal = () => {
