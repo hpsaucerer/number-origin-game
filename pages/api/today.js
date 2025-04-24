@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
   const { data: puzzle, error } = await supabase
-    .from("Puzzles")
+    .from("puzzles")
     .select("id, number, formatted, category, clues, date, reveal_formatted_at")
     .eq("date", today)
     .single();
