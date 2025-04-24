@@ -146,37 +146,35 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 
 useEffect(() => {
-  const seenTour = localStorage.getItem("seenTour");
+  if (!puzzle || !hasMounted || localStorage.getItem("seenTour") === "true") return;
 
-  if (seenTour === "true") return;
+  let attempts = 0;
+  const maxTries = 10;
 
-  let checkCount = 0;
-  const maxAttempts = 10;
-
-  const checkTargets = () => {
-    const daily = document.querySelector(".daily-number");
+  const tryStartTour = () => {
     const input = document.querySelector(".guess-input");
     const clue = document.querySelector(".reveal-button");
+    const daily = document.querySelector(".daily-number");
     const stats = document.querySelector(".stats-button");
 
     if (daily && input && clue && stats) {
-      console.log("✅ All Joyride targets found. Starting tour...");
-      setReadyToRunTour(true);
+      console.log("✅ Joyride: All targets found.");
       setStepIndex(0);
       setTourKey(Date.now());
       setShowTour(true);
-    } else if (checkCount < maxAttempts) {
-      checkCount++;
-      console.warn(`⏳ Waiting for Joyride targets... (Attempt ${checkCount})`);
-      setTimeout(checkTargets, 300);
+      setReadyToRunTour(true);
+    } else if (attempts < maxTries) {
+      attempts++;
+      console.warn(`⏳ Joyride waiting... attempt ${attempts}`);
+      setTimeout(tryStartTour, 300);
     } else {
-      console.error("❌ Could not find Joyride targets after multiple attempts.");
+      console.error("❌ Joyride failed: Targets not found.");
     }
   };
 
-  // Wait a bit longer to start checking, giving React time to render
-  setTimeout(checkTargets, 500);
-}, []);
+  // Delay check until after render
+  setTimeout(tryStartTour, 300);
+}, [puzzle, hasMounted]);
 
 
   
