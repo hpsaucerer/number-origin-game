@@ -357,16 +357,17 @@ const handleGuess = async () => {
 
   setInputError("");
 
-  try {
-    const res = await fetch("/api/validate-guess", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        guess: cleanedGuess,
-        puzzleId,
-        attempt: attempts,
-      }),
-    });
+const res = await fetch("/api/validate-guess", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    guess: cleanedGuess,
+    attempt: attempts,
+    puzzleId: puzzle?.id ?? 0, // ✅ this is what the API expects
+  }),
+});
 
     const result = await res.json();
 
