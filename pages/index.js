@@ -372,10 +372,12 @@ const fuse = new Fuse(allAnswers, {
 
     const [bestMatch] = fuse.search(cleanedGuess);
 
-    const essentialWords = (puzzle.essential_keywords || []).map(normalize);
-    const hasEssentialKeyword = essentialWords.some(word => cleanedGuess.includes(word));
+// 🔍 Check for essential keyword coverage (e.g. allow 2 of 3)
+const essentialWords = (puzzle.essential_keywords || []).map(normalize);
+const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
+const hasEnoughEssentials = matchCount >= 2; // Allow 2 out of 3 to match
 
-    if (bestMatch?.score <= 0.65 && hasEssentialKeyword) {
+    if (bestMatch?.score <= 0.65 && hasEnoughEssentials) {
       // ✅ Correct guess
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
@@ -395,7 +397,7 @@ const fuse = new Fuse(allAnswers, {
       }
 
       setTimeout(() => setShowPostGame(true), 500);
-    } else if (hasEssentialKeyword) {
+    } else if (hasEnoughEssentials) {
       // 🤏 Close guess
       setInputError("You're really close! Try rephrasing your guess.");
       // ❌ Don't clear input here — encourage refining
