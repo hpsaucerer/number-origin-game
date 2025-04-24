@@ -36,6 +36,7 @@ const synonymMap = {
   rubix: "rubik",
   rubicks: "rubik",
   "rubik's": "rubik",
+  square: "squares",
   usa: "united states",
   uk: "united kingdom",
   number: "amount",
@@ -375,53 +376,56 @@ const handleGuess = async (isClueReveal = false) => {
     const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
     const hasEnoughEssentials = matchCount >= 2;
 
-    if (bestMatch && bestMatch.score <= 0.55 && hasEnoughEssentials) {
-      // ✅ Correct guess
-      setIsCorrect(true);
-      localStorage.setItem(`completed-${puzzle.date}`, "true");
-      setStats((prev) => updateStats(prev, true, attempts + 1));
+if (bestMatch && bestMatch.score <= 0.55 && hasEnoughEssentials) {
+  // ✅ Correct guess
+  setIsCorrect(true);
+  localStorage.setItem(`completed-${puzzle.date}`, "true");
+  setStats((prev) => updateStats(prev, true, attempts + 1));
 
-      if (typeof track === "function") {
-        track("puzzle_completed", {
-          correct: true,
-          guessCount: attempts + 1,
-          puzzleId,
-        });
-        track("puzzle_guess_count", {
-          guessCount: attempts + 1,
-          puzzleId,
-        });
-      }
+  if (typeof track === "function") {
+    track("puzzle_completed", {
+      correct: true,
+      guessCount: attempts + 1,
+      puzzleId,
+    });
+    track("puzzle_guess_count", {
+      guessCount: attempts + 1,
+      puzzleId,
+    });
+  }
 
-      setTimeout(() => setShowPostGame(true), 500);
-    } else {
-      const newAttempts = attempts + 1;
-      setAttempts(newAttempts);
+  setTimeout(() => setShowPostGame(true), 500);
+} else if (hasEnoughEssentials) {
+  // 🤏 Close guess — essential keywords met but not fuzzy match
+  setInputError("You're really close! Try rephrasing your guess.");
+} else {
+  // ❌ No match and not close
+  const newAttempts = attempts + 1;
+  setAttempts(newAttempts);
 
-      // Reveal clue if one is available
-      const clueToReveal = puzzle.clues?.[revealedClues.length];
-      if (clueToReveal) {
-        setRevealedClues((prev) => [...prev, clueToReveal]);
-      }
+  const clueToReveal = puzzle.clues?.[revealedClues.length];
+  if (clueToReveal) {
+    setRevealedClues((prev) => [...prev, clueToReveal]);
+  }
 
-      if (newAttempts >= maxGuesses) {
-        setStats((prev) => updateStats(prev, false));
-        if (typeof track === "function") {
-          track("puzzle_failed", {
-            correct: false,
-            attempts: newAttempts,
-            puzzleId,
-          });
-          track("puzzle_guess_count", {
-            guessCount: "✖",
-            puzzleId,
-          });
-        }
-        setTimeout(() => setShowPostGame(true), 500);
-      } else {
-        setInputError("Hmm, not quite. Try again or reveal a clue!");
-      }
+  if (newAttempts >= maxGuesses) {
+    setStats((prev) => updateStats(prev, false));
+    if (typeof track === "function") {
+      track("puzzle_failed", {
+        correct: false,
+        attempts: newAttempts,
+        puzzleId,
+      });
+      track("puzzle_guess_count", {
+        guessCount: "✖",
+        puzzleId,
+      });
     }
+    setTimeout(() => setShowPostGame(true), 500);
+  } else {
+    setInputError("Hmm, not quite. Try again or reveal a clue!");
+  }
+}
 
     setGuess("");
   } catch (error) {
