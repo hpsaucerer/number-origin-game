@@ -548,17 +548,26 @@ return !hasMounted ? (
     next: "Next",
     skip: "Skip",
   }}
-  callback={(data) => {
-    console.log("🔄 Joyride event:", data);
 
-    // End tour
-    if (data.status === "finished" || data.status === "skipped") {
+<Joyride
+  ...
+  callback={(data) => {
+    const finishTour = () => {
       setShowTour(false);
       localStorage.setItem("seenTour", "true");
+    };
+
+    if (data.status === "finished" || data.status === "skipped") {
+      finishTour();
       return;
     }
 
-    // Advance only if next step exists
+    if (data.type === "target:notFound") {
+      console.warn("🚫 Joyride target not found:", data.step.target);
+      finishTour();
+      return;
+    }
+
     if (data.type === "step:after") {
       const nextStep = stepIndex + 1;
       const nextTarget = document.querySelector(joyrideSteps[nextStep]?.target);
@@ -567,15 +576,12 @@ return !hasMounted ? (
         setStepIndex(nextStep);
       } else {
         console.warn("❌ Next Joyride step target missing:", joyrideSteps[nextStep]?.target);
-        setShowTour(false);
+        finishTour();
       }
     }
-
-    if (data.type === "target:notFound") {
-      console.warn("🚫 Joyride target not found:", data.step.target);
-      setShowTour(false);
-    }
   }}
+/>
+
 />
 <Header
   onHelpClick={() => setShowInstructions(true)}
