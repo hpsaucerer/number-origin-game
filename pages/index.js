@@ -376,7 +376,7 @@ const handleGuess = async (isClueReveal = false) => {
     const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
     const hasEnoughEssentials = matchCount >= 2;
 
-if (bestMatch && bestMatch.score <= 0.55 && hasEnoughEssentials) {
+if (bestMatch?.score <= 0.55 && hasEnoughEssentials) {
   // ✅ Correct guess
   setIsCorrect(true);
   localStorage.setItem(`completed-${puzzle.date}`, "true");
@@ -396,10 +396,10 @@ if (bestMatch && bestMatch.score <= 0.55 && hasEnoughEssentials) {
 
   setTimeout(() => setShowPostGame(true), 500);
 } else if (hasEnoughEssentials) {
-  // 🤏 Close guess — essential keywords met but not fuzzy match
+  // 🤏 Close guess — keywords present, fuzzy match failed
   setInputError("You're really close! Try rephrasing your guess.");
 } else {
-  // ❌ No match and not close
+  // ❌ Wrong guess, reveal clue or fail
   const newAttempts = attempts + 1;
   setAttempts(newAttempts);
 
@@ -426,13 +426,6 @@ if (bestMatch && bestMatch.score <= 0.55 && hasEnoughEssentials) {
     setInputError("Hmm, not quite. Try again or reveal a clue!");
   }
 }
-
-    setGuess("");
-  } catch (error) {
-    console.error("❌ Error in handleGuess:", error);
-    setInputError("Something went wrong. Try again!");
-  }
-};
 
 
 const handleClueReveal = () => {
