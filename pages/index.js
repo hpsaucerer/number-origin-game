@@ -80,6 +80,8 @@ const joyrideSteps = [
     target: ".daily-number",
     content: "Welcome to Numerus - the daily reverse trivia game. This is today's number. Can you figure out what it represents?",
     disableBeacon: true,
+    disableScrolling: true,
+    wait: 500,
   },
   {
     target: ".guess-input",
@@ -93,20 +95,25 @@ const joyrideSteps = [
         </p>
       </div>
     ),
+    disableScrolling: true,
+    wait: 500,
   },
   {
     target: ".reveal-button",
     content: "Need help? Reveal a clue! Remember though, each time you do, this uses up a guess.",
     disableBeacon: true,
     disableScrolling: true,
-    wait: 500
+    wait: 500,
   },
   {
     target: ".stats-button",
     content: "Track your daily streaks and puzzle stats here.",
     disableBeacon: true,
+    disableScrolling: true,
+    wait: 500,
   },
 ];
+
     
   const { stats, setStats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
     const incorrectGuessMessages = [
@@ -615,15 +622,6 @@ callback={(data) => {
 
       <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
         <CardContent className="overflow-hidden">
-
-{showTour && (
-  <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden">
-    <input className="guess-input" />
-    <button className="reveal-button">Reveal</button>
-    <div className="daily-number">{puzzle.formatted}</div>
-    <div className="stats-button">Stats</div>
-  </div>
-)}
 
     
 <PostGameModal
