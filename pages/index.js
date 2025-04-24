@@ -375,9 +375,11 @@ const handleGuess = async (isClueReveal = false) => {
     const hasEnoughEssentials = matchCount >= 2;
 
     if (bestMatch?.score <= 0.55 && hasEnoughEssentials) {
+      // ✅ Correct guess
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
       setStats((prev) => updateStats(prev, true, attempts + 1));
+      setGuess(""); // ✅ Clear input on correct guess
 
       if (typeof track === "function") {
         track("puzzle_completed", {
@@ -393,8 +395,11 @@ const handleGuess = async (isClueReveal = false) => {
 
       setTimeout(() => setShowPostGame(true), 500);
     } else if (hasEnoughEssentials) {
+      // 🤏 Close guess
       setInputError("You're really close! Try rephrasing your guess.");
+      // ❌ Don't clear input here — encourage refining
     } else {
+      // ❌ Incorrect guess
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
@@ -420,15 +425,16 @@ const handleGuess = async (isClueReveal = false) => {
       } else {
         setInputError("Hmm, not quite. Try again or reveal a clue!");
       }
-    }
 
-    setGuess("");
+      setGuess(""); // ✅ Clear on incorrect guess
+    }
   } catch (error) {
     console.error("❌ Error in handleGuess:", error);
     setInputError("Something went wrong. Try again!");
   }
-}; // <-- ✅ Missing brace now added here!
+};
 
+    
 const handleClueReveal = () => {
   if (
     revealDisabled || 
