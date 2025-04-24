@@ -130,6 +130,7 @@ const joyrideSteps = [
   const [selectedPuzzleId, setSelectedPuzzleId] = useState(null);
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
   const [revealDisabled, setRevealDisabled] = useState(false);
+  const [animateClueButton, setAnimateClueButton] = useState(true);
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
@@ -444,14 +445,18 @@ const handleClueReveal = () => {
 
   setRevealDisabled(true);
 
+  // Temporarily stop animation
+  setAnimateClueButton(false);
+
   setRevealedClues([...revealedClues, puzzle.clues[revealedClues.length]]);
   setAttempts(attempts + 1);
 
+  // Re-enable animation & button after timeout
   setTimeout(() => {
     setRevealDisabled(false);
-  }, 1000); // 1 second lockout to prevent double taps
+    setAnimateClueButton(true); // Re-triggers animation
+  }, 1000);
 };
-
 
 const shareTextHandler = () => {
   shareResult({
@@ -715,21 +720,23 @@ return !hasMounted ? (
     )}
 
     <div className="flex flex-col gap-3 w-full max-w-xs mx-auto mt-2">
-      <Button
-        onClick={handleClueReveal}
-        disabled={
-          revealDisabled ||
-          !puzzle ||
-          revealedClues.length >= puzzle.clues.length ||
-          attempts >= maxGuesses
-        }
-        variant="outline"
-        className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
-          revealedClues.length === 0 && attempts < maxGuesses ? "animate-pulse-grow" : ""
-        }`}
-      >
-        Reveal a Clue
-      </Button>
+<Button
+  onClick={handleClueReveal}
+  disabled={
+    revealDisabled ||
+    !puzzle ||
+    revealedClues.length >= puzzle.clues.length ||
+    attempts >= maxGuesses
+  }
+  variant="outline"
+  className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
+    animateClueButton && revealedClues.length < puzzle.clues.length
+      ? "animate-pulse-grow"
+      : ""
+  }`}
+>
+  Reveal a Clue
+</Button>
 
       <Button
         onClick={handleGuess}
