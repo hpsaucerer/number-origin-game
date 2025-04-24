@@ -616,6 +616,16 @@ callback={(data) => {
       <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
         <CardContent className="overflow-hidden">
 
+{showTour && (
+  <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden">
+    <input className="guess-input" />
+    <button className="reveal-button">Reveal</button>
+    <div className="daily-number">{puzzle.formatted}</div>
+    <div className="stats-button">Stats</div>
+  </div>
+)}
+
+    
 <PostGameModal
   open={showPostGame}
   onClose={() => setShowPostGame(false)}
