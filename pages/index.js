@@ -144,34 +144,47 @@ const [stepIndex, setStepIndex] = useState(0);
 const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
 const [readyToRunTour, setReadyToRunTour] = useState(false);
 
+
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
   if (seenTour === "true" || !puzzle) return;
 
   let retries = 10;
-  const interval = setInterval(() => {
+
+  const checkTargets = () => {
     const daily = document.querySelector(".daily-number");
     const input = document.querySelector(".guess-input");
     const clue = document.querySelector(".reveal-button");
     const stats = document.querySelector(".stats-button");
 
-    if (daily && input && clue && stats) {
-      clearInterval(interval);
-      console.log("✅ All Joyride elements found. Starting tour...");
+    const allVisible = [daily, input, clue, stats].every(
+      (el) => el && el.offsetParent !== null
+    );
+
+    if (allVisible) {
+      console.log("✅ All Joyride targets visible. Starting tour...");
       setReadyToRunTour(true);
       setStepIndex(0);
       setTourKey(Date.now());
       setShowTour(true);
+      return;
     }
 
-    if (--retries <= 0) {
-      clearInterval(interval);
+    if (--retries > 0) {
+      requestAnimationFrame(() => setTimeout(checkTargets, 250));
+    } else {
       console.warn("❌ Could not find Joyride targets after multiple attempts.");
     }
-  }, 300);
+  };
 
-  return () => clearInterval(interval);
-}, [puzzle]); // ← add this dependency
+  // Wait a tick for first DOM paint
+  requestAnimationFrame(() => setTimeout(checkTargets, 300));
+
+  return () => {
+    retries = 0; // Cancel on unmount
+  };
+}, [puzzle]);
+    
 
 
 useEffect(() => {
