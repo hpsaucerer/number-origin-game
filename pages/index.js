@@ -96,7 +96,7 @@ const joyrideSteps = [
   },
   {
     target: ".reveal-button",
-    content: "Need help? Reveal a clue! Remember though, each time you do, you use up a guess.",
+    content: "Need help? Reveal a clue! Remember though, each time you do, this uses up a guess.",
     disableBeacon: true,
     disableScrolling: true,
     wait: 500
