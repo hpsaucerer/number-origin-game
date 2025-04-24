@@ -334,7 +334,6 @@ const handleGuess = async (isClueReveal = false) => {
   setInputError("");
 
   try {
-    // If just revealing a clue, skip match checking
     if (isClueReveal) {
       const res = await fetch("/api/validate-guess", {
         method: "POST",
@@ -356,7 +355,6 @@ const handleGuess = async (isClueReveal = false) => {
       return;
     }
 
-    // --- Enhanced client-side guess checking ---
     const allAnswers = [
       { label: normalize(puzzle.answer) },
       ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
@@ -376,75 +374,79 @@ const handleGuess = async (isClueReveal = false) => {
     const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
     const hasEnoughEssentials = matchCount >= 2;
 
-if (bestMatch?.score <= 0.55 && hasEnoughEssentials) {
-  // ✅ Correct guess
-  setIsCorrect(true);
-  localStorage.setItem(`completed-${puzzle.date}`, "true");
-  setStats((prev) => updateStats(prev, true, attempts + 1));
+    if (bestMatch?.score <= 0.55 && hasEnoughEssentials) {
+      setIsCorrect(true);
+      localStorage.setItem(`completed-${puzzle.date}`, "true");
+      setStats((prev) => updateStats(prev, true, attempts + 1));
 
-  if (typeof track === "function") {
-    track("puzzle_completed", {
-      correct: true,
-      guessCount: attempts + 1,
-      puzzleId,
-    });
-    track("puzzle_guess_count", {
-      guessCount: attempts + 1,
-      puzzleId,
-    });
-  }
+      if (typeof track === "function") {
+        track("puzzle_completed", {
+          correct: true,
+          guessCount: attempts + 1,
+          puzzleId,
+        });
+        track("puzzle_guess_count", {
+          guessCount: attempts + 1,
+          puzzleId,
+        });
+      }
 
-  setTimeout(() => setShowPostGame(true), 500);
-} else if (hasEnoughEssentials) {
-  // 🤏 Close guess — keywords present, fuzzy match failed
-  setInputError("You're really close! Try rephrasing your guess.");
-} else {
-  // ❌ Wrong guess, reveal clue or fail
-  const newAttempts = attempts + 1;
-  setAttempts(newAttempts);
+      setTimeout(() => setShowPostGame(true), 500);
+    } else if (hasEnoughEssentials) {
+      setInputError("You're really close! Try rephrasing your guess.");
+    } else {
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
 
-  const clueToReveal = puzzle.clues?.[revealedClues.length];
-  if (clueToReveal) {
-    setRevealedClues((prev) => [...prev, clueToReveal]);
-  }
+      const clueToReveal = puzzle.clues?.[revealedClues.length];
+      if (clueToReveal) {
+        setRevealedClues((prev) => [...prev, clueToReveal]);
+      }
 
-  if (newAttempts >= maxGuesses) {
-    setStats((prev) => updateStats(prev, false));
-    if (typeof track === "function") {
-      track("puzzle_failed", {
-        correct: false,
-        attempts: newAttempts,
-        puzzleId,
-      });
-      track("puzzle_guess_count", {
-        guessCount: "✖",
-        puzzleId,
-      });
+      if (newAttempts >= maxGuesses) {
+        setStats((prev) => updateStats(prev, false));
+        if (typeof track === "function") {
+          track("puzzle_failed", {
+            correct: false,
+            attempts: newAttempts,
+            puzzleId,
+          });
+          track("puzzle_guess_count", {
+            guessCount: "✖",
+            puzzleId,
+          });
+        }
+        setTimeout(() => setShowPostGame(true), 500);
+      } else {
+        setInputError("Hmm, not quite. Try again or reveal a clue!");
+      }
     }
-    setTimeout(() => setShowPostGame(true), 500);
-  } else {
-    setInputError("Hmm, not quite. Try again or reveal a clue!");
-  }
-}
 
+    setGuess("");
+  } catch (error) {
+    console.error("❌ Error in handleGuess:", error);
+    setInputError("Something went wrong. Try again!");
+  }
+}; // <-- ✅ Missing brace now added here!
 
 const handleClueReveal = () => {
-    if (
+  if (
     revealDisabled || 
     attempts >= maxGuesses || 
-    revealedClues.length >= puzzle?.clues?.length // 👈 prevent over-revealing
+    revealedClues.length >= puzzle?.clues?.length
   ) return;
 
   setRevealDisabled(true);
   setAnimateClueButton(false);
 
-  handleGuess(true); // This now handles clue reveal via backend
+  handleGuess(true);
 
   setTimeout(() => {
     setRevealDisabled(false);
     setAnimateClueButton(true);
   }, 1000);
 };
+
 
 const shareTextHandler = () => {
   shareResult({
