@@ -149,9 +149,7 @@ useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
   if (seenTour === "true" || !puzzle) return;
 
-  let retries = 10;
-
-  const checkTargets = () => {
+  const observer = new MutationObserver(() => {
     const daily = document.querySelector(".daily-number");
     const input = document.querySelector(".guess-input");
     const clue = document.querySelector(".reveal-button");
@@ -162,30 +160,24 @@ useEffect(() => {
     );
 
     if (allVisible) {
-      console.log("✅ All Joyride targets visible. Starting tour...");
+      console.log("✅ All Joyride targets found. Starting tour...");
+      observer.disconnect();
       setReadyToRunTour(true);
       setStepIndex(0);
       setTourKey(Date.now());
       setShowTour(true);
-      return;
     }
+  });
 
-    if (--retries > 0) {
-      requestAnimationFrame(() => setTimeout(checkTargets, 250));
-    } else {
-      console.warn("❌ Could not find Joyride targets after multiple attempts.");
-    }
-  };
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
 
-  // Wait a tick for first DOM paint
-  requestAnimationFrame(() => setTimeout(checkTargets, 300));
-
-  return () => {
-    retries = 0; // Cancel on unmount
-  };
+  return () => observer.disconnect();
 }, [puzzle]);
-    
 
+    
 
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
