@@ -147,38 +147,39 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
-  if (seenTour === "true" || !puzzle) return;
 
-  const observer = new MutationObserver(() => {
+  if (seenTour === "true") return;
+
+  let checkCount = 0;
+  const maxAttempts = 10;
+
+  const checkTargets = () => {
     const daily = document.querySelector(".daily-number");
     const input = document.querySelector(".guess-input");
     const clue = document.querySelector(".reveal-button");
     const stats = document.querySelector(".stats-button");
 
-    const allVisible = [daily, input, clue, stats].every(
-      (el) => el && el.offsetParent !== null
-    );
-
-    if (allVisible) {
+    if (daily && input && clue && stats) {
       console.log("✅ All Joyride targets found. Starting tour...");
-      observer.disconnect();
       setReadyToRunTour(true);
       setStepIndex(0);
       setTourKey(Date.now());
       setShowTour(true);
+    } else if (checkCount < maxAttempts) {
+      checkCount++;
+      console.warn(`⏳ Waiting for Joyride targets... (Attempt ${checkCount})`);
+      setTimeout(checkTargets, 300);
+    } else {
+      console.error("❌ Could not find Joyride targets after multiple attempts.");
     }
-  });
+  };
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
+  // Wait a bit longer to start checking, giving React time to render
+  setTimeout(checkTargets, 500);
+}, []);
 
-  return () => observer.disconnect();
-}, [puzzle]);
 
-    
-
+  
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
     timeZone: "Europe/London",
