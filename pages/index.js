@@ -320,26 +320,11 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-const handleGuess = async () => {
+const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalize(guess);
   const puzzleId = puzzle?.id ?? 0;
 
-  // Log guess to Supabase
-  try {
-    await supabase.from("Player_responses").insert({
-      puzzle_id: puzzleId,
-      raw_guess: guess,
-      cleaned_guess: cleanedGuess,
-      is_correct: false,
-      attempt: attempts + 1,
-      created_at: new Date().toISOString(),
-      device_id: localStorage.getItem("anon_id") ?? null,
-    });
-  } catch (error) {
-    console.error("❌ Failed to log guess to Supabase:", error);
-  }
-
-  if (!cleanedGuess) {
+  if (!isClueReveal && !cleanedGuess) {
     setInputError("Please enter a guess before submitting.");
     return;
   }
@@ -347,17 +332,18 @@ const handleGuess = async () => {
   setInputError("");
 
   try {
-const res = await fetch("/api/validate-guess", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    guess: cleanedGuess,
-    attempt: attempts,
-    puzzleId,
-  }),
-});
+    const res = await fetch("/api/validate-guess", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        guess: cleanedGuess,
+        attempt: attempts,
+        puzzleId,
+        isClueReveal,
+      }),
+    });
 
     const result = await res.json();
 
@@ -376,18 +362,17 @@ const res = await fetch("/api/validate-guess", {
           puzzleId,
         });
       }
-      console.log("✅ Correct guess — showing post-game modal...");
       setTimeout(() => setShowPostGame(true), 500);
     } else {
-      if (result.feedbackMessage) {
-        setInputError(result.feedbackMessage);
-      }
-
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
       if (result.nextClue) {
         setRevealedClues((prev) => [...prev, result.nextClue]);
+      }
+
+      if (result.feedbackMessage && !isClueReveal) {
+        setInputError(result.feedbackMessage);
       }
 
       if (result.gameOver) {
@@ -403,17 +388,17 @@ const res = await fetch("/api/validate-guess", {
             puzzleId,
           });
         }
-        console.log("❌ Max attempts reached — showing post-game modal...");
         setTimeout(() => setShowPostGame(true), 500);
       }
     }
 
-    setGuess(""); // ✅ This line is fine
+    setGuess("");
   } catch (error) {
     console.error("❌ Error validating guess:", error);
     setInputError("Something went wrong. Try again!");
   }
-}; // ✅ this closes handleGuess
+};
+
 
 const handleClueReveal = () => {
   if (revealDisabled || attempts >= maxGuesses) return;
@@ -421,7 +406,7 @@ const handleClueReveal = () => {
   setRevealDisabled(true);
   setAnimateClueButton(false);
 
-  handleGuess(); // This now handles clue reveal via backend
+  handleGuess(true); // This now handles clue reveal via backend
 
   setTimeout(() => {
     setRevealDisabled(false);
