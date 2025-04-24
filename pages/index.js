@@ -224,20 +224,20 @@ useEffect(() => {
 
     if (DEV_MODE && selectedPuzzleIndex !== null) {
       const devPuzzle = all[selectedPuzzleIndex];
+      console.log("🔧 DEV PUZZLE:", devPuzzle); // ✅ Debug log
       setPuzzle(devPuzzle);
       setPuzzleNumber(selectedPuzzleIndex + 1);
     } else {
-const today = await fetchTodayPuzzle();
-if (today) {
-  setPuzzle(today);
+      const today = await fetchTodayPuzzle();
+      if (today) {
+        console.log("📆 TODAY'S PUZZLE:", today); // ✅ Debug log
+        setPuzzle(today);
 
-  // Optionally find the puzzle index if needed
-  const index = all.findIndex((p) => p.id === today.id);
-  setPuzzleNumber(index + 1);
-} else {
-  console.warn("⚠️ No puzzle returned for today.");
-}
-
+        const index = all.findIndex((p) => p.id === today.id);
+        setPuzzleNumber(index + 1);
+      } else {
+        console.warn("⚠️ No puzzle returned for today.");
+      }
     }
   };
 
