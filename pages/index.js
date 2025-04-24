@@ -146,57 +146,34 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
+  if (seenTour === "true") return;
 
-  // ✅ Exit early if already seen
-  if (seenTour === "true") {
-    setShowTour(false);
-    setReadyToRunTour(false);
-    return;
-  }
+  let retries = 10;
+  const interval = setInterval(() => {
+    const daily = document.querySelector(".daily-number");
+    const input = document.querySelector(".guess-input");
+    const clue = document.querySelector(".reveal-button");
+    const stats = document.querySelector(".stats-button");
 
-  let observer;
-  const delayObserver = setTimeout(() => {
-    observer = new MutationObserver(() => {
-      const daily = document.querySelector(".daily-number");
-      const input = document.querySelector(".guess-input");
-      const clue = document.querySelector(".reveal-button");
-      const stats = document.querySelector(".stats-button");
+    if (daily && input && clue && stats) {
+      clearInterval(interval);
+      console.log("✅ All Joyride elements found. Starting tour...");
+      setReadyToRunTour(true);
+      setStepIndex(0);
+      setTourKey(Date.now());
+      setShowTour(true);
+    }
 
-      if (
-  daily?.offsetParent !== null &&
-  input?.offsetParent !== null &&
-  clue?.offsetParent !== null &&
-  stats?.offsetParent !== null
-) {
+    if (--retries <= 0) {
+      clearInterval(interval);
+      console.warn("❌ Could not find Joyride targets after multiple attempts.");
+    }
+  }, 300);
 
-        observer.disconnect();
-        console.log("✅ All Joyride elements found. Starting tour...");
-
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            setReadyToRunTour(true);
-            setStepIndex(0);
-            setTourKey(Date.now());
-            setShowTour(true);
-          }, 300);
-        });
-      }
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-  }, 100);
-
-  return () => {
-    clearTimeout(delayObserver);
-    if (observer) observer.disconnect();
-  };
+  return () => clearInterval(interval);
 }, []);
-  
 
-
+ 
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
     timeZone: "Europe/London",
