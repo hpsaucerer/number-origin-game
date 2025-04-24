@@ -1,4 +1,3 @@
-import puzzles from "@/data/puzzles";
 import Fuse from "fuse.js";
 
 function normalize(str) {
@@ -10,12 +9,7 @@ export default function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { guess, puzzleId, attempt } = req.body;
-  const puzzle = puzzles[puzzleId];
-
-  if (!puzzle) {
-    return res.status(404).json({ error: "Puzzle not found" });
-  }
+  const { guess, puzzle, attempt } = req.body;
 
   const cleanedGuess = normalize(guess);
 
