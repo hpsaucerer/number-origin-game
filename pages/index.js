@@ -146,7 +146,7 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
-  if (seenTour === "true") return;
+  if (seenTour === "true" || !puzzle) return;
 
   let retries = 10;
   const interval = setInterval(() => {
@@ -171,9 +171,9 @@ useEffect(() => {
   }, 300);
 
   return () => clearInterval(interval);
-}, []);
+}, [puzzle]); // ← add this dependency
 
- 
+
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
     timeZone: "Europe/London",
