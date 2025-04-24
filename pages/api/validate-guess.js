@@ -1,15 +1,27 @@
+import { supabase } from "@/lib/supabase";
 import Fuse from "fuse.js";
 
 function normalize(str) {
   return str?.trim().toLowerCase().replace(/[^a-z0-9]+/g, " ") ?? "";
 }
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { guess, puzzle, attempt } = req.body;
+  const { guess, puzzleId, attempt } = req.body;
+
+  // ✅ Fetch the puzzle from Supabase
+  const { data: puzzle, error } = await supabase
+    .from("Puzzles")
+    .select("*")
+    .eq("id", puzzleId)
+    .single();
+
+  if (error || !puzzle) {
+    return res.status(404).json({ error: "Puzzle not found" });
+  }
 
   const cleanedGuess = normalize(guess);
 
@@ -29,18 +41,13 @@ export default function handler(req, res) {
   const [bestMatch] = fuse.search(cleanedGuess);
 
   const essentialWords = (puzzle.essential_keywords || []).map(normalize);
-  const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
+  const matchCount = essentialWords.filter((word) => cleanedGuess.includes(word)).length;
   const hasEnoughEssentials = matchCount >= 2;
 
-  let isCorrect = false;
-  if (bestMatch && bestMatch.score <= 0.5 && hasEnoughEssentials) {
-    isCorrect = true;
-  }
+  const isCorrect = !!(bestMatch && bestMatch.score <= 0.5 && hasEnoughEssentials);
 
-  // Clue logic
-  const nextClue = !isCorrect && attempt < puzzle.clues.length
-    ? puzzle.clues[attempt]
-    : null;
+  const nextClue =
+    !isCorrect && attempt < puzzle.clues.length ? puzzle.clues[attempt] : null;
 
   const gameOver = attempt >= 3 && !isCorrect;
 
