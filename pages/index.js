@@ -793,12 +793,13 @@ if (data.type === "step:after") {
   {revealedClues.length >= puzzle?.clues?.length ? "No more clues" : "Reveal a Clue"}
 </Button>
 
-      <Button
-        onClick={handleGuess}
-        className="w-full bg-[#3B82F6] text-white"
-      >
-        Submit
-      </Button>
+<Button
+  onClick={() => handleGuess()} // ✅ Safe and explicit
+  className="w-full bg-[#3B82F6] text-white"
+>
+  Submit
+</Button>
+
     </div>
   </div>
 )}
