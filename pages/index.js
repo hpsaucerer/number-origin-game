@@ -553,32 +553,42 @@ callback={(data) => {
     return;
   }
 
-  // Handle advancing between steps
-  if (data.type === "step:after") {
-    const nextStep = stepIndex + 1;
-    const nextTargetSelector = joyrideSteps[nextStep]?.target;
+// Handle advancing between steps
+if (data.type === "step:after") {
+  const nextStep = stepIndex + 1;
 
-    if (nextTargetSelector) {
-      const nextTarget = document.querySelector(nextTargetSelector);
+  // ✅ End the tour if there are no more steps
+  if (nextStep >= joyrideSteps.length) {
+    console.log("✅ All Joyride steps complete!");
+    setShowTour(false);
+    localStorage.setItem("seenTour", "true");
+    return;
+  }
 
-      if (nextTarget) {
-        setStepIndex(nextStep);
-      } else {
-        // Retry after delay in case of late-rendered element
-        console.warn(`⏳ Waiting for next Joyride step target: ${nextTargetSelector}`);
-        setTimeout(() => {
-          const retryTarget = document.querySelector(nextTargetSelector);
-          if (retryTarget) {
-            console.log(`✅ Retry succeeded: advancing to step ${nextStep}`);
-            setStepIndex(nextStep);
-          } else {
-            console.warn(`❌ Still missing Joyride step target after retry: ${nextTargetSelector}`);
-            setShowTour(false);
-          }
-        }, 500); // Retry after 0.5s
-      }
+  const nextTargetSelector = joyrideSteps[nextStep]?.target;
+
+  if (nextTargetSelector) {
+    const nextTarget = document.querySelector(nextTargetSelector);
+
+    if (nextTarget) {
+      setStepIndex(nextStep);
+    } else {
+      // Retry after delay in case of late-rendered element
+      console.warn(`⏳ Waiting for next Joyride step target: ${nextTargetSelector}`);
+      setTimeout(() => {
+        const retryTarget = document.querySelector(nextTargetSelector);
+        if (retryTarget) {
+          console.log(`✅ Retry succeeded: advancing to step ${nextStep}`);
+          setStepIndex(nextStep);
+        } else {
+          console.warn(`❌ Still missing Joyride step target after retry: ${nextTargetSelector}`);
+          setShowTour(false);
+        }
+      }, 500); // Retry after 0.5s
     }
   }
+}
+
 
   // Handle missing target during step render
   if (data.type === "target:notFound") {
