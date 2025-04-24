@@ -12,7 +12,11 @@ export default async function handler(req, res) {
 
   const { guess, puzzleId, attempt } = req.body;
 
-  // ✅ Fetch the puzzle from Supabase
+  if (!puzzleId) {
+    return res.status(400).json({ error: "Missing puzzleId" });
+  }
+
+  // ✅ Fetch puzzle from Supabase
   const { data: puzzle, error } = await supabase
     .from("Puzzles")
     .select("*")
@@ -20,6 +24,7 @@ export default async function handler(req, res) {
     .single();
 
   if (error || !puzzle) {
+    console.error("❌ Supabase error fetching puzzle:", error);
     return res.status(404).json({ error: "Puzzle not found" });
   }
 
@@ -27,7 +32,7 @@ export default async function handler(req, res) {
 
   const allAnswers = [
     { label: normalize(puzzle.answer) },
-    ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
+    ...(puzzle.acceptable_guesses || []).map((g) => ({
       label: normalize(g),
     })),
   ];
@@ -44,11 +49,13 @@ export default async function handler(req, res) {
   const matchCount = essentialWords.filter((word) => cleanedGuess.includes(word)).length;
   const hasEnoughEssentials = matchCount >= 2;
 
-  const isCorrect = !!(bestMatch && bestMatch.score <= 0.5 && hasEnoughEssentials);
+  let isCorrect = false;
+  if (bestMatch && bestMatch.score <= 0.5 && hasEnoughEssentials) {
+    isCorrect = true;
+  }
 
-  const nextClue =
-    !isCorrect && attempt < puzzle.clues.length ? puzzle.clues[attempt] : null;
-
+  const clues = puzzle.clues || [];
+  const nextClue = !isCorrect && attempt < clues.length ? clues[attempt] : null;
   const gameOver = attempt >= 3 && !isCorrect;
 
   let feedbackMessage = null;
