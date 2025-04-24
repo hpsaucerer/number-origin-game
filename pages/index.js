@@ -162,7 +162,13 @@ useEffect(() => {
       const clue = document.querySelector(".reveal-button");
       const stats = document.querySelector(".stats-button");
 
-      if (daily && input && clue && stats) {
+      if (
+  daily?.offsetParent !== null &&
+  input?.offsetParent !== null &&
+  clue?.offsetParent !== null &&
+  stats?.offsetParent !== null
+) {
+
         observer.disconnect();
         console.log("✅ All Joyride elements found. Starting tour...");
 
