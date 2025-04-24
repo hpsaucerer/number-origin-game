@@ -70,6 +70,28 @@ const normalize = (str) =>
     .join(" ")
     .trim();
 
+const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
+  const normalizedGuess = normalize(guess);
+  const normalizedEssential = essential.map(normalize);
+  const normalizedRequired = required.map(normalize);
+
+  const matchedEssential = normalizedEssential.filter((kw) =>
+    normalizedGuess.includes(kw)
+  );
+  const matchedRequired = normalizedRequired.filter((kw) =>
+    normalizedGuess.includes(kw)
+  );
+
+  return {
+    matchCount: matchedEssential.length,
+    hasStrongMatch: matchedEssential.length >= 2,
+    hasWeakMatch: matchedEssential.length === 1,
+    requiredMatched: matchedRequired.length === normalizedRequired.length,
+    matchedEssential,
+    matchedRequired,
+  };
+};
+
 const DEV_MODE = true;
 
 const colorClassMap = {
@@ -326,6 +348,18 @@ const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalize(guess);
   const puzzleId = puzzle?.id ?? 0;
 
+const {
+  matchCount,
+  hasStrongMatch,
+  hasWeakMatch,
+  requiredMatched,
+  matchedEssential,
+  matchedRequired,
+} = evaluateGuessKeywords(cleanedGuess, {
+  essential: puzzle.essential_keywords,
+  required: puzzle.keywords || [],
+});
+  
   if (!isClueReveal && !cleanedGuess) {
     setInputError("Please enter a guess before submitting.");
     return;
@@ -372,12 +406,7 @@ const fuse = new Fuse(allAnswers, {
 
     const [bestMatch] = fuse.search(cleanedGuess);
 
-// 🔍 Check for essential keyword coverage (e.g. allow 2 of 3)
-const essentialWords = (puzzle.essential_keywords || []).map(normalize);
-const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
-const hasEnoughEssentials = matchCount >= 2; // Allow 2 out of 3 to match
-
-    if (bestMatch?.score <= 0.65 && hasEnoughEssentials) {
+    if (bestMatch?.score <= 0.65 && hasStrongMatch && requiredMatched) {
       // ✅ Correct guess
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
@@ -397,7 +426,7 @@ const hasEnoughEssentials = matchCount >= 2; // Allow 2 out of 3 to match
       }
 
       setTimeout(() => setShowPostGame(true), 500);
-    } else if (hasEnoughEssentials) {
+    } else if (hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
       // 🤏 Close guess
       setInputError("You're really close! Try rephrasing your guess.");
       // ❌ Don't clear input here — encourage refining
