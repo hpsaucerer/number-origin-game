@@ -53,6 +53,8 @@ const synonymMap = {
   length: "distance",
   domains: "kingdoms",
   movies: "films",
+  cats: "cat",
+  types: "species",
 };
 
 const normalize = (str) =>
