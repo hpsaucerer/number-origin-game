@@ -146,7 +146,11 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 useEffect(() => {
   const seenTour = localStorage.getItem("seenTour");
-  if (seenTour) return;
+  if (seenTour === "true") {
+  setShowTour(false);
+  setReadyToRunTour(false);
+  return;
+}
 
   let observer; // declare so we can disconnect later
 
@@ -208,6 +212,18 @@ useEffect(() => {
   setHasMounted(true);
 }, []);
 
+useEffect(() => {
+  if (!puzzle) return;
+
+  const gameState = {
+    attempts,
+    revealedClues,
+    isCorrect,
+    guess,
+  };
+
+  localStorage.setItem(`gameState-${puzzle.date}`, JSON.stringify(gameState));
+}, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 useEffect(() => {
   const loadPuzzles = async () => {
@@ -270,17 +286,17 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
-   
-// Check if the user already completed this puzzle
-useEffect(() => {
-  if (puzzle) {
-    const alreadyCompleted =
-      localStorage.getItem(`completed-${puzzle.date}`) === "true";
-    if (alreadyCompleted) {
-      setIsCorrect(true);
-    }
+  useEffect(() => {
+  if (!puzzle) return;
+
+  const alreadyCompleted = localStorage.getItem(`completed-${puzzle.date}`) === "true";
+  if (alreadyCompleted) {
+    setIsCorrect(true);
+    // Clean up any leftover game state for this puzzle
+    localStorage.removeItem(`gameState-${puzzle.date}`);
   }
 }, [puzzle]);
+
 
     useEffect(() => {
   if (puzzle && DEV_MODE) {
