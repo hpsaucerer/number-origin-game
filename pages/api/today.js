@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const { data: puzzle, error } = await supabase
     .from("Puzzles")
-    .select("id, number, formatted, category, date, reveal_formatted_at")
+    .select("id, number, formatted, category, clues, date, reveal_formatted_at")
     .eq("date", today)
     .single();
 
@@ -19,5 +19,11 @@ export default async function handler(req, res) {
     return res.status(404).json({ error: "No puzzle found for today" });
   }
 
-  return res.status(200).json(puzzle);
+  // ✅ Remap to match frontend field expectations
+  const formattedPuzzle = {
+    ...puzzle,
+    revealFormattedAt: puzzle.reveal_formatted_at,
+  };
+
+  return res.status(200).json(formattedPuzzle);
 }
