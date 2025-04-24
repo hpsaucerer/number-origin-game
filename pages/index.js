@@ -426,28 +426,17 @@ body: JSON.stringify({
   }
 }; // ✅ this closes handleGuess
 
-
-
-    
 const handleClueReveal = () => {
-  if (
-    revealDisabled ||
-    attempts >= maxGuesses ||
-    revealedClues.length >= puzzle.clues.length
-  ) return;
+  if (revealDisabled || attempts >= maxGuesses) return;
 
   setRevealDisabled(true);
-
-  // Temporarily stop animation
   setAnimateClueButton(false);
 
-  setRevealedClues([...revealedClues, puzzle.clues[revealedClues.length]]);
-  setAttempts(attempts + 1);
+  handleGuess(); // This now handles clue reveal via backend
 
-  // Re-enable animation & button after timeout
   setTimeout(() => {
     setRevealDisabled(false);
-    setAnimateClueButton(true); // Re-triggers animation
+    setAnimateClueButton(true);
   }, 1000);
 };
 
@@ -718,9 +707,9 @@ return !hasMounted ? (
   disabled={
     revealDisabled ||
     !puzzle ||
-    revealedClues.length >= puzzle.clues.length ||
-    attempts >= maxGuesses
+    gameOver
   }
+
   variant="outline"
   className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
     animateClueButton && revealedClues.length < puzzle.clues.length
