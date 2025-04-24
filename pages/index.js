@@ -592,7 +592,7 @@ callback={(data) => {
     setShowTour(false);
   }
 }}
-
+/> 
 <Header
   onHelpClick={() => setShowInstructions(true)}
   onStatsClick={() => setShowStats(true)}
