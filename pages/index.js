@@ -56,6 +56,7 @@ const synonymMap = {
   cats: "cat",
   types: "species",
   meters: "metres",
+  gravitational: "gravity",
 };
 
 const normalize = (str) =>
