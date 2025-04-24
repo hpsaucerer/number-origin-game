@@ -593,9 +593,6 @@ callback={(data) => {
   }
 }}
 
-/>
-
-/>
 <Header
   onHelpClick={() => setShowInstructions(true)}
   onStatsClick={() => setShowStats(true)}
