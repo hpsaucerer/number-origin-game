@@ -549,37 +549,50 @@ return !hasMounted ? (
     skip: "Skip",
   }}
 
-<Joyride
-  ...
-  callback={(data) => {
-    const finishTour = () => {
-      setShowTour(false);
-      localStorage.setItem("seenTour", "true");
-    };
+callback={(data) => {
+  console.log("🔄 Joyride event:", data);
 
-    if (data.status === "finished" || data.status === "skipped") {
-      finishTour();
-      return;
-    }
+  // End tour if finished or skipped
+  if (data.status === "finished" || data.status === "skipped") {
+    setShowTour(false);
+    localStorage.setItem("seenTour", "true");
+    return;
+  }
 
-    if (data.type === "target:notFound") {
-      console.warn("🚫 Joyride target not found:", data.step.target);
-      finishTour();
-      return;
-    }
+  // Handle advancing between steps
+  if (data.type === "step:after") {
+    const nextStep = stepIndex + 1;
+    const nextTargetSelector = joyrideSteps[nextStep]?.target;
 
-    if (data.type === "step:after") {
-      const nextStep = stepIndex + 1;
-      const nextTarget = document.querySelector(joyrideSteps[nextStep]?.target);
+    if (nextTargetSelector) {
+      const nextTarget = document.querySelector(nextTargetSelector);
 
       if (nextTarget) {
         setStepIndex(nextStep);
       } else {
-        console.warn("❌ Next Joyride step target missing:", joyrideSteps[nextStep]?.target);
-        finishTour();
+        // Retry after delay in case of late-rendered element
+        console.warn(`⏳ Waiting for next Joyride step target: ${nextTargetSelector}`);
+        setTimeout(() => {
+          const retryTarget = document.querySelector(nextTargetSelector);
+          if (retryTarget) {
+            console.log(`✅ Retry succeeded: advancing to step ${nextStep}`);
+            setStepIndex(nextStep);
+          } else {
+            console.warn(`❌ Still missing Joyride step target after retry: ${nextTargetSelector}`);
+            setShowTour(false);
+          }
+        }, 500); // Retry after 0.5s
       }
     }
-  }}
+  }
+
+  // Handle missing target during step render
+  if (data.type === "target:notFound") {
+    console.warn("🚫 Joyride target not found:", data.step.target);
+    setShowTour(false);
+  }
+}}
+
 />
 
 />
