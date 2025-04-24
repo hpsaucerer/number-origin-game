@@ -364,7 +364,7 @@ const handleGuess = async (isClueReveal = false) => {
 
     const fuse = new Fuse(allAnswers, {
       keys: ["label"],
-      threshold: 0.5,
+      threshold: 0.65,
       includeScore: true,
     });
 
@@ -374,7 +374,7 @@ const handleGuess = async (isClueReveal = false) => {
     const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
     const hasEnoughEssentials = matchCount >= 2;
 
-    if (bestMatch?.score <= 0.55 && hasEnoughEssentials) {
+    if (bestMatch?.score <= 0.7 && hasEnoughEssentials) {
       // ✅ Correct guess
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
