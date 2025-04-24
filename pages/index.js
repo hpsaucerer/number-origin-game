@@ -362,19 +362,20 @@ const handleGuess = async (isClueReveal = false) => {
       })),
     ];
 
-    const fuse = new Fuse(allAnswers, {
-      keys: ["label"],
-      threshold: 0.35,
-      includeScore: true,
-    });
+const fuse = new Fuse(allAnswers, {
+  keys: ["label"],
+  threshold: 0.6,
+  distance: 100,
+  ignoreLocation: true,
+  includeScore: true,
+});
 
     const [bestMatch] = fuse.search(cleanedGuess);
 
     const essentialWords = (puzzle.essential_keywords || []).map(normalize);
-    const matchCount = essentialWords.filter(word => cleanedGuess.includes(word)).length;
-    const hasEnoughEssentials = matchCount >= 2;
+    const hasEssentialKeyword = essentialWords.some(word => cleanedGuess.includes(word));
 
-    if (bestMatch?.score <= 0.4 && hasEnoughEssentials) {
+    if (bestMatch?.score <= 0.65 && hasEssentialKeyword) {
       // ✅ Correct guess
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
@@ -394,7 +395,7 @@ const handleGuess = async (isClueReveal = false) => {
       }
 
       setTimeout(() => setShowPostGame(true), 500);
-    } else if (hasEnoughEssentials) {
+    } else if (hasEssentialKeyword) {
       // 🤏 Close guess
       setInputError("You're really close! Try rephrasing your guess.");
       // ❌ Don't clear input here — encourage refining
