@@ -55,6 +55,7 @@ const synonymMap = {
   movies: "films",
   cats: "cat",
   types: "species",
+  u.s: "us",
 };
 
 const normalize = (str) =>
