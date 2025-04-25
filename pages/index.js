@@ -441,7 +441,7 @@ const handleGuess = async (isClueReveal = false) => {
     console.log("Guess vs Answer:", cleanedGuess, normalize(puzzle.answer));
     console.log("isAcceptableGuess?", isAcceptableGuess);
     console.log("isExactAnswerMatch?", isExactAnswerMatch);
-    console.log("Essential match count:", essentialKeywordMatchCount);
+    console.log("Essential match count:", essentialMatchCount);
 
   const isCorrectGuess =
   isExactAnswerMatch ||
