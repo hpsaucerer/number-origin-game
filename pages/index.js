@@ -367,6 +367,9 @@ const handleGuess = async (isClueReveal = false) => {
     required: puzzle.keywords || [],
   });
 
+  console.log("Matched Essential:", matchedEssential, "from:", cleanedGuess);
+  console.log("Essential keywords:", puzzle.essential_keywords);
+  
   if (!isClueReveal && !cleanedGuess) {
     setInputError("Please enter a guess before submitting.");
     return;
