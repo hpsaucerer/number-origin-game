@@ -404,7 +404,7 @@ const {
 
 const fuse = new Fuse(allAnswers, {
   keys: ["label"],
-  threshold: 0.6,
+  threshold: 0.4,
   distance: 100,
   ignoreLocation: true,
   includeScore: true,
