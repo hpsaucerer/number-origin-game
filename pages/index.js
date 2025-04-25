@@ -473,7 +473,7 @@ if (
     setRevealedClues((prev) => [...prev, clueToReveal]);
   }
 
-  setInputError("You're really close! Try rephrasing your guess.");
+  setInputError("You're on the right track!");
 
   if (newAttempts >= maxGuesses) {
     setStats((prev) => updateStats(prev, false));
