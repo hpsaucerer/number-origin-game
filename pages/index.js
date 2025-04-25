@@ -442,12 +442,15 @@ const handleGuess = async (isClueReveal = false) => {
     console.log("Essential match count:", essentialKeywordMatchCount);
 
     const isCorrectGuess =
-      (
-        bestMatch?.score <= 0.65 &&
-        hasStrongMatch &&
-        (requiredMatched || isAcceptableGuess || isExactAnswerMatch || exactAcceptableMatch)
-      ) ||
-      strongEssentialHit;
+  isExactAnswerMatch ||
+  exactAcceptableMatch ||
+  isAcceptableGuess || // <-- treat it as full correct!
+  (
+    bestMatch?.score <= 0.65 &&
+    hasStrongMatch &&
+    requiredMatched
+  ) ||
+  strongEssentialHit;
 
     if (isCorrectGuess) {
       // ✅ Correct guess
