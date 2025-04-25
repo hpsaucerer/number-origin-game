@@ -431,8 +431,9 @@ const handleGuess = async (isClueReveal = false) => {
       }
     );
 
-    const isAcceptableGuess = acceptableFuse.search(cleanedGuess).length > 0;
-    
+    const acceptableResults = acceptableFuse.search(cleanedGuess);
+    const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.3); // tighter match threshold
+
     const essentialMatchCount = matchedEssential.length;
     const strongEssentialHit = essentialMatchCount >= 2;
     const nearMissEssential = essentialMatchCount === 1;
