@@ -415,11 +415,13 @@ const isAcceptableGuess = (puzzle.acceptable_guesses || []).some(
 );
     
 const isExactAnswerMatch = normalize(puzzle.answer) === normalizedGuess;
+const essentialKeywordMatchCount = matchedEssential.length;
+const strongEssentialHit = essentialKeywordMatchCount >= 3;
     
 if (
   bestMatch?.score <= 0.65 &&
   hasStrongMatch &&
-  (requiredMatched || isAcceptableGuess || isExactAnswerMatch)
+  (requiredMatched || isAcceptableGuess || isExactAnswerMatch || strongEssentialHit)
 ) {
   // ✅ Correct guess
   setIsCorrect(true);
