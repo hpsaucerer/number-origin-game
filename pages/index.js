@@ -63,6 +63,9 @@ const synonymMap = {
   highest: "maximum",
   meters: "metres",
   length: "distance",
+  shirt: "jersey",
+  top: "jersey",
+  vest: "jersey",
 };
 
 const normalize = (str) =>
