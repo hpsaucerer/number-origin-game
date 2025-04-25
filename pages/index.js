@@ -463,7 +463,6 @@ if (
     }
     setTimeout(() => setShowPostGame(true), 500);
   }
-}
 
       // ❌ Don't clear input here — encourage refining
     } else {
