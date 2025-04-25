@@ -432,25 +432,28 @@ const handleGuess = async (isClueReveal = false) => {
     );
 
     const isAcceptableGuess = acceptableFuse.search(cleanedGuess).length > 0;
+    
+    const essentialMatchCount = matchedEssential.length;
+    const strongEssentialHit = essentialMatchCount >= 2;
+    const nearMissEssential = essentialMatchCount === 1;
 
-    const essentialKeywordMatchCount = matchedEssential.length;
-    const strongEssentialHit = essentialKeywordMatchCount >= 3;
 
     console.log("Guess vs Answer:", cleanedGuess, normalize(puzzle.answer));
     console.log("isAcceptableGuess?", isAcceptableGuess);
     console.log("isExactAnswerMatch?", isExactAnswerMatch);
     console.log("Essential match count:", essentialKeywordMatchCount);
 
-    const isCorrectGuess =
+  const isCorrectGuess =
   isExactAnswerMatch ||
   exactAcceptableMatch ||
-  isAcceptableGuess || // <-- treat it as full correct!
+  isAcceptableGuess ||
   (
     bestMatch?.score <= 0.65 &&
     hasStrongMatch &&
-    requiredMatched
-  ) ||
-  strongEssentialHit;
+    requiredMatched &&
+    strongEssentialHit // ✅ now required within fuzzy logic
+  );
+
 
     if (isCorrectGuess) {
       // ✅ Correct guess
@@ -472,7 +475,7 @@ const handleGuess = async (isClueReveal = false) => {
       }
 
       setTimeout(() => setShowPostGame(true), 500);
-    } else if (hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
+    } else if (nearMissEssential || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
       // 🤏 Close guess
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
@@ -482,7 +485,12 @@ const handleGuess = async (isClueReveal = false) => {
         setRevealedClues((prev) => [...prev, clueToReveal]);
       }
 
-      setInputError("You're on the right track!");
+      setInputError(
+  nearMissEssential
+    ? "You're close — try adding a more specific word!"
+    : "You're on the right track!"
+);
+
 
       if (newAttempts >= maxGuesses) {
         setStats((prev) => updateStats(prev, false));
