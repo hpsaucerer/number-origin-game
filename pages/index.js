@@ -78,16 +78,32 @@ const normalize = (str) =>
 
 const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
   const normalizedGuess = normalize(guess);
+  const normalizedTokens = normalizedGuess.split(/\W+/); // ✅ split once
   const normalizedEssential = essential.map(normalize);
   const normalizedRequired = required.map(normalize);
 
   const matchedEssential = normalizedEssential.filter((kw) =>
-    normalizedGuess.split(" ").some(word => word === kw)
+    normalizedTokens.includes(kw)
+  );
 
-  );
   const matchedRequired = normalizedRequired.filter((kw) =>
-    normalizedGuess.includes(kw)
+    normalizedTokens.includes(kw)
   );
+
+  const hasStrongMatch = matchedEssential.length > 0;
+  const hasWeakMatch = matchedRequired.length > 0;
+  const matchCount = matchedEssential.length + matchedRequired.length;
+  const requiredMatched = matchedRequired.length > 0;
+
+  return {
+    matchCount,
+    hasStrongMatch,
+    hasWeakMatch,
+    requiredMatched,
+    matchedEssential,
+    matchedRequired,
+  };
+};
 
   return {
     matchCount: matchedEssential.length,
