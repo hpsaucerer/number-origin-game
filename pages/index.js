@@ -419,10 +419,14 @@ const essentialKeywordMatchCount = matchedEssential.length;
 const strongEssentialHit = essentialKeywordMatchCount >= 3;
     
 if (
-  bestMatch?.score <= 0.65 &&
-  hasStrongMatch &&
-  (requiredMatched || isAcceptableGuess || isExactAnswerMatch || strongEssentialHit)
+  (
+    bestMatch?.score <= 0.65 &&
+    hasStrongMatch &&
+    (requiredMatched || isAcceptableGuess || isExactAnswerMatch)
+  ) ||
+  strongEssentialHit
 ) {
+
   // ✅ Correct guess
   setIsCorrect(true);
   localStorage.setItem(`completed-${puzzle.date}`, "true");
