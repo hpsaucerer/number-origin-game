@@ -417,7 +417,12 @@ const isExactAnswerMatch = normalize(puzzle.answer) === cleanedGuess;
     
 const essentialKeywordMatchCount = matchedEssential.length;
 const strongEssentialHit = essentialKeywordMatchCount >= 3;
-    
+
+console.log("Guess vs Answer:", cleanedGuess, normalize(puzzle.answer));
+console.log("isAcceptableGuess?", isAcceptableGuess);
+console.log("isExactAnswerMatch?", isExactAnswerMatch);
+console.log("Essential match count:", essentialKeywordMatchCount);
+
 if (
   (
     bestMatch?.score <= 0.65 &&
