@@ -64,11 +64,13 @@ const synonymMap = {
 const normalize = (str) =>
   str
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "") // strip punctuation
+    .replace(/[’'`]/g, "")               // ← NEW: remove apostrophes
+    .replace(/[^a-z0-9\s]/g, "")         // remove punctuation
     .split(" ")
     .map((word) => synonymMap[word] || word)
     .join(" ")
     .trim();
+
 
 const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
   const normalizedGuess = normalize(guess);
