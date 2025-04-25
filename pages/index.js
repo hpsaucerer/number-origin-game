@@ -409,12 +409,12 @@ const fuse = new Fuse(allAnswers, {
 
     const [bestMatch] = fuse.search(cleanedGuess);
 
-const normalizedGuess = normalize(guess);
 const isAcceptableGuess = (puzzle.acceptable_guesses || []).some(
-  (g) => normalize(g) === normalizedGuess
+  (g) => normalize(g) === cleanedGuess
 );
+const isExactAnswerMatch = normalize(puzzle.answer) === cleanedGuess;
+
     
-const isExactAnswerMatch = normalize(puzzle.answer) === normalizedGuess;
 const essentialKeywordMatchCount = matchedEssential.length;
 const strongEssentialHit = essentialKeywordMatchCount >= 3;
     
