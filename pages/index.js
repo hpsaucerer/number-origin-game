@@ -423,8 +423,7 @@ const fuse = new Fuse(allAnswers, {
           guessCount: attempts + 1,
           puzzleId,
         });
-      }
-
+      
       setTimeout(() => setShowPostGame(true), 500);
     } else if (hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
   // 🤏 Close guess
