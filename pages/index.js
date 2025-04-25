@@ -426,9 +426,35 @@ const fuse = new Fuse(allAnswers, {
       }
 
       setTimeout(() => setShowPostGame(true), 500);
-    } else if (hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
-      // 🤏 Close guess
-      setInputError("You're really close! Try rephrasing your guess.");
+      } else if (hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
+  // 🤏 Close guess
+  const newAttempts = attempts + 1;
+  setAttempts(newAttempts);
+
+  const clueToReveal = puzzle.clues?.[revealedClues.length];
+  if (clueToReveal) {
+    setRevealedClues((prev) => [...prev, clueToReveal]);
+  }
+
+  setInputError("You're really close! Try rephrasing your guess.");
+
+  if (newAttempts >= maxGuesses) {
+    setStats((prev) => updateStats(prev, false));
+    if (typeof track === "function") {
+      track("puzzle_failed", {
+        correct: false,
+        attempts: newAttempts,
+        puzzleId,
+      });
+      track("puzzle_guess_count", {
+        guessCount: "✖",
+        puzzleId,
+      });
+    }
+    setTimeout(() => setShowPostGame(true), 500);
+  }
+}
+
       // ❌ Don't clear input here — encourage refining
     } else {
       // ❌ Incorrect guess
