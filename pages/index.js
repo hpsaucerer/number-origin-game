@@ -426,7 +426,7 @@ const fuse = new Fuse(allAnswers, {
       }
 
       setTimeout(() => setShowPostGame(true), 500);
-      } else if (hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
+    } else if (hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
   // 🤏 Close guess
   const newAttempts = attempts + 1;
   setAttempts(newAttempts);
