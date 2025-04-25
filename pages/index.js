@@ -105,16 +105,6 @@ const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
   };
 };
 
-  return {
-    matchCount: matchedEssential.length,
-    hasStrongMatch: matchedEssential.length >= 2,
-    hasWeakMatch: matchedEssential.length === 1,
-    requiredMatched: matchedRequired.length === normalizedRequired.length,
-    matchedEssential,
-    matchedRequired,
-  };
-};
-
 const DEV_MODE = true;
 
 const colorClassMap = {
