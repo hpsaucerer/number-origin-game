@@ -64,8 +64,8 @@ const synonymMap = {
 const normalize = (str) =>
   str
     .toLowerCase()
-    .replace(/[’'`]/g, "")               // ← NEW: remove apostrophes
-    .replace(/[^a-z0-9\s]/g, "")         // remove punctuation
+    .replace(/[’'`]/g, "")               // ← NEW: apostrophe cleanup
+    .replace(/[^a-z0-9\s]/g, "")         // existing: strip other punctuation
     .split(" ")
     .map((word) => synonymMap[word] || word)
     .join(" ")
@@ -413,11 +413,13 @@ const normalizedGuess = normalize(guess);
 const isAcceptableGuess = (puzzle.acceptable_guesses || []).some(
   (g) => normalize(g) === normalizedGuess
 );
-
+    
+const isExactAnswerMatch = normalize(puzzle.answer) === normalizedGuess;
+    
 if (
   bestMatch?.score <= 0.65 &&
   hasStrongMatch &&
-  (requiredMatched || isAcceptableGuess)
+  (requiredMatched || isAcceptableGuess || isExactAnswerMatch)
 ) {
   // ✅ Correct guess
   setIsCorrect(true);
