@@ -409,9 +409,18 @@ const fuse = new Fuse(allAnswers, {
 
     const [bestMatch] = fuse.search(cleanedGuess);
 
-const isAcceptableGuess = (puzzle.acceptable_guesses || []).some(
-  (g) => normalize(g) === cleanedGuess
+const acceptableFuse = new Fuse(
+  (puzzle.acceptable_guesses || []).map(g => ({ label: normalize(g) })),
+  {
+    keys: ["label"],
+    threshold: 0.4, // looser than 0.65 for better tolerance
+    distance: 100,
+    ignoreLocation: true,
+  }
 );
+
+const acceptableResults = acceptableFuse.search(cleanedGuess);
+const isAcceptableGuess = acceptableResults.length > 0;
 const isExactAnswerMatch = normalize(puzzle.answer) === cleanedGuess;
 
     
