@@ -59,6 +59,7 @@ const synonymMap = {
   meters: "metres",
   gravitational: "gravity",
   mountain: "mount",
+  works: "plays",
 };
 
 const normalize = (str) =>
