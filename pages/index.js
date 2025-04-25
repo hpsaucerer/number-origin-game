@@ -407,23 +407,33 @@ const fuse = new Fuse(allAnswers, {
 
     const [bestMatch] = fuse.search(cleanedGuess);
 
-    if (bestMatch?.score <= 0.65 && hasStrongMatch && requiredMatched) {
-      // ✅ Correct guess
-      setIsCorrect(true);
-      localStorage.setItem(`completed-${puzzle.date}`, "true");
-      setStats((prev) => updateStats(prev, true, attempts + 1));
-      setGuess(""); // ✅ Clear input on correct guess
+const normalizedGuess = normalize(guess);
+const isAcceptableGuess = (puzzle.acceptable_guesses || []).some(
+  (g) => normalize(g) === normalizedGuess
+);
 
-      if (typeof track === "function") {
-        track("puzzle_completed", {
-          correct: true,
-          guessCount: attempts + 1,
-          puzzleId,
-        });
-        track("puzzle_guess_count", {
-          guessCount: attempts + 1,
-          puzzleId,
-        });
+if (
+  bestMatch?.score <= 0.65 &&
+  hasStrongMatch &&
+  (requiredMatched || isAcceptableGuess)
+) {
+  // ✅ Correct guess
+  setIsCorrect(true);
+  localStorage.setItem(`completed-${puzzle.date}`, "true");
+  setStats((prev) => updateStats(prev, true, attempts + 1));
+  setGuess("");
+
+  if (typeof track === "function") {
+    track("puzzle_completed", {
+      correct: true,
+      guessCount: attempts + 1,
+      puzzleId,
+    });
+    track("puzzle_guess_count", {
+      guessCount: attempts + 1,
+      puzzleId,
+    });
+  }
       
       setTimeout(() => setShowPostGame(true), 500);
     } else if (hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
