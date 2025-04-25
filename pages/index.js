@@ -61,6 +61,7 @@ const synonymMap = {
   mountain: "mount",
   works: "plays",
   highest: "maximum",
+  meters: "metres",
 };
 
 const normalize = (str) =>
