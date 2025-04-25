@@ -76,7 +76,8 @@ const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
   const normalizedRequired = required.map(normalize);
 
   const matchedEssential = normalizedEssential.filter((kw) =>
-    normalizedGuess.includes(kw)
+    normalizedGuess.split(" ").some(word => word === kw)
+
   );
   const matchedRequired = normalizedRequired.filter((kw) =>
     normalizedGuess.includes(kw)
