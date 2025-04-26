@@ -28,11 +28,27 @@ import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
 
+const DEBUG_MODE = true; // set to false later when live if you want
+
 function debugLog(...args) {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log("[DEBUG]", ...args);
+  if (!DEBUG_MODE || process.env.NODE_ENV === 'production') return;
+
+  const forbiddenFields = ["answer", "acceptable_guesses", "essential_keywords", "keywords", "clues"];
+
+  const hasForbidden = args.some(arg =>
+    typeof arg === "object" &&
+    arg !== null &&
+    forbiddenFields.some(field => field in arg)
+  );
+
+  if (hasForbidden) {
+    console.warn("[DEBUG BLOCKED] Sensitive object detected, skipping log.");
+    return;
   }
+
+  console.log("[DEBUG]", ...args);
 }
+
 
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
