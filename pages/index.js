@@ -31,7 +31,7 @@ import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` fil
 const DEBUG_MODE = false; // set to false later when live if you want
 
 function debugLog(...args) {
-  if (!DEBUG_MODE || process.env.NODE_ENV === 'production') return;
+  if (!DEBUG_MODE || process.env.NODE_ENV === "production") return;
 
   const forbiddenFields = ["answer", "acceptable_guesses", "essential_keywords", "keywords", "clues"];
 
