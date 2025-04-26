@@ -274,8 +274,9 @@ useEffect(() => {
     } else {
       const today = await fetchTodayPuzzle();
       if (today) {
-        debugLog("📆 TODAY'S PUZZLE:", today); // ✅ Debug log
-        setPuzzle(today);
+         // debugLog("📆 TODAY'S PUZZLE:", today); // disabled to prevent leaking answers
+         setPuzzle(today);
+        }
 
         const index = all.findIndex((p) => p.id === today.id);
         setPuzzleNumber(index + 1);
