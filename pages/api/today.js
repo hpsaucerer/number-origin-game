@@ -2,9 +2,7 @@
 import { supabase } from "@/lib/supabase";
 
 function getUKTodayDate() {
-  const ukNow = new Date().toLocaleString("en-GB", { timeZone: "Europe/London" });
-  const date = new Date(ukNow);
-  return date.toISOString().split("T")[0]; // e.g., "2025-04-27"
+  return new Date().toLocaleDateString("en-CA", { timeZone: "Europe/London" });
 }
 
 export default async function handler(req, res) {
@@ -12,7 +10,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const today = getUKTodayDate(); // ✅ Use UK date!
+  const today = getUKTodayDate(); // ✅ Proper UK date!
 
   const { data: puzzle, error } = await supabase
     .from("puzzles")
