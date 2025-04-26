@@ -497,8 +497,8 @@ const handleGuess = async (isClueReveal = false) => {
     strongEssentialHit // ✅ now required within fuzzy logic
   );
 
-    // ✅ Log the guess to Supabase
-await supabase.from("Player_responses").insert([
+// ✅ Log the guess to Supabase with error handling
+const { error } = await supabase.from("Player_responses").insert([
   {
     puzzle_id: puzzleId.toString(),
     raw_guess: guess,
@@ -508,6 +508,13 @@ await supabase.from("Player_responses").insert([
     device_id: localStorage.getItem("deviceId") || "unknown",
   }
 ]);
+
+if (error) {
+  console.error("❌ Supabase insert error:", error);
+} else {
+  console.log("✅ Guess successfully logged to Supabase!");
+}
+
 
     if (isCorrectGuess) {
       // ✅ Correct guess
