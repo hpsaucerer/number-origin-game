@@ -28,7 +28,7 @@ import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
 
-const DEBUG_MODE = true; // set to false later when live if you want
+const DEBUG_MODE = false; // set to false later when live if you want
 
 function debugLog(...args) {
   if (!DEBUG_MODE || process.env.NODE_ENV === 'production') return;
