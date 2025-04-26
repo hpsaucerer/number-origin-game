@@ -28,6 +28,12 @@ import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
 
+function debugLog(...args) {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log("[DEBUG]", ...args);
+  }
+}
+
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
   quickest: "fastest",
@@ -211,7 +217,7 @@ useEffect(() => {
     const stats = document.querySelector(".stats-button");
 
     if (daily && input && clue && stats) {
-      console.log("✅ Joyride: All targets found.");
+      debugLog("✅ Joyride: All targets found.");
       setStepIndex(0);
       setTourKey(Date.now());
       setShowTour(true);
@@ -262,13 +268,13 @@ useEffect(() => {
 
     if (DEV_MODE && selectedPuzzleIndex !== null) {
       const devPuzzle = all[selectedPuzzleIndex];
-      console.log("🔧 DEV PUZZLE:", devPuzzle); // ✅ Debug log
+      debugLog("🔧 DEV PUZZLE:", devPuzzle); // ✅ Debug log
       setPuzzle(devPuzzle);
       setPuzzleNumber(selectedPuzzleIndex + 1);
     } else {
       const today = await fetchTodayPuzzle();
       if (today) {
-        console.log("📆 TODAY'S PUZZLE:", today); // ✅ Debug log
+        debugLog("📆 TODAY'S PUZZLE:", today); // ✅ Debug log
         setPuzzle(today);
 
         const index = all.findIndex((p) => p.id === today.id);
@@ -376,8 +382,8 @@ const handleGuess = async (isClueReveal = false) => {
     required: puzzle.keywords || [],
   });
 
-  console.log("Matched Essential:", matchedEssential, "from:", cleanedGuess);
-  console.log("Essential keywords:", puzzle.essential_keywords);
+  debugLog("Matched Essential:", matchedEssential, "from:", cleanedGuess);
+  debugLog("Essential keywords:", puzzle.essential_keywords);
   
   if (!isClueReveal && !cleanedGuess) {
     setInputError("Please enter a guess before submitting.");
@@ -451,10 +457,10 @@ const handleGuess = async (isClueReveal = false) => {
     const nearMissEssential = essentialMatchCount === 1;
 
 
-    console.log("Guess vs Answer:", cleanedGuess, normalize(puzzle.answer));
-    console.log("isAcceptableGuess?", isAcceptableGuess);
-    console.log("isExactAnswerMatch?", isExactAnswerMatch);
-    console.log("Essential match count:", essentialMatchCount);
+    debugLog("Guess vs Answer:", cleanedGuess, normalize(puzzle.answer));
+    debugLog("isAcceptableGuess?", isAcceptableGuess);
+    debugLog("isExactAnswerMatch?", isExactAnswerMatch);
+    debugLog("Essential match count:", essentialMatchCount);
 
   const isCorrectGuess =
   isExactAnswerMatch ||
@@ -696,7 +702,7 @@ return !hasMounted ? (
   }}
 
 callback={(data) => {
-  console.log("🔄 Joyride event:", data);
+  debugLog("🔄 Joyride event:", data);
 
   // End tour if finished or skipped
   if (data.status === "finished" || data.status === "skipped") {
@@ -711,7 +717,7 @@ if (data.type === "step:after") {
 
   // ✅ End the tour if there are no more steps
   if (nextStep >= joyrideSteps.length) {
-    console.log("✅ All Joyride steps complete!");
+    debugLog("✅ All Joyride steps complete!");
     setShowTour(false);
     localStorage.setItem("seenTour", "true");
     return;
@@ -730,7 +736,7 @@ if (data.type === "step:after") {
       setTimeout(() => {
         const retryTarget = document.querySelector(nextTargetSelector);
         if (retryTarget) {
-          console.log(`✅ Retry succeeded: advancing to step ${nextStep}`);
+          debugLog(`✅ Retry succeeded: advancing to step ${nextStep}`);
           setStepIndex(nextStep);
         } else {
           console.warn(`❌ Still missing Joyride step target after retry: ${nextTargetSelector}`);
