@@ -279,26 +279,27 @@ useEffect(() => {
 
 useEffect(() => {
 const loadPuzzles = async () => {
-  const all = await fetchAllPuzzles();
-  setAllPuzzles(all);
+const all = await fetchAllPuzzles();
+setAllPuzzles(all);
 
-  if (DEV_MODE && selectedPuzzleIndex !== null) {
-    const devPuzzle = all[selectedPuzzleIndex];
-    debugLog("🔧 DEV PUZZLE:", devPuzzle);
-    setPuzzle(devPuzzle);
-    setPuzzleNumber(selectedPuzzleIndex + 1);
+if (DEV_MODE && selectedPuzzleIndex !== null) {
+  const devPuzzle = all[selectedPuzzleIndex];
+  debugLog("🔧 DEV PUZZLE loaded.");  // ✅ Only mention success, no object
+  setPuzzle(devPuzzle);
+  setPuzzleNumber(selectedPuzzleIndex + 1);
+} else {
+  const today = await fetchTodayPuzzle();
+  if (today) {
+    debugLog("✅ Today's puzzle loaded.");  // ✅ Only mention success
+    setPuzzle(today);
+
+    const index = all.findIndex((p) => p.id === today.id);
+    setPuzzleNumber(index + 1);
   } else {
-    const today = await fetchTodayPuzzle();
-    if (today) {
-      // debugLog("📆 TODAY'S PUZZLE:", today);
-      setPuzzle(today);
-
-      const index = all.findIndex((p) => p.id === today.id);
-      setPuzzleNumber(index + 1);
-    } else {
-      console.warn("⚠️ No puzzle returned for today.");
-    }
+    console.warn("⚠️ No puzzle returned for today.");
   }
+}
+
 };
 
   loadPuzzles();
@@ -473,9 +474,9 @@ const handleGuess = async (isClueReveal = false) => {
     const nearMissEssential = essentialMatchCount === 1;
 
 
-    debugLog("Guess vs Answer:", cleanedGuess, normalize(puzzle.answer));
+    debugLog("Checking guess validity. Cleaned guess:", cleanedGuess);
     debugLog("isAcceptableGuess?", isAcceptableGuess);
-    debugLog("isExactAnswerMatch?", isExactAnswerMatch);
+    debugLog("Is exact match achieved?", isExactAnswerMatch);
     debugLog("Essential match count:", essentialMatchCount);
 
   const isCorrectGuess =
