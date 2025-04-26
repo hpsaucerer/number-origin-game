@@ -251,7 +251,6 @@ useEffect(() => {
   setTimeout(tryStartTour, 300);
 }, [puzzle, hasMounted]);
 
-
   
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
@@ -262,6 +261,14 @@ useEffect(() => {
 
 useEffect(() => {
   setHasMounted(true);
+}, []);
+
+useEffect(() => {
+  const existingId = localStorage.getItem("deviceId");
+  if (!existingId) {
+    const newId = crypto.randomUUID();
+    localStorage.setItem("deviceId", newId);
+  }
 }, []);
 
 useEffect(() => {
@@ -490,6 +497,17 @@ const handleGuess = async (isClueReveal = false) => {
     strongEssentialHit // ✅ now required within fuzzy logic
   );
 
+    // ✅ Log the guess to Supabase
+await supabase.from("Player_responses").insert([
+  {
+    puzzle_id: puzzleId.toString(),
+    raw_guess: guess,
+    cleaned_guess: cleanedGuess,
+    is_correct: isCorrectGuess,
+    attempt: attempts + 1,
+    device_id: localStorage.getItem("deviceId") || "unknown",
+  }
+]);
 
     if (isCorrectGuess) {
       // ✅ Correct guess
