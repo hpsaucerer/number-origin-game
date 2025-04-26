@@ -262,29 +262,28 @@ useEffect(() => {
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 useEffect(() => {
-  const loadPuzzles = async () => {
-    const all = await fetchAllPuzzles();
-    setAllPuzzles(all);
+const loadPuzzles = async () => {
+  const all = await fetchAllPuzzles();
+  setAllPuzzles(all);
 
-    if (DEV_MODE && selectedPuzzleIndex !== null) {
-      const devPuzzle = all[selectedPuzzleIndex];
-      debugLog("🔧 DEV PUZZLE:", devPuzzle); // ✅ Debug log
-      setPuzzle(devPuzzle);
-      setPuzzleNumber(selectedPuzzleIndex + 1);
+  if (DEV_MODE && selectedPuzzleIndex !== null) {
+    const devPuzzle = all[selectedPuzzleIndex];
+    debugLog("🔧 DEV PUZZLE:", devPuzzle);
+    setPuzzle(devPuzzle);
+    setPuzzleNumber(selectedPuzzleIndex + 1);
+  } else {
+    const today = await fetchTodayPuzzle();
+    if (today) {
+      // debugLog("📆 TODAY'S PUZZLE:", today);
+      setPuzzle(today);
+
+      const index = all.findIndex((p) => p.id === today.id);
+      setPuzzleNumber(index + 1);
     } else {
-      const today = await fetchTodayPuzzle();
-      if (today) {
-         // debugLog("📆 TODAY'S PUZZLE:", today); // disabled to prevent leaking answers
-         setPuzzle(today);
-        }
-
-        const index = all.findIndex((p) => p.id === today.id);
-        setPuzzleNumber(index + 1);
-      } else {
-        console.warn("⚠️ No puzzle returned for today.");
-      }
+      console.warn("⚠️ No puzzle returned for today.");
     }
-  };
+  }
+};
 
   loadPuzzles();
 }, [selectedPuzzleIndex]);
