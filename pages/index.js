@@ -426,20 +426,13 @@ function awardTile() {
 
     console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
 
-    // 🚀 Delay the tile reset for a few seconds to let animation happen
-    setTimeout(() => {
-      localStorage.setItem("earnedTiles", "[]");
-      setEarnedTiles([]);
-      console.log("🔁 Tiles reset to start a new round.");
-    }, 5000);
-
-    // Optionally hide the glow token after 2 seconds
-    setTimeout(() => {
-      setJustEarnedToken(false);
-    }, 2000);
+    // 🎯 Save a special marker to reset tiles *tomorrow* instead of now
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    localStorage.setItem("resetTilesAt", tomorrow.getTime().toString());
   }
-} // ✅ this closes the awardTile() function
-
+}
 
 const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalize(guess);
