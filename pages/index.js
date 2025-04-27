@@ -409,7 +409,7 @@ function awardTile() {
 
   if (storedTiles.length >= TILE_WORD.length) {
     console.log("✅ Already earned all tiles, no action.");
-    return; // No more tiles to award
+    return;
   }
 
   const nextLetter = TILE_WORD[storedTiles.length];
@@ -424,19 +424,19 @@ function awardTile() {
     setTokenCount(currentTokens + 1);
     setJustEarnedToken(true);
 
-    // 🎯 Remove the animation after a short time
-   setTimeout(() => {
-   setJustEarnedToken(false);
-   }, 2000);
-
     console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
-    
-    // Optional: Reset earnedTiles to start again
-    localStorage.setItem("earnedTiles", "[]");
-    console.log("🔁 Tiles reset to start a new round.");
+
+    setTimeout(() => {
+      setJustEarnedToken(false);
+    }, 2000);
+
+    // ⏳ Now delay resetting tiles until AFTER animation
+    setTimeout(() => {
+      localStorage.setItem("earnedTiles", "[]");
+      console.log("🔁 Tiles reset to start a new round (after swoosh).");
+    }, 1500);
   }
 }
-
 
 const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalize(guess);
