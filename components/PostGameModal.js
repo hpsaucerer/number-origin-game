@@ -8,6 +8,27 @@ import confetti from "canvas-confetti";
 
 const TILE_WORD = "NUMERUS";
 
+const getTileMessage = (count) => {
+  switch (count) {
+    case 1:
+      return "Yay! You've got your first letter!";
+    case 2:
+      return "Another one in the bag, come back tomorrow for your third!";
+    case 3:
+      return "Three down, four to go - almost halfway!";
+    case 4:
+      return "Getting closer to that token now.";
+    case 5:
+      return "You're on a roll!";
+    case 6:
+      return "Just one more day, you can do it!";
+    case 7:
+      return "Whoop! Well done, you've earned a token!";
+    default:
+      return "";
+  }
+};
+
 export default function PostGameModal({
   open,
   onClose,
@@ -139,29 +160,40 @@ useEffect(() => {
 
           {/* 🎁 Earned Tiles Section */}
 <div className="flex flex-col items-center mt-6">
-  {justEarnedTile && (
-    <p className="text-green-600 font-semibold mb-2 text-lg">
-      You earned a new letter!
+  {earnedTiles.length > 0 && earnedTiles.length <= TILE_WORD.length && (
+    <p className="text-green-600 font-semibold mb-2 text-lg text-center">
+      {getTileMessage(earnedTiles.length)}
     </p>
   )}
-<div className={`flex space-x-1 ${earnedTiles.length === TILE_WORD.length ? 'mega-celebration' : ''}`}>
-  {"NUMERUS".split("").map((letter, index) => {
-    const isEarned = earnedTiles.length > index;
-    return (
-<div
-  key={index}
-  className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
-    ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
-    ${earnedTiles.length === TILE_WORD.length && index === TILE_WORD.length - 1 ? 'final-letter-bounce' : ''}
-    transition-all duration-300 ease-in-out`}
->
-        {letter}
-    </div>
-  );
-})}
 
+  <div className={`flex space-x-1 ${earnedTiles.length === TILE_WORD.length ? 'mega-celebration' : ''}`}>
+    {TILE_WORD.split("").map((letter, index) => {
+      const isEarned = earnedTiles.length > index;
+      return (
+        <div
+          key={index}
+          className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
+            ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
+            transition-all duration-300 ease-in-out`}
+        >
+          {letter}
+        </div>
+      );
+    })}
   </div>
+
+  {/* 🎖 Token Animation */}
+  {earnedTiles.length === TILE_WORD.length && (
+    <div className="flex flex-col items-center mt-4">
+      <img
+        src="/icons/token.png" // 🛠️ adjust this if your token is in another location
+        alt="Token Earned"
+        className="w-16 h-16 animate-bounce-once mb-2"
+      />
+    </div>
+  )}
 </div>
+
 
           {/* ⏳ Countdown */}
           <div className="mt-4 text-center">
