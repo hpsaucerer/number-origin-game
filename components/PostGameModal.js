@@ -21,6 +21,9 @@ export default function PostGameModal({
 
   const [countdown, setCountdown] = useState("");
 
+  const [justEarnedTile, setJustEarnedTile] = useState(false);
+  const [tileAwardedAtOpen, setTileAwardedAtOpen] = useState(0);
+
   useEffect(() => {
     const updateCountdown = () => {
       const now = new Date();
@@ -40,15 +43,34 @@ export default function PostGameModal({
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (open && isCorrect) {
+useEffect(() => {
+  if (open) {
+    document.body.style.overflow = "hidden";
+
+    const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
+    const currentTiles = storedTiles.length;
+    const alreadyAwarded = tileAwardedAtOpen;
+
+    if (currentTiles > alreadyAwarded) {
+      setJustEarnedTile(true);
+      setTileAwardedAtOpen(currentTiles);
+    }
+
+    if (isCorrect) {
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
       });
     }
-  }, [open, isCorrect]);
+  } else {
+    document.body.style.overflow = "";
+  }
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [open, isCorrect]);
+
 
   // ✅ Prevent background scroll on mobile when modal is open
   useEffect(() => {
@@ -113,22 +135,30 @@ export default function PostGameModal({
           {/* 🧠 Fun Fact */}
           <FunFactBox puzzle={puzzle} />
 
-          {/* 🎁 Earned Tiles */}
-<div className="flex justify-center mt-6 space-x-1">
-  {"NUMERUS".split("").map((letter, index) => {
-    const isEarned = earnedTiles.length > index;
-    return (
-      <div
-        key={index}
-        className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
-          ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
-          transition-all duration-300 ease-in-out`}
-      >
-        {letter}
-      </div>
-    );
-  })}
+          {/* 🎁 Earned Tiles Section */}
+<div className="flex flex-col items-center mt-6">
+  {justEarnedTile && (
+    <p className="text-green-600 font-semibold mb-2 text-lg">
+      You earned a new letter!
+    </p>
+  )}
+  <div className="flex space-x-1">
+    {"NUMERUS".split("").map((letter, index) => {
+      const isEarned = earnedTiles.length > index;
+      return (
+        <div
+          key={index}
+          className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
+            ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
+            transition-all duration-300 ease-in-out`}
+        >
+          {letter}
+        </div>
+      );
+    })}
+  </div>
 </div>
+
 
 
           {/* ⏳ Countdown */}
