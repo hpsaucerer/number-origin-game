@@ -416,27 +416,26 @@ function awardTile() {
   const newTiles = [...storedTiles, nextLetter];
 
   localStorage.setItem("earnedTiles", JSON.stringify(newTiles));
+  setEarnedTiles(newTiles); // 🛠️ ADD THIS LINE to update the UI immediately!
 
-  // 🎉 If all tiles are now earned, award a free token
   if (newTiles.length === TILE_WORD.length) {
     let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
     localStorage.setItem("freeToken", (currentTokens + 1).toString());
     setTokenCount(currentTokens + 1);
     setJustEarnedToken(true);
 
-    console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
-
     setTimeout(() => {
       setJustEarnedToken(false);
     }, 2000);
 
-    // ⏳ Now delay resetting tiles until AFTER animation
-    setTimeout(() => {
-      localStorage.setItem("earnedTiles", "[]");
-      console.log("🔁 Tiles reset to start a new round (after swoosh).");
-    }, 1500);
+    console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
+
+    localStorage.setItem("earnedTiles", "[]");
+    setEarnedTiles([]); // 🛠️ ADD THIS TOO when resetting
+    console.log("🔁 Tiles reset to start a new round.");
   }
 }
+
 
 const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalize(guess);
