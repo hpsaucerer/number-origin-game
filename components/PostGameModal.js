@@ -154,16 +154,20 @@ useEffect(() => {
               The answer was: <span className="block text-sm font-bold mt-1">{puzzle.answer}</span>
             </div>
           </div>
+
 {/* 🎁 Earned Tiles & Token */}
 <div className="flex flex-col items-center mt-6">
-  {earnedTiles.length > 0 && earnedTiles.length <= TILE_WORD.length && (
-<p className="font-semibold mb-4 text-lg text-center" style={{ color: "#63c4a7" }}>
-  {getTileMessage(earnedTiles.length)}
-</p>
+  
+  {/* 🎉 Motivational Message ABOVE the tiles */}
+  {earnedTiles.length > 0 && (
+    <p className="mb-2 text-center text-brand font-semibold text-sm">
+      {getTileMessage(earnedTiles.length)}
+    </p>
   )}
 
-  <div className={`flex space-x-1 mb-4 ${earnedTiles.length === TILE_WORD.length ? 'mega-celebration' : ''}`}>
-    {TILE_WORD.split("").map((letter, index) => {
+  {/* Letters + Token */}
+  <div className="flex items-center space-x-2">
+    {"NUMERUS".split("").map((letter, index) => {
       const isEarned = earnedTiles.length > index;
       return (
         <div
@@ -176,19 +180,17 @@ useEffect(() => {
         </div>
       );
     })}
-  </div>
-
-  {/* 🏅 Token */}
-  {earnedTiles.length === TILE_WORD.length && (
-    <div className="flex flex-col items-center">
+    {/* ➡️ Token appears next to 'S' */}
+    {earnedTiles.length === TILE_WORD.length && (
       <img
-        src="/icons/token.png" // 🔥 Your nice token icon path
+        src="/icons/token.png" // replace with your token image path
         alt="Token Earned"
-        className="w-20 h-20 animate-pulse token-glow mb-2" // Bigger and glowing
+        className="w-12 h-12 token-pulse ml-2"
       />
-    </div>
-  )}
+    )}
+  </div>
 </div>
+
 
           {/* 🧠 Fun Fact */}
           <FunFactBox puzzle={puzzle} />
