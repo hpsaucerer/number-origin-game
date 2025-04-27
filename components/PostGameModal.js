@@ -15,6 +15,7 @@ export default function PostGameModal({
   puzzleNumber,
   shareResult,
   attempts,
+  earnedTiles,
 }) {
   if (!puzzle || !stats) return null;
 
@@ -112,13 +113,23 @@ export default function PostGameModal({
           {/* 🧠 Fun Fact */}
           <FunFactBox puzzle={puzzle} />
 
-          {/* 🔥 Streak */}
-          <div className="text-center mt-6">
-            <p className="text-sm text-gray-700 font-semibold">🔥 Current Streak</p>
-            <p className="text-3xl font-bold text-amber-500">
-              {stats?.currentStreak ?? 0} day{stats?.currentStreak === 1 ? "" : "s"}
-            </p>
-          </div>
+          {/* 🎁 Earned Tiles */}
+<div className="flex justify-center mt-6 space-x-1">
+  {"NUMERUS".split("").map((letter, index) => {
+    const isEarned = earnedTiles.length > index;
+    return (
+      <div
+        key={index}
+        className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
+          ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
+          transition-all duration-300 ease-in-out`}
+      >
+        {letter}
+      </div>
+    );
+  })}
+</div>
+
 
           {/* ⏳ Countdown */}
           <div className="mt-4 text-center">
