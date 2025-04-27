@@ -430,7 +430,6 @@ function awardTile() {
 
     console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
 
-    localStorage.setItem("earnedTiles", "[]");
     setEarnedTiles([]); // 🛠️ ADD THIS TOO when resetting
     console.log("🔁 Tiles reset to start a new round.");
   }
