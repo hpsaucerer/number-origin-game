@@ -219,6 +219,13 @@ const [stepIndex, setStepIndex] = useState(0);
 const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
 const [readyToRunTour, setReadyToRunTour] = useState(false);
 
+const TILE_WORD = "NUMERUS";
+const [earnedTiles, setEarnedTiles] = useState([]);
+
+useEffect(() => {
+  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
+  setEarnedTiles(storedTiles);
+}, []);
 
 useEffect(() => {
   if (!puzzle || !hasMounted || localStorage.getItem("seenTour") === "true") return;
@@ -390,6 +397,19 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
+const awardTile = () => {
+  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
+  const nextTileIndex = storedTiles.length;
+
+  if (nextTileIndex < TILE_WORD.length) {
+    const nextTile = TILE_WORD[nextTileIndex];
+    const updatedTiles = [...storedTiles, nextTile];
+    localStorage.setItem("earnedTiles", JSON.stringify(updatedTiles));
+    setEarnedTiles(updatedTiles);
+  }
+};
+
+
 const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalize(guess);
   const puzzleId = puzzle?.id ?? 0;
@@ -534,7 +554,7 @@ if (error) {
           puzzleId,
         });
       }
-
+      awardTile();
       setTimeout(() => setShowPostGame(true), 500);
     } else if (nearMissEssential || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
       // 🤏 Close guess
@@ -559,6 +579,7 @@ if (error) {
           track("puzzle_failed", { correct: false, attempts: newAttempts, puzzleId });
           track("puzzle_guess_count", { guessCount: "✖", puzzleId });
         }
+        awardTile();
         setTimeout(() => setShowPostGame(true), 500);
       }
 
