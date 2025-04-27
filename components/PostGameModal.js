@@ -6,6 +6,8 @@ import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 import confetti from "canvas-confetti";
 
+const TILE_WORD = "NUMERUS";
+
 export default function PostGameModal({
   open,
   onClose,
