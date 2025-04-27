@@ -864,6 +864,7 @@ if (data.type === "step:after") {
   shareResult={shareTextHandler}
   attempts={attempts}
   puzzleNumber={puzzleNumber} // ✅ Add this
+  earnedTiles={earnedTiles}
 />
    
            
