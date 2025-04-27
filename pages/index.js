@@ -404,8 +404,6 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-const TILE_WORD = "NUMERUS";
-
 function awardTile() {
   const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
 
