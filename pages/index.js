@@ -206,6 +206,8 @@ const joyrideSteps = [
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
   const [revealDisabled, setRevealDisabled] = useState(false);
   const [animateClueButton, setAnimateClueButton] = useState(true);
+  const [tokenCount, setTokenCount] = useState(0);
+  const [justEarnedToken, setJustEarnedToken] = useState(false);
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
@@ -225,6 +227,11 @@ const [earnedTiles, setEarnedTiles] = useState([]);
 useEffect(() => {
   const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
   setEarnedTiles(storedTiles);
+}, []);
+
+useEffect(() => {
+  const storedTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+  setTokenCount(storedTokens);
 }, []);
 
 useEffect(() => {
@@ -397,17 +404,40 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-const awardTile = () => {
-  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
-  const nextTileIndex = storedTiles.length;
+const TILE_WORD = "NUMERUS";
 
-  if (nextTileIndex < TILE_WORD.length) {
-    const nextTile = TILE_WORD[nextTileIndex];
-    const updatedTiles = [...storedTiles, nextTile];
-    localStorage.setItem("earnedTiles", JSON.stringify(updatedTiles));
-    setEarnedTiles(updatedTiles);
+function awardTile() {
+  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
+
+  if (storedTiles.length >= TILE_WORD.length) {
+    console.log("✅ Already earned all tiles, no action.");
+    return; // No more tiles to award
   }
-};
+
+  const nextLetter = TILE_WORD[storedTiles.length];
+  const newTiles = [...storedTiles, nextLetter];
+
+  localStorage.setItem("earnedTiles", JSON.stringify(newTiles));
+
+  // 🎉 If all tiles are now earned, award a free token
+  if (newTiles.length === TILE_WORD.length) {
+    let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+    localStorage.setItem("freeToken", (currentTokens + 1).toString());
+    setTokenCount(currentTokens + 1);
+    setJustEarnedToken(true);
+
+    // 🎯 Remove the animation after a short time
+   setTimeout(() => {
+   setJustEarnedToken(false);
+   }, 2000);
+
+    console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
+    
+    // Optional: Reset earnedTiles to start again
+    localStorage.setItem("earnedTiles", "[]");
+    console.log("🔁 Tiles reset to start a new round.");
+  }
+}
 
 
 const handleGuess = async (isClueReveal = false) => {
@@ -823,7 +853,24 @@ if (data.type === "step:after") {
   onStatsClick={() => setShowStats(true)}
 />
 
- <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
+{/* 🎖 Token Display */}
+<div className="fixed top-4 right-4 z-50">
+  <div className={`bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold shadow-lg ${justEarnedToken ? "token-pop token-glow" : ""}`}>
+    {tokenCount}
+  </div>
+
+  {/* Whooshing clone when new */}
+  {justEarnedToken && (
+    <div className="fixed top-4 right-4 z-50">
+      <div className="bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold shadow-lg token-whoosh">
+        🏅
+      </div>
+    </div>
+  )}
+</div>
+
+<div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
+
 
 {DEV_MODE && (
   <div className="mb-2 flex flex-col items-center">
