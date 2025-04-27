@@ -89,6 +89,54 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   display: none !important;
 }
 
+/* === Token Animation Styles === */
+
+.token-pop {
+  animation: popIn 0.5s ease-out;
+}
+
+.token-glow {
+  box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.8);
+}
+
+.token-whoosh {
+  animation: whooshAway 1s ease-in forwards;
+  position: fixed;
+}
+
+/* ✨ POP Animation */
+@keyframes popIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes whooshAway {
+  0% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(1.2) translate(-20px, -50px) rotate(-10deg);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1) translate(-60px, -120px) rotate(20deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(0.8) translate(-120px, -300px) rotate(45deg);
+    opacity: 0;
+  }
+}
+
 
 @tailwind base;
 @tailwind components;
