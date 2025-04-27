@@ -148,12 +148,13 @@ useEffect(() => {
   {"NUMERUS".split("").map((letter, index) => {
     const isEarned = earnedTiles.length > index;
     return (
-      <div
-        key={index}
-        className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
-          ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
-          transition-all duration-300 ease-in-out`}
-      >
+<div
+  key={index}
+  className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
+    ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
+    ${earnedTiles.length === TILE_WORD.length && index === TILE_WORD.length - 1 ? 'final-letter-bounce' : ''}
+    transition-all duration-300 ease-in-out`}
+>
         {letter}
     </div>
   );
