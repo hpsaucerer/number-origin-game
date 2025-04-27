@@ -225,6 +225,18 @@ const TILE_WORD = "NUMERUS";
 const [earnedTiles, setEarnedTiles] = useState([]);
 
 useEffect(() => {
+  const resetTime = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
+  const now = Date.now();
+
+  if (resetTime && now >= resetTime) {
+    console.log("🔄 It's a new day! Resetting earned tiles.");
+    localStorage.setItem("earnedTiles", "[]");
+    localStorage.removeItem("resetTilesAt"); // clean up
+    setEarnedTiles([]);
+  }
+}, []);
+
+useEffect(() => {
   const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
   setEarnedTiles(storedTiles);
 }, []);
