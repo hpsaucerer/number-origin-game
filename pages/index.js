@@ -416,28 +416,29 @@ function awardTile() {
   const newTiles = [...storedTiles, nextLetter];
 
   localStorage.setItem("earnedTiles", JSON.stringify(newTiles));
-  setEarnedTiles(newTiles); // 🛠️ ADD THIS LINE to update the UI immediately!
+  setEarnedTiles(newTiles);
 
-if (newTiles.length === TILE_WORD.length) {
-  let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
-  localStorage.setItem("freeToken", (currentTokens + 1).toString());
-  setTokenCount(currentTokens + 1);
-  setJustEarnedToken(true);
+  if (newTiles.length === TILE_WORD.length) {
+    let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+    localStorage.setItem("freeToken", (currentTokens + 1).toString());
+    setTokenCount(currentTokens + 1);
+    setJustEarnedToken(true);
 
-  console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
+    console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
 
-  // 🚀 Delay the tile reset for a few seconds to let animation happen
-  setTimeout(() => {
-    localStorage.setItem("earnedTiles", "[]");
-    setEarnedTiles([]); // update state too if needed
-    console.log("🔁 Tiles reset to start a new round.");
-  }, 5000); // 5 seconds (adjust if you want a longer celebration)
+    // 🚀 Delay the tile reset for a few seconds to let animation happen
+    setTimeout(() => {
+      localStorage.setItem("earnedTiles", "[]");
+      setEarnedTiles([]);
+      console.log("🔁 Tiles reset to start a new round.");
+    }, 5000);
 
-  // Optionally hide the glow token after 2 seconds
-  setTimeout(() => {
-    setJustEarnedToken(false);
-  }, 2000);
-}
+    // Optionally hide the glow token after 2 seconds
+    setTimeout(() => {
+      setJustEarnedToken(false);
+    }, 2000);
+  }
+} // ✅ this closes the awardTile() function
 
 
 const handleGuess = async (isClueReveal = false) => {
