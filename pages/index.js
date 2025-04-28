@@ -49,8 +49,10 @@ function debugLog(...args) {
   console.log("[DEBUG]", ...args);
 }
 
+const fillerWords = [
+  "year", "in", "on", "the", "of", "a", "an", "when", "at", "to", "for", "by", "is", "was"
+];
 
-// 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
   quickest: "fastest",
   rapid: "fast",
@@ -84,52 +86,46 @@ const synonymMap = {
   mountain: "mount",
   works: "plays",
   highest: "maximum",
-  meters: "metres",
-  length: "distance",
   shirt: "jersey",
   top: "jersey",
   vest: "jersey",
 };
 
-const normalize = (str) =>
-  str
+export function normalizeGuess(input) {
+  if (!input) return "";
+
+  return input
     .toLowerCase()
-    .replace(/[’'`]/g, "")               // ← NEW: apostrophe cleanup
-    .replace(/[^a-z0-9\s]/g, "")         // existing: strip other punctuation
-    .split(" ")
-    .map((word) => synonymMap[word] || word)
+    .replace(/[’'`]/g, "")               // Remove apostrophes
+    .replace(/[^a-z0-9\s]/g, "")         // Remove punctuation
+    .split(/\s+/)                        // Split words safely
+    .filter(word => !fillerWords.includes(word)) // Drop filler words
+    .map(word => synonymMap[word] || word)       // Apply synonym mapping
     .join(" ")
     .trim();
+}
 
 
-const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
-  const normalizedGuess = normalize(guess);
-  const normalizedTokens = normalizedGuess.split(/\W+/); // ✅ split once
-  const normalizedEssential = essential.map(normalize);
-  const normalizedRequired = required.map(normalize);
+function evaluateGuessKeywords(guess, { essential = [], required = [] }) {
+  const normalizedGuess = normalizeGuess(guess);
+  const guessTokens = new Set(normalizedGuess.split(/\W+/)); // ⚡ Faster lookup with Set!
 
-  const matchedEssential = normalizedEssential.filter((kw) =>
-    normalizedTokens.includes(kw)
-  );
+  const normalizeAndFilter = (arr) =>
+    arr.map(normalizeGuess).filter((token) => guessTokens.has(token));
 
-  const matchedRequired = normalizedRequired.filter((kw) =>
-    normalizedTokens.includes(kw)
-  );
-
-  const hasStrongMatch = matchedEssential.length > 0;
-  const hasWeakMatch = matchedRequired.length > 0;
-  const matchCount = matchedEssential.length + matchedRequired.length;
-  const requiredMatched = matchedRequired.length > 0;
+  const matchedEssential = normalizeAndFilter(essential);
+  const matchedRequired = normalizeAndFilter(required);
 
   return {
-    matchCount,
-    hasStrongMatch,
-    hasWeakMatch,
-    requiredMatched,
+    matchCount: matchedEssential.length + matchedRequired.length,
+    hasStrongMatch: matchedEssential.length > 0,
+    hasWeakMatch: matchedRequired.length > 0,
+    requiredMatched: matchedRequired.length > 0,
     matchedEssential,
     matchedRequired,
   };
-};
+}
+
 
 const DEV_MODE = false;
 
@@ -391,8 +387,8 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-const handleGuess = async (isClueReveal = false) => {
-  const cleanedGuess = normalize(guess);
+  const handleGuess = async (isClueReveal = false) => {
+  const cleanedGuess = normalizeGuess(guess);
   const puzzleId = puzzle?.id ?? 0;
 
   const {
@@ -475,7 +471,7 @@ const handleGuess = async (isClueReveal = false) => {
     );
 
     const acceptableResults = acceptableFuse.search(cleanedGuess);
-    const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.3); // tighter match threshold
+    const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.35); // tighter match threshold
 
     const essentialMatchCount = matchedEssential.length;
     const strongEssentialHit = essentialMatchCount >= 2;
