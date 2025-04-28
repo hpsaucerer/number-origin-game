@@ -17,7 +17,7 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
         <DialogContent className="relative max-h-[90vh] overflow-y-auto pt-3 px-4 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center">
 
-          {/* Dismiss Button (improved) */}
+          {/* Dismiss Button */}
           <button
             className="absolute top-2 right-2 p-1 text-blue-500 hover:text-blue-600 transition"
             onClick={onClose}
@@ -52,32 +52,52 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
           {/* Category Achievements Section */}
           <div className="mt-6 w-full">
             <h3 className="text-md font-semibold text-gray-800 mb-4 text-center">Category Achievements</h3>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               {categories.map((cat) => {
                 const { label, color, total } = cat;
                 const completed = categoryAchievements[label] || 0;
                 const percentage = total ? (completed / total) * 100 : 0;
 
+                const lowerLabel = label.toLowerCase();
+                const medal =
+                  completed >= 100
+                    ? `/medals/${lowerLabel}-gold.png`
+                    : completed >= 50
+                    ? `/medals/${lowerLabel}-silver.png`
+                    : completed >= 20
+                    ? `/medals/${lowerLabel}-bronze.png`
+                    : `/medals/${lowerLabel}-empty.png`;
+
                 return (
-                  <div key={label} className="flex flex-col gap-0.5">
+                  <div key={label} className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
-                      <img src={`/icons/${label.toLowerCase()}.png`} alt={`${label} icon`} className="w-8 h-8" />
+                      <img src={`/icons/${lowerLabel}.png`} alt={`${label} icon`} className="w-8 h-8" />
                       <span className="text-sm font-semibold">{label}</span>
                     </div>
 
-                    {/* Progress Bar */}
-                    <div className="w-full bg-gray-200 rounded-full h-3 mt-1">
-                    <div
-                    className="h-3 rounded-full transition-all duration-500 ease-out"
-                    style={{
-                     width: `${percentage}%`,
-                     backgroundColor: color,
-                    }}
-                 />
-                    </div>
+                    {/* Bar + Medal */}
+                    <div className="flex items-center gap-2">
+                      {/* Progress Bar Container (shrinked to ~70%) */}
+                      <div className="flex-1">
+                        <div className="w-full bg-gray-200 rounded-full h-3 mt-1">
+                          <div
+                            className="h-3 rounded-full transition-all duration-500 ease-out"
+                            style={{
+                              width: `${percentage}%`,
+                              backgroundColor: color,
+                            }}
+                          />
+                        </div>
+                        <div className="text-xs text-gray-500 text-right">{`${completed}/${total}`}</div>
+                      </div>
 
-                    {/* Progress Text */}
-                    <div className="text-xs text-gray-500 text-right">{`${completed}/${total}`}</div>
+                      {/* Medal Image */}
+                      <img
+                        src={medal}
+                        alt={`${label} medal`}
+                        className="w-10 h-10 object-contain ml-1"
+                      />
+                    </div>
                   </div>
                 );
               })}
