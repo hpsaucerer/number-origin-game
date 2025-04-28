@@ -1231,8 +1231,15 @@ if (data.type === "step:after") {
 <AchievementsModal
   open={showAchievements}
   onClose={() => setShowAchievements(false)}
-  earnedTiles={earnedTiles}
-  categoryAchievements={categoryAchievements}
+  earnedTiles={["N", "U", "M", "E", "R", "U", "S"]} // simulate full tiles earned
+  categoryAchievements={{
+    Maths: true,
+    Geography: false,
+    Science: true,
+    History: false,
+    Culture: true,
+    Sport: true,
+  }}
 />
 
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
