@@ -11,9 +11,14 @@ export default function AchievementsModal({ open, onClose, earnedTiles, category
       <DialogContent className="max-w-md mx-auto">
         <DialogHeader className="flex justify-between items-center">
           <DialogTitle>Your Achievements</DialogTitle>
-          <button onClick={onClose}>
-            <X size={24} />
-          </button>
+<button
+  onClick={onClose}
+  className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition"
+  aria-label="Close"
+>
+  <X size={24} />
+</button>
+
         </DialogHeader>
 
         {/* Daily Streak */}
