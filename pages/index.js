@@ -982,12 +982,12 @@ if (data.type === "step:after") {
       Category:
     </p>
     <div className="flex items-center gap-2 mt-1">
-      {/* Colored Dot */}
-      <span
-        className="w-3 h-3 rounded-full inline-block"
-        style={{ backgroundColor: categoryColorMap[puzzle.category] || "#000" }}
-      ></span>
-
+      {/* 📸 Category Icon */}
+      <img
+        src={`/icons/${puzzle.category.toLowerCase()}.png`}
+        alt={`${puzzle.category} icon`}
+        className="w-6 h-6 inline-block"
+      />
       {/* Category Name */}
       <p
         className="text-xl font-bold"
