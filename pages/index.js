@@ -1050,7 +1050,7 @@ if (data.type === "step:after") {
 <Button
   onClick={handleRevealCategory}
   className="w-full text-white hover:opacity-90"
-  style={{ backgroundColor: "#f7c548" }}
+  className="w-full text-white bg-[#f7c548] hover:opacity-90"
   disabled={spendingToken}
 >
   {spendingToken ? "Revealing..." : "Reveal Category (1 Token)"}
