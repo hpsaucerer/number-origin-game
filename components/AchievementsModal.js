@@ -67,13 +67,13 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
 
                     {/* Progress Bar */}
                     <div className="w-full bg-gray-200 rounded-full h-3 mt-1">
-                      <div
-                        className="h-3 rounded-full"
-                        style={{
-                          width: `${percentage}%`,
-                          backgroundColor: color,
-                        }}
-                      />
+                    <div
+                    className="h-3 rounded-full transition-all duration-500 ease-out"
+                    style={{
+                     width: `${percentage}%`,
+                     backgroundColor: color,
+                    }}
+                 />
                     </div>
 
                     {/* Progress Text */}
