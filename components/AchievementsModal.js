@@ -61,7 +61,7 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
                 return (
                   <div key={label} className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
-                      <img src={`/icons/${label.toLowerCase()}.png`} alt={`${label} icon`} className="w-6 h-6" />
+                      <img src={`/icons/${label.toLowerCase()}.png`} alt={`${label} icon`} className="w-10 h-10" />
                       <span className="text-sm font-semibold">{label}</span>
                     </div>
 
