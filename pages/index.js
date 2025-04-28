@@ -1049,13 +1049,13 @@ if (data.type === "step:after") {
 {tokenCount > 0 && !categoryRevealed && (
 <Button
   onClick={handleRevealCategory}
-  variant="secondary"
   className="w-full text-white hover:opacity-90"
   style={{ backgroundColor: "#f7c548" }}
   disabled={spendingToken}
 >
   {spendingToken ? "Revealing..." : "Reveal Category (1 Token)"}
 </Button>
+
 )}
 
 <Button
