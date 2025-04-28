@@ -986,7 +986,7 @@ if (data.type === "step:after") {
       <img
         src={`/icons/${puzzle.category.toLowerCase()}.png`}
         alt={`${puzzle.category} icon`}
-        className="w-6 h-6 inline-block"
+        className="w-10 h-10 inline-block"
       />
       {/* Category Name */}
       <p
