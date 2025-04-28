@@ -932,25 +932,6 @@ if (data.type === "step:after") {
   onAchievementsClick={() => setShowAchievements(true)}
 />
 
-{/* 🎖 Token Display */}
-<div className="fixed top-4 right-4 z-50">
-<div className={`bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold shadow-lg 
-  ${justEarnedToken ? "token-pop token-glow" : ""} 
-  ${spendingToken ? "animate-token-spin" : ""}
-`}>
-  {tokenCount}
-</div>
-
-  {/* Whooshing clone when new */}
-  {justEarnedToken && (
-    <div className="fixed top-4 right-4 z-50">
-      <div className="bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold shadow-lg token-whoosh">
-        🏅
-      </div>
-    </div>
-  )}
-</div>
-
 <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
 
 
@@ -981,9 +962,27 @@ if (data.type === "step:after") {
       <h1 className="text-2xl font-bold mt-2">Today's number is:</h1>
 
       <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
-        <CardContent className="overflow-hidden">
+        <CardContent className="overflow-hidden relative">
 
-    
+{/* 🟡 Token Counter INSIDE Card */}
+<div className="absolute top-2 right-2 z-10">
+  <div className={`bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md 
+    ${justEarnedToken ? "token-pop token-glow" : ""} 
+    ${spendingToken ? "animate-token-spin" : ""}
+  `}>
+    {tokenCount}
+  </div>
+
+  {/* Whoosh animation if just earned */}
+  {justEarnedToken && (
+    <div className="absolute top-2 right-2 z-20">
+      <div className="bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md token-whoosh">
+        🏅
+      </div>
+    </div>
+  )}
+</div>
+
 <PostGameModal
   open={showPostGame}
   onClose={() => setShowPostGame(false)}
