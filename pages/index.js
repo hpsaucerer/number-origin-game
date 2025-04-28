@@ -140,6 +140,14 @@ const colorClassMap = {
   purple: "text-purple-700 bg-purple-100 hover:bg-purple-200",
   red: "text-red-700 bg-red-100 hover:bg-red-200",
 };
+const categoryColorMap = {
+  Maths: "#3b82f6",      // blue
+  Geography: "#63c4a7",  // green
+  Science: "#f57d45",    // orange
+  History: "#f7c548",    // yellow
+  Culture: "#8e44ad",    // purple
+  Sport: "#e53935",      // red
+};
 
   export default function Home() {
 
@@ -969,15 +977,28 @@ if (data.type === "step:after") {
 ))}
 
 {categoryRevealed && puzzle.category && (
-  <div className="mt-4 text-center">
+  <div className="mt-4 text-center flex flex-col items-center">
     <p className="text-sm font-semibold text-gray-700">
       Category:
     </p>
-    <p className="text-xl font-bold text-blue-700">
-      {puzzle.category}
-    </p>
+    <div className="flex items-center gap-2 mt-1">
+      {/* Colored Dot */}
+      <span
+        className="w-3 h-3 rounded-full inline-block"
+        style={{ backgroundColor: categoryColorMap[puzzle.category] || "#000" }}
+      ></span>
+
+      {/* Category Name */}
+      <p
+        className="text-xl font-bold"
+        style={{ color: categoryColorMap[puzzle.category] || "#000" }}
+      >
+        {puzzle.category}
+      </p>
+    </div>
   </div>
 )}
+
 
 {/* 🔄 Active Game UI */}
 {!isCorrect && attempts < maxGuesses && (
@@ -1026,14 +1047,15 @@ if (data.type === "step:after") {
   {revealedClues.length >= puzzle?.clues?.length ? "No more clues" : "Reveal a Clue"}
 </Button>
 {tokenCount > 0 && !categoryRevealed && (
-  <Button
-    onClick={handleRevealCategory}
-    variant="secondary"
-    className="w-full bg-yellow-400 text-white hover:bg-yellow-500"
-    disabled={spendingToken}
-  >
-    {spendingToken ? "Revealing..." : "Reveal Category (1 Token)"}
-  </Button>
+<Button
+  onClick={handleRevealCategory}
+  variant="secondary"
+  className="w-full text-white hover:opacity-90"
+  style={{ backgroundColor: "#f7c548" }}
+  disabled={spendingToken}
+>
+  {spendingToken ? "Revealing..." : "Reveal Category (1 Token)"}
+</Button>
 )}
 
 <Button
