@@ -2,7 +2,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { X } from "lucide-react";
 
 export default function AchievementsModal({ open, onClose, earnedTiles = [], categoryAchievements = {} }) {
-  // 🔵 Define categories + branding color
   const categories = [
     { label: "Maths", color: "#3b82f6", total: 20 },
     { label: "Geography", color: "#63c4a7", total: 20 },
@@ -64,9 +63,7 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
                     ? `/medals/${lowerLabel}-gold.png`
                     : completed >= 50
                     ? `/medals/${lowerLabel}-silver.png`
-                    : completed >= 20
-                    ? `/medals/${lowerLabel}-bronze.png`
-                    : `/medals/${lowerLabel}-empty.png`;
+                    : `/medals/${lowerLabel}-bronze.png`; // <-- Always bronze as minimum
 
                 return (
                   <div key={label} className="flex flex-col gap-1">
@@ -77,7 +74,6 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
 
                     {/* Bar + Medal */}
                     <div className="flex items-center gap-2">
-                      {/* Progress Bar Container (shrinked to ~70%) */}
                       <div className="flex-1">
                         <div className="w-full bg-gray-200 rounded-full h-3 mt-1">
                           <div
@@ -91,7 +87,7 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
                         <div className="text-xs text-gray-500 text-right">{`${completed}/${total}`}</div>
                       </div>
 
-                      {/* Medal Image */}
+                      {/* Medal */}
                       <img
                         src={medal}
                         alt={`${label} medal`}
