@@ -51,7 +51,7 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
           {/* Category Achievements Section */}
           <div className="mt-6 w-full">
             <h3 className="text-md font-semibold text-gray-800 mb-4 text-center">Category Achievements</h3>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1.5">
               {categories.map((cat) => {
                 const { label, color, total } = cat;
                 const completed = categoryAchievements[label] || 0;
@@ -68,7 +68,7 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
                 return (
                   <div key={label} className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
-                      <img src={`/icons/${lowerLabel}.png`} alt={`${label} icon`} className="w-10 h-10" />
+                      <img src={`/icons/${lowerLabel}.png`} alt={`${label} icon`} className="w-8 h-8" />
                       <span className="text-sm font-semibold">{label}</span>
                     </div>
 
@@ -91,7 +91,7 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
                       <img
                         src={medal}
                         alt={`${label} medal`}
-                        className="w-10 h-10 object-contain ml-1"
+                        className="w-14 h-14 object-contain ml-1"
                       />
                     </div>
                   </div>
