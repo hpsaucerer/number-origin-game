@@ -208,6 +208,8 @@ const joyrideSteps = [
   const [animateClueButton, setAnimateClueButton] = useState(true);
   const [tokenCount, setTokenCount] = useState(0);
   const [justEarnedToken, setJustEarnedToken] = useState(false);
+  const [categoryRevealed, setCategoryRevealed] = useState(false);
+  const [spendingToken, setSpendingToken] = useState(false); // Optional: UI animation later
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
@@ -668,6 +670,22 @@ const handleClueReveal = () => {
   }, 1000);
 };
 
+const handleRevealCategory = () => {
+  if (tokenCount <= 0 || categoryRevealed || !puzzle) return;
+
+  setSpendingToken(true);
+
+  setTimeout(() => {
+    setTokenCount((prev) => {
+      const newCount = prev - 1;
+      localStorage.setItem("freeToken", newCount.toString());
+      return newCount;
+    });
+    setCategoryRevealed(true);
+    setSpendingToken(false);
+  }, 1000); // small delay to allow for nice animation if you want
+};
+
 
 const shareTextHandler = () => {
   shareResult({
@@ -861,9 +879,12 @@ if (data.type === "step:after") {
 
 {/* 🎖 Token Display */}
 <div className="fixed top-4 right-4 z-50">
-  <div className={`bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold shadow-lg ${justEarnedToken ? "token-pop token-glow" : ""}`}>
-    {tokenCount}
-  </div>
+<div className={`bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold shadow-lg 
+  ${justEarnedToken ? "token-pop token-glow" : ""} 
+  ${spendingToken ? "animate-token-spin" : ""}
+`}>
+  {tokenCount}
+</div>
 
   {/* Whooshing clone when new */}
   {justEarnedToken && (
@@ -947,6 +968,17 @@ if (data.type === "step:after") {
   </p>
 ))}
 
+{categoryRevealed && puzzle.category && (
+  <div className="mt-4 text-center">
+    <p className="text-sm font-semibold text-gray-700">
+      Category:
+    </p>
+    <p className="text-xl font-bold text-blue-700">
+      {puzzle.category}
+    </p>
+  </div>
+)}
+
 {/* 🔄 Active Game UI */}
 {!isCorrect && attempts < maxGuesses && (
   <div className="w-full max-w-md space-y-4 mt-6">
@@ -993,6 +1025,16 @@ if (data.type === "step:after") {
 >
   {revealedClues.length >= puzzle?.clues?.length ? "No more clues" : "Reveal a Clue"}
 </Button>
+{tokenCount > 0 && !categoryRevealed && (
+  <Button
+    onClick={handleRevealCategory}
+    variant="secondary"
+    className="w-full bg-yellow-400 text-white hover:bg-yellow-500"
+    disabled={spendingToken}
+  >
+    {spendingToken ? "Revealing..." : "Reveal Category (1 Token)"}
+  </Button>
+)}
 
 <Button
   onClick={() => handleGuess()} // ✅ Safe and explicit
