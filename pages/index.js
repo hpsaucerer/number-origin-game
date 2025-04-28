@@ -434,12 +434,12 @@ useEffect(() => {
       return;
     }
 
-    const allAnswers = [
-      { label: normalize(puzzle.answer) },
-      ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
-        label: normalize(g),
-      })),
-    ];
+const allAnswers = [
+  { label: normalizeGuess(puzzle.answer) },
+  ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
+    label: normalizeGuess(g),
+  })),
+];
 
     const fuse = new Fuse(allAnswers, {
       keys: ["label"],
