@@ -27,6 +27,7 @@ import Joyride from "react-joyride";
 import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
+import AchievementsModal from "@/components/modals/AchievementsModal";
 
 const DEBUG_MODE = false; // set to false later when live if you want
 
@@ -219,6 +220,7 @@ const joyrideSteps = [
   const [categoryRevealed, setCategoryRevealed] = useState(false);
   const [spendingToken, setSpendingToken] = useState(false); // Optional: UI animation later
   const [showAchievements, setShowAchievements] = useState(false);
+  const [completedPuzzles, setCompletedPuzzles] = useState([]);
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
@@ -234,6 +236,23 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 const TILE_WORD = "NUMERUS";
 const [earnedTiles, setEarnedTiles] = useState([]);
+const [categoryAchievements, setCategoryAchievements] = useState({});
+
+useEffect(() => {
+  if (!allPuzzles.length) return;
+
+  const completedCategories = {};
+
+  const completedPuzzleIds = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+
+  allPuzzles.forEach((puzzle) => {
+    if (completedPuzzleIds.includes(puzzle.id)) {
+      completedCategories[puzzle.category] = true;
+    }
+  });
+
+  setCategoryAchievements(completedCategories);
+}, [allPuzzles]);
 
 useEffect(() => {
   const resetTime = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
@@ -322,32 +341,53 @@ useEffect(() => {
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 useEffect(() => {
-const loadPuzzles = async () => {
-const all = await fetchAllPuzzles();
-setAllPuzzles(all);
+  async function loadPuzzles() {
+    const all = await fetchAllPuzzles();
+    setAllPuzzles(all);
 
-if (DEV_MODE && selectedPuzzleIndex !== null) {
-  const devPuzzle = all[selectedPuzzleIndex];
-  debugLog("🔧 DEV PUZZLE loaded.");  // ✅ Only mention success, no object
-  setPuzzle(devPuzzle);
-  setPuzzleNumber(selectedPuzzleIndex + 1);
-} else {
-  const today = await fetchTodayPuzzle();
-  if (today) {
-    debugLog("✅ Today's puzzle loaded.");  // ✅ Only mention success
-    setPuzzle(today);
+    let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
 
-    const index = all.findIndex((p) => p.id === today.id);
-    setPuzzleNumber(index + 1);
-  } else {
-    console.warn("⚠️ No puzzle returned for today.");
+    if (!Array.isArray(completed)) {
+      completed = [];
+
+      all.forEach((p) => {
+        if (localStorage.getItem(`completed-${p.date}`) === "true") {
+          completed.push(p.id);
+        }
+      });
+
+      localStorage.setItem("completedPuzzles", JSON.stringify(completed));
+      console.log(
+        completed.length > 0
+          ? "✅ Migrated old completions to completedPuzzles."
+          : "🆕 No old completions found. Initialized empty completedPuzzles."
+      );
+    }
+
+    setCompletedPuzzles(completed);
+
+    if (DEV_MODE && selectedPuzzleIndex !== null) {
+      const devPuzzle = all[selectedPuzzleIndex];
+      debugLog("🔧 DEV PUZZLE loaded.");
+      setPuzzle(devPuzzle);
+      setPuzzleNumber(selectedPuzzleIndex + 1);
+    } else {
+      const today = await fetchTodayPuzzle();
+      if (today) {
+        debugLog("✅ Today's puzzle loaded.");
+        setPuzzle(today);
+
+        const index = all.findIndex((p) => p.id === today.id);
+        setPuzzleNumber(index + 1);
+      } else {
+        console.warn("⚠️ No puzzle returned for today.");
+      }
+    }
   }
-}
-
-};
 
   loadPuzzles();
 }, [selectedPuzzleIndex]);
+
 
 
   const toggleTooltip = (idx) => {
@@ -587,6 +627,12 @@ if (error) {
       // ✅ Correct guess
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
+      const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+      if (!existingCompleted.includes(puzzle.id)) {
+       existingCompleted.push(puzzle.id);
+       localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
+   }
+
       setStats((prev) => updateStats(prev, true, attempts + 1));
       setGuess("");
 
@@ -1181,6 +1227,12 @@ if (data.type === "step:after") {
   COLORS={COLORS}
   renderCenterLabel={renderCenterLabel}
   combinedLabel={combinedLabel}
+/>
+<AchievementsModal
+  open={showAchievements}
+  onClose={() => setShowAchievements(false)}
+  earnedTiles={earnedTiles}
+  categoryAchievements={categoryAchievements}
 />
 
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
