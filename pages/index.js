@@ -966,7 +966,7 @@ if (data.type === "step:after") {
 
 
 {/* 🟡 Token Counter INSIDE Card */}
-<div className="absolute top-2 right-2 z-10">
+<div className="absolute top-2 right-2 z-20">
   <div className={`bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center text-base font-bold shadow-md 
     ${justEarnedToken ? "token-pop token-glow" : ""} 
     ${spendingToken ? "animate-token-spin" : ""}
