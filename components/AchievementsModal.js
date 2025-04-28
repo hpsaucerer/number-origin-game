@@ -1,64 +1,91 @@
-"use client";
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 
-export default function AchievementsModal({ open, onClose, earnedTiles, categoryAchievements }) {
-  const categories = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
+export default function AchievementsModal({ open, onClose, earnedTiles = [], categoryAchievements = {} }) {
+  // 🔵 Define categories + branding color
+  const categories = [
+    { label: "Maths", color: "#3b82f6", total: 20 },
+    { label: "Geography", color: "#63c4a7", total: 20 },
+    { label: "Science", color: "#f57d45", total: 20 },
+    { label: "History", color: "#f7c548", total: 20 },
+    { label: "Culture", color: "#8e44ad", total: 20 },
+    { label: "Sport", color: "#e53935", total: 20 },
+  ];
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-auto">
-        <DialogHeader className="flex justify-between items-center">
-          <DialogTitle>Your Achievements</DialogTitle>
-<button
-  onClick={onClose}
-  className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition"
-  aria-label="Close"
->
-  <X size={24} />
-</button>
+      <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
+        <DialogContent className="relative max-h-[90vh] overflow-y-auto pt-3 px-4 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center">
 
-        </DialogHeader>
+          {/* Dismiss Button (improved) */}
+          <button
+            className="absolute top-2 right-2 p-1 text-blue-500 hover:text-blue-600 transition"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            <X size={28} />
+          </button>
 
-        {/* Daily Streak */}
-        <div className="text-center my-4">
-          <h3 className="font-semibold mb-2">Daily Streak: Numerus Tiles</h3>
-          <div className="flex justify-center gap-2">
-            {earnedTiles.length > 0 ? (
-              earnedTiles.map((tile, idx) => (
+          <DialogHeader className="w-full">
+            <DialogTitle>
+              <h2 className="text-lg text-gray-800 text-left">Your Achievements</h2>
+            </DialogTitle>
+          </DialogHeader>
+
+          {/* Tiles Section */}
+          <div className="mt-4 w-full text-center">
+            <h3 className="text-md font-semibold text-gray-700 mb-2">Daily Streak: Numerus Tiles</h3>
+            <div className="flex justify-center gap-2">
+              {Array.from("NUMERUS").map((letter, idx) => (
                 <div
                   key={idx}
-                  className="w-10 h-10 bg-blue-500 text-white flex items-center justify-center font-bold rounded-md"
-                >
-                  {tile}
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500 text-sm">No tiles earned yet!</p>
-            )}
-          </div>
-        </div>
-
-        {/* Category Achievements */}
-        <div className="text-center my-6">
-          <h3 className="font-semibold mb-2">Category Achievements</h3>
-          <div className="flex flex-col gap-3 items-center">
-            {categories.map((category) => (
-              <div key={category} className="flex items-center gap-3 w-64">
-                <div className="flex-1 text-left font-medium">{category}</div>
-                <div
-                  className={`w-32 h-4 rounded-full ${
-                    categoryAchievements?.[category]
-                      ? "bg-green-400"
-                      : "bg-gray-300"
+                  className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
+                    earnedTiles.includes(letter) ? "bg-[#3B82F6]" : "bg-gray-300"
                   }`}
-                ></div>
-              </div>
-            ))}
+                >
+                  {letter}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </DialogContent>
+
+          {/* Category Achievements Section */}
+          <div className="mt-6 w-full">
+            <h3 className="text-md font-semibold text-gray-800 mb-4 text-center">Category Achievements</h3>
+            <div className="flex flex-col gap-4">
+              {categories.map((cat) => {
+                const { label, color, total } = cat;
+                const completed = categoryAchievements[label] || 0;
+                const percentage = total ? (completed / total) * 100 : 0;
+
+                return (
+                  <div key={label} className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <img src={`/icons/${label.toLowerCase()}.png`} alt={`${label} icon`} className="w-6 h-6" />
+                      <span className="text-sm font-semibold">{label}</span>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="w-full bg-gray-200 rounded-full h-3 mt-1">
+                      <div
+                        className="h-3 rounded-full"
+                        style={{
+                          width: `${percentage}%`,
+                          backgroundColor: color,
+                        }}
+                      />
+                    </div>
+
+                    {/* Progress Text */}
+                    <div className="text-xs text-gray-500 text-right">{`${completed}/${total}`}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+        </DialogContent>
+      </div>
     </Dialog>
   );
 }
