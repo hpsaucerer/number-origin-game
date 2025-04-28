@@ -27,7 +27,7 @@ import Joyride from "react-joyride";
 import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
-import AchievementsModal from "@/components/modals/AchievementsModal";
+import AchievementsModal from "@/components/AchievementsModal";
 
 const DEBUG_MODE = false; // set to false later when live if you want
 
