@@ -454,21 +454,23 @@ const allAnswers = [
     const normalizedGuess = cleanedGuess.replace(/\s+/g, '');
     const acceptableStrings = puzzle.acceptableGuesses || puzzle.acceptable_guesses || [];
 
-    const exactAcceptableMatch = acceptableStrings.some(
-      g => normalize(g).replace(/\s+/g, '') === normalizedGuess
-    );
+const exactAcceptableMatch = acceptableStrings.some(
+  g => normalizeGuess(g).replace(/\s+/g, '') === normalizedGuess
+);
 
-    const isExactAnswerMatch = normalize(puzzle.answer) === cleanedGuess;
+const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
 
-    const acceptableFuse = new Fuse(
-      acceptableStrings.map(g => ({ label: normalize(g) })),
-      {
-        keys: ["label"],
-        threshold: 0.4,
-        distance: 100,
-        ignoreLocation: true,
-      }
-    );
+
+const acceptableFuse = new Fuse(
+  acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
+  {
+    keys: ["label"],
+    threshold: 0.4,
+    distance: 100,
+    ignoreLocation: true,
+  }
+);
+
 
     const acceptableResults = acceptableFuse.search(cleanedGuess);
     const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.35); // tighter match threshold
