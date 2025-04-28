@@ -101,7 +101,7 @@ const normalize = (str) =>
     .trim();
 
 
-const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
+  const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
   const normalizedGuess = normalize(guess);
   const normalizedTokens = normalizedGuess.split(/\W+/); // ✅ split once
   const normalizedEssential = essential.map(normalize);
@@ -218,6 +218,7 @@ const joyrideSteps = [
   const [justEarnedToken, setJustEarnedToken] = useState(false);
   const [categoryRevealed, setCategoryRevealed] = useState(false);
   const [spendingToken, setSpendingToken] = useState(false); // Optional: UI animation later
+  const [showAchievements, setShowAchievements] = useState(false);
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
@@ -881,8 +882,8 @@ if (data.type === "step:after") {
 }}
 /> 
 <Header
-  onHelpClick={() => setShowInstructions(true)}
   onStatsClick={() => setShowStats(true)}
+  onAchievementsClick={() => setShowAchievements(true)}
 />
 
 {/* 🎖 Token Display */}
