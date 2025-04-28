@@ -1231,16 +1231,17 @@ if (data.type === "step:after") {
 <AchievementsModal
   open={showAchievements}
   onClose={() => setShowAchievements(false)}
-  earnedTiles={["N", "U", "M", "E", "R", "U", "S"]} // simulate full tiles earned
+  earnedTiles={earnedTiles}
   categoryAchievements={{
-    Maths: true,
-    Geography: false,
-    Science: true,
-    History: false,
-    Culture: true,
-    Sport: true,
+    Maths: 8,
+    Geography: 5,
+    Science: 14,
+    History: 3,
+    Culture: 10,
+    Sport: 12,
   }}
 />
+
 
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
