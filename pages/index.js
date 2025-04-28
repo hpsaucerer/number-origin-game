@@ -73,6 +73,7 @@ const synonymMap = {
   run: "sprint",
   murdered: "assassination",
   killed: "assassination",
+  death: "assassination",
   length: "distance",
   domains: "kingdoms",
   movies: "films",
