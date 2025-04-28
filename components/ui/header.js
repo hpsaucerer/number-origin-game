@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Link from "next/link";
-import { BookOpen, BarChart } from "lucide-react";
+import { BarChart, Trophy } from "lucide-react"; // ✅ Update imports: Trophy instead of BookOpen
 import { Button } from "@/components/ui/button";
 
-export default function Header({ onHelpClick, onStatsClick }) {
+export default function Header({ onStatsClick, onAchievementsClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -31,6 +31,13 @@ export default function Header({ onHelpClick, onStatsClick }) {
                   Daily Puzzle
                 </Link>
                 <Link
+                  href="/how-to-play"
+                  onClick={() => setMenuOpen(false)}
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+                >
+                  How to Play
+                </Link>
+                <Link
                   href="/about"
                   onClick={() => setMenuOpen(false)}
                   className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
@@ -39,12 +46,11 @@ export default function Header({ onHelpClick, onStatsClick }) {
                 </Link>
                 <Link
                   href="/contact"
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
                   onClick={() => setMenuOpen(false)}
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
                 >
                   Contact
-                  </Link>
-
+                </Link>
               </div>
             )}
           </div>
@@ -61,23 +67,24 @@ export default function Header({ onHelpClick, onStatsClick }) {
 
         {/* Right-side icon buttons */}
         <div className="flex items-center space-x-3">
+          {/* Stats Button */}
           <Button
-            onClick={onHelpClick}
-            className="bg-white border border-[#3B82F6] px-3 py-2 rounded-lg hover:bg-[#3B82F6] hover:text-white transition shadow-md"
-            title="How to Play"
-            aria-label="How to Play"
+            onClick={onStatsClick}
+            className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+            title="Your Stats"
+            aria-label="Your Stats"
           >
-            <BookOpen size={20} strokeWidth={2.25} className="text-[#3B82F6]" />
+            <BarChart size={20} className="text-[#3B82F6] group-hover:text-white transition" />
           </Button>
 
-<Button
-  onClick={onStatsClick}
-  className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
-  title="Your Stats"
-  aria-label="Your Stats"
->
-
-            <BarChart size={20} className="text-[#3B82F6] group-hover:text-white transition" />
+          {/* Achievements Button */}
+          <Button
+            onClick={onAchievementsClick}
+            className="bg-white border border-[#3B82F6] px-3 py-2 rounded-lg hover:bg-[#3B82F6] hover:text-white transition shadow-md"
+            title="Achievements"
+            aria-label="Achievements"
+          >
+            <Trophy size={20} strokeWidth={2.25} className="text-[#3B82F6]" />
           </Button>
         </div>
       </div>
