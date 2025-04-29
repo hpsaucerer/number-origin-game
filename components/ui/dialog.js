@@ -46,7 +46,7 @@ export function DialogContent({ children, className = "", style = {} }) {
       className={`w-full max-w-md sm:max-w-lg bg-white rounded-lg shadow-xl p-4 ${className}`}
       style={{
         position: "relative", // ensures zIndex applies
-        zIndex: 50,           // ✅ this ensures it's above the token
+        zIndex: 100,           // ✅ this ensures it's above the token
         ...style,             // keeps user-passed styles working
       }}
     >
