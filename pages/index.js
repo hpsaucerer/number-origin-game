@@ -961,12 +961,12 @@ if (data.type === "step:after") {
              
       <h1 className="text-2xl font-bold mt-2">Today's number is:</h1>
 
-<Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
-  <CardContent>
+<Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
+  <CardContent className="relative">
 
 
 {/* 🟡 Token Counter INSIDE Card */}
-<div className="absolute top-2 right-2 z-20">
+<div className="absolute top-2 right-2 z-10">
   <div className={`bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center text-base font-bold shadow-md 
     ${justEarnedToken ? "token-pop token-glow" : ""} 
     ${spendingToken ? "animate-token-spin" : ""}
@@ -976,7 +976,7 @@ if (data.type === "step:after") {
 
   {/* Whoosh animation if just earned */}
   {justEarnedToken && (
-    <div className="absolute top-2 right-2 z-20">
+    <div className="absolute top-2 right-2 z-10">
       <div className="bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md token-whoosh">
         🏅
       </div>
