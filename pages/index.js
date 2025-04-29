@@ -150,7 +150,7 @@ function evaluateGuessKeywords(guess, { essential = [], required = [] }) {
 }
 
 
-const DEV_MODE = false;
+const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
