@@ -965,7 +965,7 @@ if (data.type === "step:after") {
   <CardContent className="relative">
 
     {/* 🟡 Token Counter INSIDE Card */}
-    <div className="absolute top-2 right-2 z-10 border border-red-500">
+    <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10">
       <div className={`bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md
         ${justEarnedToken ? "token-pop token-glow" : ""} 
         ${spendingToken ? "animate-token-spin" : ""}
@@ -975,7 +975,7 @@ if (data.type === "step:after") {
 
       {/* Whoosh animation if just earned */}
       {justEarnedToken && (
-        <div className="absolute top-0 right-0 z-10">
+        <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10">
           <div className="bg-yellow-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-md token-whoosh">
             🏅
           </div>
