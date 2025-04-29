@@ -111,6 +111,8 @@ const synonymMap = {
   shakessper: "shakespeare",
   shakisper: "shakespeare",
   shaekspeare: "shakespeare",
+  "shakespeares": shakesperes,
+  "shakespeares": shakespears,
 };
 
 export function normalizeGuess(input) {
