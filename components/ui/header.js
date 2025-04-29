@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
-import { Circle, Trophy } from "lucide-react"; // ✅ Update imports: Trophy instead of BookOpen
+import { CircleDot, Trophy } from "lucide-react"; // ✅ Update imports: Trophy instead of BookOpen
 import { Button } from "@/components/ui/button";
 
 export default function Header({ onStatsClick, onAchievementsClick }) {
@@ -74,7 +74,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
             title="Your Stats"
             aria-label="Your Stats"
           >
-            <Circle size={20} className="text-[#3B82F6] group-hover:text-white transition" />
+            <CircleDot size={20} className="text-[#3B82F6] group-hover:text-white transition" />
           </Button>
 
           {/* Achievements Button */}
