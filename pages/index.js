@@ -50,7 +50,17 @@ function debugLog(...args) {
 }
 
 const fillerWords = [
-  "year", "in", "on", "the", "of", "a", "an", "when", "at", "to", "for", "by", "is", "was"
+  "a", "an", "the", "and", "or", "but", "if", "so", "because", "as", "although", "though", "while", "when", "where",
+  "of", "in", "on", "at", "to", "from", "by", "with", "about", "into", "onto", "off", "over", "under", "through", "up", "down", "for",
+  "is", "was", "were", "are", "am", "be", "been", "being", "do", "did", "does", "have", "has", "had",
+  "will", "would", "shall", "should", "can", "could", "may", "might", "must",
+  "that", "this", "these", "those", "such", "some", "any", "all", "each", "every", "no", "not", "only", "just",
+  "how", "what", "which", "who", "whom", "whose", "why", "when", "where",
+  "it", "its", "he", "she", "him", "her", "his", "they", "them", "their", "we", "us", "our", "you", "your", "i", "me", "my",
+  "been", "being", "there", "here", "then", "than",
+  "more", "less", "very", "too", "also", "again", "once", "even",
+  "didn’t", "doesn’t", "wasn’t", "weren’t", "isn’t", "aren’t", "can’t", "won’t", "wouldn’t", "shouldn’t", "couldn’t",
+  "yes", "no", "okay", "ok", "alright", 
 ];
 
 const synonymMap = {
@@ -89,6 +99,19 @@ const synonymMap = {
   shirt: "jersey",
   top: "jersey",
   vest: "jersey",
+  shakespeare: "shakespear",
+  shakespeare: "shakespere",
+  shakespeare: "shakspeare",
+  shakespeare:  "shakspear",
+  shakespeare:  "shackespeare",
+  shakespeare:  "shakesspeare",
+  shakespeare:  "shakspere",
+  shakespeare:  "shakesspear",
+  shakespeare:  "shakspere",
+  shakespeare:  "shakessper",
+  shakespeare:  "shakisper",
+  shakespeare:  "shaekspeare",
+  shakespeare:  "shakesspeare",
 };
 
 export function normalizeGuess(input) {
