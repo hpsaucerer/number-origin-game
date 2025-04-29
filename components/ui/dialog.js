@@ -44,7 +44,11 @@ export function DialogContent({ children, className = "", style = {} }) {
     <div
       onClick={(e) => e.stopPropagation()}
       className={`w-full max-w-md sm:max-w-lg bg-white rounded-lg shadow-xl p-4 ${className}`}
-      style={style}
+      style={{
+        position: "relative", // ensures zIndex applies
+        zIndex: 50,           // ✅ this ensures it's above the token
+        ...style,             // keeps user-passed styles working
+      }}
     >
       {children}
     </div>
