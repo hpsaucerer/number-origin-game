@@ -31,9 +31,9 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
             </DialogTitle>
           </DialogHeader>
 
-          {/* Tiles Section */}
-          <div className="mt-4 w-full text-center">
-            <h3 className="text-md font-semibold text-gray-700 mb-2">Daily Streak: Numerus Tiles</h3>
+          {/* 🎯 Tiles Section with subtle background */}
+          <div className="w-full text-center bg-gray-100 rounded-lg py-4 px-3 shadow-inner mb-4">
+            <h3 className="text-sm font-semibold text-gray-700 mb-2">Daily Streak: Numerus Tiles</h3>
             <div className="flex justify-center gap-2">
               {Array.from("NUMERUS").map((letter, idx) => (
                 <div
@@ -48,51 +48,36 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
             </div>
           </div>
 
-          {/* Category Achievements Section */}
-          <div className="mt-6 w-full">
-            <h3 className="text-md font-semibold text-gray-800 mb-4 text-center">Category Achievements</h3>
-            <div className="flex flex-col gap-2 sm:gap-3">
+          {/* 🧩 Category Achievements Section */}
+          <div className="w-full">
+            <h3 className="text-md font-semibold text-gray-800 mb-2 text-center">Category Achievements</h3>
+            <div className="flex flex-col gap-2 sm:gap-2">
               {categories.map((cat) => {
                 const { label, color, total } = cat;
                 const completed = categoryAchievements[label] || 0;
                 const percentage = total ? (completed / total) * 100 : 0;
-
                 const lowerLabel = label.toLowerCase();
-                const medal =
-                  completed >= 100
-                    ? `/medals/${lowerLabel}-gold.png`
-                    : completed >= 50
-                    ? `/medals/${lowerLabel}-silver.png`
-                    : `/medals/${lowerLabel}-bronze.png`; // always at least bronze
 
                 return (
                   <div key={label} className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
-                      <img src={`/icons/${lowerLabel}.png`} alt={`${label} icon`} className="w-9 h-9 sm:w-8 sm:h-8" />
+                      <img src={`/icons/${lowerLabel}.png`} alt={`${label} icon`} className="w-6 h-6" />
                       <span className="text-sm font-semibold">{label}</span>
                     </div>
 
-                    {/* Bar + Medal */}
                     <div className="flex items-center gap-2">
                       <div className="flex-1">
-                        <div className="w-full bg-gray-200 rounded-full h-3 mt-1">
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-1">
                           <div
-                            className="h-3 rounded-full transition-all duration-500 ease-out"
+                            className="h-2.5 rounded-full transition-all duration-500 ease-out"
                             style={{
                               width: `${percentage}%`,
                               backgroundColor: color,
                             }}
                           />
                         </div>
-                        <div className="text-xs text-gray-500 text-right">{`${completed}/${total}`}</div>
+                        <div className="text-xs text-gray-500 text-right mt-1">{`${completed}/${total}`}</div>
                       </div>
-
-                      {/* Medal */}
-                      <img
-                        src={medal}
-                        alt={`${label} medal`}
-                        className="w-10 h-10 sm:w-9 sm:h-9 object-contain ml-2"
-                      />
                     </div>
                   </div>
                 );
