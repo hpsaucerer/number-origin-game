@@ -99,7 +99,7 @@ const synonymMap = {
   shirt: "jersey",
   top: "jersey",
   vest: "jersey",
-  shakespeare: "shakespear",
+  "shakespeare": shakespear,
   shakespeare: "shakespere",
   shakespeare: "shakspeare",
   shakespeare:  "shakspear",
