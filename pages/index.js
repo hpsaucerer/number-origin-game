@@ -32,24 +32,6 @@ const DEBUG_MODE = true; // set to false later when live if you want
 
 function debugLog(...args) {
   if (!DEBUG_MODE || process.env.NODE_ENV === "production") return;
-
-  // Temporarily allow logging everything during active debugging
-  console.log("[DEBUG]", ...args);
-}
-
-  const forbiddenFields = ["answer", "acceptable_guesses", "essential_keywords", "keywords", "clues"];
-
-  const hasForbidden = args.some(arg =>
-    typeof arg === "object" &&
-    arg !== null &&
-    forbiddenFields.some(field => field in arg)
-  );
-
-  if (hasForbidden) {
-    console.warn("[DEBUG BLOCKED] Sensitive object detected, skipping log.");
-    return;
-  }
-
   console.log("[DEBUG]", ...args);
 }
 
