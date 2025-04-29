@@ -2,6 +2,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { CircleDot, Trophy } from "lucide-react"; // ✅ Update imports: Trophy instead of BookOpen
 import { Button } from "@/components/ui/button";
+import PieChartIcon from "@/components/icons/PieChartIcon";
 
 export default function Header({ onStatsClick, onAchievementsClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -74,7 +75,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
             title="Your Stats"
             aria-label="Your Stats"
           >
-            <CircleDot size={20} className="text-[#3B82F6] group-hover:text-white transition" />
+            <PieChartIcon className="w-5 h-5 text-[#3B82F6] group-hover:text-white transition" />
           </Button>
 
           {/* Achievements Button */}
