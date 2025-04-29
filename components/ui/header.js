@@ -78,15 +78,16 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
             <PieChartIcon className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
           </Button>
 
-          {/* Achievements Button */}
-          <Button
-            onClick={onAchievementsClick}
-            className="bg-white border border-[#3B82F6] px-3 py-2 rounded-lg hover:bg-[#3B82F6] hover:text-white transition shadow-md"
-            title="Achievements"
-            aria-label="Achievements"
-          >
-            <Trophy size={20} strokeWidth={2.25} className="text-[#3B82F6]" />
-          </Button>
+{/* Achievements Button */}
+<Button
+  onClick={onAchievementsClick}
+  className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+  title="Achievements"
+  aria-label="Achievements"
+>
+  <Trophy size={20} className="text-[#3B82F6] group-hover:text-white transition" />
+</Button>
+
         </div>
       </div>
     </header>
