@@ -85,7 +85,8 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
   title="Achievements"
   aria-label="Achievements"
 >
-  <Trophy size={20} className="text-[#3B82F6] group-hover:text-white transition" />
+  <Trophy className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
+
 </Button>
 
         </div>
