@@ -75,7 +75,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
             title="Your Stats"
             aria-label="Your Stats"
           >
-            <PieChartIcon className="w-7 h-7 text-[#3B82F6] group-hover:text-white transition" />
+            <PieChartIcon className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
           </Button>
 
           {/* Achievements Button */}
