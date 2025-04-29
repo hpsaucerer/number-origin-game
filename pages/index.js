@@ -387,7 +387,7 @@ useEffect(() => {
   };
 }, [openTooltip]);
 
-  const handleGuess = async (isClueReveal = false) => {
+const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalizeGuess(guess);
   const puzzleId = puzzle?.id ?? 0;
 
@@ -405,7 +405,7 @@ useEffect(() => {
 
   debugLog("Matched Essential:", matchedEssential, "from:", cleanedGuess);
   debugLog("Essential keywords:", puzzle.essential_keywords);
-  
+
   if (!isClueReveal && !cleanedGuess) {
     setInputError("Please enter a guess before submitting.");
     return;
@@ -434,12 +434,12 @@ useEffect(() => {
       return;
     }
 
-const allAnswers = [
-  { label: normalizeGuess(puzzle.answer) },
-  ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
-    label: normalizeGuess(g),
-  })),
-];
+    const allAnswers = [
+      { label: normalizeGuess(puzzle.answer) },
+      ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
+        label: normalizeGuess(g),
+      })),
+    ];
 
     const fuse = new Fuse(allAnswers, {
       keys: ["label"],
@@ -454,23 +454,21 @@ const allAnswers = [
     const normalizedGuess = cleanedGuess.replace(/\s+/g, '');
     const acceptableStrings = puzzle.acceptableGuesses || puzzle.acceptable_guesses || [];
 
-const exactAcceptableMatch = acceptableStrings.some(
-  g => normalizeGuess(g).replace(/\s+/g, '') === normalizedGuess
-);
+    const exactAcceptableMatch = acceptableStrings.some(
+      g => normalizeGuess(g).replace(/\s+/g, '') === normalizedGuess
+    );
 
-const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
+    const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
 
-
-const acceptableFuse = new Fuse(
-  acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
-  {
-    keys: ["label"],
-    threshold: 0.4,
-    distance: 100,
-    ignoreLocation: true,
-  }
-);
-
+    const acceptableFuse = new Fuse(
+      acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
+      {
+        keys: ["label"],
+        threshold: 0.4,
+        distance: 100,
+        ignoreLocation: true,
+      }
+    );
 
     const acceptableResults = acceptableFuse.search(cleanedGuess);
     const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.35); // tighter match threshold
@@ -478,45 +476,70 @@ const acceptableFuse = new Fuse(
     const essentialMatchCount = matchedEssential.length;
     const strongEssentialHit = essentialMatchCount >= 2;
     const nearMissEssential = essentialMatchCount === 1;
+    const hasOnlyEssentialMatch = hasStrongMatch && essentialMatchCount >= 2;
 
+    // ✅ Final match logic
+    const isCorrectGuess =
+      isExactAnswerMatch ||
+      exactAcceptableMatch ||
+      isAcceptableGuess ||
+      (
+        bestMatch?.score <= 0.65 &&
+        hasStrongMatch &&
+        requiredMatched &&
+        strongEssentialHit
+      ) ||
+      (
+        hasOnlyEssentialMatch && cleanedGuess.length > 12
+      );
 
-    debugLog("Checking guess validity. Cleaned guess:", cleanedGuess);
-    debugLog("isAcceptableGuess?", isAcceptableGuess);
-    debugLog("Is exact match achieved?", isExactAnswerMatch);
-    debugLog("Essential match count:", essentialMatchCount);
+    // 🧠 Track why it passed or failed
+    const matchType = isExactAnswerMatch
+      ? "exact_answer"
+      : exactAcceptableMatch
+      ? "exact_acceptable"
+      : isAcceptableGuess
+      ? "fuzzy_acceptable"
+      : (
+          bestMatch?.score <= 0.65 &&
+          hasStrongMatch &&
+          requiredMatched &&
+          strongEssentialHit
+        )
+      ? "fuzzy_with_required"
+      : (
+          strongEssentialHit &&
+          matchedEssential.length >= 2 &&
+          cleanedGuess.length > 12
+        )
+      ? "essential_only_fallback"
+      : "none";
 
-  const isCorrectGuess =
-  isExactAnswerMatch ||
-  exactAcceptableMatch ||
-  isAcceptableGuess ||
-  (
-    bestMatch?.score <= 0.65 &&
-    hasStrongMatch &&
-    requiredMatched &&
-    strongEssentialHit // ✅ now required within fuzzy logic
-  );
+    const { error } = await supabase.from("Player_responses").insert([
+      {
+        puzzle_id: puzzleId.toString(),
+        raw_guess: guess,
+        cleaned_guess: cleanedGuess,
+        is_correct: isCorrectGuess,
+        match_type: matchType,
+        attempt: attempts + 1,
+        device_id: localStorage.getItem("deviceId") || "unknown",
+        notes: JSON.stringify({
+          essentialHit: matchedEssential,
+          requiredHit: matchedRequired,
+          fuzzyScore: bestMatch?.score ?? null,
+          relaxedRule: hasOnlyEssentialMatch && cleanedGuess.length > 12
+        }),
+      }
+    ]);
 
-// ✅ Log the guess to Supabase with error handling
-const { error } = await supabase.from("Player_responses").insert([
-  {
-    puzzle_id: puzzleId.toString(),
-    raw_guess: guess,
-    cleaned_guess: cleanedGuess,
-    is_correct: isCorrectGuess,
-    attempt: attempts + 1,
-    device_id: localStorage.getItem("deviceId") || "unknown",
-  }
-]);
-
-if (error) {
-  console.error("❌ Supabase insert error:", error);
-} else {
-  console.log("✅ Guess successfully logged to Supabase!");
-}
-
+    if (error) {
+      console.error("❌ Supabase insert error:", error);
+    } else {
+      console.log("✅ Guess successfully logged to Supabase!");
+    }
 
     if (isCorrectGuess) {
-      // ✅ Correct guess
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
       setStats((prev) => updateStats(prev, true, attempts + 1));
@@ -536,7 +559,6 @@ if (error) {
 
       setTimeout(() => setShowPostGame(true), 500);
     } else if (nearMissEssential || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
-      // 🤏 Close guess
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
@@ -546,11 +568,10 @@ if (error) {
       }
 
       setInputError(
-  nearMissEssential
-    ? "You're close — try adding a more specific word!"
-    : "You're on the right track!"
-);
-
+        nearMissEssential
+          ? "You're close — try adding a more specific word!"
+          : "You're on the right track!"
+      );
 
       if (newAttempts >= maxGuesses) {
         setStats((prev) => updateStats(prev, false));
@@ -562,7 +583,6 @@ if (error) {
       }
 
     } else {
-      // ❌ Incorrect guess
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
@@ -589,7 +609,6 @@ if (error) {
     setInputError("Something went wrong. Try again!");
   }
 };
-
 
     
 const handleClueReveal = () => {
