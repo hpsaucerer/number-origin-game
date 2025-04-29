@@ -16,6 +16,7 @@ export function Dialog({ open, onOpenChange, children }) {
         justifyContent: "center",
         padding: "1rem", // optional, keeps content from touching edges on mobile
         boxSizing: "border-box", // optional, ensures padding is respected
+        zIndex: 1000, // 🔥 Add this line
       }}
       onClick={() => onOpenChange(false)}
     >
