@@ -589,10 +589,13 @@ const handleGuess = async (isClueReveal = false) => {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
-      const clueToReveal = puzzle.clues?.[revealedClues.length];
-      if (clueToReveal) {
-        setRevealedClues((prev) => [...prev, clueToReveal]);
-      }
+const clueIndex = revealedClues.length;
+const nextClue = puzzle.clues?.[clueIndex];
+
+if (nextClue && !revealedClues.includes(nextClue)) {
+  setRevealedClues([...revealedClues, nextClue]);
+}
+
 
       setInputError(
         nearMissEssential
@@ -613,10 +616,12 @@ const handleGuess = async (isClueReveal = false) => {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
-      const clueToReveal = puzzle.clues?.[revealedClues.length];
-      if (clueToReveal) {
-        setRevealedClues((prev) => [...prev, clueToReveal]);
-      }
+const clueIndex = revealedClues.length;
+const nextClue = puzzle.clues?.[clueIndex];
+
+if (nextClue && !revealedClues.includes(nextClue)) {
+  setRevealedClues([...revealedClues, nextClue]);
+}
 
       if (newAttempts >= maxGuesses) {
         setStats((prev) => updateStats(prev, false));
@@ -640,15 +645,21 @@ const handleGuess = async (isClueReveal = false) => {
     
 const handleClueReveal = () => {
   if (
-    revealDisabled || 
-    attempts >= maxGuesses || 
+    revealDisabled ||
+    attempts >= maxGuesses ||
     revealedClues.length >= puzzle?.clues?.length
   ) return;
 
   setRevealDisabled(true);
   setAnimateClueButton(false);
 
-  handleGuess(true);
+  const clueIndex = revealedClues.length;
+  const nextClue = puzzle.clues?.[clueIndex];
+
+  if (nextClue && !revealedClues.includes(nextClue)) {
+    setRevealedClues([...revealedClues, nextClue]);
+    setAttempts((prev) => prev + 1); // Don't forget to increment attempts!
+  }
 
   setTimeout(() => {
     setRevealDisabled(false);
