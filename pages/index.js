@@ -475,10 +475,19 @@ function awardTile() {
     return;
   }
 
+  const puzzleDate = puzzle?.date;
+  if (!puzzleDate) return;
+
+  if (localStorage.getItem(`tile-earned-${puzzleDate}`) === "true") {
+    console.log("⏳ Tile already awarded for today.");
+    return;
+  }
+
   const nextLetter = TILE_WORD[storedTiles.length];
-  const newTiles = [...storedTiles, nextLetter];
+  const newTiles = Array.from(new Set([...storedTiles, nextLetter]));
 
   localStorage.setItem("earnedTiles", JSON.stringify(newTiles));
+  localStorage.setItem(`tile-earned-${puzzleDate}`, "true"); // ✅ Prevent duplicate award
   setEarnedTiles(newTiles);
 
   if (newTiles.length === TILE_WORD.length) {
@@ -489,13 +498,13 @@ function awardTile() {
 
     console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
 
-    // 🎯 Save a special marker to reset tiles *tomorrow* instead of now
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
     localStorage.setItem("resetTilesAt", tomorrow.getTime().toString());
   }
 }
+
 
 const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalize(guess);
