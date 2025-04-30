@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 
 export default function MetadataGenerator() {
   const [number, setNumber] = useState("");
@@ -63,7 +62,14 @@ Provide thoughtful, varied guesses and realistic player expressions. Make sure t
       <Button onClick={handleGenerate} disabled={loading}>
         {loading ? "Generating..." : "Generate Metadata"}
       </Button>
-      <Textarea rows={16} value={result} readOnly className="font-mono" />
+      <textarea
+  rows={16}
+  value={result}
+  readOnly
+  className="w-full p-3 border border-gray-300 rounded font-mono bg-gray-50 text-sm"
+  style={{ whiteSpace: "pre-wrap" }}
+/>
+
     </div>
   );
 }
