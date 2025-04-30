@@ -5,10 +5,10 @@ const openai = new OpenAI({
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end("Method Not Allowed");
 
-  **if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.OPENAI_API_KEY) {
     console.error("❌ OPENAI_API_KEY is missing in environment variables.");
     return res.status(500).json({ error: "OpenAI key not set" });
-  }**
+  }
 
   const { prompt } = req.body;
 
