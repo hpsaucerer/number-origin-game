@@ -10,11 +10,11 @@ export default function MetadataGenerator() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleGenerate = async () => {
-    setLoading(true);
-    setResult("");
+const handleGenerate = async () => {
+  setLoading(true);
+  setResult("");
 
-    const prompt = `
+  const prompt = `
 I'm building a game called "Number Origin" where players guess what a number represents. For the given number, I need you to help populate three important fields in my database:
 
 1. acceptable_guesses — a list of full phrases or answers that should be accepted as correct (including short and long forms).
@@ -27,24 +27,32 @@ Let’s do this for the number: **${number}**
 Its significance is: **${description}**
 
 Provide thoughtful, varied guesses and realistic player expressions. Make sure the keywords are intelligently chosen to support fuzzy matching.
-    `.trim();
+  `.trim();
 
-    try {
-      const res = await fetch("/api/generate-metadata", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
-      });
+  try {
+    const res = await fetch("/api/generate-metadata", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
 
-      const data = await res.json();
-      setResult(data.output);
-    } catch (err) {
-      setResult("⚠️ Something went wrong.");
-      console.error(err);
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      const errorText = await res.text(); // fallback in case JSON fails
+      console.error("❌ Server responded with error:", res.status, errorText);
+      setResult(`⚠️ Server error ${res.status}:\n${errorText}`);
+      return;
     }
-  };
+
+    const data = await res.json();
+    setResult(data.output || "⚠️ No output received.");
+  } catch (err) {
+    console.error("❌ Fetch failed:", err);
+    setResult("⚠️ Something went wrong. Check the console for details.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="max-w-xl mx-auto p-6 space-y-4 bg-white border shadow rounded">
