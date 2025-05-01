@@ -1,5 +1,16 @@
 @import './fonts.css';
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ✅ Your custom font base style must come AFTER @tailwind base */
+@layer base {
+  html {
+    @apply font-bevietnam;
+  }
+}
+
 /* Ensure full height layout and mobile-safe scrolling */
 html, body {
   height: 100%;
@@ -59,7 +70,6 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   }
 }
 
-
 .animate-shimmer {
   background: linear-gradient(90deg, #ffffff22, #ffffff66, #ffffff22);
   background-size: 200% 100%;
@@ -90,9 +100,3 @@ html, body, button, .recharts-wrapper, .recharts-surface {
 .joyride-tooltip__spotlight {
   display: none !important;
 }
-
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
