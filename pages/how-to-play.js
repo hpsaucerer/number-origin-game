@@ -1,16 +1,17 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Header from "@/components/ui/header";
 import CategoryPills from "@/components/category-pills";
 import StatsModal from "@/components/modals/StatsModal";
 import AchievementsModal from "@/components/AchievementsModal";
-import useStats from "@/hooks/useStats"; // import your custom hook
+import useStats from "@/hooks/useStats"; // your custom hook
 
 export default function HowToPlayPage() {
   const [showStats, setShowStats] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
   const {
     stats,
@@ -20,7 +21,14 @@ export default function HowToPlayPage() {
     combinedLabel,
     earnedTiles,
     categoryAchievements,
-  } = useStats(); // fetch actual user data
+  } = useStats(); // client-side hook
+
+  // Prevent SSR crash by only rendering after client mount
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) return null;
 
   return (
     <>
@@ -88,15 +96,12 @@ export default function HowToPlayPage() {
         combinedLabel={combinedLabel}
       />
 
-{earnedTiles.length > 0 && Object.keys(categoryAchievements).length > 0 && (
-  <AchievementsModal
-    open={showAchievements}
-    onClose={() => setShowAchievements(false)}
-    earnedTiles={earnedTiles}
-    categoryAchievements={categoryAchievements}
-  />
-)}
-
+      <AchievementsModal
+        open={showAchievements}
+        onClose={() => setShowAchievements(false)}
+        earnedTiles={earnedTiles}
+        categoryAchievements={categoryAchievements}
+      />
     </>
   );
 }
