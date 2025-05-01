@@ -28,6 +28,7 @@ import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
 import AchievementsModal from "@/components/AchievementsModal";
+import WhatsNewModal from "@/components/modals/WhatsNewModal";
 
 const DEBUG_MODE = false; // set to false later when live if you want
 
@@ -233,6 +234,7 @@ const [puzzle, setPuzzle] = useState(null);
 const [puzzleNumber, setPuzzleNumber] = useState(null);
 
 const [localDate, setLocalDate] = useState("");
+const [showWhatsNew, setShowWhatsNew] = useState(false);
 
 const [showTour, setShowTour] = useState(false);
 const [stepIndex, setStepIndex] = useState(0);
@@ -322,6 +324,14 @@ useEffect(() => {
 
 useEffect(() => {
   setHasMounted(true);
+}, []);
+    
+useEffect(() => {
+  const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew");
+  if (!hasSeenWhatsNew) {
+    setShowWhatsNew(true);
+    localStorage.setItem("seenWhatsNew", "true");
+  }
 }, []);
 
 useEffect(() => {
@@ -1150,7 +1160,12 @@ if (data.type === "step:after") {
     Sport: 12,
   }}
 />
-
+<WhatsNewModal
+  open={showWhatsNew}
+  onClose={() => setShowWhatsNew(false)}
+  earnedTiles={earnedTiles}
+  categoryAchievements={categoryAchievements}
+/>
 
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
