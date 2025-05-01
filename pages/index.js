@@ -183,6 +183,13 @@ const joyrideSteps = [
     wait: 500,
   },
   {
+    target: ".achievements-button",
+    content: "Tap the trophy icon to view your achievements — including category progress and tiles earned!",
+    disableBeacon: true,
+    disableScrolling: true,
+    wait: 500,
+  },
+  {
     target: ".stats-button",
     content: "Track your daily streaks and puzzle stats here.",
     disableBeacon: true,
