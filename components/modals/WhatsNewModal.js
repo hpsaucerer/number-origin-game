@@ -49,7 +49,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
           </DialogHeader>
 
           <p className="text-sm text-gray-700 mt-1 mb-4 leading-relaxed">
-            Introducing: Daily Streak - Build your Numerus!
+            Introducing: <strong>Daily Streak - Build your Numerus!</strong>
           </p>
 
 {/* Tiles Preview */}
@@ -88,8 +88,8 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
 
 {/* Category Achievements Preview Image Section */}
 <div className="w-full mt-6">
-  <p className="text-sm text-gray-700 font-vietnam mb-3">
-    Introducing new: <strong>Category Achievements</strong>
+  <p className="text-base font-medium text-gray-800 text-center mb-2">
+    Introducing: <strong>Category Achievements</strong>
   </p>
 
   <img
@@ -98,7 +98,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
     className="w-full rounded-lg shadow-md"
   />
 
-  <p className="text-xs text-gray-600 mt-2 text-left">
+  <p className="text-base font-medium text-gray-700 text-center mt-2">
     Track your progress and unlock rewards in each category!
   </p>
 </div>
