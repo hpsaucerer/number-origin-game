@@ -48,12 +48,13 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
             </DialogTitle>
           </DialogHeader>
 
-          <p className="text-base font-medium text-gray-800 text-center mb-2">
-            Introducing: <strong>Daily Streak - Build your Numerus!</strong>
-          </p>
+<div className="text-base font-medium text-gray-800 text-center mb-2">
+  Introducing: <strong>Daily Streak - Build your Numerus!</strong>
+</div>
+
 
 {/* Tiles Preview */}
-<div className="w-full text-center bg-gray-100 rounded-lg py-4 px-3 shadow-inner mb-6">
+<div className="w-full text-center bg-gray-100 rounded-lg py-4 px-3 shadow-inner mb-2">
   <div className="flex justify-center gap-2 mb-3">
     {Array.from("NUMERUS").map((letter, idx) => (
       <div
@@ -68,7 +69,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
   </div>
 
   <p className="text-sm text-gray-600 max-w-sm mx-auto mb-4">
-    Earn a tile each day you play — spell out <strong>NUMERUS</strong> and earn free category reveal tokens!
+    Earn a tile each day you play to spell out <strong>NUMERUS</strong> and earn free category reveal tokens!
   </p>
 
   {/* 🔔 New Button Intro */}
