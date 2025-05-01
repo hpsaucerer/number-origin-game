@@ -1,15 +1,18 @@
 @import './fonts.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-/* ✅ Your custom font base style must come AFTER @tailwind base */
+@tailwind base;
 @layer base {
   html {
     @apply font-bevietnam;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: white;
   }
 }
+@tailwind components;
+@tailwind utilities;
+
 
 /* Ensure full height layout and mobile-safe scrolling */
 html, body {
@@ -22,13 +25,6 @@ html, body {
 /* ✅ Apply consistent box-sizing across all elements */
 *, *::before, *::after {
   box-sizing: border-box;
-}
-
-body {
-  font-family: 'Be Vietnam Pro', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: white;
 }
 
 .recharts-pie-sector:focus {
