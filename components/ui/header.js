@@ -68,25 +68,24 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
 
         {/* Right-side icon buttons */}
         <div className="flex items-center space-x-3">
-          {/* Stats Button */}
-          <Button
-            onClick={onStatsClick}
-            className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
-            title="Your Stats"
-            aria-label="Your Stats"
-          >
-            <PieChartIcon className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
-          </Button>
+{/* Stats Button */}
+<Button
+  onClick={onStatsClick}
+  className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+  title="Your Stats"
+  aria-label="Your Stats"
+>
+  <PieChartIcon className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
+</Button>
 
 {/* Achievements Button */}
 <Button
   onClick={onAchievementsClick}
-  className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+  className="achievements-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
   title="Achievements"
   aria-label="Achievements"
 >
   <Trophy className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
-
 </Button>
 
         </div>
