@@ -1,13 +1,35 @@
-// app/how-to-play/page.js
+'use client';
+
+import { useState } from "react";
 import Link from "next/link";
-import Header from "@/components/ui/header"; // Adjust if your file is named differently
+import Header from "@/components/ui/header";
 import CategoryPills from "@/components/category-pills";
+import StatsModal from "@/components/modals/StatsModal";
+import AchievementsModal from "@/components/AchievementsModal";
+import useStats from "@/hooks/useStats"; // import your custom hook
 
 export default function HowToPlayPage() {
+  const [showStats, setShowStats] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
+
+  const {
+    stats,
+    data,
+    COLORS,
+    renderCenterLabel,
+    combinedLabel,
+    earnedTiles,
+    categoryAchievements,
+  } = useStats(); // fetch actual user data
+
   return (
     <>
-      <Header />
-      <div className="flex flex-col items-center pt-24 px-4 pb-8 bg-gray-50 min-h-screen">
+      <Header
+        onStatsClick={() => setShowStats(true)}
+        onAchievementsClick={() => setShowAchievements(true)}
+      />
+
+      <div className="flex flex-col items-center pt-8 md:pt-24 px-4 pb-8 bg-gray-50 min-h-screen">
         <div className="bg-white border border-gray-200 rounded-xl shadow-md p-6 w-full max-w-2xl">
           <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">How To Play</h1>
 
@@ -47,7 +69,6 @@ export default function HowToPlayPage() {
             </div>
           </div>
 
-          {/* 🔙 Optional back to Home button */}
           <div className="mt-8 text-center">
             <Link href="/" className="inline-block bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
               ← Back to Home
@@ -55,6 +76,24 @@ export default function HowToPlayPage() {
           </div>
         </div>
       </div>
+
+      {/* Live modals with real user data */}
+      <StatsModal
+        open={showStats}
+        onClose={() => setShowStats(false)}
+        stats={stats}
+        data={data}
+        COLORS={COLORS}
+        renderCenterLabel={renderCenterLabel}
+        combinedLabel={combinedLabel}
+      />
+
+      <AchievementsModal
+        open={showAchievements}
+        onClose={() => setShowAchievements(false)}
+        earnedTiles={earnedTiles}
+        categoryAchievements={categoryAchievements}
+      />
     </>
   );
 }
