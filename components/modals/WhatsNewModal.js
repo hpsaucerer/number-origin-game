@@ -44,12 +44,12 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
 
           <DialogHeader className="w-full">
             <DialogTitle>
-              <h2 className="text-lg text-gray-800 text-left">🎉 What's New in Numerus</h2>
+              <h2 className="text-lg text-gray-800 text-left">🎉 What's New? </h2>
             </DialogTitle>
           </DialogHeader>
 
           <p className="text-sm text-gray-700 mt-1 mb-4 leading-relaxed">
-            We’ve added new features to make your experience even more fun! Introducing: Daily Streak - Build your Numerus!
+            Introducing: Daily Streak - Build your Numerus!
           </p>
 
 {/* Tiles Preview */}
@@ -77,7 +77,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
   {/* 🔓 Category Reveal Button Image */}
   <div>
     <img
-      src="/images/reveal-category-button-preview.png"
+      src="/images/reveal-category-button.png"
       alt="Reveal Category Button"
       className="mx-auto w-48 h-auto rounded shadow"
     />
@@ -86,17 +86,17 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
 </div>
 
 
-{/* 📸 Static Category Progress Image */}
-<div className="w-full text-center">
-  <h3 className="text-md font-semibold text-gray-800 mb-2">📊 Category Achievements</h3>
-  <img
-    src="/images/achievements-preview.png"
-    alt="Category Progress Preview"
-    className="mx-auto rounded-lg shadow-sm border border-gray-200 max-w-full h-auto"
-  />
-  <p className="text-sm text-gray-600 mt-2">
-    Track your progress and unlock rewards in each category!
+{/* Category Achievements Preview Image Section */}
+<div className="w-full mt-6">
+  <p className="text-sm text-gray-700 font-vietnam mb-3">
+    Introducing: <strong>Category Achievements</strong>
   </p>
+
+  <img
+    src="/images/category-achievements-preview.png"
+    alt="Category Achievements Preview"
+    className="w-full rounded-lg shadow-md"
+  />
 </div>
 
 
