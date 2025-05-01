@@ -52,13 +52,38 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
             We’ve added new features to make your experience even more fun! Check out what’s new:
           </p>
 
-          {/* Tiles Preview */}
-          <div className="w-full text-center bg-gray-100 rounded-lg py-4 px-3 shadow-inner mb-6">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">✨ Daily Streak: Earn Numerus Tiles</h3>
-            <div className="flex justify-center gap-2">
-              {previewTiles}
-            </div>
-          </div>
+{/* Tiles Preview */}
+<div className="w-full text-center bg-gray-100 rounded-lg py-4 px-3 shadow-inner mb-6">
+  <h3 className="text-sm font-semibold text-gray-700 mb-2">✨ Daily Streak: Earn Numerus Tiles</h3>
+
+  <div className="flex justify-center gap-2 mb-3">
+    {Array.from("NUMERUS").map((letter, idx) => (
+      <div
+        key={idx}
+        className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
+          earnedTiles.includes(letter) ? "bg-[#3B82F6]" : "bg-gray-300"
+        }`}
+      >
+        {letter}
+      </div>
+    ))}
+  </div>
+
+  <p className="text-sm text-gray-600 max-w-sm mx-auto">
+    Earn a tile each day you play — spell out <strong>NUMERUS</strong> and earn free category reveal tokens!
+  </p>
+
+  {/* 🔓 Category Reveal Button Image */}
+  <div className="mt-4">
+    <img
+      src="/images/reveal-category-button-preview.png"
+      alt="Reveal Category Button"
+      className="mx-auto w-48 h-auto rounded shadow"
+    />
+    <p className="text-xs text-gray-500 mt-1">Use tokens to reveal the category of a tricky puzzle!</p>
+  </div>
+</div>
+
 
 {/* 📸 Static Category Progress Image */}
 <div className="w-full text-center">
