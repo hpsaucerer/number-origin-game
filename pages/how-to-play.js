@@ -1,6 +1,6 @@
 // app/how-to-play/page.js
 import Link from "next/link";
-import Header from "@/components/ui/Header"; // Adjust if your file is named differently
+import Header from "@/components/ui/header"; // Adjust if your file is named differently
 
 export default function HowToPlayPage({ renderCategoryPills }) {
   return (
