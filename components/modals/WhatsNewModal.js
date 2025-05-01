@@ -89,16 +89,19 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
 {/* Category Achievements Preview Image Section */}
 <div className="w-full mt-6">
   <p className="text-sm text-gray-700 font-vietnam mb-3">
-    Introducing: <strong>Category Achievements</strong>
+    Introducing new: <strong>Category Achievements</strong>
   </p>
 
   <img
-    src="/images/category-achievements-preview.png"
+    src="/images/achievements-preview.png"
     alt="Category Achievements Preview"
     className="w-full rounded-lg shadow-md"
   />
-</div>
 
+  <p className="text-xs text-gray-600 mt-2 text-left">
+    Track your progress and unlock rewards in each category!
+  </p>
+</div>
 
           <button
             onClick={onClose}
