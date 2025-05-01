@@ -64,7 +64,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
 <div className="w-full text-center">
   <h3 className="text-md font-semibold text-gray-800 mb-2">📊 Category Achievements</h3>
   <img
-    src="/images/category-achievements-preview.png"
+    src="/images/achievements-preview.png"
     alt="Category Progress Preview"
     className="mx-auto rounded-lg shadow-sm border border-gray-200 max-w-full h-auto"
   />
