@@ -1,3 +1,5 @@
+@import './fonts.css';
+
 /* Ensure full height layout and mobile-safe scrolling */
 html, body {
   height: 100%;
@@ -12,7 +14,7 @@ html, body {
 }
 
 body {
-  font-family: system-ui, sans-serif;
+  font-family: 'Be Vietnam Pro', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: white;
