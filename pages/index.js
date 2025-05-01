@@ -113,6 +113,15 @@ const synonymMap = {
   shaekspeare: "shakespeare",
   "shakesperes": "shakespeare",
   "shaksper": "shakespeare",
+  "divine proportion": "golden ratio",
+  "golden mean": "golden ratio",
+  "golden section": "golden ratio",
+  "phi ratio": "golden ratio",
+  "beauty ratio": "golden ratio",
+  "aesthetic ratio": "golden ratio",
+  "golden number": "golden ratio",
+  "golden constant": "golden ratio",
+  "ideal proportion": "golden ratio",
 };
 
 export function normalizeGuess(input) {
