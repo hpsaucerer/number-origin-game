@@ -1,41 +1,42 @@
-// components/CategoryPills.jsx
-import React, { useRef, useEffect } from "react";
+// components/ui/CategoryPills.js
+import { useState, useRef, useEffect } from "react";
 
-export default function CategoryPills({ openTooltip, toggleTooltip }) {
+const categories = [
+  {
+    label: "Maths",
+    color: "bg-blue-200 text-blue-800",
+    tooltip: "Equations, constants, mathematical discoveries, calculations.",
+  },
+  {
+    label: "Geography",
+    color: "bg-green-200 text-green-800",
+    tooltip: "Distances, coordinates, elevations.",
+  },
+  {
+    label: "Science",
+    color: "bg-orange-200 text-orange-800",
+    tooltip: "Atomic numbers, scientific constants, measurements.",
+  },
+  {
+    label: "History",
+    color: "bg-yellow-200 text-yellow-800",
+    tooltip: "Monumental events, inventions, revolutions, treaties.",
+  },
+  {
+    label: "Culture",
+    color: "bg-purple-200 text-purple-800",
+    tooltip: "Movies, literature, music, art.",
+  },
+  {
+    label: "Sport",
+    color: "bg-red-200 text-red-800",
+    tooltip: "World records, famous jersey numbers, stats, memorable dates.",
+  },
+];
+
+export default function CategoryPills() {
+  const [openTooltip, setOpenTooltip] = useState(null);
   const tooltipRefs = useRef([]);
-
-  const categories = [
-    {
-      label: "Maths",
-      color: "bg-blue-200 text-blue-800",
-      tooltip: "Equations, constants, mathematical discoveries, calculations.",
-    },
-    {
-      label: "Geography",
-      color: "bg-green-200 text-green-800",
-      tooltip: "Distances, coordinates, elevations.",
-    },
-    {
-      label: "Science",
-      color: "bg-orange-200 text-orange-800",
-      tooltip: "Atomic numbers, scientific constants, measurements.",
-    },
-    {
-      label: "History",
-      color: "bg-yellow-200 text-yellow-800",
-      tooltip: "Monumental events, inventions, revolutions, treaties.",
-    },
-    {
-      label: "Culture",
-      color: "bg-purple-200 text-purple-800",
-      tooltip: "Movies, literature, music, art.",
-    },
-    {
-      label: "Sport",
-      color: "bg-red-200 text-red-800",
-      tooltip: "World records, famous jersey numbers, stats, memorable dates.",
-    },
-  ];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -44,7 +45,7 @@ export default function CategoryPills({ openTooltip, toggleTooltip }) {
           (ref) => ref && !ref.contains(event.target)
         )
       ) {
-        toggleTooltip(null);
+        setOpenTooltip(null);
       }
     };
 
@@ -55,7 +56,11 @@ export default function CategoryPills({ openTooltip, toggleTooltip }) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [openTooltip, toggleTooltip]);
+  }, [openTooltip]);
+
+  const toggleTooltip = (idx) => {
+    setOpenTooltip((prev) => (prev === idx ? null : idx));
+  };
 
   return (
     <div className="grid grid-cols-2 gap-2 mt-4">
