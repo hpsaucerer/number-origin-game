@@ -49,13 +49,11 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
           </DialogHeader>
 
           <p className="text-sm text-gray-700 mt-1 mb-4 leading-relaxed">
-            We’ve added new features to make your experience even more fun! Check out what’s new:
+            We’ve added new features to make your experience even more fun! Introducing: Daily Streak - Build your Numerus!
           </p>
 
 {/* Tiles Preview */}
 <div className="w-full text-center bg-gray-100 rounded-lg py-4 px-3 shadow-inner mb-6">
-  <h3 className="text-sm font-semibold text-gray-700 mb-2">✨ Daily Streak: Earn Numerus Tiles</h3>
-
   <div className="flex justify-center gap-2 mb-3">
     {Array.from("NUMERUS").map((letter, idx) => (
       <div
@@ -69,18 +67,21 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
     ))}
   </div>
 
-  <p className="text-sm text-gray-600 max-w-sm mx-auto">
+  <p className="text-sm text-gray-600 max-w-sm mx-auto mb-4">
     Earn a tile each day you play — spell out <strong>NUMERUS</strong> and earn free category reveal tokens!
   </p>
 
+  {/* 🔔 New Button Intro */}
+  <p className="text-sm font-semibold text-gray-800 mb-2">A new button joins the game!</p>
+
   {/* 🔓 Category Reveal Button Image */}
-  <div className="mt-4">
+  <div>
     <img
-      src="/images/reveal-category-button.png"
+      src="/images/reveal-category-button-preview.png"
       alt="Reveal Category Button"
       className="mx-auto w-48 h-auto rounded shadow"
     />
-    <p className="text-xs text-gray-500 mt-1">Use tokens to reveal the category of a tricky puzzle!</p>
+    <p className="text-xs text-gray-500 mt-1">Use your tokens to reveal the category for tricky puzzles!</p>
   </div>
 </div>
 
