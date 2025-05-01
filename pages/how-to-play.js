@@ -1,8 +1,9 @@
 // app/how-to-play/page.js
 import Link from "next/link";
 import Header from "@/components/ui/header"; // Adjust if your file is named differently
+import CategoryPills from "@/components/ui/category-pills";
 
-export default function HowToPlayPage({ renderCategoryPills }) {
+export default function HowToPlayPage() {
   return (
     <>
       <Header />
@@ -41,7 +42,7 @@ export default function HowToPlayPage({ renderCategoryPills }) {
                 <p className="text-sm text-gray-600 mb-4">
                   Tap the buttons below to explore the categories in more detail.
                 </p>
-                {renderCategoryPills && renderCategoryPills()}
+                <CategoryPills />
               </div>
             </div>
           </div>
