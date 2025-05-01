@@ -60,31 +60,19 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
             </div>
           </div>
 
-          {/* Progress Bars */}
-          <div className="w-full">
-            <h3 className="text-md font-semibold text-gray-800 mb-2 text-center">📊 Category Achievements</h3>
-            <div className="flex flex-col gap-3">
-              {categories.map(({ label, color, total }) => {
-                const completed = categoryAchievements[label] || 0;
-                const percentage = (completed / total) * 100;
-                return (
-                  <div key={label}>
-                    <div className="flex items-center gap-2">
-                      <img src={`/icons/${label.toLowerCase()}.png`} alt={label} className="w-6 h-6" />
-                      <span className="text-sm font-semibold">{label}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-1">
-                      <div
-                        className="h-2.5 rounded-full transition-all"
-                        style={{ width: `${percentage}%`, backgroundColor: color }}
-                      />
-                    </div>
-                    <div className="text-xs text-gray-500 text-right">{`${completed}/${total}`}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+{/* 📸 Static Category Progress Image */}
+<div className="w-full text-center">
+  <h3 className="text-md font-semibold text-gray-800 mb-2">📊 Category Achievements</h3>
+  <img
+    src="/images/category-achievements-preview.png"
+    alt="Category Progress Preview"
+    className="mx-auto rounded-lg shadow-sm border border-gray-200 max-w-full h-auto"
+  />
+  <p className="text-sm text-gray-600 mt-2">
+    Track your progress and unlock rewards in each category!
+  </p>
+</div>
+
 
           <button
             onClick={onClose}
