@@ -2,6 +2,23 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { X } from "lucide-react";
 
 export default function AchievementsModal({ open, onClose, earnedTiles = [], categoryAchievements = {} }) {
+  const TILE_WORD = "NUMERUS";
+  const nextTileIndex = earnedTiles.length;
+
+  const previewTiles = TILE_WORD.split("").map((letter, index) => {
+    const isEarned = index < nextTileIndex;
+    return (
+      <div
+        key={index}
+        className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
+          isEarned ? "bg-[#3B82F6]" : "bg-gray-300"
+        }`}
+      >
+        {letter}
+      </div>
+    );
+  });
+
   const categories = [
     { label: "Maths", color: "#3b82f6", total: 20 },
     { label: "Geography", color: "#63c4a7", total: 20 },
@@ -35,16 +52,7 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
           <div className="w-full text-center bg-gray-100 rounded-lg py-4 px-3 shadow-inner mb-4">
             <h3 className="text-sm font-semibold text-gray-700 mb-2">Daily Streak: Numerus Tiles</h3>
             <div className="flex justify-center gap-2">
-              {Array.from("NUMERUS").map((letter, idx) => (
-                <div
-                  key={idx}
-                  className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
-                    earnedTiles.includes(letter) ? "bg-[#3B82F6]" : "bg-gray-300"
-                  }`}
-                >
-                  {letter}
-                </div>
-              ))}
+              {previewTiles}
             </div>
           </div>
 
