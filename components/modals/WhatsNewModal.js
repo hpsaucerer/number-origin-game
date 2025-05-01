@@ -76,7 +76,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
   {/* 🔓 Category Reveal Button Image */}
   <div className="mt-4">
     <img
-      src="/images/reveal-category-button-preview.png"
+      src="/images/reveal-category-button.png"
       alt="Reveal Category Button"
       className="mx-auto w-48 h-auto rounded shadow"
     />
