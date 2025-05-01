@@ -244,6 +244,19 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 const TILE_WORD = "NUMERUS";
 const [earnedTiles, setEarnedTiles] = useState([]);
 const [categoryAchievements, setCategoryAchievements] = useState({});
+const [showTokenBubble, setShowTokenBubble] = useState(false);
+
+useEffect(() => {
+  const hasGivenStarterTokens = localStorage.getItem("starterTokensGiven");
+  if (!hasGivenStarterTokens) {
+    const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+    const newTotal = currentTokens + 3;
+    localStorage.setItem("freeToken", newTotal.toString());
+    localStorage.setItem("starterTokensGiven", "true");
+    setTokenCount(newTotal); // Update UI state
+    console.log("🟢 Starter tokens granted!");
+  }
+}, []);
 
 useEffect(() => {
   if (!allPuzzles.length) return;
@@ -899,6 +912,11 @@ if (data.type === "step:after") {
       `}>
         {tokenCount}
       </div>
+      {showTokenBubble && (
+  <div className="absolute -top-6 right-0 bg-white border border-green-400 text-green-600 px-2 py-1 text-xs rounded shadow">
+    +3 free tokens!
+  </div>
+)}
 
       {/* Whoosh animation if just earned */}
       {justEarnedToken && (
@@ -1162,7 +1180,11 @@ if (data.type === "step:after") {
 />
 <WhatsNewModal
   open={showWhatsNew}
-  onClose={() => setShowWhatsNew(false)}
+  onClose={() => {
+    setShowWhatsNew(false);
+    setShowTokenBubble(true);
+    setTimeout(() => setShowTokenBubble(false), 3000); // hide after 3s
+  }}
   earnedTiles={earnedTiles}
   categoryAchievements={categoryAchievements}
 />
