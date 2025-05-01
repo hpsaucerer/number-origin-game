@@ -6,7 +6,7 @@ export default function HowToPlayPage({ renderCategoryPills }) {
   return (
     <>
       <Header />
-      <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8 bg-gray-50">
+      <div className="flex flex-col items-center pt-24 px-4 pb-8 bg-gray-50 min-h-screen">
         <div className="bg-white border border-gray-200 rounded-xl shadow-md p-6 w-full max-w-2xl">
           <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">How To Play</h1>
 
