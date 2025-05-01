@@ -48,7 +48,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
             </DialogTitle>
           </DialogHeader>
 
-          <p className="text-sm text-gray-700 mt-1 mb-4 leading-relaxed">
+          <p className="text-base font-medium text-gray-800 text-center mb-2">
             Introducing: <strong>Daily Streak - Build your Numerus!</strong>
           </p>
 
@@ -103,12 +103,14 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
   </p>
 </div>
 
-          <button
-            onClick={onClose}
-            className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
-          >
-            Got it!
-          </button>
+<button
+  onClick={onClose}
+  className="mt-6 text-white px-4 py-2 rounded w-full hover:opacity-90 transition"
+  style={{ backgroundColor: "#63c4a7" }} // ← your brand green hex
+>
+  Got it!
+</button>
+
 
         </DialogContent>
       </div>
