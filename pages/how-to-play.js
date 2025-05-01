@@ -88,12 +88,15 @@ export default function HowToPlayPage() {
         combinedLabel={combinedLabel}
       />
 
-      <AchievementsModal
-        open={showAchievements}
-        onClose={() => setShowAchievements(false)}
-        earnedTiles={earnedTiles}
-        categoryAchievements={categoryAchievements}
-      />
+{earnedTiles.length > 0 && Object.keys(categoryAchievements).length > 0 && (
+  <AchievementsModal
+    open={showAchievements}
+    onClose={() => setShowAchievements(false)}
+    earnedTiles={earnedTiles}
+    categoryAchievements={categoryAchievements}
+  />
+)}
+
     </>
   );
 }
