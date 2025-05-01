@@ -1,7 +1,7 @@
 /* /public/fonts/fonts.css or /styles/fonts.css */
 @font-face {
   font-family: 'Be Vietnam Pro';
-  src: url('/fonts/be-vietnam-pro/be-vietnam-pro-vietnamese-400-normal.woff2') format('woff2');
+  src: url('/fonts/be-vietnam-pro/be-vietnam-pro-latin-400-normal.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'Be Vietnam Pro';
-  src: url('/fonts/be-vietnam-pro/be-vietnam-pro-vietnamese-500-normal.woff2') format('woff2');
+  src: url('/fonts/be-vietnam-pro/be-vietnam-pro-latin-500-normal.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -17,7 +17,7 @@
 
 @font-face {
   font-family: 'Be Vietnam Pro';
-  src: url('/fonts/be-vietnam-pro/be-vietnam-pro-vietnamese-700-normal.woff2') format('woff2');
+  src: url('/fonts/be-vietnam-pro/be-vietnam-pro-latin-700-normal.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
