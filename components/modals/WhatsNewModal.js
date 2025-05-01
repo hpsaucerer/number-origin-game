@@ -48,24 +48,33 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
             </DialogTitle>
           </DialogHeader>
 
-<div className="text-base font-medium text-gray-800 text-center mb-2">
-  Introducing: <strong>Daily Streak - Build your Numerus!</strong>
+<div className="w-full text-center mb-2">
+  <p className="text-base font-medium text-gray-800">
+    Introducing: <strong>Daily Streak – Build your Numerus!</strong>
+  </p>
 </div>
 
 
 {/* Tiles Preview */}
 <div className="w-full text-center bg-gray-100 rounded-lg py-4 px-3 shadow-inner mb-2">
   <div className="flex justify-center gap-2 mb-3">
-    {Array.from("NUMERUS").map((letter, idx) => (
-      <div
-        key={idx}
-        className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
-          earnedTiles.includes(letter) ? "bg-[#3B82F6]" : "bg-gray-300"
-        }`}
-      >
-        {letter}
-      </div>
-    ))}
+const TILE_WORD = "NUMERUS";
+const nextTileIndex = earnedTiles.length;
+
+{TILE_WORD.split("").map((letter, index) => {
+  const isEarned = index < nextTileIndex;
+  return (
+    <div
+      key={index}
+      className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
+        isEarned ? "bg-[#3B82F6]" : "bg-gray-300"
+      }`}
+    >
+      {letter}
+    </div>
+  );
+})}
+
   </div>
 
   <p className="text-sm text-gray-600 max-w-sm mx-auto mb-4">
@@ -82,7 +91,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
       alt="Reveal Category Button"
       className="mx-auto w-48 h-auto rounded shadow"
     />
-    <p className="text-xs text-gray-500 mt-1">Use your tokens to reveal the category for tricky puzzles!</p>
+    <p className="text-base text-gray-500 mt-1">Use your tokens to reveal the category for tricky puzzles!</p>
   </div>
 </div>
 
