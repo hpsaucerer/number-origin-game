@@ -5,19 +5,19 @@ export default function WhatsNewModal({ open, onClose }) {
   const TILE_WORD = "NUMERUS";
 
   // Dummy data – always highlight first 7 tiles for the modal preview
-  const previewTiles = TILE_WORD.split("").map((letter, index) => {
-    return (
-      <div
-        key={index}
-        style={{ animationDelay: `${index * 0.5}s` }}
-        className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white animate-fade-in ${
-          "bg-[#3B82F6]"
-        }`}
-      >
-        {letter}
-      </div>
-    );
-  });
+const previewTiles = TILE_WORD.split("").map((letter, index) => {
+  const isEarned = index < 3;
+  return (
+    <div
+      key={index}
+      className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
+        isEarned ? "bg-[#3B82F6]" : "bg-gray-300 text-gray-400"
+      }`}
+    >
+      {letter}
+    </div>
+  );
+});
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
