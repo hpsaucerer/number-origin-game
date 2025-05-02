@@ -206,7 +206,9 @@ const joyrideSteps = [
     "Hmm, not quite. Keep thinking!",
     "Last clue! Take a deep breath and go for it.",
   ];
-    
+  
+  const [isFirstTimePlayer, setIsFirstTimePlayer] = useState(false);
+  const [pendingWhatsNew, setPendingWhatsNew] = useState(false);
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState(0);
@@ -297,37 +299,48 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (!puzzle || !hasMounted || localStorage.getItem("seenTour") === "true") return;
+  const hasSeenTour = localStorage.getItem("seenTour") === "true";
 
-  let attempts = 0;
-  const maxTries = 10;
+  if (!puzzle || !hasMounted) return;
 
-  const tryStartTour = () => {
-    const input = document.querySelector(".guess-input");
-    const clue = document.querySelector(".reveal-button");
-    const daily = document.querySelector(".daily-number");
-    const stats = document.querySelector(".stats-button");
+  if (!hasSeenTour) {
+    setIsFirstTimePlayer(true);
 
-    if (daily && input && clue && stats) {
-      debugLog("✅ Joyride: All targets found.");
-      setStepIndex(0);
-      setTourKey(Date.now());
-      setShowTour(true);
-      setReadyToRunTour(true);
-    } else if (attempts < maxTries) {
-      attempts++;
-      console.warn(`⏳ Joyride waiting... attempt ${attempts}`);
-      setTimeout(tryStartTour, 300);
-    } else {
-      console.error("❌ Joyride failed: Targets not found.");
+    let attempts = 0;
+    const maxTries = 10;
+
+    const tryStartTour = () => {
+      const input = document.querySelector(".guess-input");
+      const clue = document.querySelector(".reveal-button");
+      const daily = document.querySelector(".daily-number");
+      const stats = document.querySelector(".stats-button");
+
+      if (daily && input && clue && stats) {
+        debugLog("✅ Joyride: All targets found.");
+        setStepIndex(0);
+        setTourKey(Date.now());
+        setShowTour(true);
+        setReadyToRunTour(true);
+      } else if (attempts < maxTries) {
+        attempts++;
+        console.warn(`⏳ Joyride waiting... attempt ${attempts}`);
+        setTimeout(tryStartTour, 300);
+      } else {
+        console.error("❌ Joyride failed: Targets not found.");
+      }
+    };
+
+    setTimeout(tryStartTour, 300);
+  } else {
+    const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
+    if (!hasSeenWhatsNew) {
+      setShowWhatsNew(true);
+      localStorage.setItem("seenWhatsNew", "true");
     }
-  };
-
-  // Delay check until after render
-  setTimeout(tryStartTour, 300);
+  }
 }, [puzzle, hasMounted]);
 
-  
+
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
     timeZone: "Europe/London",
@@ -339,13 +352,6 @@ useEffect(() => {
   setHasMounted(true);
 }, []);
     
-useEffect(() => {
-  const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew");
-  if (!hasSeenWhatsNew) {
-    setShowWhatsNew(true);
-    localStorage.setItem("seenWhatsNew", "true");
-  }
-}, []);
 
 useEffect(() => {
   const existingId = localStorage.getItem("deviceId");
@@ -816,35 +822,39 @@ return !hasMounted ? (
 callback={(data) => {
   debugLog("🔄 Joyride event:", data);
 
-  // End tour if finished or skipped
+  // When the tour ends (finished or skipped)
   if (data.status === "finished" || data.status === "skipped") {
     setShowTour(false);
     localStorage.setItem("seenTour", "true");
+
+    // ✅ Trigger What's New only if this is the first-time player
+    const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
+    if (isFirstTimePlayer && !hasSeenWhatsNew) {
+      setTimeout(() => {
+        setShowWhatsNew(true);
+        localStorage.setItem("seenWhatsNew", "true");
+      }, 500); // slight delay to avoid visual clash
+    }
+
     return;
   }
 
-// Handle advancing between steps
-if (data.type === "step:after") {
-  const nextStep = stepIndex + 1;
+  // Advance steps
+  if (data.type === "step:after") {
+    const nextStep = stepIndex + 1;
+    const nextTargetSelector = joyrideSteps[nextStep]?.target;
 
-  // ✅ End the tour if there are no more steps
-  if (nextStep >= joyrideSteps.length) {
-    debugLog("✅ All Joyride steps complete!");
-    setShowTour(false);
-    localStorage.setItem("seenTour", "true");
-    return;
-  }
+    if (!nextTargetSelector) {
+      debugLog("✅ All Joyride steps complete!");
+      setShowTour(false);
+      localStorage.setItem("seenTour", "true");
+      return;
+    }
 
-  const nextTargetSelector = joyrideSteps[nextStep]?.target;
-
-  if (nextTargetSelector) {
     const nextTarget = document.querySelector(nextTargetSelector);
-
     if (nextTarget) {
       setStepIndex(nextStep);
     } else {
-      // Retry after delay in case of late-rendered element
-      console.warn(`⏳ Waiting for next Joyride step target: ${nextTargetSelector}`);
       setTimeout(() => {
         const retryTarget = document.querySelector(nextTargetSelector);
         if (retryTarget) {
@@ -854,10 +864,15 @@ if (data.type === "step:after") {
           console.warn(`❌ Still missing Joyride step target after retry: ${nextTargetSelector}`);
           setShowTour(false);
         }
-      }, 500); // Retry after 0.5s
+      }, 500);
     }
   }
-}
+
+  if (data.type === "target:notFound") {
+    console.warn("🚫 Joyride target not found:", data.step.target);
+    setShowTour(false);
+  }
+}}
 
 
   // Handle missing target during step render
