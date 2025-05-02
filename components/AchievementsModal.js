@@ -1,8 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
-import { useState, useEffect } from "react";
 
-export default function AchievementsModal({ open, onClose, earnedTiles = [] }) {
+export default function AchievementsModal({ open, onClose, earnedTiles = [], categoryAchievements = {} }) {
   const TILE_WORD = "NUMERUS";
   const nextTileIndex = earnedTiles.length;
 
@@ -20,15 +19,6 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [] }) {
     );
   });
 
-const [categoryAchievements, setCategoryAchievements] = useState({
-  Maths: 0,
-  Geography: 0,
-  Science: 0,
-  History: 0,
-  Culture: 0,
-  Sport: 0,
-});
-
   const categories = [
     { label: "Maths", color: "#3b82f6", total: 20 },
     { label: "Geography", color: "#63c4a7", total: 20 },
@@ -37,29 +27,6 @@ const [categoryAchievements, setCategoryAchievements] = useState({
     { label: "Culture", color: "#8e44ad", total: 20 },
     { label: "Sport", color: "#e53935", total: 20 },
   ];
-useEffect(() => {
-  const completedPuzzles = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-  const allPuzzles = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
-
-  const categoryCounts = {
-    Maths: 0,
-    Geography: 0,
-    Science: 0,
-    History: 0,
-    Culture: 0,
-    Sport: 0,
-  };
-
-  allPuzzles.forEach((puzzle) => {
-    if (completedPuzzles.includes(puzzle.id)) {
-      if (categoryCounts[puzzle.category] !== undefined) {
-        categoryCounts[puzzle.category]++;
-      }
-    }
-  });
-
-  setCategoryAchievements(categoryCounts);
-}, []);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -81,7 +48,7 @@ useEffect(() => {
             </DialogTitle>
           </DialogHeader>
 
-          {/* 🎯 Tiles Section with subtle background */}
+          {/* 🎯 Tiles Section */}
           <div className="w-full text-center bg-gray-100 rounded-lg py-4 px-3 shadow-inner mb-4">
             <h3 className="text-sm font-semibold text-gray-700 mb-2">Daily Streak: Numerus Tiles</h3>
             <div className="flex justify-center gap-2">
@@ -89,12 +56,11 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* 🧩 Category Achievements Section */}
+          {/* 🧩 Category Progress */}
           <div className="w-full">
             <h3 className="text-md font-semibold text-gray-800 mb-2 text-center">Category Achievements</h3>
             <div className="flex flex-col gap-2 sm:gap-2">
-              {categories.map((cat) => {
-                const { label, color, total } = cat;
+              {categories.map(({ label, color, total }) => {
                 const completed = categoryAchievements[label] || 0;
                 const percentage = total ? (completed / total) * 100 : 0;
                 const lowerLabel = label.toLowerCase();
@@ -105,7 +71,6 @@ useEffect(() => {
                       <img src={`/icons/${lowerLabel}.png`} alt={`${label} icon`} className="w-8 h-8" />
                       <span className="text-sm font-semibold">{label}</span>
                     </div>
-
                     <div className="flex items-center gap-2">
                       <div className="flex-1">
                         <div className="w-full bg-gray-200 rounded-full h-2.5 mt-1">
