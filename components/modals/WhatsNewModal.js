@@ -35,14 +35,14 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
 
           <DialogHeader className="w-full">
             <DialogTitle>
-              <h2 className="text-lg text-gray-800 text-left">Update 1.0: What's new on Numerus</h2>
+              <h2 className="text-lg text-gray-800 text-left">Update 1.0. What's new on Numerus</h2>
             </DialogTitle>
           </DialogHeader>
 
           {/* Intro Text */}
           <div className="w-full text-center mb-2">
             <p className="text-base font-medium text-gray-800">
-              Introducing: <strong>Daily Streak – Build your Numerus!</strong>
+              Introducing.. <strong>Daily Streak – Build your Numerus!</strong>
             </p>
           </div>
 
@@ -75,7 +75,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
           {/* Category Achievements Preview Image Section */}
           <div className="w-full mt-4">
             <p className="text-base font-medium text-gray-800 text-center mb-2">
-              Introducing: <strong>Category Achievements</strong>
+              Introducing.. <strong>Category Achievements</strong>
             </p>
 
             <img
