@@ -22,7 +22,7 @@ const previewTiles = TILE_WORD.split("").map((letter, index) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 flex justify-center z-50 px-4 overflow-y-auto pt-10 pb-6 sm:items-center">
-        <DialogContent className="relative max-h-[90vh] overflow-y-auto pt-3 px-4 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center">
+        <DialogContent className="relative max-h-[90vh] overflow-y-auto scroll-smooth pt-3 px-4 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center">
 
           {/* Close Button */}
           <button
