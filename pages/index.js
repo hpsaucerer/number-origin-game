@@ -329,6 +329,13 @@ useEffect(() => {
 }, [showAchievements]);
 
 useEffect(() => {
+  if (!showAchievements) return;
+
+  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
+  setEarnedTiles(storedTiles);
+}, [showAchievements]);
+
+useEffect(() => {
   const resetTime = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
   const now = Date.now();
 
