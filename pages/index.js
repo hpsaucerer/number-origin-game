@@ -260,8 +260,6 @@ const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
 const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 const TILE_WORD = "NUMERUS";
-const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
-const [categoryAchievements, setCategoryAchievements] = useState({});
 const [showTokenBubble, setShowTokenBubble] = useState(false);
 
 useEffect(() => {
@@ -275,70 +273,6 @@ useEffect(() => {
     console.log("🟢 Starter tokens granted!");
   }
 }, []);
-
-useEffect(() => {
-  if (!showPostGame) return;
-
-  const completedPuzzles = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-  const allPuzzles = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
-
-  const categoryCounts = {
-    Maths: 0,
-    Geography: 0,
-    Science: 0,
-    History: 0,
-    Culture: 0,
-    Sport: 0,
-  };
-
-  allPuzzles.forEach((puzzle) => {
-    if (completedPuzzles.includes(puzzle.id)) {
-      if (categoryCounts[puzzle.category] !== undefined) {
-        categoryCounts[puzzle.category]++;
-      }
-    }
-  });
-
-  setCategoryAchievements(categoryCounts);
-}, [showPostGame]);
-
-useEffect(() => {
-  if (!showAchievements) return;
-
-  const completedPuzzles = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-  const allPuzzles = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
-
-  const categoryCounts = {
-    Maths: 0,
-    Geography: 0,
-    Science: 0,
-    History: 0,
-    Culture: 0,
-    Sport: 0,
-  };
-
-  allPuzzles.forEach((puzzle) => {
-    if (completedPuzzles.includes(puzzle.id)) {
-      if (categoryCounts[puzzle.category] !== undefined) {
-        categoryCounts[puzzle.category]++;
-      }
-    }
-  });
-
-  setCategoryAchievements(categoryCounts);
-}, [showAchievements]);
-
-useEffect(() => {
-  if (!showAchievements) return;
-
-  try {
-    const stored = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
-    setEarnedTileIndexes(Array.isArray(stored) ? stored : []);
-  } catch (err) {
-    console.error("Invalid earnedTileIndexes JSON:", err);
-    setEarnedTileIndexes([]); // ✅ Fix here
-  }
-}, [showAchievements]);
 
 
 useEffect(() => {
@@ -1233,8 +1167,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 <AchievementsModal
   open={showAchievements}
   onClose={() => setShowAchievements(false)}
-  earnedTileIndexes={earnedTileIndexes} // ✅ this must match
-  categoryAchievements={categoryAchievements}
 />
 
 <WhatsNewModal
