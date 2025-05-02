@@ -9,7 +9,7 @@ export default function WhatsNewModal({ open, onClose }) {
     return (
       <div
         key={index}
-        style={{ animationDelay: `${index * 0.15}s` }}
+        style={{ animationDelay: `${index * 0.5}s` }}
         className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white animate-fade-in ${
           "bg-[#3B82F6]"
         }`}
@@ -42,7 +42,7 @@ export default function WhatsNewModal({ open, onClose }) {
           {/* Intro Text */}
           <div className="w-full text-center mb-2">
             <p className="text-base font-medium text-gray-800">
-              Introducing.. <strong>Daily Streak – Build your Numerus!</strong>
+              Introducing... <strong>Daily Streak – build your Numerus!</strong>
             </p>
           </div>
 
@@ -75,7 +75,7 @@ export default function WhatsNewModal({ open, onClose }) {
           {/* Category Achievements Preview */}
           <div className="w-full mt-4">
             <p className="text-base font-medium text-gray-800 text-center mb-2">
-              Introducing.. <strong>Category Achievements</strong>
+              Introducing... <strong>Category Achievements</strong>
             </p>
 
             <img
