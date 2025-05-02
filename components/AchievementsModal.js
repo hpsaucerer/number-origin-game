@@ -1,12 +1,12 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 
-export default function AchievementsModal({ open, onClose, earnedTiles = [], categoryAchievements = {} }) {
+export default function AchievementsModal({ open, onClose, earnedTileIndexes = [], categoryAchievements = {} }) {
   const TILE_WORD = "NUMERUS";
   const nextTileIndex = earnedTiles.length;
 
 const previewTiles = TILE_WORD.split("").map((letter, index) => {
-  const isEarned = earnedTiles.includes(index); // ✅ check index explicitly
+  const isEarned = earnedTileIndexes.includes(index); // ✅ check index explicitly
   return (
     <div
       key={index}
