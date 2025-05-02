@@ -68,41 +68,45 @@ export default function PostGameModal({
   }, []);
 
 useEffect(() => {
-  if (open) {
-    document.body.style.overflow = "hidden";
+  if (!open) return;
 
-    // Step 1: Load tiles from localStorage
-    const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
+  document.body.style.overflow = "hidden";
 
-    // Step 2: Determine the next letter to award
+  const today = new Date().toISOString().split("T")[0]; // e.g., '2025-05-02'
+  const tileAlreadyEarnedToday = localStorage.getItem(`tile-earned-${today}`);
+
+  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
+
+  if (!tileAlreadyEarnedToday) {
     const nextTileIndex = storedTiles.length;
     const newTile = TILE_WORD[nextTileIndex];
 
-    // Step 3: Add new tile if needed
     if (newTile && !storedTiles.includes(newTile)) {
       const updatedTiles = [...storedTiles, newTile];
       localStorage.setItem("earnedTiles", JSON.stringify(updatedTiles));
-      setEarnedTiles(updatedTiles); // also update local state
+      localStorage.setItem(`tile-earned-${today}`, "true"); // ✅ Mark today's reward
+      setEarnedTiles(updatedTiles);
     } else {
-      setEarnedTiles(storedTiles); // fallback, just set what we had
-    }
-
-    // Step 4: Handle animation and confetti
-    if (isCorrect) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
+      setEarnedTiles(storedTiles);
     }
   } else {
-    document.body.style.overflow = "";
+    // No reward today — just load existing
+    setEarnedTiles(storedTiles);
+  }
+
+  if (isCorrect) {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
   }
 
   return () => {
     document.body.style.overflow = "";
   };
 }, [open, isCorrect]);
+
 
 
   const imagePathFor = (attempts, isCorrect) => {
