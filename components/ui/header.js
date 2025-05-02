@@ -1,11 +1,13 @@
 import { useState } from "react";
 import Link from "next/link";
-import { CircleDot, Trophy } from "lucide-react"; // ✅ Update imports: Trophy instead of BookOpen
+import { CircleDot, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PieChartIcon from "@/components/icons/PieChartIcon";
+import { useModal } from "@/context/ModalContext"; // ✅ Import modal context
 
-export default function Header({ onStatsClick, onAchievementsClick }) {
+export default function Header({ onStatsClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { setShowAchievements } = useModal(); // ✅ Use context to open achievements
 
   return (
     <header>
@@ -68,26 +70,25 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
 
         {/* Right-side icon buttons */}
         <div className="flex items-center space-x-3">
-{/* Stats Button */}
-<Button
-  onClick={onStatsClick}
-  className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
-  title="Your Stats"
-  aria-label="Your Stats"
->
-  <PieChartIcon className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
-</Button>
+          {/* Stats Button */}
+          <Button
+            onClick={onStatsClick}
+            className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+            title="Your Stats"
+            aria-label="Your Stats"
+          >
+            <PieChartIcon className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
+          </Button>
 
-{/* Achievements Button */}
-<Button
-  onClick={onAchievementsClick}
-  className="achievements-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
-  title="Achievements"
-  aria-label="Achievements"
->
-  <Trophy className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
-</Button>
-
+          {/* Achievements Button */}
+          <Button
+            onClick={() => setShowAchievements(true)} // ✅ Trigger global modal
+            className="achievements-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+            title="Achievements"
+            aria-label="Achievements"
+          >
+            <Trophy className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
+          </Button>
         </div>
       </div>
     </header>
