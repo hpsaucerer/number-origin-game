@@ -46,7 +46,8 @@ export default function PostGameModal({
 
   const [justEarnedTile, setJustEarnedTile] = useState(false);
   const [tileAwardedAtOpen, setTileAwardedAtOpen] = useState(0);
-  const [earnedTiles, setEarnedTiles] = useState([]);
+  const [earnedTiles, setEarnedTiles] = useState([]); // still works, but holds indexes now
+
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -75,24 +76,19 @@ useEffect(() => {
   const today = new Date().toISOString().split("T")[0]; // e.g., '2025-05-02'
   const tileAlreadyEarnedToday = localStorage.getItem(`tile-earned-${today}`);
 
-  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
+const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
-  if (!tileAlreadyEarnedToday) {
-    const nextTileIndex = storedTiles.length;
-    const newTile = TILE_WORD[nextTileIndex];
+if (!tileAlreadyEarnedToday && storedIndexes.length < TILE_WORD.length) {
+  const nextIndex = storedIndexes.length;
+  const updatedIndexes = [...storedIndexes, nextIndex];
+  localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
+  localStorage.setItem(`tile-earned-${today}`, "true");
+  setEarnedTiles(updatedIndexes);
+  setJustEarnedTile(true);
+} else {
+  setEarnedTiles(storedIndexes);
+}
 
-    if (newTile && !storedTiles.includes(newTile)) {
-      const updatedTiles = [...storedTiles, newTile];
-      localStorage.setItem("earnedTiles", JSON.stringify(updatedTiles));
-      localStorage.setItem(`tile-earned-${today}`, "true"); // ✅ Mark today's reward
-      setEarnedTiles(updatedTiles);
-    } else {
-      setEarnedTiles(storedTiles);
-    }
-  } else {
-    // No reward today — just load existing
-    setEarnedTiles(storedTiles);
-  }
 
   if (isCorrect) {
     confetti({
@@ -170,7 +166,7 @@ useEffect(() => {
   {/* Letters + Token */}
   <div className="flex items-center space-x-2">
 {TILE_WORD.split("").map((letter, index) => {
-  const isEarned = earnedTiles.length > index;
+  const isEarned = earnedTiles.includes(index); // ✅ now comparing indexes
   return (
     <div
       key={index}
