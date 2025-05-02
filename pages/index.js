@@ -110,25 +110,32 @@ const synonymMap = {
   vest: "jersey",
 };
 
-const normalize = (str) =>
-  str
+function normalizeGuess(str) {
+  return str
     .toLowerCase()
-    .replace(/[’'`]/g, "")               // ← NEW: apostrophe cleanup
-    .replace(/[^a-z0-9\s]/g, "")         // existing: strip other punctuation
-    .split(" ")
-    .map((word) => synonymMap[word] || word)
+    .replace(/[’'`]/g, "")
+    .replace(/[^a-z0-9\s]/g, "")
+    .split(/\s+/)
+    .filter(w => !["the", "a", "an", "is", "in", "of", "to", "for", "on", "with", "by", "at", "as", "and"].includes(w))
+    .map(w => synonymMap[w] || w)
     .join(" ")
     .trim();
+}
 
-  const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
-  const normalizedGuess = normalize(guess);
-  const normalizedTokens = normalizedGuess.split(/\W+/); // ✅ split once
-  const normalizedEssential = essential.map(normalize);
-  const normalizedRequired = required.map(normalize);
+function evaluateGuessKeywords(guess, { essential = [], required = [] }) {
+  const normalizedTokens = normalizeGuess(guess).split(/\W+/);
+  const tokenSet = new Set(normalizedTokens);
+  const essentialMatches = essential.map(normalizeGuess).filter(t => tokenSet.has(t));
+  const requiredMatches = required.map(normalizeGuess).filter(t => tokenSet.has(t));
+  return {
+    matchedEssential: essentialMatches,
+    matchedRequired: requiredMatches,
+    hasStrongMatch: essentialMatches.length > 0,
+    hasWeakMatch: requiredMatches.length > 0,
+    requiredMatched: requiredMatches.length > 0,
+  };
+}
 
-  const matchedEssential = normalizedEssential.filter((kw) =>
-    normalizedTokens.includes(kw)
-  );
 
   const matchedRequired = normalizedRequired.filter((kw) =>
     normalizedTokens.includes(kw)
@@ -517,7 +524,7 @@ function awardTile() {
 
 
 const handleGuess = async (isClueReveal = false) => {
-  const cleanedGuess = normalize(guess);
+  const cleanedGuess = normalizeGuess(guess);
   const puzzleId = puzzle?.id ?? 0;
 
   const {
@@ -563,12 +570,13 @@ const handleGuess = async (isClueReveal = false) => {
       return;
     }
 
-    const allAnswers = [
-      { label: normalize(puzzle.answer) },
-      ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
-        label: normalize(g),
-      })),
-    ];
+const allAnswers = [
+  { label: normalizeGuess(puzzle.answer) },
+  ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
+    label: normalizeGuess(g),
+  })),
+];
+
 
     const fuse = new Fuse(allAnswers, {
       keys: ["label"],
@@ -587,10 +595,10 @@ const handleGuess = async (isClueReveal = false) => {
       g => normalize(g).replace(/\s+/g, '') === normalizedGuess
     );
 
-    const isExactAnswerMatch = normalize(puzzle.answer) === cleanedGuess;
+    const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
 
     const acceptableFuse = new Fuse(
-      acceptableStrings.map(g => ({ label: normalize(g) })),
+      acceptableStrings.map(g => ({ label: normalizeGuess(g) }))
       {
         keys: ["label"],
         threshold: 0.4,
@@ -623,6 +631,28 @@ const handleGuess = async (isClueReveal = false) => {
     strongEssentialHit // ✅ now required within fuzzy logic
   );
 
+    // 🧠 Track why it passed or failed
+    const matchType = isExactAnswerMatch
+      ? "exact_answer"
+      : exactAcceptableMatch
+      ? "exact_acceptable"
+      : isAcceptableGuess
+      ? "fuzzy_acceptable"
+      : (
+          bestMatch?.score <= 0.65 &&
+          hasStrongMatch &&
+          requiredMatched &&
+          strongEssentialHit
+        )
+      ? "fuzzy_with_required"
+      : (
+          strongEssentialHit &&
+          matchedEssential.length >= 2 &&
+          cleanedGuess.length > 12
+        )
+      ? "essential_only_fallback"
+      : "none";
+
 // ✅ Log the guess to Supabase with error handling
 const { error } = await supabase.from("Player_responses").insert([
   {
@@ -630,8 +660,15 @@ const { error } = await supabase.from("Player_responses").insert([
     raw_guess: guess,
     cleaned_guess: cleanedGuess,
     is_correct: isCorrectGuess,
+    match_type: matchType,
     attempt: attempts + 1,
     device_id: localStorage.getItem("deviceId") || "unknown",
+    notes: JSON.stringify({
+      essentialHit: matchedEssential,
+      requiredHit: matchedRequired,
+      fuzzyScore: bestMatch?.score ?? null,
+      relaxedRule: hasOnlyEssentialMatch && cleanedGuess.length > 12
+    }),
   }
 ]);
 
