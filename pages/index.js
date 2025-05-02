@@ -354,9 +354,9 @@ useEffect(() => {
   if (pendingWhatsNew) {
     const delay = setTimeout(() => {
       setShowWhatsNew(true);
+      localStorage.setItem("seenWhatsNew", "true");
       setPendingWhatsNew(false); // reset
     }, 500); // slight delay
-
     return () => clearTimeout(delay); // clean up on unmount
   }
 }, [pendingWhatsNew]);
@@ -840,7 +840,6 @@ callback={(data) => {
 const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
 if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   setPendingWhatsNew(true); // 🔁 Let useEffect handle it
-  localStorage.setItem("seenWhatsNew", "true");
 }
 
     return;
