@@ -302,6 +302,31 @@ useEffect(() => {
   setCategoryAchievements(categoryCounts);
 }, [showPostGame]);
 
+useEffect(() => {
+  if (!showAchievements) return;
+
+  const completedPuzzles = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  const allPuzzles = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
+
+  const categoryCounts = {
+    Maths: 0,
+    Geography: 0,
+    Science: 0,
+    History: 0,
+    Culture: 0,
+    Sport: 0,
+  };
+
+  allPuzzles.forEach((puzzle) => {
+    if (completedPuzzles.includes(puzzle.id)) {
+      if (categoryCounts[puzzle.category] !== undefined) {
+        categoryCounts[puzzle.category]++;
+      }
+    }
+  });
+
+  setCategoryAchievements(categoryCounts);
+}, [showAchievements]);
 
 useEffect(() => {
   const resetTime = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
