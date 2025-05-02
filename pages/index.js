@@ -102,7 +102,7 @@ const normalize = (str) =>
     .join(" ")
     .trim();
 
-
+  const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false);
   const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
   const normalizedGuess = normalize(guess);
   const normalizedTokens = normalizedGuess.split(/\W+/); // ✅ split once
@@ -303,8 +303,8 @@ useEffect(() => {
 
   if (!puzzle || !hasMounted) return;
 
-  if (!hasSeenTour) {
-    setIsFirstTimePlayer(true);
+if (!hasSeenTour) {
+  setWasFirstTimePlayer(true); // track for later
 
     let attempts = 0;
     const maxTries = 10;
@@ -828,8 +828,8 @@ callback={(data) => {
     localStorage.setItem("seenTour", "true");
 
     // ✅ Trigger What's New only if this is the first-time player
-    const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
-    if (isFirstTimePlayer && !hasSeenWhatsNew) {
+const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
+if (wasFirstTimePlayer && !hasSeenWhatsNew) {
       setTimeout(() => {
         setShowWhatsNew(true);
         localStorage.setItem("seenWhatsNew", "true");
