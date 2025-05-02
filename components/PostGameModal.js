@@ -55,26 +55,43 @@ export default function PostGameModal({
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (!open) return;
+useEffect(() => {
+  if (!open) return;
 
-    document.body.style.overflow = "hidden";
+  document.body.style.overflow = "hidden";
 
-    const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+  const today = new Date().toISOString().split("T")[0]; // e.g., '2025-05-02'
+  const alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
+
+  const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+
+  if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length) {
+    const nextIndex = storedIndexes.length;
+    const updatedIndexes = [...storedIndexes, nextIndex];
+
+    localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
+    localStorage.setItem(`tile-earned-${today}`, "true");
+
+    setEarnedTiles(updatedIndexes);
+    setJustEarnedTile(true);
+  } else {
+    // Still need to show previously earned tiles
     setEarnedTiles(storedIndexes);
+  }
 
-    if (isCorrect) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-    }
+  if (isCorrect) {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  }
 
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open, isCorrect]);
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [open, isCorrect]);
+
 
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
