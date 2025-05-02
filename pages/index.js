@@ -279,17 +279,28 @@ useEffect(() => {
 useEffect(() => {
   if (!allPuzzles.length) return;
 
-  const completedCategories = {};
+useEffect(() => {
+  if (!allPuzzles.length) return;
 
   const completedPuzzleIds = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  const categoryCounts = {
+    Maths: 0,
+    Geography: 0,
+    Science: 0,
+    History: 0,
+    Culture: 0,
+    Sport: 0,
+  };
 
   allPuzzles.forEach((puzzle) => {
     if (completedPuzzleIds.includes(puzzle.id)) {
-      completedCategories[puzzle.category] = true;
+      if (categoryCounts.hasOwnProperty(puzzle.category)) {
+        categoryCounts[puzzle.category]++;
+      }
     }
   });
 
-  setCategoryAchievements(completedCategories);
+  setCategoryAchievements(categoryCounts);
 }, [allPuzzles]);
 
 useEffect(() => {
@@ -307,7 +318,8 @@ useEffect(() => {
 useEffect(() => {
   const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
   setEarnedTiles(storedTiles);
-}, []);
+}, [showPostGame]); // rerun after post game modal shows
+
 
 useEffect(() => {
   const storedTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
