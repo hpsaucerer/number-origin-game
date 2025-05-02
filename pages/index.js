@@ -151,7 +151,7 @@ const categoryColorMap = {
 };
 
   export default function Home() {
-const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false);
+const wasFirstTimePlayerRef = useRef(false);
 const joyrideSteps = [
   {
     target: ".daily-number",
@@ -302,7 +302,7 @@ useEffect(() => {
   if (!puzzle || !hasMounted) return;
 
 if (!hasSeenTour) {
-  setWasFirstTimePlayer(true); // track for later
+ wasFirstTimePlayerRef.current = true; // track for later
 
     let attempts = 0;
     const maxTries = 10;
@@ -827,7 +827,7 @@ callback={(data) => {
 
     // ✅ Trigger What's New only if this is the first-time player
 const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
-if (wasFirstTimePlayer && !hasSeenWhatsNew) {
+if (wasFirstTimePlayerRef.current && !hasSeenWhatsNew) {
       setTimeout(() => {
         setShowWhatsNew(true);
         localStorage.setItem("seenWhatsNew", "true");
