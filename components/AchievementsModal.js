@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export default function AchievementsModal({ open, onClose, earnedTiles = [], categoryAchievements = {} }) {
+export default function AchievementsModal({ open, onClose, earnedTiles = [] }) {
   const TILE_WORD = "NUMERUS";
   const nextTileIndex = earnedTiles.length;
 
