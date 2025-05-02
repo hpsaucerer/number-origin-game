@@ -53,7 +53,7 @@ export default function WhatsNewModal({ open, onClose }) {
             </div>
 
             <p className="text-sm text-gray-600 max-w-sm mx-auto mb-4">
-              Earn a tile each day you play to spell out <strong>NUMERUS</strong> and earn category reveal tokens!
+              Earn a tile each day you play to spell out <strong>NUMERUS</strong> and receive category reveal tokens!
             </p>
 
             {/* 🔔 New Button Intro */}
