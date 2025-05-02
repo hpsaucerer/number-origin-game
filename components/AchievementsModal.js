@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function AchievementsModal({ open, onClose, earnedTiles = [], categoryAchievements = {} }) {
   const TILE_WORD = "NUMERUS";
@@ -19,6 +20,15 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
     );
   });
 
+const [categoryAchievements, setCategoryAchievements] = useState({
+  Maths: 0,
+  Geography: 0,
+  Science: 0,
+  History: 0,
+  Culture: 0,
+  Sport: 0,
+});
+
   const categories = [
     { label: "Maths", color: "#3b82f6", total: 20 },
     { label: "Geography", color: "#63c4a7", total: 20 },
@@ -27,6 +37,29 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
     { label: "Culture", color: "#8e44ad", total: 20 },
     { label: "Sport", color: "#e53935", total: 20 },
   ];
+useEffect(() => {
+  const completedPuzzles = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  const allPuzzles = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
+
+  const categoryCounts = {
+    Maths: 0,
+    Geography: 0,
+    Science: 0,
+    History: 0,
+    Culture: 0,
+    Sport: 0,
+  };
+
+  allPuzzles.forEach((puzzle) => {
+    if (completedPuzzles.includes(puzzle.id)) {
+      if (categoryCounts[puzzle.category] !== undefined) {
+        categoryCounts[puzzle.category]++;
+      }
+    }
+  });
+
+  setCategoryAchievements(categoryCounts);
+}, []);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
