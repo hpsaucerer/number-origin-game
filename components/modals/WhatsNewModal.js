@@ -62,7 +62,7 @@ export default function WhatsNewModal({ open, onClose }) {
 {/* 🔓 Category Reveal Button Image */}
 <div>
   <img
-    src="/images/reveal-category-button-new.png"
+    src="/images/reveal-category.png"
     alt="Reveal Category Button"
     className="mx-auto w-56 h-auto rounded shadow animate-glow-pop"
   />
