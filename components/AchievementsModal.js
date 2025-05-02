@@ -64,7 +64,7 @@ useEffect(() => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 z-50 overflow-y-auto px-4 pt-10 sm:pt-4">
-        <DialogContent className="relative max-h-[90vh] overflow-y-auto pt-3 px-4 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center">
+        <DialogContent className="relative pt-4 px-4 pb-6 sm:max-w-md w-full flex flex-col items-start">
 
           {/* Dismiss Button */}
           <button
