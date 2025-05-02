@@ -5,19 +5,19 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
   const TILE_WORD = "NUMERUS";
   const nextTileIndex = earnedTiles.length;
 
-  const previewTiles = TILE_WORD.split("").map((letter, index) => {
-    const isEarned = index < nextTileIndex;
-    return (
-      <div
-        key={index}
-        className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
-          isEarned ? "bg-[#3B82F6]" : "bg-gray-300"
-        }`}
-      >
-        {letter}
-      </div>
-    );
-  });
+{TILE_WORD.split("").map((letter, i) => (
+  <div
+    key={i}
+    className={`rounded-md w-10 h-10 flex items-center justify-center font-bold ${
+      earnedTiles.includes(letter)
+        ? "bg-blue-500 text-white"
+        : "bg-gray-200 text-gray-400"
+    } tile-animate`}
+  >
+    {letter}
+  </div>
+))}
+
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
