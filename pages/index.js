@@ -350,7 +350,18 @@ useEffect(() => {
   setHasMounted(true);
 }, []);
     
+useEffect(() => {
+  if (pendingWhatsNew) {
+    const delay = setTimeout(() => {
+      setShowWhatsNew(true);
+      setPendingWhatsNew(false); // reset
+    }, 500); // slight delay
 
+    return () => clearTimeout(delay); // clean up on unmount
+  }
+}, [pendingWhatsNew]);
+
+    
 useEffect(() => {
   const existingId = localStorage.getItem("deviceId");
   if (!existingId) {
@@ -828,10 +839,8 @@ callback={(data) => {
     // ✅ Trigger What's New only if this is the first-time player
 const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
 if (wasFirstTimePlayer && !hasSeenWhatsNew) {
-  setTimeout(() => {
-    setShowWhatsNew(true);
-    localStorage.setItem("seenWhatsNew", "true");
-  }, 500);
+  setPendingWhatsNew(true); // 🔁 Let useEffect handle it
+  localStorage.setItem("seenWhatsNew", "true");
 }
 
     return;
