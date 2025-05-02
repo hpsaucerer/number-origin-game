@@ -89,6 +89,11 @@ const previewTiles = TILE_WORD.split("").map((letter, index) => {
             </p>
           </div>
 
+          {/* ➕ New Final Line */}
+          <p className="text-sm text-gray-600 text-center mt-4">
+           ➕ Plus, several bugs fixed and improved guess logic!
+          </p>
+
           {/* Confirm Button */}
           <button
             onClick={onClose}
