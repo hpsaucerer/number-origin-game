@@ -80,7 +80,7 @@ export default function Header({ onStatsClick }) {
             title="Your Stats"
             aria-label="Your Stats"
           >
-            <PieChartIcon className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
+            <PieChartIcon className="w-5 h-5 text-[#3B82F6] group-hover:text-white transition" />
           </Button>
 
           {/* Achievements Button */}
@@ -91,7 +91,7 @@ export default function Header({ onStatsClick }) {
   aria-label="Achievements"
   disabled={!setShowAchievements} // Optional: disable if context is unavailable
 >
-  <Trophy className="w-6 h-6 text-[#3B82F6] group-hover:text-white transition" />
+  <Trophy className="w-5 h-5 text-[#3B82F6] group-hover:text-white transition" />
 </Button>
 
         </div>
