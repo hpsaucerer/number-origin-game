@@ -587,15 +587,15 @@ const allAnswers = [
 
     const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
 
-    const acceptableFuse = new Fuse(
-      acceptableStrings.map(g => ({ label: normalizeGuess(g) }))
-      {
-        keys: ["label"],
-        threshold: 0.4,
-        distance: 100,
-        ignoreLocation: true,
-      }
-    );
+const acceptableFuse = new Fuse(
+  acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
+  {
+    keys: ["label"],
+    threshold: 0.4,
+    distance: 100,
+    ignoreLocation: true,
+  }
+);
 
     const acceptableResults = acceptableFuse.search(cleanedGuess);
     const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.3); // tighter match threshold
