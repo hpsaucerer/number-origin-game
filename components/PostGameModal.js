@@ -16,7 +16,7 @@ const getTileMessage = (count) => {
     case 4: return "Getting closer to that token now.";
     case 5: return "You're on a roll!";
     case 6: return "Just one more day, you can do it!";
-    case 7: return "Whoop! Well done, you've earned a token!";
+    case 7: return "Whoop! Well done, you've earned some tokens!";
     default: return "";
   }
 };
