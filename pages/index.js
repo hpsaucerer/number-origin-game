@@ -1199,7 +1199,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     setShowTokenBubble(true);
     setTimeout(() => setShowTokenBubble(false), 3000); // hide after 3s
   }}
-  earnedTiles={earnedTiles}
+  earnedTiles={["N", "U", "M"]} // ✅ Show sample progress regardless of localStorage
   categoryAchievements={categoryAchievements}
 />
 
