@@ -5,19 +5,19 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
   const TILE_WORD = "NUMERUS";
   const nextTileIndex = earnedTiles.length;
 
-  const previewTiles = TILE_WORD.split("").map((letter, index) => {
-    const isEarned = index < nextTileIndex;
-    return (
-      <div
-        key={index}
-        className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
-          isEarned ? "bg-[#3B82F6]" : "bg-gray-300"
-        }`}
-      >
-        {letter}
-      </div>
-    );
-  });
+const previewTiles = TILE_WORD.split("").map((letter, index) => {
+  const isEarned = earnedTiles.includes(index); // ✅ check index explicitly
+  return (
+    <div
+      key={index}
+      className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
+        isEarned ? "bg-[#3B82F6]" : "bg-gray-300"
+      }`}
+    >
+      {letter}
+    </div>
+  );
+});
 
   const categories = [
     { label: "Maths", color: "#3b82f6", total: 20 },
@@ -35,8 +35,6 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
   className="relative pt-4 px-4 pb-6 sm:max-w-md w-full flex flex-col items-start 
              max-h-[90vh] sm:max-h-[80vh] overflow-y-auto"
 >
-
-
 
           {/* Dismiss Button */}
           <button
