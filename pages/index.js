@@ -279,9 +279,6 @@ useEffect(() => {
 useEffect(() => {
   if (!allPuzzles.length) return;
 
-useEffect(() => {
-  if (!allPuzzles.length) return;
-
   const completedPuzzleIds = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
   const categoryCounts = {
     Maths: 0,
