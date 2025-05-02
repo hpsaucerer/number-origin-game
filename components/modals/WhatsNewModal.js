@@ -37,7 +37,7 @@ export default function WhatsNewModal({ open, onClose }) {
 
             <DialogHeader className="w-full pr-10">
               <DialogTitle>
-                <h2 className="text-base text-gray-800 text-left">Update 1.0. What's new</h2>
+                <h2 className="text-base text-gray-800 text-left">1.0. What's new in Numerus</h2>
               </DialogTitle>
             </DialogHeader>
 
