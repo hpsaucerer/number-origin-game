@@ -102,7 +102,6 @@ const normalize = (str) =>
     .join(" ")
     .trim();
 
-  const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false);
   const evaluateGuessKeywords = (guess, { essential = [], required = [] }) => {
   const normalizedGuess = normalize(guess);
   const normalizedTokens = normalizedGuess.split(/\W+/); // ✅ split once
@@ -152,7 +151,7 @@ const categoryColorMap = {
 };
 
   export default function Home() {
-
+const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false);
 const joyrideSteps = [
   {
     target: ".daily-number",
@@ -207,7 +206,6 @@ const joyrideSteps = [
     "Last clue! Take a deep breath and go for it.",
   ];
   
-  const [isFirstTimePlayer, setIsFirstTimePlayer] = useState(false);
   const [pendingWhatsNew, setPendingWhatsNew] = useState(false);
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
