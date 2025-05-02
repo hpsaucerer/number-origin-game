@@ -87,13 +87,13 @@ export default function WhatsNewModal({ open, onClose }) {
               />
 
               <p className="text-base font-medium text-gray-700 text-center mt-2">
-                Track your progress and unlock rewards in each category!
+                Track your progress and unlock in-game rewards and trophies in each category!
               </p>
             </div>
 
             {/* ➕ New Final Line */}
             <p className="text-sm text-gray-600 text-center mt-4">
-              ➕ Plus, several bugs fixed and improved guess logic!
+              ➕ Several bugs fixes and improved guess logic.
             </p>
 
             {/* Confirm Button */}
