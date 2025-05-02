@@ -38,14 +38,15 @@ export default function PostGameModal({
   puzzleNumber,
   shareResult,
   attempts,
-  earnedTiles,
 }) {
+
   if (!puzzle || !stats) return null;
 
   const [countdown, setCountdown] = useState("");
 
   const [justEarnedTile, setJustEarnedTile] = useState(false);
   const [tileAwardedAtOpen, setTileAwardedAtOpen] = useState(0);
+  const [earnedTiles, setEarnedTiles] = useState([]);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -70,15 +71,23 @@ useEffect(() => {
   if (open) {
     document.body.style.overflow = "hidden";
 
+    // Step 1: Load tiles from localStorage
     const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
-    const currentTiles = storedTiles.length;
-    const alreadyAwarded = tileAwardedAtOpen;
 
-    if (currentTiles > alreadyAwarded) {
-      setJustEarnedTile(true);
-      setTileAwardedAtOpen(currentTiles);
+    // Step 2: Determine the next letter to award
+    const nextTileIndex = storedTiles.length;
+    const newTile = TILE_WORD[nextTileIndex];
+
+    // Step 3: Add new tile if needed
+    if (newTile && !storedTiles.includes(newTile)) {
+      const updatedTiles = [...storedTiles, newTile];
+      localStorage.setItem("earnedTiles", JSON.stringify(updatedTiles));
+      setEarnedTiles(updatedTiles); // also update local state
+    } else {
+      setEarnedTiles(storedTiles); // fallback, just set what we had
     }
 
+    // Step 4: Handle animation and confetti
     if (isCorrect) {
       confetti({
         particleCount: 100,
@@ -89,23 +98,12 @@ useEffect(() => {
   } else {
     document.body.style.overflow = "";
   }
+
   return () => {
     document.body.style.overflow = "";
   };
 }, [open, isCorrect]);
 
-
-  // ✅ Prevent background scroll on mobile when modal is open
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
 
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
@@ -167,19 +165,19 @@ useEffect(() => {
 
   {/* Letters + Token */}
   <div className="flex items-center space-x-2">
-    {"NUMERUS".split("").map((letter, index) => {
-      const isEarned = earnedTiles.length > index;
-      return (
-        <div
-          key={index}
-          className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
-            ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
-            transition-all duration-300 ease-in-out`}
-        >
-          {letter}
-        </div>
-      );
-    })}
+{TILE_WORD.split("").map((letter, index) => {
+  const isEarned = earnedTiles.length > index;
+  return (
+    <div
+      key={index}
+      className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
+        ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
+        transition-all duration-300 ease-in-out`}
+    >
+      {letter}
+    </div>
+  );
+})}
     {/* ➡️ Token appears next to 'S' */}
     {earnedTiles.length === TILE_WORD.length && (
       <img
