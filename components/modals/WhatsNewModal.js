@@ -35,7 +35,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
 
           <DialogHeader className="w-full">
             <DialogTitle>
-              <h2 className="text-lg text-gray-800 text-left">🎉 What's New? </h2>
+              <h2 className="text-lg text-gray-800 text-left">Update 1.0: What's new on Numerus</h2>
             </DialogTitle>
           </DialogHeader>
 
@@ -53,7 +53,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
             </div>
 
             <p className="text-sm text-gray-600 max-w-sm mx-auto mb-4">
-              Earn a tile each day you play to spell out <strong>NUMERUS</strong> and earn free category reveal tokens!
+              Earn a tile each day you play to spell out <strong>NUMERUS</strong> and earn category reveal tokens!
             </p>
 
             {/* 🔔 New Button Intro */}
@@ -64,7 +64,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
               <img
                 src="/images/reveal-category-button.png"
                 alt="Reveal Category Button"
-                className="mx-auto w-48 h-auto rounded shadow"
+                className="mx-auto w-56 h-auto rounded shadow"
               />
               <p className="text-sm text-gray-500 mt-1">
                 Use your tokens to reveal the category for tricky puzzles!
