@@ -218,7 +218,7 @@ html, body, button, .recharts-wrapper, .recharts-surface {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.4s ease-out forwards;
+  animation: fade-in 0.6s ease-out forwards;
 }
 
 @tailwind base;
