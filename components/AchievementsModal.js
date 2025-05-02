@@ -30,7 +30,7 @@ export default function AchievementsModal({ open, onClose, earnedTiles = [], cat
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <div className="fixed inset-0 z-50 overflow-y-auto px-4 pt-10 sm:pt-4">
+      <div className="fixed inset-0 z-50 overflow-y-auto px-4 pt-10 sm:pt-4 flex justify-center">
         <DialogContent className="relative pt-4 px-4 pb-6 sm:max-w-md w-full flex flex-col items-start">
 
           {/* Dismiss Button */}
