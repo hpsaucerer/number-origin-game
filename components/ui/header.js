@@ -1,16 +1,11 @@
 import { useState } from "react";
 import Link from "next/link";
-import { CircleDot, Trophy } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PieChartIcon from "@/components/icons/PieChartIcon";
-import { useContext } from "react";
-import { ModalContext } from "@/context/ModalContext"; // adjust path if needed
 
-export default function Header({ onStatsClick }) {
+export default function Header({ onStatsClick, onAchievementsClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const modalContext = useContext(ModalContext);
-  const setShowAchievements = modalContext?.setShowAchievements;
-
 
   return (
     <header>
@@ -84,16 +79,14 @@ export default function Header({ onStatsClick }) {
           </Button>
 
           {/* Achievements Button */}
-<Button
-  onClick={() => setShowAchievements?.(true)}
-  className="achievements-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
-  title="Achievements"
-  aria-label="Achievements"
-  disabled={!setShowAchievements} // Optional: disable if context is unavailable
->
-  <Trophy className="w-5 h-5 text-[#3B82F6] group-hover:text-white transition" />
-</Button>
-
+          <Button
+            onClick={onAchievementsClick}
+            className="achievements-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+            title="Achievements"
+            aria-label="Achievements"
+          >
+            <Trophy className="w-5 h-5 text-[#3B82F6] group-hover:text-white transition" />
+          </Button>
         </div>
       </div>
     </header>
