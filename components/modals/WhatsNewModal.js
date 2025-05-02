@@ -1,26 +1,23 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 
-export default function WhatsNewModal({ open, onClose, earnedTiles = [], categoryAchievements = {} }) {
+export default function WhatsNewModal({ open, onClose }) {
   const TILE_WORD = "NUMERUS";
-  const nextTileIndex = earnedTiles.length;
 
-<div className="flex justify-center gap-2 mb-3">
-  {TILE_WORD.split("").map((letter, i) => (
-    <div
-      key={i}
-      className="w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white animate-fade-in"
-      style={{
-        animationDelay: `${i * 0.2}s`,
-        backgroundColor: "#3B82F6",
-        opacity: 0,
-      }}
-    >
-      {letter}
-    </div>
-  ))}
-</div>
-
+  // Dummy data – always highlight first 7 tiles for the modal preview
+  const previewTiles = TILE_WORD.split("").map((letter, index) => {
+    return (
+      <div
+        key={index}
+        style={{ animationDelay: `${index * 0.15}s` }}
+        className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white animate-fade-in ${
+          "bg-[#3B82F6]"
+        }`}
+      >
+        {letter}
+      </div>
+    );
+  });
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -75,7 +72,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
             </div>
           </div>
 
-          {/* Category Achievements Preview Image Section */}
+          {/* Category Achievements Preview */}
           <div className="w-full mt-4">
             <p className="text-base font-medium text-gray-800 text-center mb-2">
               Introducing.. <strong>Category Achievements</strong>
@@ -96,7 +93,7 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
           <button
             onClick={onClose}
             className="mt-6 text-white px-4 py-2 rounded w-full hover:opacity-90 transition"
-            style={{ backgroundColor: "#63c4a7" }} // ← brand green
+            style={{ backgroundColor: "#63c4a7" }}
           >
             Got it!
           </button>
