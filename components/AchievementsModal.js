@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 
 export default function AchievementsModal({ open, onClose, earnedTileIndexes = [], categoryAchievements = {} }) {
   const TILE_WORD = "NUMERUS";
-  const nextTileIndex = earnedTiles.length;
+  const nextTileIndex = earnedTileIndexes.length;
 
 const previewTiles = TILE_WORD.split("").map((letter, index) => {
   const isEarned = earnedTileIndexes.includes(index); // ✅ check index explicitly
