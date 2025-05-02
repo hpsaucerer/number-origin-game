@@ -59,17 +59,17 @@ export default function WhatsNewModal({ open, onClose }) {
             {/* 🔔 New Button Intro */}
             <p className="text-sm font-semibold text-gray-800 mb-2">A new button joins the game!</p>
 
-            {/* 🔓 Category Reveal Button Image */}
-            <div>
-              <img
-                src="/images/reveal-category-button.png"
-                alt="Reveal Category Button"
-                className="mx-auto w-56 h-auto rounded shadow"
-              />
-              <p className="text-sm text-gray-500 mt-1">
-                Use your tokens to reveal the category for tricky puzzles!
-              </p>
-            </div>
+{/* 🔓 Category Reveal Button Image */}
+<div>
+  <img
+    src="/images/reveal-category-button-new.png"
+    alt="Reveal Category Button"
+    className="mx-auto w-56 h-auto rounded shadow animate-glow-pop"
+  />
+  <p className="text-sm text-gray-500 mt-1">
+    Use your tokens to reveal the category for tricky puzzles!
+  </p>
+</div>
           </div>
 
           {/* Category Achievements Preview */}
