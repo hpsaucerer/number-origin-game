@@ -185,6 +185,27 @@ html, body, button, .recharts-wrapper, .recharts-surface {
 .animate-token-spin {
   animation: spin-small 0.7s ease-in-out;
 }
+/* === WhatsNewModal Tile Animation === */
+.tile-animate {
+  opacity: 0;
+  transform: scale(0.9);
+  animation: tileFadeIn 0.4s ease forwards;
+}
+
+.tile-animate:nth-child(1) { animation-delay: 0.1s; }
+.tile-animate:nth-child(2) { animation-delay: 0.25s; }
+.tile-animate:nth-child(3) { animation-delay: 0.4s; }
+.tile-animate:nth-child(4) { animation-delay: 0.55s; }
+.tile-animate:nth-child(5) { animation-delay: 0.7s; }
+.tile-animate:nth-child(6) { animation-delay: 0.85s; }
+.tile-animate:nth-child(7) { animation-delay: 1s; }
+
+@keyframes tileFadeIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
 @tailwind base;
 @tailwind components;
