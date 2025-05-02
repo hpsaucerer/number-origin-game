@@ -277,9 +277,11 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (!allPuzzles.length) return;
+  if (!showPostGame) return;
 
-  const completedPuzzleIds = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  const completedPuzzles = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  const allPuzzles = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
+
   const categoryCounts = {
     Maths: 0,
     Geography: 0,
@@ -290,15 +292,16 @@ useEffect(() => {
   };
 
   allPuzzles.forEach((puzzle) => {
-    if (completedPuzzleIds.includes(puzzle.id)) {
-      if (categoryCounts.hasOwnProperty(puzzle.category)) {
+    if (completedPuzzles.includes(puzzle.id)) {
+      if (categoryCounts[puzzle.category] !== undefined) {
         categoryCounts[puzzle.category]++;
       }
     }
   });
 
   setCategoryAchievements(categoryCounts);
-}, [allPuzzles]);
+}, [showPostGame]);
+
 
 useEffect(() => {
   const resetTime = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
