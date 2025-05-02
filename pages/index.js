@@ -123,28 +123,17 @@ function normalizeGuess(str) {
 }
 
 function evaluateGuessKeywords(guess, { essential = [], required = [] }) {
-  const normalizedTokens = normalizeGuess(guess).split(/\W+/);
+  const normalizedGuess = normalizeGuess(guess);
+  const normalizedTokens = normalizedGuess.split(/\W+/);
   const tokenSet = new Set(normalizedTokens);
-  const essentialMatches = essential.map(normalizeGuess).filter(t => tokenSet.has(t));
-  const requiredMatches = required.map(normalizeGuess).filter(t => tokenSet.has(t));
-  return {
-    matchedEssential: essentialMatches,
-    matchedRequired: requiredMatches,
-    hasStrongMatch: essentialMatches.length > 0,
-    hasWeakMatch: requiredMatches.length > 0,
-    requiredMatched: requiredMatches.length > 0,
-  };
-}
 
-
-  const matchedRequired = normalizedRequired.filter((kw) =>
-    normalizedTokens.includes(kw)
-  );
+  const matchedEssential = essential.map(normalizeGuess).filter(t => tokenSet.has(t));
+  const matchedRequired = required.map(normalizeGuess).filter(t => tokenSet.has(t));
 
   const hasStrongMatch = matchedEssential.length > 0;
   const hasWeakMatch = matchedRequired.length > 0;
-  const matchCount = matchedEssential.length + matchedRequired.length;
   const requiredMatched = matchedRequired.length > 0;
+  const matchCount = matchedEssential.length + matchedRequired.length;
 
   return {
     matchCount,
@@ -154,7 +143,8 @@ function evaluateGuessKeywords(guess, { essential = [], required = [] }) {
     matchedEssential,
     matchedRequired,
   };
-};
+}
+
 
 const DEV_MODE = false;
 
