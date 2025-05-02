@@ -1233,7 +1233,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 <AchievementsModal
   open={showAchievements}
   onClose={() => setShowAchievements(false)}
-  earnedTiles={earnedTileIndexes}
+  earnedTileIndexes={earnedTileIndexes} // ✅ this must match
   categoryAchievements={categoryAchievements}
 />
 
