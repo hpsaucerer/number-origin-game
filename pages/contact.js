@@ -7,17 +7,20 @@ import StatsModal from "@/components/modals/StatsModal";
 import useStats from "@/hooks/useStats";
 import { FaEnvelope } from "react-icons/fa";
 import Footer from "@/components/ui/Footer";
+import { useModal } from "@/context/ModalContext"; // ✅ import useModal
 
 export default function ContactPage() {
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
+  const { setShowAchievements } = useModal(); // ✅ get modal control
 
   return (
     <>
       <Header
         onHelpClick={() => setShowInstructions(true)}
         onStatsClick={() => setShowStats(true)}
+        onAchievementsClick={() => setShowAchievements(true)} // ✅ wire up trophy
       />
 
       <main className="max-w-3xl mx-auto px-6 pt-4 pb-12 text-center">
@@ -27,16 +30,15 @@ export default function ContactPage() {
           Have a question, suggestion, or just want to say hi? We'd love to hear from you!
         </p>
 
-<div className="flex items-center justify-center gap-2 text-blue-600 underline mb-6">
-  <FaEnvelope aria-hidden="true" />
-  <a href="mailto:info@numerus.site">info@numerus.site</a>
-</div>
-
+        <div className="flex items-center justify-center gap-2 text-blue-600 underline mb-6">
+          <FaEnvelope aria-hidden="true" />
+          <a href="mailto:info@numerus.site">info@numerus.site</a>
+        </div>
 
         <div className="bg-blue-50 p-4 rounded-lg shadow-md mb-10">
           <h2 className="text-xl font-semibold text-gray-800 mb-2 flex items-center justify-center gap-2">
-  <span>Feedback</span> <span role="img" aria-label="speech bubble">💬</span>
-</h2>
+            <span>Feedback</span> <span role="img" aria-label="speech bubble">💬</span>
+          </h2>
           <p className="text-gray-600 mb-2">
             Love Numerus? Loathe it? Let us know what you think!
           </p>
@@ -74,7 +76,7 @@ export default function ContactPage() {
           renderCenterLabel={renderCenterLabel}
         />
       )}
-    <Footer />
+      <Footer />
     </>
   );
 }
