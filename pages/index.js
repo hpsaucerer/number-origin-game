@@ -336,7 +336,7 @@ useEffect(() => {
     setEarnedTileIndexes(Array.isArray(stored) ? stored : []);
   } catch (err) {
     console.error("Invalid earnedTileIndexes JSON:", err);
-    setEarnedTiles([]);
+    setEarnedTileIndexes([]); // ✅ Fix here
   }
 }, [showAchievements]);
 
@@ -544,13 +544,15 @@ function awardTile() {
   const puzzleDate = puzzle?.date;
   if (!puzzleDate || localStorage.getItem(`tile-earned-${puzzleDate}`) === "true") return;
 
-  const nextIndex = storedIndexes.length;
+  const nextIndex = storedIndexes.length; // 0 → N, 1 → U, etc.
   const newIndexes = [...storedIndexes, nextIndex];
 
+  // ✅ Save only earnedTileIndexes — not earnedTiles as letters
   localStorage.setItem("earnedTileIndexes", JSON.stringify(newIndexes));
   localStorage.setItem(`tile-earned-${puzzleDate}`, "true");
-  setEarnedTileIndexes(newIndexes); // still calling setEarnedTiles, now with indexes
+  setEarnedTileIndexes(newIndexes);
 
+  // ✅ Optional: if all tiles collected, give a token reward
   if (newIndexes.length === TILE_WORD.length) {
     const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
     localStorage.setItem("freeToken", (currentTokens + 1).toString());
@@ -563,6 +565,7 @@ function awardTile() {
     localStorage.setItem("resetTilesAt", tomorrow.getTime().toString());
   }
 }
+
 
 const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalize(guess);
