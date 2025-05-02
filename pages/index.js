@@ -260,7 +260,7 @@ const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
 const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 const TILE_WORD = "NUMERUS";
-const [earnedTiles, setEarnedTiles] = useState([]);
+const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
 const [categoryAchievements, setCategoryAchievements] = useState({});
 const [showTokenBubble, setShowTokenBubble] = useState(false);
 
@@ -331,26 +331,14 @@ useEffect(() => {
 useEffect(() => {
   if (!showAchievements) return;
 
-  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
-  setEarnedTiles(storedTiles);
-}, [showAchievements]);
-
-useEffect(() => {
-  const resetTime = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
-  const now = Date.now();
-
-  if (resetTime && now >= resetTime) {
-    console.log("🔄 It's a new day! Resetting earned tiles.");
-    localStorage.setItem("earnedTiles", "[]");
-    localStorage.removeItem("resetTilesAt"); // clean up
+  try {
+    const stored = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+    setEarnedTileIndexes(Array.isArray(stored) ? stored : []);
+  } catch (err) {
+    console.error("Invalid earnedTileIndexes JSON:", err);
     setEarnedTiles([]);
   }
-}, []);
-
-useEffect(() => {
-  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
-  setEarnedTiles(storedTiles);
-}, [showPostGame]); // rerun after post game modal shows
+}, [showAchievements]);
 
 
 useEffect(() => {
@@ -548,37 +536,26 @@ useEffect(() => {
   }
 }, [puzzle]);
 
-
 function awardTile() {
-  const storedTiles = JSON.parse(localStorage.getItem("earnedTiles") || "[]");
+  const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
-  if (storedTiles.length >= TILE_WORD.length) {
-    console.log("✅ Already earned all tiles, no action.");
-    return;
-  }
+  if (storedIndexes.length >= TILE_WORD.length) return;
 
   const puzzleDate = puzzle?.date;
-  if (!puzzleDate) return;
+  if (!puzzleDate || localStorage.getItem(`tile-earned-${puzzleDate}`) === "true") return;
 
-  if (localStorage.getItem(`tile-earned-${puzzleDate}`) === "true") {
-    console.log("⏳ Tile already awarded for today.");
-    return;
-  }
+  const nextIndex = storedIndexes.length;
+  const newIndexes = [...storedIndexes, nextIndex];
 
-  const nextLetter = TILE_WORD[storedTiles.length];
-  const newTiles = Array.from(new Set([...storedTiles, nextLetter]));
+  localStorage.setItem("earnedTileIndexes", JSON.stringify(newIndexes));
+  localStorage.setItem(`tile-earned-${puzzleDate}`, "true");
+  setEarnedTileIndexes(newIndexes); // still calling setEarnedTiles, now with indexes
 
-  localStorage.setItem("earnedTiles", JSON.stringify(newTiles));
-  localStorage.setItem(`tile-earned-${puzzleDate}`, "true"); // ✅ Prevent duplicate award
-  setEarnedTiles(newTiles);
-
-  if (newTiles.length === TILE_WORD.length) {
-    let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+  if (newIndexes.length === TILE_WORD.length) {
+    const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
     localStorage.setItem("freeToken", (currentTokens + 1).toString());
     setTokenCount(currentTokens + 1);
     setJustEarnedToken(true);
-
-    console.log("🏅 Completed NUMERUS! Awarded 1 free token.");
 
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -586,7 +563,6 @@ function awardTile() {
     localStorage.setItem("resetTilesAt", tomorrow.getTime().toString());
   }
 }
-
 
 const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalize(guess);
@@ -1250,7 +1226,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 <AchievementsModal
   open={showAchievements}
   onClose={() => setShowAchievements(false)}
-  earnedTiles={earnedTiles}
+  earnedTiles={earnedTileIndexes}
   categoryAchievements={categoryAchievements}
 />
 
@@ -1261,7 +1237,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     setShowTokenBubble(true);
     setTimeout(() => setShowTokenBubble(false), 3000); // hide after 3s
   }}
-  earnedTiles={["N", "U", "M"]} // ✅ Show sample progress regardless of localStorage
+  earnedTiles={[0, 1, 2]} // based on the indexes of "NUMERUS"
   categoryAchievements={categoryAchievements}
 />
 
