@@ -421,6 +421,10 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
+  localStorage.removeItem("earnedTiles");
+}, []);
+
+useEffect(() => {
   if (!puzzle) return;
 
   const gameState = {
