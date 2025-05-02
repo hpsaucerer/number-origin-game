@@ -1202,19 +1202,14 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   renderCenterLabel={renderCenterLabel}
   combinedLabel={combinedLabel}
 />
+    
 <AchievementsModal
   open={showAchievements}
   onClose={() => setShowAchievements(false)}
   earnedTiles={earnedTiles}
-  categoryAchievements={{
-    Maths: 8,
-    Geography: 5,
-    Science: 14,
-    History: 3,
-    Culture: 10,
-    Sport: 12,
-  }}
+  categoryAchievements={categoryAchievements}
 />
+
 <WhatsNewModal
   open={showWhatsNew}
   onClose={() => {
