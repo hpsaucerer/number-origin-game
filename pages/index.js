@@ -874,13 +874,6 @@ callback={(data) => {
   }
 }}
 
-
-  // Handle missing target during step render
-  if (data.type === "target:notFound") {
-    console.warn("🚫 Joyride target not found:", data.step.target);
-    setShowTour(false);
-  }
-}}
 /> 
 <Header
   onStatsClick={() => setShowStats(true)}
