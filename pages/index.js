@@ -333,7 +333,18 @@ useEffect(() => {
 useEffect(() => {
   setHasMounted(true);
 }, []);
-    
+
+useEffect(() => {
+  const resetAt = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
+  const now = Date.now();
+
+  if (resetAt && now > resetAt) {
+    localStorage.removeItem("earnedTileIndexes");
+    localStorage.removeItem("resetTilesAt");
+    console.log("🧼 Cleared earnedTileIndexes for a new cycle.");
+  }
+}, []);
+
 useEffect(() => {
   if (pendingWhatsNew) {
     const delay = setTimeout(() => {
@@ -494,7 +505,7 @@ function awardTile() {
   if (newIndexes.length === TILE_WORD.length) {
     const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
     localStorage.setItem("freeToken", (currentTokens + 1).toString());
-    setTokenCount(currentTokens + 1);
+    setTokenCount(currentTokens + 2);
     setJustEarnedToken(true);
 
     const tomorrow = new Date();
