@@ -387,6 +387,7 @@ useEffect(() => {
   async function loadPuzzles() {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
+localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
     let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
 
