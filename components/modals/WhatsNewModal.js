@@ -5,19 +5,22 @@ export default function WhatsNewModal({ open, onClose, earnedTiles = [], categor
   const TILE_WORD = "NUMERUS";
   const nextTileIndex = earnedTiles.length;
 
-const previewTiles = TILE_WORD.split("").map((letter, index) => {
-  return (
+<div className="flex justify-center gap-2 mb-3">
+  {TILE_WORD.split("").map((letter, i) => (
     <div
-      key={index}
-      style={{ animationDelay: `${index * 0.15}s` }}
-      className={`w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white ${
-        index < 3 ? "bg-[#3B82F6] animate-fade-in" : "bg-gray-300"
-      }`}
+      key={i}
+      className="w-10 h-10 flex items-center justify-center rounded-lg font-bold text-white animate-fade-in"
+      style={{
+        animationDelay: `${i * 0.2}s`,
+        backgroundColor: "#3B82F6",
+        opacity: 0,
+      }}
     >
       {letter}
     </div>
-  );
-});
+  ))}
+</div>
+
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
