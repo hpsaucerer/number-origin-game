@@ -51,6 +51,24 @@ function debugLog(...args) {
   console.log("[DEBUG]", ...args);
 }
 
+async function logCategoryReveal(puzzleId) {
+  const deviceId = localStorage.getItem("deviceId") || "unknown";
+
+  const { error } = await supabase.from("Player_responses").insert([
+    {
+      puzzle_id: puzzleId,
+      device_id: deviceId,
+      revealed_category: true,
+      revealed_at: new Date().toISOString(),
+    },
+  ]);
+
+  if (error) {
+    console.error("❌ Supabase error logging category reveal:", error);
+  } else {
+    console.log("📘 Category reveal logged to Supabase!");
+  }
+}
 
 // 🔁 Synonym replacement map for flexible matching
 const synonymMap = {
@@ -765,9 +783,14 @@ const handleRevealCategory = () => {
       localStorage.setItem("freeToken", newCount.toString());
       return newCount;
     });
+
     setCategoryRevealed(true);
     setSpendingToken(false);
-  }, 1000); // small delay to allow for nice animation if you want
+
+    // ✅ Track usage in Supabase
+    logCategoryReveal(puzzle.id);
+
+  }, 1000);
 };
 
 
@@ -1055,7 +1078,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {tokenCount > 0 && !categoryRevealed && (
 <Button
   onClick={handleRevealCategory}
-  className="w-full text-white hover:opacity-90"
   className="w-full text-white bg-[#f7c548] hover:opacity-90"
   disabled={spendingToken}
 >
