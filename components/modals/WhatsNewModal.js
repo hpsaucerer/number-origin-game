@@ -21,7 +21,7 @@ const previewTiles = TILE_WORD.split("").map((letter, index) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
+      <div className="fixed inset-0 flex justify-center z-50 px-4 overflow-y-auto pt-10 pb-6 sm:items-center">
         <DialogContent className="relative max-h-[90vh] overflow-y-auto pt-3 px-4 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center">
 
           {/* Close Button */}
@@ -33,7 +33,7 @@ const previewTiles = TILE_WORD.split("").map((letter, index) => {
             <X size={28} />
           </button>
 
-          <DialogHeader className="w-full">
+          <DialogHeader className="w-full pr-10">
             <DialogTitle>
               <h2 className="text-lg text-gray-800 text-left">Update 1.0. What's new on Numerus</h2>
             </DialogTitle>
