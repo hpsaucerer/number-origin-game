@@ -142,6 +142,13 @@ const synonymMap = {
   "golden number": "golden ratio",
   "golden constant": "golden ratio",
   "ideal proportion": "golden ratio",
+  film: "movie",
+  flick: "movie",
+  motion picture: "movie",
+  launch: "release",
+  premiere: "release"
+  star wars iv: "star wars"
+  new hope: "star wars",
 };
 
 function normalizeGuess(input) {
