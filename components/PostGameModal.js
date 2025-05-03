@@ -35,6 +35,7 @@ export default function PostGameModal({
 
   const [countdown, setCountdown] = useState("");
   const [earnedTiles, setEarnedTiles] = useState([]);
+  const [justEarnedTile, setJustEarnedTile] = useState(false);
 
   useEffect(() => {
     const updateCountdown = () => {
