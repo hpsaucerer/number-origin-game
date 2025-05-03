@@ -1,11 +1,11 @@
 // pages/_app.js
 
 import '@/styles/globals.css';
-import { Be_Vietnam_Pro } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import Head from 'next/head';
 import { ModalProvider, useModal } from '@/context/ModalContext';
 import AchievementsModal from '@/components/AchievementsModal'; // ✅ Import the modal
+
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ['latin'],
@@ -25,6 +25,8 @@ function ModalManager() {
   );
 }
 
+
+
 export default function App({ Component, pageProps }) {
   return (
     <ModalProvider>
@@ -35,6 +37,10 @@ export default function App({ Component, pageProps }) {
           content="Numerus – The Daily Reverse Trivia Game. Strengthen your trivia muscle, one number at a time. Start your workout today!"
         />
         <meta name="google-site-verification" content="NFzRNjrQmkhs56W8QgrDymrXZy2rusezlOhR2fcBDRA" />
+
+
+        {/* Optional Open Graph tags for social previews */}
+>
         <meta property="og:title" content="Numerus – The Daily Reverse Trivia Game" />
         <meta property="og:description" content="Can you guess what today's number signifies? Use clues to solve the puzzle!" />
         <meta property="og:image" content="/social-preview.png" />
@@ -42,7 +48,7 @@ export default function App({ Component, pageProps }) {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
-      <main className={beVietnamPro.className}>
+      <main>
         <Component {...pageProps} />
         <Analytics />
         <ModalManager /> {/* ✅ Global modal mount */}

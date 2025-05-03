@@ -30,10 +30,10 @@ import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` fil
 import AchievementsModal from "@/components/AchievementsModal";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
 
-const DEBUG_MODE = false; // set to false later when live if you want
+const DEBUG_MODE = true; // set to false later when live if you want
 
 function debugLog(...args) {
-  if (!DEBUG_MODE || process.env.NODE_ENV === "production") return;
+  if (!DEV_MODE || process.env.NODE_ENV === "production") return;
 
   const forbiddenFields = ["answer", "acceptable_guesses", "essential_keywords", "keywords", "clues"];
 
@@ -70,7 +70,20 @@ async function logCategoryReveal(puzzleId) {
   }
 }
 
-// 🔁 Synonym replacement map for flexible matching
+const fillerWords = [
+  "a", "an", "the", "and", "or", "but", "if", "so", "because", "as", "although", "though", "while", "when", "where",
+  "of", "in", "on", "at", "to", "from", "by", "with", "about", "into", "onto", "off", "over", "under", "through", "up", "down", "for",
+  "is", "was", "were", "are", "am", "be", "been", "being", "do", "did", "does", "have", "has", "had",
+  "will", "would", "shall", "should", "can", "could", "may", "might", "must",
+  "that", "this", "these", "those", "such", "some", "any", "all", "each", "every", "no", "not", "only", "just",
+  "how", "what", "which", "who", "whom", "whose", "why", "when", "where",
+  "it", "its", "he", "she", "him", "her", "his", "they", "them", "their", "we", "us", "our", "you", "your", "i", "me", "my",
+  "been", "being", "there", "here", "then", "than",
+  "more", "less", "very", "too", "also", "again", "once", "even",
+  "didn’t", "doesn’t", "wasn’t", "weren’t", "isn’t", "aren’t", "can’t", "won’t", "wouldn’t", "shouldn’t", "couldn’t",
+  "yes", "no", "okay", "ok", "alright", 
+];
+
 const synonymMap = {
   quickest: "fastest",
   rapid: "fast",
@@ -93,6 +106,7 @@ const synonymMap = {
   run: "sprint",
   murdered: "assassination",
   killed: "assassination",
+  death: "assassination",
   length: "distance",
   domains: "kingdoms",
   movies: "films",
@@ -103,50 +117,69 @@ const synonymMap = {
   mountain: "mount",
   works: "plays",
   highest: "maximum",
-  meters: "metres",
-  length: "distance",
   shirt: "jersey",
   top: "jersey",
   vest: "jersey",
+  shakespear: "shakespeare",
+  shakespere: "shakespeare",
+  shakspeare: "shakespeare",
+  shakspear: "shakespeare",
+  shackespeare: "shakespeare",
+  shakesspeare: "shakespeare",
+  shakspere: "shakespeare",
+  shakesspear: "shakespeare",
+  shakessper: "shakespeare",
+  shakisper: "shakespeare",
+  shaekspeare: "shakespeare",
+  "shakesperes": "shakespeare",
+  "shaksper": "shakespeare",
+  "divine proportion": "golden ratio",
+  "golden mean": "golden ratio",
+  "golden section": "golden ratio",
+  "phi ratio": "golden ratio",
+  "beauty ratio": "golden ratio",
+  "aesthetic ratio": "golden ratio",
+  "golden number": "golden ratio",
+  "golden constant": "golden ratio",
+  "ideal proportion": "golden ratio",
 };
 
-function normalizeGuess(str) {
-  return str
+function normalizeGuess(input) {
+  if (!input) return "";
+
+  return input
     .toLowerCase()
-    .replace(/[’'`]/g, "")
-    .replace(/[^a-z0-9\s]/g, "")
-    .split(/\s+/)
-    .filter(w => !["the", "a", "an", "is", "in", "of", "to", "for", "on", "with", "by", "at", "as", "and"].includes(w))
-    .map(w => synonymMap[w] || w)
+    .replace(/[’'`]/g, "")               // Remove apostrophes
+    .replace(/[^a-z0-9\s]/g, "")         // Remove punctuation
+    .split(/\s+/)                        // Split words safely
+    .filter(word => !fillerWords.includes(word)) // Drop filler words
+    .map(word => synonymMap[word] || word)       // Apply synonym mapping
     .join(" ")
     .trim();
 }
 
 function evaluateGuessKeywords(guess, { essential = [], required = [] }) {
   const normalizedGuess = normalizeGuess(guess);
-  const normalizedTokens = normalizedGuess.split(/\W+/);
-  const tokenSet = new Set(normalizedTokens);
+  const guessTokens = new Set(normalizedGuess.split(/\W+/)); // ⚡ Faster lookup with Set!
 
-  const matchedEssential = essential.map(normalizeGuess).filter(t => tokenSet.has(t));
-  const matchedRequired = required.map(normalizeGuess).filter(t => tokenSet.has(t));
+  const normalizeAndFilter = (arr) =>
+    arr.map(normalizeGuess).filter((token) => guessTokens.has(token));
 
-  const hasStrongMatch = matchedEssential.length > 0;
-  const hasWeakMatch = matchedRequired.length > 0;
-  const requiredMatched = matchedRequired.length > 0;
-  const matchCount = matchedEssential.length + matchedRequired.length;
+  const matchedEssential = normalizeAndFilter(essential);
+  const matchedRequired = normalizeAndFilter(required);
 
   return {
-    matchCount,
-    hasStrongMatch,
-    hasWeakMatch,
-    requiredMatched,
+    matchCount: matchedEssential.length + matchedRequired.length,
+    hasStrongMatch: matchedEssential.length > 0,
+    hasWeakMatch: matchedRequired.length > 0,
+    requiredMatched: matchedRequired.length > 0,
     matchedEssential,
     matchedRequired,
   };
 }
 
 
-const DEV_MODE = false;
+const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
 
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
@@ -528,10 +561,13 @@ const handleGuess = async (isClueReveal = false) => {
     essential: puzzle.essential_keywords,
     required: puzzle.keywords || [],
   });
+  debugLog("Matched Essential:", matchedEssential);
+  debugLog("Essential Keywords:", puzzle.essential_keywords);
+  debugLog("Normalized Guess:", cleanedGuess);
 
   debugLog("Matched Essential:", matchedEssential, "from:", cleanedGuess);
   debugLog("Essential keywords:", puzzle.essential_keywords);
-  
+
   if (!isClueReveal && !cleanedGuess) {
     setInputError("Please enter a guess before submitting.");
     return;
@@ -560,12 +596,21 @@ const handleGuess = async (isClueReveal = false) => {
       return;
     }
 
+
 const allAnswers = [
   { label: normalizeGuess(puzzle.answer) },
   ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
     label: normalizeGuess(g),
   })),
 ];
+
+
+    const allAnswers = [
+      { label: normalizeGuess(puzzle.answer) },
+      ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
+        label: normalizeGuess(g),
+      })),
+    ];
 
 
     const fuse = new Fuse(allAnswers, {
@@ -582,10 +627,11 @@ const allAnswers = [
     const acceptableStrings = puzzle.acceptableGuesses || puzzle.acceptable_guesses || [];
 
     const exactAcceptableMatch = acceptableStrings.some(
-      g => normalize(g).replace(/\s+/g, '') === normalizedGuess
+      g => normalizeGuess(g).replace(/\s+/g, '') === normalizedGuess
     );
 
     const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
+
 
 const acceptableFuse = new Fuse(
   acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
@@ -597,18 +643,62 @@ const acceptableFuse = new Fuse(
   }
 );
 
+    const acceptableFuse = new Fuse(
+      acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
+      {
+        keys: ["label"],
+        threshold: 0.4,
+        distance: 100,
+        ignoreLocation: true,
+      }
+    );
+
+
     const acceptableResults = acceptableFuse.search(cleanedGuess);
-    const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.3); // tighter match threshold
+    const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.35); // tighter match threshold
 
     const essentialMatchCount = matchedEssential.length;
     const strongEssentialHit = essentialMatchCount >= 2;
     const nearMissEssential = essentialMatchCount === 1;
+    const hasOnlyEssentialMatch = hasStrongMatch && essentialMatchCount >= 2;
 
+    // ✅ Final match logic
+    const isCorrectGuess =
+      isExactAnswerMatch ||
+      exactAcceptableMatch ||
+      isAcceptableGuess ||
+      (
+        bestMatch?.score <= 0.65 &&
+        hasStrongMatch &&
+        requiredMatched &&
+        strongEssentialHit
+      ) ||
+      (
+        hasOnlyEssentialMatch && cleanedGuess.length > 12
+      );
 
-    debugLog("Checking guess validity. Cleaned guess:", cleanedGuess);
-    debugLog("isAcceptableGuess?", isAcceptableGuess);
-    debugLog("Is exact match achieved?", isExactAnswerMatch);
-    debugLog("Essential match count:", essentialMatchCount);
+    // 🧠 Track why it passed or failed
+    const matchType = isExactAnswerMatch
+      ? "exact_answer"
+      : exactAcceptableMatch
+      ? "exact_acceptable"
+      : isAcceptableGuess
+      ? "fuzzy_acceptable"
+      : (
+          bestMatch?.score <= 0.65 &&
+          hasStrongMatch &&
+          requiredMatched &&
+          strongEssentialHit
+        )
+      ? "fuzzy_with_required"
+      : (
+          strongEssentialHit &&
+          matchedEssential.length >= 2 &&
+          cleanedGuess.length > 12
+        )
+      ? "essential_only_fallback"
+      : "none";
+
 
   const isCorrectGuess =
   isExactAnswerMatch ||
@@ -668,9 +758,32 @@ if (error) {
   console.log("✅ Guess successfully logged to Supabase!");
 }
 
+    const { error } = await supabase.from("Player_responses").insert([
+      {
+        puzzle_id: puzzleId.toString(),
+        raw_guess: guess,
+        cleaned_guess: cleanedGuess,
+        is_correct: isCorrectGuess,
+        match_type: matchType,
+        attempt: attempts + 1,
+        device_id: localStorage.getItem("deviceId") || "unknown",
+        notes: JSON.stringify({
+          essentialHit: matchedEssential,
+          requiredHit: matchedRequired,
+          fuzzyScore: bestMatch?.score ?? null,
+          relaxedRule: hasOnlyEssentialMatch && cleanedGuess.length > 12
+        }),
+      }
+    ]);
+
+
+    if (error) {
+      console.error("❌ Supabase insert error:", error);
+    } else {
+      console.log("✅ Guess successfully logged to Supabase!");
+    }
 
     if (isCorrectGuess) {
-      // ✅ Correct guess
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
       const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
@@ -696,21 +809,22 @@ if (error) {
       awardTile();
       setTimeout(() => setShowPostGame(true), 500);
     } else if (nearMissEssential || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
-      // 🤏 Close guess
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
-      const clueToReveal = puzzle.clues?.[revealedClues.length];
-      if (clueToReveal) {
-        setRevealedClues((prev) => [...prev, clueToReveal]);
-      }
+const clueIndex = revealedClues.length;
+const nextClue = puzzle.clues?.[clueIndex];
+
+if (nextClue && !revealedClues.includes(nextClue)) {
+  setRevealedClues([...revealedClues, nextClue]);
+}
+
 
       setInputError(
-  nearMissEssential
-    ? "You're close — try adding a more specific word!"
-    : "You're on the right track!"
-);
-
+        nearMissEssential
+          ? "You're close — try adding a more specific word!"
+          : "You're on the right track!"
+      );
 
       if (newAttempts >= maxGuesses) {
         setStats((prev) => updateStats(prev, false));
@@ -723,14 +837,15 @@ if (error) {
       }
 
     } else {
-      // ❌ Incorrect guess
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
-      const clueToReveal = puzzle.clues?.[revealedClues.length];
-      if (clueToReveal) {
-        setRevealedClues((prev) => [...prev, clueToReveal]);
-      }
+const clueIndex = revealedClues.length;
+const nextClue = puzzle.clues?.[clueIndex];
+
+if (nextClue && !revealedClues.includes(nextClue)) {
+  setRevealedClues([...revealedClues, nextClue]);
+}
 
       if (newAttempts >= maxGuesses) {
         setStats((prev) => updateStats(prev, false));
@@ -751,19 +866,24 @@ if (error) {
   }
 };
 
-
     
 const handleClueReveal = () => {
   if (
-    revealDisabled || 
-    attempts >= maxGuesses || 
+    revealDisabled ||
+    attempts >= maxGuesses ||
     revealedClues.length >= puzzle?.clues?.length
   ) return;
 
   setRevealDisabled(true);
   setAnimateClueButton(false);
 
-  handleGuess(true);
+  const clueIndex = revealedClues.length;
+  const nextClue = puzzle.clues?.[clueIndex];
+
+  if (nextClue && !revealedClues.includes(nextClue)) {
+    setRevealedClues([...revealedClues, nextClue]);
+    setAttempts((prev) => prev + 1); // Don't forget to increment attempts!
+  }
 
   setTimeout(() => {
     setRevealDisabled(false);

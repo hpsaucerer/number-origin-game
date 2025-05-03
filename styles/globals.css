@@ -1,3 +1,19 @@
+@import './fonts.css';
+
+
+@tailwind base;
+@layer base {
+  html {
+    @apply font-bevietnam;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: white;
+  }
+}
+@tailwind components;
+@tailwind utilities;
+
+
 /* Ensure full height layout and mobile-safe scrolling */
 html, body {
   height: 100%;
@@ -9,13 +25,6 @@ html, body {
 /* ✅ Apply consistent box-sizing across all elements */
 *, *::before, *::after {
   box-sizing: border-box;
-}
-
-body {
-  font-family: system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: white;
 }
 
 .recharts-pie-sector:focus {
@@ -57,7 +66,6 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   }
 }
 
-
 .animate-shimmer {
   background: linear-gradient(90deg, #ffffff22, #ffffff66, #ffffff22);
   background-size: 200% 100%;
@@ -88,6 +96,7 @@ html, body, button, .recharts-wrapper, .recharts-surface {
 .joyride-tooltip__spotlight {
   display: none !important;
 }
+
 
 /* === Token Animation Styles === */
 

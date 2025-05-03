@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        bevietnam: ['var(--font-bevietnam)', 'sans-serif'],
+        bevietnam: ['Be Vietnam Pro', 'sans-serif'],
       },
     },
   },
