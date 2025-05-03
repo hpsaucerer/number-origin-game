@@ -275,7 +275,8 @@ const joyrideSteps = [
   const [spendingToken, setSpendingToken] = useState(false); // Optional: UI animation later
   const [showAchievements, setShowAchievements] = useState(false);
   const [completedPuzzles, setCompletedPuzzles] = useState([]);
-
+  const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
+    
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
