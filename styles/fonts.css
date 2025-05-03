@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'Be Vietnam Pro';
-  src: url('/fonts/be-vietnam-pro/be-vietnam-pro-latin-500-normal.woff2') format('woff2');
+  src: url('/fonts/be-vietnam-pro/be-vietnam-pro-latin-500-normal.woff2') format('woff2'); 
   font-weight: 500;
   font-style: normal;
   font-display: swap;
