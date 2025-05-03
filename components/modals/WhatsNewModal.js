@@ -93,7 +93,7 @@ export default function WhatsNewModal({ open, onClose }) {
 
             {/* ➕ New Final Line */}
             <p className="text-sm text-gray-600 text-center mt-4">
-              ➕ Several bugs fixes and improved guess validation logic.
+              ➕ Several bugs fixed and improved guess validation logic.
             </p>
 
             {/* Confirm Button */}
