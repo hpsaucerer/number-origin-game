@@ -7,13 +7,6 @@ import { ModalProvider, useModal } from '@/context/ModalContext';
 import AchievementsModal from '@/components/AchievementsModal'; // ✅ Import the modal
 
 
-const beVietnamPro = Be_Vietnam_Pro({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  display: 'swap',
-  variable: '--font-bevietnam',
-});
-
 // 👇 Helper wrapper to access modal inside provider
 function ModalManager() {
   const { showAchievements, setShowAchievements } = useModal();
