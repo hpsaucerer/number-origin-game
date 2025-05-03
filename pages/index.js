@@ -146,8 +146,8 @@ const synonymMap = {
   flick: "movie",
   "motion picture": "movie",
   launch: "release",
-  premiere: "release"
-  "star wars iv": "star wars"
+  premiere: "release",
+  "star wars iv": "star wars",
   "new hope": "star wars",
 };
 
