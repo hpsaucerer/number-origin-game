@@ -21,7 +21,7 @@ import { BookOpen } from "lucide-react";
 import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
-import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";  
+import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
 import Fuse from "fuse.js";
 import Joyride from "react-joyride";
 import StatsModal from "@/components/modals/StatsModal";
@@ -258,7 +258,6 @@ const joyrideSteps = [
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false); // 👈 Add this line here
   const [revealedClues, setRevealedClues] = useState([]);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -549,9 +548,6 @@ function awardTile() {
 
 
 const handleGuess = async (isClueReveal = false) => {
-  if (isSubmitting) return;       // ✅ Prevents re-entry
-  setIsSubmitting(true);          // ✅ Locks submission
-
   const cleanedGuess = normalizeGuess(guess);
   const puzzleId = puzzle?.id ?? 0;
 
@@ -705,6 +701,18 @@ const { error } = await supabase.from("Player_responses").insert([
   }
 ]);
 
+if (error) {
+  console.error("❌ Supabase insert error:", error);
+} else {
+  console.log("✅ Guess successfully logged to Supabase!");
+}
+
+
+    if (error) {
+      console.error("❌ Supabase insert error:", error);
+    } else {
+      console.log("✅ Guess successfully logged to Supabase!");
+    }
 
     if (isCorrectGuess) {
       setIsCorrect(true);
@@ -783,14 +791,13 @@ if (nextClue && !revealedClues.includes(nextClue)) {
 
       setGuess("");
     }
-} catch (error) {
-  console.error("❌ Error in handleGuess:", error);
-  setInputError("Something went wrong. Try again!");
-} finally {
-  setIsSubmitting(false); // ✅ Always unlocks
-}
+  } catch (error) {
+    console.error("❌ Error in handleGuess:", error);
+    setInputError("Something went wrong. Try again!");
+  }
+};
 
-
+    
 const handleClueReveal = () => {
   if (
     revealDisabled ||
@@ -1129,11 +1136,10 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 )}
 
 <Button
-  onClick={() => handleGuess()}
+  onClick={() => handleGuess()} // ✅ Safe and explicit
   className="w-full bg-[#3B82F6] text-white"
-  disabled={isSubmitting} // ✅ disables while guessing
 >
-  {isSubmitting ? "Checking..." : "Submit"} {/* ✅ dynamic label */}
+  Submit
 </Button>
 
     </div>
@@ -1267,6 +1273,5 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 </div> {/* CLOSE div properly here */}
 </>
 );
-}
 } // Close Home function
 
