@@ -705,11 +705,6 @@ const { error } = await supabase.from("Player_responses").insert([
   }
 ]);
 
-    if (error) {
-      console.error("❌ Supabase insert error:", error);
-    } else {
-      console.log("✅ Guess successfully logged to Supabase!");
-    }
 
     if (isCorrectGuess) {
       setIsCorrect(true);
@@ -1272,5 +1267,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 </div> {/* CLOSE div properly here */}
 </>
 );
+}
 } // Close Home function
 
