@@ -27,6 +27,8 @@ import Joyride from "react-joyride";
 import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
+import AchievementsModal from "@/components/AchievementsModal";
+import WhatsNewModal from "@/components/modals/WhatsNewModal";
 
 const DEBUG_MODE = true; // set to false later when live if you want
 
@@ -49,6 +51,24 @@ function debugLog(...args) {
   console.log("[DEBUG]", ...args);
 }
 
+async function logCategoryReveal(puzzleId) {
+  const deviceId = localStorage.getItem("deviceId") || "unknown";
+
+  const { error } = await supabase.from("Player_responses").insert([
+    {
+      puzzle_id: puzzleId,
+      device_id: deviceId,
+      revealed_category: true,
+      revealed_at: new Date().toISOString(),
+    },
+  ]);
+
+  if (error) {
+    console.error("❌ Supabase error logging category reveal:", error);
+  } else {
+    console.log("📘 Category reveal logged to Supabase!");
+  }
+}
 
 const fillerWords = [
   "a", "an", "the", "and", "or", "but", "if", "so", "because", "as", "although", "though", "while", "when", "where",
@@ -124,7 +144,7 @@ const synonymMap = {
   "ideal proportion": "golden ratio",
 };
 
-export function normalizeGuess(input) {
+function normalizeGuess(input) {
   if (!input) return "";
 
   return input
@@ -137,7 +157,6 @@ export function normalizeGuess(input) {
     .join(" ")
     .trim();
 }
-
 
 function evaluateGuessKeywords(guess, { essential = [], required = [] }) {
   const normalizedGuess = normalizeGuess(guess);
@@ -170,9 +189,17 @@ const colorClassMap = {
   purple: "text-purple-700 bg-purple-100 hover:bg-purple-200",
   red: "text-red-700 bg-red-100 hover:bg-red-200",
 };
+const categoryColorMap = {
+  Maths: "#3b82f6",      // blue
+  Geography: "#63c4a7",  // green
+  Science: "#f57d45",    // orange
+  History: "#f7c548",    // yellow
+  Culture: "#8e44ad",    // purple
+  Sport: "#e53935",      // red
+};
 
   export default function Home() {
-
+const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 const joyrideSteps = [
   {
     target: ".daily-number",
@@ -204,6 +231,13 @@ const joyrideSteps = [
     wait: 500,
   },
   {
+    target: ".achievements-button",
+    content: "Tap the trophy icon to view your achievements — including category progress and tiles earned!",
+    disableBeacon: true,
+    disableScrolling: true,
+    wait: 500,
+  },
+  {
     target: ".stats-button",
     content: "Track your daily streaks and puzzle stats here.",
     disableBeacon: true,
@@ -219,8 +253,8 @@ const joyrideSteps = [
     "Hmm, not quite. Keep thinking!",
     "Last clue! Take a deep breath and go for it.",
   ];
-    
-  const [openTooltip, setOpenTooltip] = useState(null);
+  
+  const [pendingWhatsNew, setPendingWhatsNew] = useState(false);
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState(0);
@@ -229,13 +263,18 @@ const joyrideSteps = [
   const [showInstructions, setShowInstructions] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [inputError, setInputError] = useState("");
-  const tooltipRefs = useRef([]);
   const [showPostGame, setShowPostGame] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedPuzzleId, setSelectedPuzzleId] = useState(null);
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState(null);
   const [revealDisabled, setRevealDisabled] = useState(false);
   const [animateClueButton, setAnimateClueButton] = useState(true);
+  const [tokenCount, setTokenCount] = useState(0);
+  const [justEarnedToken, setJustEarnedToken] = useState(false);
+  const [categoryRevealed, setCategoryRevealed] = useState(false);
+  const [spendingToken, setSpendingToken] = useState(false); // Optional: UI animation later
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [completedPuzzles, setCompletedPuzzles] = useState([]);
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
@@ -243,45 +282,77 @@ const [puzzle, setPuzzle] = useState(null);
 const [puzzleNumber, setPuzzleNumber] = useState(null);
 
 const [localDate, setLocalDate] = useState("");
+const [showWhatsNew, setShowWhatsNew] = useState(false);
 
 const [showTour, setShowTour] = useState(false);
 const [stepIndex, setStepIndex] = useState(0);
 const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
 const [readyToRunTour, setReadyToRunTour] = useState(false);
 
+const TILE_WORD = "NUMERUS";
+const [showTokenBubble, setShowTokenBubble] = useState(false);
 
 useEffect(() => {
-  if (!puzzle || !hasMounted || localStorage.getItem("seenTour") === "true") return;
+  const hasGivenStarterTokens = localStorage.getItem("starterTokensGiven");
+  if (!hasGivenStarterTokens) {
+    const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+    const newTotal = currentTokens + 3;
+    localStorage.setItem("freeToken", newTotal.toString());
+    localStorage.setItem("starterTokensGiven", "true");
+    setTokenCount(newTotal); // Update UI state
+    console.log("🟢 Starter tokens granted!");
+  }
+}, []);
 
-  let attempts = 0;
-  const maxTries = 10;
 
-  const tryStartTour = () => {
-    const input = document.querySelector(".guess-input");
-    const clue = document.querySelector(".reveal-button");
-    const daily = document.querySelector(".daily-number");
-    const stats = document.querySelector(".stats-button");
+useEffect(() => {
+  const storedTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+  setTokenCount(storedTokens);
+}, []);
 
-    if (daily && input && clue && stats) {
-      debugLog("✅ Joyride: All targets found.");
-      setStepIndex(0);
-      setTourKey(Date.now());
-      setShowTour(true);
-      setReadyToRunTour(true);
-    } else if (attempts < maxTries) {
-      attempts++;
-      console.warn(`⏳ Joyride waiting... attempt ${attempts}`);
-      setTimeout(tryStartTour, 300);
-    } else {
-      console.error("❌ Joyride failed: Targets not found.");
+useEffect(() => {
+  const hasSeenTour = localStorage.getItem("seenTour") === "true";
+
+  if (!puzzle || !hasMounted) return;
+
+if (!hasSeenTour) {
+ setWasFirstTimePlayer(true); // ✅ tracked in state now
+
+    let attempts = 0;
+    const maxTries = 10;
+
+    const tryStartTour = () => {
+      const input = document.querySelector(".guess-input");
+      const clue = document.querySelector(".reveal-button");
+      const daily = document.querySelector(".daily-number");
+      const stats = document.querySelector(".stats-button");
+
+      if (daily && input && clue && stats) {
+        debugLog("✅ Joyride: All targets found.");
+        setStepIndex(0);
+        setTourKey(Date.now());
+        setShowTour(true);
+        setReadyToRunTour(true);
+      } else if (attempts < maxTries) {
+        attempts++;
+        console.warn(`⏳ Joyride waiting... attempt ${attempts}`);
+        setTimeout(tryStartTour, 300);
+      } else {
+        console.error("❌ Joyride failed: Targets not found.");
+      }
+    };
+
+    setTimeout(tryStartTour, 300);
+  } else {
+    const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
+    if (!hasSeenWhatsNew) {
+      setShowWhatsNew(true);
+      localStorage.setItem("seenWhatsNew", "true");
     }
-  };
-
-  // Delay check until after render
-  setTimeout(tryStartTour, 300);
+  }
 }, [puzzle, hasMounted]);
 
-  
+
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
     timeZone: "Europe/London",
@@ -294,11 +365,38 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
+  const resetAt = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
+  const now = Date.now();
+
+  if (resetAt && now > resetAt) {
+    localStorage.removeItem("earnedTileIndexes");
+    localStorage.removeItem("resetTilesAt");
+    console.log("🧼 Cleared earnedTileIndexes for a new cycle.");
+  }
+}, []);
+
+useEffect(() => {
+  if (pendingWhatsNew) {
+    const delay = setTimeout(() => {
+      setShowWhatsNew(true);
+      localStorage.setItem("seenWhatsNew", "true");
+      setPendingWhatsNew(false); // reset
+    }, 500); // slight delay
+    return () => clearTimeout(delay); // clean up on unmount
+  }
+}, [pendingWhatsNew]);
+
+    
+useEffect(() => {
   const existingId = localStorage.getItem("deviceId");
   if (!existingId) {
     const newId = crypto.randomUUID();
     localStorage.setItem("deviceId", newId);
   }
+}, []);
+
+useEffect(() => {
+  localStorage.removeItem("earnedTiles");
 }, []);
 
 useEffect(() => {
@@ -315,37 +413,54 @@ useEffect(() => {
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 useEffect(() => {
-const loadPuzzles = async () => {
-const all = await fetchAllPuzzles();
-setAllPuzzles(all);
+  async function loadPuzzles() {
+    const all = await fetchAllPuzzles();
+    setAllPuzzles(all);
+localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
-if (DEV_MODE && selectedPuzzleIndex !== null) {
-  const devPuzzle = all[selectedPuzzleIndex];
-  debugLog("🔧 DEV PUZZLE loaded.");  // ✅ Only mention success, no object
-  setPuzzle(devPuzzle);
-  setPuzzleNumber(selectedPuzzleIndex + 1);
-} else {
-  const today = await fetchTodayPuzzle();
-  if (today) {
-    debugLog("✅ Today's puzzle loaded.");  // ✅ Only mention success
-    setPuzzle(today);
+    let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
 
-    const index = all.findIndex((p) => p.id === today.id);
-    setPuzzleNumber(index + 1);
-  } else {
-    console.warn("⚠️ No puzzle returned for today.");
+    if (!Array.isArray(completed)) {
+      completed = [];
+
+      all.forEach((p) => {
+        if (localStorage.getItem(`completed-${p.date}`) === "true") {
+          completed.push(p.id);
+        }
+      });
+
+      localStorage.setItem("completedPuzzles", JSON.stringify(completed));
+      console.log(
+        completed.length > 0
+          ? "✅ Migrated old completions to completedPuzzles."
+          : "🆕 No old completions found. Initialized empty completedPuzzles."
+      );
+    }
+
+    setCompletedPuzzles(completed);
+
+    if (DEV_MODE && selectedPuzzleIndex !== null) {
+      const devPuzzle = all[selectedPuzzleIndex];
+      debugLog("🔧 DEV PUZZLE loaded.");
+      setPuzzle(devPuzzle);
+      setPuzzleNumber(selectedPuzzleIndex + 1);
+    } else {
+      const today = await fetchTodayPuzzle();
+      if (today) {
+        debugLog("✅ Today's puzzle loaded.");
+        setPuzzle(today);
+
+        const index = all.findIndex((p) => p.id === today.id);
+        setPuzzleNumber(index + 1);
+      } else {
+        console.warn("⚠️ No puzzle returned for today.");
+      }
+    }
   }
-}
-
-};
 
   loadPuzzles();
 }, [selectedPuzzleIndex]);
 
-
-  const toggleTooltip = (idx) => {
-  setOpenTooltip((prev) => (prev === idx ? null : idx));
-};
 
   const maxGuesses = 4;
   const gameOver = isCorrect || attempts >= maxGuesses;
@@ -400,25 +515,36 @@ useEffect(() => {
   }
 }, [puzzle]);
 
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (
-      tooltipRefs.current.every(
-        (ref) => ref && !ref.contains(event.target)
-      )
-    ) {
-      setOpenTooltip(null);
-    }
-  };
+function awardTile() {
+  const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
-  if (openTooltip !== null) {
-    document.addEventListener("mousedown", handleClickOutside); // 👈 changed from 'click'
+  if (storedIndexes.length >= TILE_WORD.length) return;
+
+  const puzzleDate = puzzle?.date;
+  if (!puzzleDate || localStorage.getItem(`tile-earned-${puzzleDate}`) === "true") return;
+
+  const nextIndex = storedIndexes.length; // 0 → N, 1 → U, etc.
+  const newIndexes = [...storedIndexes, nextIndex];
+
+  // ✅ Save only earnedTileIndexes — not earnedTiles as letters
+  localStorage.setItem("earnedTileIndexes", JSON.stringify(newIndexes));
+  localStorage.setItem(`tile-earned-${puzzleDate}`, "true");
+  setEarnedTileIndexes(newIndexes);
+
+  // ✅ Optional: if all tiles collected, give a token reward
+  if (newIndexes.length === TILE_WORD.length) {
+    const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+    localStorage.setItem("freeToken", (currentTokens + 1).toString());
+    setTokenCount(currentTokens + 2);
+    setJustEarnedToken(true);
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    localStorage.setItem("resetTilesAt", tomorrow.getTime().toString());
   }
+}
 
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, [openTooltip]);
 
 const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalizeGuess(guess);
@@ -470,12 +596,13 @@ const handleGuess = async (isClueReveal = false) => {
       return;
     }
 
-    const allAnswers = [
-      { label: normalizeGuess(puzzle.answer) },
-      ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
-        label: normalizeGuess(g),
-      })),
-    ];
+
+const allAnswers = [
+  { label: normalizeGuess(puzzle.answer) },
+  ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
+    label: normalizeGuess(g),
+  })),
+];
 
     const fuse = new Fuse(allAnswers, {
       keys: ["label"],
@@ -496,15 +623,17 @@ const handleGuess = async (isClueReveal = false) => {
 
     const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
 
-    const acceptableFuse = new Fuse(
-      acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
-      {
-        keys: ["label"],
-        threshold: 0.4,
-        distance: 100,
-        ignoreLocation: true,
-      }
-    );
+
+const acceptableFuse = new Fuse(
+  acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
+  {
+    keys: ["label"],
+    threshold: 0.4,
+    distance: 100,
+    ignoreLocation: true,
+  }
+);
+
 
     const acceptableResults = acceptableFuse.search(cleanedGuess);
     const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.35); // tighter match threshold
@@ -551,23 +680,32 @@ const handleGuess = async (isClueReveal = false) => {
       ? "essential_only_fallback"
       : "none";
 
-    const { error } = await supabase.from("Player_responses").insert([
-      {
-        puzzle_id: puzzleId.toString(),
-        raw_guess: guess,
-        cleaned_guess: cleanedGuess,
-        is_correct: isCorrectGuess,
-        match_type: matchType,
-        attempt: attempts + 1,
-        device_id: localStorage.getItem("deviceId") || "unknown",
-        notes: JSON.stringify({
-          essentialHit: matchedEssential,
-          requiredHit: matchedRequired,
-          fuzzyScore: bestMatch?.score ?? null,
-          relaxedRule: hasOnlyEssentialMatch && cleanedGuess.length > 12
-        }),
-      }
-    ]);
+
+// ✅ Log the guess to Supabase with error handling
+const { error } = await supabase.from("Player_responses").insert([
+  {
+    puzzle_id: puzzleId.toString(),
+    raw_guess: guess,
+    cleaned_guess: cleanedGuess,
+    is_correct: isCorrectGuess,
+    match_type: matchType,
+    attempt: attempts + 1,
+    device_id: localStorage.getItem("deviceId") || "unknown",
+    notes: JSON.stringify({
+      essentialHit: matchedEssential,
+      requiredHit: matchedRequired,
+      fuzzyScore: bestMatch?.score ?? null,
+      relaxedRule: hasOnlyEssentialMatch && cleanedGuess.length > 12
+    }),
+  }
+]);
+
+if (error) {
+  console.error("❌ Supabase insert error:", error);
+} else {
+  console.log("✅ Guess successfully logged to Supabase!");
+}
+
 
     if (error) {
       console.error("❌ Supabase insert error:", error);
@@ -578,6 +716,12 @@ const handleGuess = async (isClueReveal = false) => {
     if (isCorrectGuess) {
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
+      const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+      if (!existingCompleted.includes(puzzle.id)) {
+       existingCompleted.push(puzzle.id);
+       localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
+   }
+
       setStats((prev) => updateStats(prev, true, attempts + 1));
       setGuess("");
 
@@ -592,7 +736,7 @@ const handleGuess = async (isClueReveal = false) => {
           puzzleId,
         });
       }
-
+      awardTile();
       setTimeout(() => setShowPostGame(true), 500);
     } else if (nearMissEssential || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
       const newAttempts = attempts + 1;
@@ -618,6 +762,7 @@ if (nextClue && !revealedClues.includes(nextClue)) {
           track("puzzle_failed", { correct: false, attempts: newAttempts, puzzleId });
           track("puzzle_guess_count", { guessCount: "✖", puzzleId });
         }
+        awardTile();
         setTimeout(() => setShowPostGame(true), 500);
       }
 
@@ -676,6 +821,27 @@ const handleClueReveal = () => {
   }, 1000);
 };
 
+const handleRevealCategory = () => {
+  if (tokenCount <= 0 || categoryRevealed || !puzzle) return;
+
+  setSpendingToken(true);
+
+  setTimeout(() => {
+    setTokenCount((prev) => {
+      const newCount = prev - 1;
+      localStorage.setItem("freeToken", newCount.toString());
+      return newCount;
+    });
+
+    setCategoryRevealed(true);
+    setSpendingToken(false);
+
+    // ✅ Track usage in Supabase
+    logCategoryReveal(puzzle.id);
+
+  }, 1000);
+};
+
 
 const shareTextHandler = () => {
   shareResult({
@@ -696,79 +862,6 @@ const shareTextHandler = () => {
   }
 };
 
-
-const renderCategoryPills = () => {
-  const categories = [
-    {
-      label: "Maths",
-      color: "bg-blue-200 text-blue-800",
-      tooltip: "Equations, constants, mathematical discoveries, calculations.",
-    },
-    {
-      label: "Geography",
-      color: "bg-green-200 text-green-800",
-      tooltip: "Distances, coordinates, elevations.",
-    },
-    {
-      label: "Science",
-      color: "bg-orange-200 text-orange-800",
-      tooltip: "Atomic numbers, scientific constants, measurements. ",
-    },
-    {
-      label: "History",
-      color: "bg-yellow-200 text-yellow-800",
-      tooltip: "Monumental events, inventions, revolutions, treaties.",
-    },
-    {
-      label: "Culture",
-      color: "bg-purple-200 text-purple-800",
-      tooltip: "Movies, literature, music, art.",
-    },
-    {
-      label: "Sport",
-      color: "bg-red-200 text-red-800",
-      tooltip: "World records, famous jersey numbers, stats, memorable dates.",
-    },
-  ];
-
-  return (
-    <div className="grid grid-cols-2 gap-2 mt-4">
-{categories.map((cat, idx) => (
-  <div key={idx} className="relative"
-  ref={(el) => (tooltipRefs.current[idx] = el)}
-  >
- 
-<button
-  onClick={(e) => {
-    e.stopPropagation();
-    toggleTooltip(idx);
-  }}
-  className={`category-pill inline-flex items-center justify-center px-2.5 py-1 rounded-full font-semibold text-sm ${cat.color}`}
->
-  <img
-    src={`/icons/${cat.label.toLowerCase()}.png`}
-    alt={`${cat.label} icon`}
-    className="w-8 h-8 mr-0"
-    style={{ marginTop: '-1px' }}
-  />
-  {cat.label}
-</button>
-
-
-
-{openTooltip === idx && (
-  <div className="tooltip absolute bottom-full left-0 mb-2 bg-white shadow-lg p-2 rounded-md z-50 text-sm leading-snug max-w-[220px]">
-    {cat.tooltip}
-  </div>
-
-)}
-
-  </div>
-))}
-
-    </div>
-  );
-};
 
 return !hasMounted ? (
   <div className="text-center py-10 text-gray-500">Loading...</div>
@@ -811,35 +904,36 @@ return !hasMounted ? (
 callback={(data) => {
   debugLog("🔄 Joyride event:", data);
 
-  // End tour if finished or skipped
+  // When the tour ends (finished or skipped)
   if (data.status === "finished" || data.status === "skipped") {
     setShowTour(false);
     localStorage.setItem("seenTour", "true");
+
+    // ✅ Trigger What's New only if this is the first-time player
+const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
+if (wasFirstTimePlayer && !hasSeenWhatsNew) {
+  setPendingWhatsNew(true); // 🔁 Let useEffect handle it
+}
+
     return;
   }
 
-// Handle advancing between steps
-if (data.type === "step:after") {
-  const nextStep = stepIndex + 1;
+  // Advance steps
+  if (data.type === "step:after") {
+    const nextStep = stepIndex + 1;
+    const nextTargetSelector = joyrideSteps[nextStep]?.target;
 
-  // ✅ End the tour if there are no more steps
-  if (nextStep >= joyrideSteps.length) {
-    debugLog("✅ All Joyride steps complete!");
-    setShowTour(false);
-    localStorage.setItem("seenTour", "true");
-    return;
-  }
+    if (!nextTargetSelector) {
+      debugLog("✅ All Joyride steps complete!");
+      setShowTour(false);
+      localStorage.setItem("seenTour", "true");
+      return;
+    }
 
-  const nextTargetSelector = joyrideSteps[nextStep]?.target;
-
-  if (nextTargetSelector) {
     const nextTarget = document.querySelector(nextTargetSelector);
-
     if (nextTarget) {
       setStepIndex(nextStep);
     } else {
-      // Retry after delay in case of late-rendered element
-      console.warn(`⏳ Waiting for next Joyride step target: ${nextTargetSelector}`);
       setTimeout(() => {
         const retryTarget = document.querySelector(nextTargetSelector);
         if (retryTarget) {
@@ -849,25 +943,24 @@ if (data.type === "step:after") {
           console.warn(`❌ Still missing Joyride step target after retry: ${nextTargetSelector}`);
           setShowTour(false);
         }
-      }, 500); // Retry after 0.5s
+      }, 500);
     }
   }
-}
 
-
-  // Handle missing target during step render
   if (data.type === "target:notFound") {
     console.warn("🚫 Joyride target not found:", data.step.target);
     setShowTour(false);
   }
 }}
+
 /> 
 <Header
-  onHelpClick={() => setShowInstructions(true)}
   onStatsClick={() => setShowStats(true)}
+  onAchievementsClick={() => setShowAchievements(true)}
 />
 
- <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
+<div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
+
 
 {DEV_MODE && (
   <div className="mb-2 flex flex-col items-center">
@@ -895,10 +988,33 @@ if (data.type === "step:after") {
              
       <h1 className="text-2xl font-bold mt-2">Today's number is:</h1>
 
-      <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg">
-        <CardContent className="overflow-hidden">
+<Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
+  <CardContent className="relative">
 
-    
+    {/* 🟡 Token Counter INSIDE Card */}
+    <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10">
+      <div className={`bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md
+        ${justEarnedToken ? "token-pop token-glow" : ""} 
+        ${spendingToken ? "animate-token-spin" : ""}
+      `}>
+        {tokenCount}
+      </div>
+      {showTokenBubble && (
+  <div className="absolute -top-6 right-0 bg-white border border-green-400 text-green-600 px-2 py-1 text-xs rounded shadow">
+    +3 free tokens!
+  </div>
+)}
+
+      {/* Whoosh animation if just earned */}
+      {justEarnedToken && (
+        <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10">
+          <div className="bg-yellow-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-md token-whoosh">
+            🏅
+          </div>
+        </div>
+      )}
+    </div>
+
 <PostGameModal
   open={showPostGame}
   onClose={() => setShowPostGame(false)}
@@ -936,6 +1052,30 @@ if (data.type === "step:after") {
     {clue.replace("formatted", puzzle.formatted)}
   </p>
 ))}
+
+{categoryRevealed && puzzle.category && (
+  <div className="mt-4 text-center flex flex-col items-center">
+    <p className="text-sm font-semibold text-gray-700">
+      Category:
+    </p>
+    <div className="flex items-center gap-2 mt-1">
+      {/* 📸 Category Icon */}
+      <img
+        src={`/icons/${puzzle.category.toLowerCase()}.png`}
+        alt={`${puzzle.category} icon`}
+        className="w-10 h-10 inline-block"
+      />
+      {/* Category Name */}
+      <p
+        className="text-xl font-bold"
+        style={{ color: categoryColorMap[puzzle.category] || "#000" }}
+      >
+        {puzzle.category}
+      </p>
+    </div>
+  </div>
+)}
+
 
 {/* 🔄 Active Game UI */}
 {!isCorrect && attempts < maxGuesses && (
@@ -983,6 +1123,16 @@ if (data.type === "step:after") {
 >
   {revealedClues.length >= puzzle?.clues?.length ? "No more clues" : "Reveal a Clue"}
 </Button>
+{tokenCount > 0 && !categoryRevealed && (
+<Button
+  onClick={handleRevealCategory}
+  className="w-full text-white bg-[#f7c548] hover:opacity-90"
+  disabled={spendingToken}
+>
+  {spendingToken ? "Revealing..." : "Reveal Category (1 Token)"}
+</Button>
+
+)}
 
 <Button
   onClick={() => handleGuess()} // ✅ Safe and explicit
@@ -1085,13 +1235,6 @@ if (data.type === "step:after") {
     </li>
   </ul>
 
-      <div className="flex justify-center mt-2">
-        <div className="bg-gray-100 border border-gray-300 rounded-xl p-4 w-full max-w-md text-center shadow-md">
-          <h3 className="text-lg font-bold mb-1 text-gray-800">Categories</h3>
-          <p className="text-sm text-gray-600 mb-3">Tap the buttons below to explore the categories in more detail.</p>
-          {renderCategoryPills()}
-        </div>
-      </div>
     </div>
 
   </DialogContent>
@@ -1107,12 +1250,27 @@ if (data.type === "step:after") {
   renderCenterLabel={renderCenterLabel}
   combinedLabel={combinedLabel}
 />
+    
+<AchievementsModal
+  open={showAchievements}
+  onClose={() => setShowAchievements(false)}
+/>
 
+<WhatsNewModal
+  open={showWhatsNew}
+  onClose={() => {
+    setShowWhatsNew(false);
+    setShowTokenBubble(true);
+    setTimeout(() => setShowTokenBubble(false), 3000); // hide after 3s
+  }}
+  earnedTiles={[0, 1, 2]} // based on the indexes of "NUMERUS"
+/>
 
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
 </footer>
-    </div>
-  </>
+</div> {/* CLOSE div properly here */}
+</>
 );
-}
+} // Close Home function
+

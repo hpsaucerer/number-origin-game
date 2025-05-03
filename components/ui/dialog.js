@@ -16,6 +16,7 @@ export function Dialog({ open, onOpenChange, children }) {
         justifyContent: "center",
         padding: "1rem", // optional, keeps content from touching edges on mobile
         boxSizing: "border-box", // optional, ensures padding is respected
+        zIndex: 1000, // 🔥 Add this line
       }}
       onClick={() => onOpenChange(false)}
     >
@@ -44,7 +45,11 @@ export function DialogContent({ children, className = "", style = {} }) {
     <div
       onClick={(e) => e.stopPropagation()}
       className={`w-full max-w-md sm:max-w-lg bg-white rounded-lg shadow-xl p-4 ${className}`}
-      style={style}
+      style={{
+        position: "relative", // ensures zIndex applies
+        zIndex: 100,           // ✅ this ensures it's above the token
+        ...style,             // keeps user-passed styles working
+      }}
     >
       {children}
     </div>

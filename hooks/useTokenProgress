@@ -1,0 +1,49 @@
+import { useState, useEffect } from "react";
+
+export function useTokenProgress() {
+  const [lettersCollected, setLettersCollected] = useState(0);
+  const [tokensAvailable, setTokensAvailable] = useState(0);
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("tokenData"));
+    if (data) {
+      setLettersCollected(data.lettersCollected || 0);
+      setTokensAvailable(data.tokensAvailable || 0);
+    }
+  }, []);
+
+  const saveProgress = (letters, tokens) => {
+    setLettersCollected(letters);
+    setTokensAvailable(tokens);
+    localStorage.setItem(
+      "tokenData",
+      JSON.stringify({
+        lettersCollected: letters,
+        tokensAvailable: tokens,
+        lastPlayedDate: new Date().toISOString().split("T")[0],
+      })
+    );
+  };
+
+  const awardLetter = () => {
+    const newLetters = lettersCollected + 1;
+    let newTokens = tokensAvailable;
+
+    if (newLetters >= 7) {
+      newTokens += 1;
+      saveProgress(0, newTokens);
+    } else {
+      saveProgress(newLetters, newTokens);
+    }
+  };
+
+  const spendToken = () => {
+    if (tokensAvailable > 0) {
+      saveProgress(lettersCollected, tokensAvailable - 1);
+      return true;
+    }
+    return false;
+  };
+
+  return { lettersCollected, tokensAvailable, awardLetter, spendToken };
+}

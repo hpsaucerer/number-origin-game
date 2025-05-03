@@ -6,6 +6,21 @@ import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 import confetti from "canvas-confetti";
 
+const TILE_WORD = "NUMERUS";
+
+const getTileMessage = (count) => {
+  switch (count) {
+    case 1: return "Yay! You've got your first letter!";
+    case 2: return "Another one in the bag, come back tomorrow for your third!";
+    case 3: return "Three down, four to go - almost halfway!";
+    case 4: return "Getting closer to that token now.";
+    case 5: return "You're on a roll!";
+    case 6: return "Just one more day, you can do it!";
+    case 7: return "Whoop! Well done, you've earned some tokens!";
+    default: return "";
+  }
+};
+
 export default function PostGameModal({
   open,
   onClose,
@@ -19,6 +34,7 @@ export default function PostGameModal({
   if (!puzzle || !stats) return null;
 
   const [countdown, setCountdown] = useState("");
+  const [earnedTiles, setEarnedTiles] = useState([]);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -39,27 +55,43 @@ export default function PostGameModal({
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (open && isCorrect) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-    }
-  }, [open, isCorrect]);
+useEffect(() => {
+  if (!open) return;
 
-  // ✅ Prevent background scroll on mobile when modal is open
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
+  document.body.style.overflow = "hidden";
+
+  const today = new Date().toISOString().split("T")[0]; // e.g., '2025-05-02'
+  const alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
+
+  const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+
+  if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length) {
+    const nextIndex = storedIndexes.length;
+    const updatedIndexes = [...storedIndexes, nextIndex];
+
+    localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
+    localStorage.setItem(`tile-earned-${today}`, "true");
+
+    setEarnedTiles(updatedIndexes);
+    setJustEarnedTile(true);
+  } else {
+    // Still need to show previously earned tiles
+    setEarnedTiles(storedIndexes);
+  }
+
+  if (isCorrect) {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  }
+
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [open, isCorrect]);
+
 
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
@@ -75,13 +107,8 @@ export default function PostGameModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent
-        className="w-full max-w-md mt-16 px-0 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-hidden"
-      >
-        {/* 🔁 Scrollable inner wrapper */}
+      <DialogContent className="w-full max-w-md mt-16 px-0 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-hidden">
         <div className="overflow-y-auto max-h-[calc(100dvh-8rem)] px-4 overscroll-contain">
-
-          {/* ❌ Close Button */}
           <button
             className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
             onClick={onClose}
@@ -90,7 +117,6 @@ export default function PostGameModal({
             <X size={28} />
           </button>
 
-          {/* 🎯 Image & Guess Count */}
           <div className="flex flex-col items-center pt-2 pb-1">
             <img
               src={imagePathFor(attempts, isCorrect)}
@@ -102,31 +128,51 @@ export default function PostGameModal({
             </p>
           </div>
 
-          {/* ✅ Answer */}
           <div className="mt-4 w-full flex justify-center">
             <div className="bg-green-100 border border-green-300 text-green-800 text-center px-4 py-2 rounded-xl shadow-sm font-semibold text-base max-w-xs w-full">
               The answer was: <span className="block text-sm font-bold mt-1">{puzzle.answer}</span>
             </div>
           </div>
 
-          {/* 🧠 Fun Fact */}
-          <FunFactBox puzzle={puzzle} />
+          {/* 🎁 Earned Tiles & Token */}
+          <div className="flex flex-col items-center mt-6">
+            {earnedTiles.length > 0 && (
+              <p className="mb-2 text-center text-brand font-semibold text-sm">
+                {getTileMessage(earnedTiles.length)}
+              </p>
+            )}
 
-          {/* 🔥 Streak */}
-          <div className="text-center mt-6">
-            <p className="text-sm text-gray-700 font-semibold">🔥 Current Streak</p>
-            <p className="text-3xl font-bold text-amber-500">
-              {stats?.currentStreak ?? 0} day{stats?.currentStreak === 1 ? "" : "s"}
-            </p>
+            <div className="flex items-center space-x-2">
+              {TILE_WORD.split("").map((letter, index) => {
+                const isEarned = earnedTiles.includes(index);
+                return (
+                  <div
+                    key={index}
+                    className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
+                      ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
+                      transition-all duration-300 ease-in-out`}
+                  >
+                    {letter}
+                  </div>
+                );
+              })}
+              {earnedTiles.length === TILE_WORD.length && (
+                <img
+                  src="/icons/token.png"
+                  alt="Token Earned"
+                  className="w-12 h-12 token-pulse ml-2"
+                />
+              )}
+            </div>
           </div>
 
-          {/* ⏳ Countdown */}
+          <FunFactBox puzzle={puzzle} />
+
           <div className="mt-4 text-center">
             <p className="text-sm font-semibold text-gray-700">Next puzzle in:</p>
             <p className="text-lg font-mono text-gray-900">{countdown}</p>
           </div>
 
-          {/* 📤 Share */}
           <div className="flex justify-center mt-4 mb-2">
             <Button
               onClick={() =>
@@ -141,7 +187,6 @@ export default function PostGameModal({
               <Share2 size={16} /> Share
             </Button>
           </div>
-
         </div>
       </DialogContent>
     </Dialog>
