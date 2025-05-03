@@ -21,7 +21,7 @@ import { BookOpen } from "lucide-react";
 import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
-import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";
+import { fetchAllPuzzles, fetchTodayPuzzle } from "@/lib/api";  
 import Fuse from "fuse.js";
 import Joyride from "react-joyride";
 import StatsModal from "@/components/modals/StatsModal";
