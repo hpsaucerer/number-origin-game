@@ -795,16 +795,14 @@ if (nextClue && !revealedClues.includes(nextClue)) {
 
       setGuess("");
     }
-  } catch (error) {
-    console.error("❌ Error in handleGuess:", error);
-    setInputError("Something went wrong. Try again!");
-  }
-};
-  finally {
-    setIsSubmitting(false);       // ✅ Always unlocks
-  }
+} catch (error) {
+  console.error("❌ Error in handleGuess:", error);
+  setInputError("Something went wrong. Try again!");
+} finally {
+  setIsSubmitting(false); // ✅ Always unlocks
+}
 
-    
+
 const handleClueReveal = () => {
   if (
     revealDisabled ||
