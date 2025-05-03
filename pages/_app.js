@@ -40,7 +40,6 @@ export default function App({ Component, pageProps }) {
 
 
         {/* Optional Open Graph tags for social previews */}
->
         <meta property="og:title" content="Numerus – The Daily Reverse Trivia Game" />
         <meta property="og:description" content="Can you guess what today's number signifies? Use clues to solve the puzzle!" />
         <meta property="og:image" content="/social-preview.png" />
