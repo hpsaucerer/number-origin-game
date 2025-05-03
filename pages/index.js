@@ -604,15 +604,6 @@ const allAnswers = [
   })),
 ];
 
-
-    const allAnswers = [
-      { label: normalizeGuess(puzzle.answer) },
-      ...(puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map((g) => ({
-        label: normalizeGuess(g),
-      })),
-    ];
-
-
     const fuse = new Fuse(allAnswers, {
       keys: ["label"],
       threshold: 0.4,
@@ -642,16 +633,6 @@ const acceptableFuse = new Fuse(
     ignoreLocation: true,
   }
 );
-
-    const acceptableFuse = new Fuse(
-      acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
-      {
-        keys: ["label"],
-        threshold: 0.4,
-        distance: 100,
-        ignoreLocation: true,
-      }
-    );
 
 
     const acceptableResults = acceptableFuse.search(cleanedGuess);
@@ -700,39 +681,6 @@ const acceptableFuse = new Fuse(
       : "none";
 
 
-  const isCorrectGuess =
-  isExactAnswerMatch ||
-  exactAcceptableMatch ||
-  isAcceptableGuess ||
-  (
-    bestMatch?.score <= 0.65 &&
-    hasStrongMatch &&
-    requiredMatched &&
-    strongEssentialHit // ✅ now required within fuzzy logic
-  );
-
-    // 🧠 Track why it passed or failed
-    const matchType = isExactAnswerMatch
-      ? "exact_answer"
-      : exactAcceptableMatch
-      ? "exact_acceptable"
-      : isAcceptableGuess
-      ? "fuzzy_acceptable"
-      : (
-          bestMatch?.score <= 0.65 &&
-          hasStrongMatch &&
-          requiredMatched &&
-          strongEssentialHit
-        )
-      ? "fuzzy_with_required"
-      : (
-          strongEssentialHit &&
-          matchedEssential.length >= 2 &&
-          cleanedGuess.length > 12
-        )
-      ? "essential_only_fallback"
-      : "none";
-
 // ✅ Log the guess to Supabase with error handling
 const { error } = await supabase.from("Player_responses").insert([
   {
@@ -757,24 +705,6 @@ if (error) {
 } else {
   console.log("✅ Guess successfully logged to Supabase!");
 }
-
-    const { error } = await supabase.from("Player_responses").insert([
-      {
-        puzzle_id: puzzleId.toString(),
-        raw_guess: guess,
-        cleaned_guess: cleanedGuess,
-        is_correct: isCorrectGuess,
-        match_type: matchType,
-        attempt: attempts + 1,
-        device_id: localStorage.getItem("deviceId") || "unknown",
-        notes: JSON.stringify({
-          essentialHit: matchedEssential,
-          requiredHit: matchedRequired,
-          fuzzyScore: bestMatch?.score ?? null,
-          relaxedRule: hasOnlyEssentialMatch && cleanedGuess.length > 12
-        }),
-      }
-    ]);
 
 
     if (error) {
