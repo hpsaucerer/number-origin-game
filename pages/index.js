@@ -258,6 +258,7 @@ const joyrideSteps = [
   const [dateString, setDateString] = useState("");
   const [guess, setGuess] = useState("");
   const [attempts, setAttempts] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false); // 👈 Add this line here
   const [revealedClues, setRevealedClues] = useState([]);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -548,6 +549,9 @@ function awardTile() {
 
 
 const handleGuess = async (isClueReveal = false) => {
+  if (isSubmitting) return;       // ✅ Prevents re-entry
+  setIsSubmitting(true);          // ✅ Locks submission
+
   const cleanedGuess = normalizeGuess(guess);
   const puzzleId = puzzle?.id ?? 0;
 
@@ -796,6 +800,9 @@ if (nextClue && !revealedClues.includes(nextClue)) {
     setInputError("Something went wrong. Try again!");
   }
 };
+  finally {
+    setIsSubmitting(false);       // ✅ Always unlocks
+  }
 
     
 const handleClueReveal = () => {
@@ -1136,10 +1143,11 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 )}
 
 <Button
-  onClick={() => handleGuess()} // ✅ Safe and explicit
+  onClick={() => handleGuess()}
   className="w-full bg-[#3B82F6] text-white"
+  disabled={isSubmitting} // ✅ disables while guessing
 >
-  Submit
+  {isSubmitting ? "Checking..." : "Submit"} {/* ✅ dynamic label */}
 </Button>
 
     </div>
