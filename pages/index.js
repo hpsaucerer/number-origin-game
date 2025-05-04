@@ -149,6 +149,9 @@ const synonymMap = {
   premiere: "release",
   "star wars iv": "star wars",
   "new hope": "star wars",
+  147: "maximum break",
+  perfect: "maximum",
+  score: "break",
 };
 
 function normalizeGuess(input) {
