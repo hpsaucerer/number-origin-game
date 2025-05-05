@@ -11,7 +11,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
     <header>
       <div className="bg-[#3B82F6] px-4 py-2 flex items-center justify-between h-16 max-w-screen-lg w-full mx-auto">
         {/* Left Side: Hamburger + Logo */}
-        <div className="flex items-center gap-0 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Hamburger + Dropdown */}
           <div className="relative flex items-start">
             <button
@@ -57,38 +57,38 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
           </div>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center -ml-1 sm:ml-0">
+          <Link href="/" className="flex items-center ml-1 sm:ml-0">
             <img
               src="/logo.svg"
               alt="Game Logo"
-              className="h-18 sm:h-16 md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
+              className="h-[164px] sm:h-[144px] md:h-20 lg:h-28 xl:h-52 w-auto translate-y-3"
             />
           </Link>
         </div>
 
         {/* Right-side icon buttons */}
         <div className="flex items-center space-x-3">
-          {/* Stats Button */}
-          <Button
+          {/* Stats Icon */}
+          <button
             onClick={onStatsClick}
-            className="stats-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+            className="stats-button p-2 text-white hover:text-blue-200 transition"
             title="Your Stats"
             aria-label="Your Stats"
           >
-            <PieChartIcon className="w-5 h-5 text-[#3B82F6] group-hover:text-white transition" />
-          </Button>
+            <PieChartIcon className="w-6 h-6" />
+          </button>
 
-          {/* Achievements Button */}
-          <Button
+          {/* Achievements Icon */}
+          <button
             onClick={onAchievementsClick}
-            className="achievements-button group bg-white border border-[#3B82F6] px-2 py-1 rounded hover:bg-[#3B82F6] hover:text-white transition"
+            className="achievements-button p-2 text-white hover:text-blue-200 transition"
             title="Achievements"
             aria-label="Achievements"
           >
-            <Trophy className="w-5 h-5 text-[#3B82F6] group-hover:text-white transition" />
-          </Button>
+            <Trophy className="w-6 h-6" />
+          </button>
         </div>
-      </div>
+      </div> {/* ✅ this closes the bg-[#3B82F6] wrapper div */}
     </header>
   );
 }

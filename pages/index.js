@@ -1,23 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { BarChart, Share2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { BarChart, Share2, HelpCircle, BookOpen, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent } from "../components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "recharts";
-import { useRef } from "react";
 import FunFactBox from "../components/FunFactBox";
 import PostGameModal from "../components/PostGameModal";
-import { X } from "lucide-react";
 import { shareResult } from "../utils/share";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { isCorrectGuess, isCloseGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
 import ComingSoon from "../components/ComingSoon";
 import Link from "next/link";
-import { HelpCircle } from "lucide-react";
-import { BookOpen } from "lucide-react";
 import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
@@ -29,21 +25,32 @@ import FeedbackBox from "@/components/FeedbackBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
 import AchievementsModal from "@/components/AchievementsModal";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
+import CookieConsentBanner from "@/components/CookieConsentBanner";
+import { getCookiePreferences } from "@/utils/cookies";
 
-const DEBUG_MODE = true; // set to false later when live if you want
+// 🧪 Debug mode flag — uses environment variable
+const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
 
+// 🐛 Controlled debug logger
 function debugLog(...args) {
   if (!DEV_MODE || process.env.NODE_ENV === "production") return;
 
-  const forbiddenFields = ["answer", "acceptable_guesses", "essential_keywords", "keywords", "clues"];
+  const forbiddenFields = [
+    "answer",
+    "acceptable_guesses",
+    "essential_keywords",
+    "keywords",
+    "clues",
+  ];
 
-  const hasForbidden = args.some(arg =>
-    typeof arg === "object" &&
-    arg !== null &&
-    forbiddenFields.some(field => field in arg)
+  const hasSensitiveData = args.some(
+    (arg) =>
+      typeof arg === "object" &&
+      arg !== null &&
+      forbiddenFields.some((field) => field in arg)
   );
 
-  if (hasForbidden) {
+  if (hasSensitiveData) {
     console.warn("[DEBUG BLOCKED] Sensitive object detected, skipping log.");
     return;
   }
@@ -188,9 +195,6 @@ function evaluateGuessKeywords(guess, { essential = [], required = [] }) {
   };
 }
 
-
-const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
-
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
   green: "text-green-700 bg-green-100 hover:bg-green-200",
@@ -208,8 +212,40 @@ const categoryColorMap = {
   Sport: "#e53935",      // red
 };
 
-  export default function Home() {
+export default function Home() {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
+
+// ✨ JSX lifted out to constants
+const guessStepContent = (
+  <div>
+    <p>
+      Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
+    </p>
+    <p>
+      <strong>You have 4 guesses to solve the puzzle.</strong>
+    </p>
+  </div>
+);
+
+const clueStepContent = (
+  <p>
+    Need help? Reveal a clue! Remember though, each time you do, this uses up a guess.
+  </p>
+);
+
+const achievementsStepContent = (
+  <p>
+    Tap the trophy icon to view your achievements — including category progress and tiles earned!
+  </p>
+);
+
+const statsStepContent = (
+  <p>
+    Track your daily streaks and puzzle stats here.
+  </p>
+);
+
+// ✅ Safe for production build
 const joyrideSteps = [
   {
     target: ".daily-number",
@@ -220,36 +256,27 @@ const joyrideSteps = [
   },
   {
     target: ".guess-input",
-    content: (
-      <div>
-        <p>
-          Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
-        </p>
-        <p>
-          <strong>You have 4 guesses to solve the puzzle.</strong>
-        </p>
-      </div>
-    ),
+    content: guessStepContent,
     disableScrolling: true,
     wait: 500,
   },
   {
     target: ".reveal-button",
-    content: "Need help? Reveal a clue! Remember though, each time you do, this uses up a guess.",
+    content: clueStepContent,
     disableBeacon: true,
     disableScrolling: true,
     wait: 500,
   },
   {
     target: ".achievements-button",
-    content: "Tap the trophy icon to view your achievements — including category progress and tiles earned!",
+    content: achievementsStepContent,
     disableBeacon: true,
     disableScrolling: true,
     wait: 500,
   },
   {
     target: ".stats-button",
-    content: "Track your daily streaks and puzzle stats here.",
+    content: statsStepContent,
     disableBeacon: true,
     disableScrolling: true,
     wait: 500,
@@ -305,21 +332,20 @@ const [showTokenBubble, setShowTokenBubble] = useState(false);
 
 useEffect(() => {
   const hasGivenStarterTokens = localStorage.getItem("starterTokensGiven");
+  let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+
   if (!hasGivenStarterTokens) {
-    const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
-    const newTotal = currentTokens + 3;
-    localStorage.setItem("freeToken", newTotal.toString());
+    currentTokens += 3;
+    localStorage.setItem("freeToken", currentTokens.toString());
     localStorage.setItem("starterTokensGiven", "true");
-    setTokenCount(newTotal); // Update UI state
     console.log("🟢 Starter tokens granted!");
+    setShowTokenBubble(true);
+    setTimeout(() => setShowTokenBubble(false), 3000);
   }
+
+  setTokenCount(currentTokens);
 }, []);
 
-
-useEffect(() => {
-  const storedTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
-  setTokenCount(storedTokens);
-}, []);
 
 useEffect(() => {
   const hasSeenTour = localStorage.getItem("seenTour") === "true";
@@ -526,7 +552,24 @@ useEffect(() => {
   }
 }, [puzzle]);
 
+function getYesterdayUK() {
+  const now = new Date();
+  const ukNow = new Date(now.toLocaleString("en-US", { timeZone: "Europe/London" }));
+  ukNow.setDate(ukNow.getDate() - 1);
+  return ukNow.toLocaleDateString("en-GB");
+}
+
 function awardTile() {
+  const today = new Date().toLocaleDateString("en-GB", { timeZone: "Europe/London" });
+  const lastPlayDate = localStorage.getItem("lastPlayDate");
+
+  if (lastPlayDate && lastPlayDate !== getYesterdayUK()) {
+    localStorage.removeItem("earnedTileIndexes");
+    console.log("🔁 Streak broken — resetting earned tiles.");
+  }
+
+  localStorage.setItem("lastPlayDate", today);
+
   const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
   if (storedIndexes.length >= TILE_WORD.length) return;
@@ -572,6 +615,18 @@ const handleGuess = async (isClueReveal = false) => {
     essential: puzzle.essential_keywords,
     required: puzzle.keywords || [],
   });
+
+  const handleGameOver = (newAttempts) => {
+  setStats((prev) => updateStats(prev, false));
+
+  if (typeof track === "function" && getCookiePreferences().analytics) {
+    track("puzzle_failed", { correct: false, attempts: newAttempts, puzzleId });
+    track("puzzle_guess_count", { guessCount: "✖", puzzleId });
+  }
+
+  setTimeout(() => setShowPostGame(true), 500);
+};
+
   debugLog("Matched Essential:", matchedEssential);
   debugLog("Essential Keywords:", puzzle.essential_keywords);
   debugLog("Normalized Guess:", cleanedGuess);
@@ -718,12 +773,6 @@ if (error) {
 }
 
 
-    if (error) {
-      console.error("❌ Supabase insert error:", error);
-    } else {
-      console.log("✅ Guess successfully logged to Supabase!");
-    }
-
     if (isCorrectGuess) {
       setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
@@ -736,7 +785,7 @@ if (error) {
       setStats((prev) => updateStats(prev, true, attempts + 1));
       setGuess("");
 
-      if (typeof track === "function") {
+      if (typeof track === "function" && getCookiePreferences().analytics) {
         track("puzzle_completed", {
           correct: true,
           guessCount: attempts + 1,
@@ -760,7 +809,6 @@ if (nextClue && !revealedClues.includes(nextClue)) {
   setRevealedClues([...revealedClues, nextClue]);
 }
 
-
       setInputError(
         nearMissEssential
           ? "You're close — try adding a more specific word!"
@@ -768,38 +816,28 @@ if (nextClue && !revealedClues.includes(nextClue)) {
       );
 
       if (newAttempts >= maxGuesses) {
-        setStats((prev) => updateStats(prev, false));
-        if (typeof track === "function") {
-          track("puzzle_failed", { correct: false, attempts: newAttempts, puzzleId });
-          track("puzzle_guess_count", { guessCount: "✖", puzzleId });
-        }
-        awardTile();
-        setTimeout(() => setShowPostGame(true), 500);
+        awardTile(); // ✅ Only shown in first path
+        handleGameOver(newAttempts); // 👈 Wrapped tracking + stats
       }
 
     } else {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
-const clueIndex = revealedClues.length;
-const nextClue = puzzle.clues?.[clueIndex];
+      const clueIndex = revealedClues.length;
+      const nextClue = puzzle.clues?.[clueIndex];
 
-if (nextClue && !revealedClues.includes(nextClue)) {
-  setRevealedClues([...revealedClues, nextClue]);
-}
+      if (nextClue && !revealedClues.includes(nextClue)) {
+        setRevealedClues([...revealedClues, nextClue]);
+      }
 
       if (newAttempts >= maxGuesses) {
-        setStats((prev) => updateStats(prev, false));
-        if (typeof track === "function") {
-          track("puzzle_failed", { correct: false, attempts: newAttempts, puzzleId });
-          track("puzzle_guess_count", { guessCount: "✖", puzzleId });
-        }
-        setTimeout(() => setShowPostGame(true), 500);
+        handleGameOver(newAttempts); // 👈 Same logic reused here too
       } else {
         setInputError("Hmm, not quite. Try again or reveal a clue!");
       }
 
-      setGuess("");
+      setGuess(""); // ✅ Leave outside the if/else
     }
   } catch (error) {
     console.error("❌ Error in handleGuess:", error);
@@ -853,26 +891,21 @@ const handleRevealCategory = () => {
   }, 1000);
 };
 
-
 const shareTextHandler = () => {
   shareResult({
-  isCorrect,
-  guessCount: attempts + 1,    // ✅ Convert attempts to final guess count
-  puzzleNumber,                // ✅ Pass the actual puzzle number
-});
+    isCorrect,
+    guessCount: attempts + 1,
+    puzzleNumber,
+  });
 
-
-
-  // Optional analytics tracking
-  if (typeof track === "function") {
+  if (typeof track === "function" && getCookiePreferences().analytics) {
     track("share_clicked", {
       correct: isCorrect,
-      attempts: attempts,
+      attempts,
       puzzleId: puzzle?.id ?? null,
     });
   }
-};
-
+}; // ✅ <-- This closing brace was missing!
 
 return !hasMounted ? (
   <div className="text-center py-10 text-gray-500">Loading...</div>
@@ -1276,6 +1309,8 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   }}
   earnedTiles={[0, 1, 2]} // based on the indexes of "NUMERUS"
 />
+    
+<CookieConsentBanner />
 
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
