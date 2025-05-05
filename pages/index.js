@@ -1301,3 +1301,4 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 );
 } // Close Home function
 
+export default Home;
