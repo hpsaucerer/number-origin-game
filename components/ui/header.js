@@ -61,7 +61,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
             <img
               src="/logo.svg"
               alt="Game Logo"
-              className="h-[88px] sm:h-[96px] md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
+              className="h-[144px] sm:h-[120px] md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
             />
           </Link>
         </div>
