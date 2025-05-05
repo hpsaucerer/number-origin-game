@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch"; // You may need this
 
 export default function CookiePreferencesModal({ open, onClose, onSave }) {
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
@@ -31,7 +30,12 @@ export default function CookiePreferencesModal({ open, onClose, onSave }) {
               <p className="font-medium text-gray-700">Analytics Cookies</p>
               <p className="text-sm text-gray-500">Helps us understand usage and improve the game.</p>
             </div>
-            <Switch checked={analyticsEnabled} onCheckedChange={setAnalyticsEnabled} />
+            <input
+              type="checkbox"
+              checked={analyticsEnabled}
+              onChange={(e) => setAnalyticsEnabled(e.target.checked)}
+              className="w-5 h-5"
+            />
           </div>
         </div>
 
