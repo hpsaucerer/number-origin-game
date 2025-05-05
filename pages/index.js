@@ -549,7 +549,24 @@ useEffect(() => {
   }
 }, [puzzle]);
 
+function getYesterdayUK() {
+  const now = new Date();
+  const ukNow = new Date(now.toLocaleString("en-US", { timeZone: "Europe/London" }));
+  ukNow.setDate(ukNow.getDate() - 1);
+  return ukNow.toLocaleDateString("en-GB");
+}
+
 function awardTile() {
+  const today = new Date().toLocaleDateString("en-GB", { timeZone: "Europe/London" });
+  const lastPlayDate = localStorage.getItem("lastPlayDate");
+
+  if (lastPlayDate && lastPlayDate !== getYesterdayUK()) {
+    localStorage.removeItem("earnedTileIndexes");
+    console.log("🔁 Streak broken — resetting earned tiles.");
+  }
+
+  localStorage.setItem("lastPlayDate", today);
+
   const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
   if (storedIndexes.length >= TILE_WORD.length) return;
