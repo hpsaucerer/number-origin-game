@@ -56,15 +56,15 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
             )}
           </div>
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center -ml-1 sm:ml-0">
-            <img
-              src="/logo.svg"
-              alt="Game Logo"
-              className="h-18 sm:h-16 md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
-            />
-          </Link>
-        </div>
+{/* Logo */}
+<Link href="/" className="flex items-center -ml-1 sm:ml-0">
+  <img
+    src="/logo.svg"
+    alt="Game Logo"
+    className="h-[72px] sm:h-[80px] md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
+  />
+</Link>
+
 
 {/* Right-side icon buttons */}
 <div className="flex items-center space-x-3">
