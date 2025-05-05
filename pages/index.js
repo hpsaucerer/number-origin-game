@@ -26,6 +26,7 @@ import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` fil
 import AchievementsModal from "@/components/AchievementsModal";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
+import { getCookiePreferences } from "@/utils/cookies";
 
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
@@ -571,6 +572,18 @@ const handleGuess = async (isClueReveal = false) => {
     essential: puzzle.essential_keywords,
     required: puzzle.keywords || [],
   });
+
+  const handleGameOver = (newAttempts) => {
+  setStats((prev) => updateStats(prev, false));
+
+  if (typeof track === "function" && getCookiePreferences().analytics) {
+    track("puzzle_failed", { correct: false, attempts: newAttempts, puzzleId });
+    track("puzzle_guess_count", { guessCount: "✖", puzzleId });
+  }
+
+  setTimeout(() => setShowPostGame(true), 500);
+};
+
   debugLog("Matched Essential:", matchedEssential);
   debugLog("Essential Keywords:", puzzle.essential_keywords);
   debugLog("Normalized Guess:", cleanedGuess);
@@ -729,7 +742,7 @@ if (error) {
       setStats((prev) => updateStats(prev, true, attempts + 1));
       setGuess("");
 
-      if (typeof track === "function") {
+      if (typeof track === "function" && getCookiePreferences().analytics) {
         track("puzzle_completed", {
           correct: true,
           guessCount: attempts + 1,
@@ -753,7 +766,6 @@ if (nextClue && !revealedClues.includes(nextClue)) {
   setRevealedClues([...revealedClues, nextClue]);
 }
 
-
       setInputError(
         nearMissEssential
           ? "You're close — try adding a more specific word!"
@@ -761,38 +773,28 @@ if (nextClue && !revealedClues.includes(nextClue)) {
       );
 
       if (newAttempts >= maxGuesses) {
-        setStats((prev) => updateStats(prev, false));
-        if (typeof track === "function") {
-          track("puzzle_failed", { correct: false, attempts: newAttempts, puzzleId });
-          track("puzzle_guess_count", { guessCount: "✖", puzzleId });
-        }
-        awardTile();
-        setTimeout(() => setShowPostGame(true), 500);
+        awardTile(); // ✅ Only shown in first path
+        handleGameOver(newAttempts); // 👈 Wrapped tracking + stats
       }
 
     } else {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
 
-const clueIndex = revealedClues.length;
-const nextClue = puzzle.clues?.[clueIndex];
+      const clueIndex = revealedClues.length;
+      const nextClue = puzzle.clues?.[clueIndex];
 
-if (nextClue && !revealedClues.includes(nextClue)) {
-  setRevealedClues([...revealedClues, nextClue]);
-}
+      if (nextClue && !revealedClues.includes(nextClue)) {
+        setRevealedClues([...revealedClues, nextClue]);
+      }
 
       if (newAttempts >= maxGuesses) {
-        setStats((prev) => updateStats(prev, false));
-        if (typeof track === "function") {
-          track("puzzle_failed", { correct: false, attempts: newAttempts, puzzleId });
-          track("puzzle_guess_count", { guessCount: "✖", puzzleId });
-        }
-        setTimeout(() => setShowPostGame(true), 500);
+        handleGameOver(newAttempts); // 👈 Same logic reused here too
       } else {
         setInputError("Hmm, not quite. Try again or reveal a clue!");
       }
 
-      setGuess("");
+      setGuess(""); // ✅ Leave outside the if/else
     }
   } catch (error) {
     console.error("❌ Error in handleGuess:", error);
@@ -855,17 +857,13 @@ const shareTextHandler = () => {
 });
 
 
-
-  // Optional analytics tracking
-  if (typeof track === "function") {
-    track("share_clicked", {
-      correct: isCorrect,
-      attempts: attempts,
-      puzzleId: puzzle?.id ?? null,
-    });
-  }
-};
-
+if (typeof track === "function" && getCookiePreferences().analytics) {
+  track("share_clicked", {
+    correct: isCorrect,
+    attempts,
+    puzzleId: puzzle?.id ?? null,
+  });
+}
 
 return !hasMounted ? (
   <div className="text-center py-10 text-gray-500">Loading...</div>
