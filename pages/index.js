@@ -211,6 +211,38 @@ const categoryColorMap = {
 
   export default function Home() {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
+
+// ✨ JSX lifted out to constants
+const guessStepContent = (
+  <div>
+    <p>
+      Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
+    </p>
+    <p>
+      <strong>You have 4 guesses to solve the puzzle.</strong>
+    </p>
+  </div>
+);
+
+const clueStepContent = (
+  <p>
+    Need help? Reveal a clue! Remember though, each time you do, this uses up a guess.
+  </p>
+);
+
+const achievementsStepContent = (
+  <p>
+    Tap the trophy icon to view your achievements — including category progress and tiles earned!
+  </p>
+);
+
+const statsStepContent = (
+  <p>
+    Track your daily streaks and puzzle stats here.
+  </p>
+);
+
+// ✅ Safe for production build
 const joyrideSteps = [
   {
     target: ".daily-number",
@@ -221,36 +253,27 @@ const joyrideSteps = [
   },
   {
     target: ".guess-input",
-    content: (
-      <div>
-        <p>
-          Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
-        </p>
-        <p>
-          <strong>You have 4 guesses to solve the puzzle.</strong>
-        </p>
-      </div>
-    ),
+    content: guessStepContent,
     disableScrolling: true,
     wait: 500,
   },
   {
     target: ".reveal-button",
-    content: "Need help? Reveal a clue! Remember though, each time you do, this uses up a guess.",
+    content: clueStepContent,
     disableBeacon: true,
     disableScrolling: true,
     wait: 500,
   },
   {
     target: ".achievements-button",
-    content: "Tap the trophy icon to view your achievements — including category progress and tiles earned!",
+    content: achievementsStepContent,
     disableBeacon: true,
     disableScrolling: true,
     wait: 500,
   },
   {
     target: ".stats-button",
-    content: "Track your daily streaks and puzzle stats here.",
+    content: statsStepContent,
     disableBeacon: true,
     disableScrolling: true,
     wait: 500,
