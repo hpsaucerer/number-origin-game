@@ -1,23 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { BarChart, Share2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { BarChart, Share2, HelpCircle, BookOpen, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent } from "../components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Label } from "recharts";
-import { useRef } from "react";
 import FunFactBox from "../components/FunFactBox";
 import PostGameModal from "../components/PostGameModal";
-import { X } from "lucide-react";
 import { shareResult } from "../utils/share";
 import { useDailyPuzzle } from "@/hooks/useDailyPuzzle";
 import { isCorrectGuess, isCloseGuess, isValidGuess, revealNextClue, updateStats } from "../utils/game";
 import ComingSoon from "../components/ComingSoon";
 import Link from "next/link";
-import { HelpCircle } from "lucide-react";
-import { BookOpen } from "lucide-react";
 import Header from "@/components/ui/header";
 import useStats from "@/hooks/useStats";
 import { track } from '@vercel/analytics';
@@ -29,21 +25,31 @@ import FeedbackBox from "@/components/FeedbackBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
 import AchievementsModal from "@/components/AchievementsModal";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
+import CookieConsentBanner from "@/components/CookieConsentBanner";
 
-const DEBUG_MODE = true; // set to false later when live if you want
+// 🧪 Debug mode flag — uses environment variable
+const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
 
+// 🐛 Controlled debug logger
 function debugLog(...args) {
   if (!DEV_MODE || process.env.NODE_ENV === "production") return;
 
-  const forbiddenFields = ["answer", "acceptable_guesses", "essential_keywords", "keywords", "clues"];
+  const forbiddenFields = [
+    "answer",
+    "acceptable_guesses",
+    "essential_keywords",
+    "keywords",
+    "clues",
+  ];
 
-  const hasForbidden = args.some(arg =>
-    typeof arg === "object" &&
-    arg !== null &&
-    forbiddenFields.some(field => field in arg)
+  const hasSensitiveData = args.some(
+    (arg) =>
+      typeof arg === "object" &&
+      arg !== null &&
+      forbiddenFields.some((field) => field in arg)
   );
 
-  if (hasForbidden) {
+  if (hasSensitiveData) {
     console.warn("[DEBUG BLOCKED] Sensitive object detected, skipping log.");
     return;
   }
@@ -185,9 +191,6 @@ function evaluateGuessKeywords(guess, { essential = [], required = [] }) {
   };
 }
 
-
-const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
-
 const colorClassMap = {
   blue: "text-blue-700 bg-blue-100 hover:bg-blue-200",
   green: "text-green-700 bg-green-100 hover:bg-green-200",
@@ -302,21 +305,20 @@ const [showTokenBubble, setShowTokenBubble] = useState(false);
 
 useEffect(() => {
   const hasGivenStarterTokens = localStorage.getItem("starterTokensGiven");
+  let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
+
   if (!hasGivenStarterTokens) {
-    const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
-    const newTotal = currentTokens + 3;
-    localStorage.setItem("freeToken", newTotal.toString());
+    currentTokens += 3;
+    localStorage.setItem("freeToken", currentTokens.toString());
     localStorage.setItem("starterTokensGiven", "true");
-    setTokenCount(newTotal); // Update UI state
     console.log("🟢 Starter tokens granted!");
+    setShowTokenBubble(true);
+    setTimeout(() => setShowTokenBubble(false), 3000);
   }
+
+  setTokenCount(currentTokens);
 }, []);
 
-
-useEffect(() => {
-  const storedTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
-  setTokenCount(storedTokens);
-}, []);
 
 useEffect(() => {
   const hasSeenTour = localStorage.getItem("seenTour") === "true";
@@ -714,12 +716,6 @@ if (error) {
   console.log("✅ Guess successfully logged to Supabase!");
 }
 
-
-    if (error) {
-      console.error("❌ Supabase insert error:", error);
-    } else {
-      console.log("✅ Guess successfully logged to Supabase!");
-    }
 
     if (isCorrectGuess) {
       setIsCorrect(true);
@@ -1273,6 +1269,8 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   }}
   earnedTiles={[0, 1, 2]} // based on the indexes of "NUMERUS"
 />
+    
+<CookieConsentBanner />
 
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
