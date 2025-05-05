@@ -209,7 +209,7 @@ const categoryColorMap = {
   Sport: "#e53935",      // red
 };
 
-  export default function Home() {
+export default function Home() {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
 // ✨ JSX lifted out to constants
@@ -1301,4 +1301,3 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 );
 } // Close Home function
 
-export default Home;
