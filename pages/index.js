@@ -871,22 +871,21 @@ const handleRevealCategory = () => {
   }, 1000);
 };
 
-
 const shareTextHandler = () => {
   shareResult({
-  isCorrect,
-  guessCount: attempts + 1,    // ✅ Convert attempts to final guess count
-  puzzleNumber,                // ✅ Pass the actual puzzle number
-});
-
-
-if (typeof track === "function" && getCookiePreferences().analytics) {
-  track("share_clicked", {
-    correct: isCorrect,
-    attempts,
-    puzzleId: puzzle?.id ?? null,
+    isCorrect,
+    guessCount: attempts + 1,
+    puzzleNumber,
   });
-}
+
+  if (typeof track === "function" && getCookiePreferences().analytics) {
+    track("share_clicked", {
+      correct: isCorrect,
+      attempts,
+      puzzleId: puzzle?.id ?? null,
+    });
+  }
+}; // ✅ <-- This closing brace was missing!
 
 return !hasMounted ? (
   <div className="text-center py-10 text-gray-500">Loading...</div>
