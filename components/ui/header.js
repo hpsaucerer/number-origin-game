@@ -11,7 +11,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
     <header>
       <div className="bg-[#3B82F6] px-4 py-2 flex items-center justify-between h-16 max-w-screen-lg w-full mx-auto">
         {/* Left Side: Hamburger + Logo */}
-        <div className="flex items-center gap-0 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Hamburger + Dropdown */}
           <div className="relative flex items-start">
             <button
@@ -57,11 +57,11 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
           </div>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center -ml-1 sm:ml-0">
+          <Link href="/" className="flex items-center ml-1 sm:ml-0">
             <img
               src="/logo.svg"
               alt="Game Logo"
-              className="h-[72px] sm:h-[80px] md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
+              className="h-[88px] sm:h-[96px] md:h-20 lg:h-28 xl:h-52 w-auto translate-y-4"
             />
           </Link>
         </div>
