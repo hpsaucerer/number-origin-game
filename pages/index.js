@@ -159,6 +159,15 @@ const synonymMap = {
   147: "maximum break",
   perfect: "maximum",
   score: "break",
+  amount: "number",
+  conflict: "war",
+  battle: "war",
+  hundred: "hundred years",
+  100: "hundred",
+  century: "hundred",
+  britain: "england",
+  english: "england",
+  french: "france",
 };
 
 function normalizeGuess(input) {
