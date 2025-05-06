@@ -163,7 +163,7 @@ const synonymMap = {
   conflict: "war",
   battle: "war",
   hundred: "hundred years",
-  100: "hundred",
+  "100": "hundred",
   century: "hundred"
   britain: "england",
   english: "england",
