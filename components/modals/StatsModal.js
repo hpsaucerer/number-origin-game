@@ -29,7 +29,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
   const title = getPlayerTitle(stats);
 
   // Use alternate image name for Oracle title
-  const iconFilename = title === "Oracle" ? "oracle-new.png" : `${title.toLowerCase()}.png`;
+  const iconFilename = `${title.toLowerCase()}.png`;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
