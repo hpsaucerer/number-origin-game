@@ -79,11 +79,13 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
           <div className="flex flex-row items-center justify-center gap-6 w-full mt-4">
             {/* Chart + Ring */}
             <div className="flex flex-col items-center">
-              <img
-                src="/icons/Ring-icon.png"
-                alt="Ring o' Results"
-                className="w-32 h-32 mx-auto mb-0"
-              />
+            <img
+            src="/icons/Ring-icon.png"
+            alt="Ring o' Results"
+            className="w-28 h-28 mx-auto mb-0"
+            style={{ marginBottom: "-12px" }} // 🧠 shrinks space visually
+            />
+
               <div className="overflow-visible">
                 <ResponsiveContainer width={220} height={220}>
                   <PieChart>
