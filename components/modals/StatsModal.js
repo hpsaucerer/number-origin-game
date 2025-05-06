@@ -108,7 +108,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 
   {/* Title Icon + Avg Guess */}
   <div className="flex flex-col justify-center items-center space-y-3 text-center">
-    <p className="text-lg text-gray-600 font-medium">Your title</p>
+    <p className="text-lg text-gray-600 font-medium">Your Rank:</p>
     <img
       src={`/icons/${title.toLowerCase()}.png`}
       alt={`${title} icon`}
