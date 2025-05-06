@@ -82,7 +82,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
               <img
                 src="/icons/Ring-icon.png"
                 alt="Ring o' Results"
-                className="w-32 h-32 mx-auto mb-2"
+                className="w-32 h-32 mx-auto mb-0"
               />
               <div className="overflow-visible">
                 <ResponsiveContainer width={220} height={220}>
@@ -117,10 +117,10 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
               <img
                 src={`/icons/${iconFilename}`}
                 alt={`${title} icon`}
-                className="w-32 h-12 object-contain"
+                className="w-20 h-20 object-contain"
               />
               <div>
-                <p className="text-xl font-bold text-gray-800">{avgGuesses}</p>
+                <p className="text-3xl font-bold text-gray-800">{avgGuesses}</p>
                 <p className="text-sm text-gray-600">Avg guesses per win</p>
               </div>
             </div>
