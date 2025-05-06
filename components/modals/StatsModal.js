@@ -80,7 +80,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
       alt="Ring o' Results"
       className="w-32 h-32 mx-auto mb-2" // ⬅️ reduced size + margin
     />
-    <ResponsiveContainer width={180} height={180}>
+    <ResponsiveContainer width={200} height={200}>
       <PieChart>
         <Pie
           data={data}
