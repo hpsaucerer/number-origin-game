@@ -121,8 +121,6 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
   </div>
 </div>
 
-
-          </div>
         </DialogContent>
       </div>
     </Dialog>
