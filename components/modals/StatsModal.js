@@ -87,6 +87,8 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             />
 
               <div className="overflow-visible">
+              console.log("Chart data:", data);
+
                 <ResponsiveContainer width={220} height={220}>
                   <PieChart>
                     <Pie
