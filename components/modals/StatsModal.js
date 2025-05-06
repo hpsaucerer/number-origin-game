@@ -72,16 +72,15 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             </div>
           </div>
 
-{/* Chart + Title Side-by-Side */}
 <div className="flex flex-row items-center justify-between w-full mt-4 space-x-4">
   {/* Chart + Ring */}
   <div className="flex flex-col items-center">
     <img
       src="/icons/Ring-icon.png"
       alt="Ring o' Results"
-      className="w-36 h-36 mx-auto mb-4"
+      className="w-32 h-32 mx-auto mb-2" // ⬅️ reduced size + margin
     />
-    <ResponsiveContainer width={200} height={200}>
+    <ResponsiveContainer width={180} height={180}>
       <PieChart>
         <Pie
           data={data}
@@ -89,7 +88,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
           cx="50%"
           cy="50%"
           innerRadius={50}
-          outerRadius={80}
+          outerRadius={75}
           label={combinedLabel}
           labelLine={false}
           isAnimationActive={true}
@@ -106,20 +105,21 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
     </ResponsiveContainer>
   </div>
 
-  {/* Title Icon + Avg Guess */}
-  <div className="flex flex-col justify-center items-center space-y-3 text-center">
-    <p className="text-lg text-gray-600 font-medium">Your Rank:</p>
+  {/* Rank Box */}
+  <div className="flex flex-col justify-center items-center bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 space-y-2 shadow-sm">
+    <p className="text-base text-gray-600 font-medium">Your Rank:</p>
     <img
       src={`/icons/${title.toLowerCase()}.png`}
       alt={`${title} icon`}
-      className="w-10 h-10"
+      className="w-32 h-12"
     />
-    <div>
-      <p className="text-2xl font-bold text-gray-800">{avgGuesses}</p>
+    <div className="text-center">
+      <p className="text-xl font-bold text-gray-800">{avgGuesses}</p>
       <p className="text-sm text-gray-600">Avg guesses per win</p>
     </div>
   </div>
 </div>
+
 
         </DialogContent>
       </div>
