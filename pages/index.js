@@ -715,7 +715,7 @@ const acceptableFuse = new Fuse(
       exactAcceptableMatch ||
       isAcceptableGuess ||
       (
-        bestMatch?.score <= 0.65 &&
+        bestMatch?.score <= 0.5 &&
         hasStrongMatch &&
         requiredMatched &&
         strongEssentialHit
@@ -732,7 +732,7 @@ const acceptableFuse = new Fuse(
       : isAcceptableGuess
       ? "fuzzy_acceptable"
       : (
-          bestMatch?.score <= 0.65 &&
+          bestMatch?.score <= 0.5 &&
           hasStrongMatch &&
           requiredMatched &&
           strongEssentialHit
