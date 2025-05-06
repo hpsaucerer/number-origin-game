@@ -72,56 +72,55 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             </div>
           </div>
 
-          {/* Chart + Title Side-by-Side */}
-          <div className="flex flex-row items-center justify-between w-full mt-4 space-x-4">
-            {/* Chart + Ring */}
-            <div className="flex flex-col items-center">
-              <img
-                src="/icons/Ring-icon.png"
-                alt="Ring o' Results"
-                className="w-36 h-36 mx-auto mb-[-64px]"
-              />
-              <ResponsiveContainer width={200} height={200}>
-                <PieChart>
-                  <Pie
-                    data={data}
-                    dataKey="value"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
-                    label={combinedLabel}
-                    labelLine={false}
-                    isAnimationActive={true}
-                  >
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={entry.name === "1" ? "#FFD700" : COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                    <Label content={renderCenterLabel} position="center" />
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+{/* Chart + Title Side-by-Side */}
+<div className="flex flex-row items-center justify-between w-full mt-4 space-x-4">
+  {/* Chart + Ring */}
+  <div className="flex flex-col items-center">
+    <img
+      src="/icons/Ring-icon.png"
+      alt="Ring o' Results"
+      className="w-36 h-36 mx-auto mb-4"
+    />
+    <ResponsiveContainer width={200} height={200}>
+      <PieChart>
+        <Pie
+          data={data}
+          dataKey="value"
+          cx="50%"
+          cy="50%"
+          innerRadius={50}
+          outerRadius={80}
+          label={combinedLabel}
+          labelLine={false}
+          isAnimationActive={true}
+        >
+          {data.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={entry.name === "1" ? "#FFD700" : COLORS[index % COLORS.length]}
+            />
+          ))}
+          <Label content={renderCenterLabel} position="center" />
+        </Pie>
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
 
-{/* Player Title + Avg Guess */}
-<div className="flex flex-col justify-center items-start space-y-2">
-  <p className="text-sm text-gray-500">Your title</p>
-  <div className="flex items-center gap-2">
+  {/* Title Icon + Avg Guess */}
+  <div className="flex flex-col justify-center items-center space-y-3 text-center">
+    <p className="text-lg text-gray-600 font-medium">Your title</p>
     <img
       src={`/icons/${title.toLowerCase()}.png`}
       alt={`${title} icon`}
-      className="w-6 h-6"
+      className="w-10 h-10"
     />
-    <h2 className="text-2xl font-bold text-yellow-600">{title}</h2>
+    <div>
+      <p className="text-2xl font-bold text-gray-800">{avgGuesses}</p>
+      <p className="text-sm text-gray-600">Avg guesses per win</p>
+    </div>
   </div>
-  <p className="text-sm text-gray-600 mt-2">
-    Avg guesses per win:
-    <span className="ml-2 font-semibold text-gray-800">{avgGuesses}</span>
-  </p>
 </div>
+
 
           </div>
         </DialogContent>
