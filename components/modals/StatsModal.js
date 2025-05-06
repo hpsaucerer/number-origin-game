@@ -28,6 +28,9 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 
   const title = getPlayerTitle(stats);
 
+  // Use alternate image name for Oracle title
+  const iconFilename = title === "Oracle" ? "oracle-new.png" : `${title.toLowerCase()}.png`;
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
@@ -72,55 +75,56 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             </div>
           </div>
 
-<div className="flex flex-row items-center justify-between w-full mt-4 space-x-4">
-  {/* Chart + Ring */}
-  <div className="flex flex-col items-center">
-    <img
-      src="/icons/Ring-icon.png"
-      alt="Ring o' Results"
-      className="w-32 h-32 mx-auto mb-2" // ⬅️ reduced size + margin
-    />
-    <ResponsiveContainer width={200} height={200}>
-      <PieChart>
-        <Pie
-          data={data}
-          dataKey="value"
-          cx="50%"
-          cy="50%"
-          innerRadius={50}
-          outerRadius={75}
-          label={combinedLabel}
-          labelLine={false}
-          isAnimationActive={true}
-        >
-          {data.map((entry, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={entry.name === "1" ? "#FFD700" : COLORS[index % COLORS.length]}
-            />
-          ))}
-          <Label content={renderCenterLabel} position="center" />
-        </Pie>
-      </PieChart>
-    </ResponsiveContainer>
-  </div>
+          {/* Chart + Title Side-by-Side */}
+          <div className="flex flex-row items-center justify-center gap-6 w-full mt-4">
+            {/* Chart + Ring */}
+            <div className="flex flex-col items-center">
+              <img
+                src="/icons/Ring-icon.png"
+                alt="Ring o' Results"
+                className="w-32 h-32 mx-auto mb-2"
+              />
+              <div className="overflow-visible">
+                <ResponsiveContainer width={220} height={220}>
+                  <PieChart>
+                    <Pie
+                      data={data}
+                      dataKey="value"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={75}
+                      label={combinedLabel}
+                      labelLine={false}
+                      isAnimationActive={true}
+                    >
+                      {data.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={entry.name === "1" ? "#FFD700" : COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                      <Label content={renderCenterLabel} position="center" />
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
 
-  {/* Rank Box */}
-  <div className="flex flex-col justify-center items-center bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 space-y-2 shadow-sm">
-    <p className="text-base text-gray-600 font-medium">Your Rank:</p>
-    <img
-      src={`/icons/${title.toLowerCase()}.png`}
-      alt={`${title} icon`}
-      className="w-32 h-12"
-    />
-    <div className="text-center">
-      <p className="text-xl font-bold text-gray-800">{avgGuesses}</p>
-      <p className="text-sm text-gray-600">Avg guesses per win</p>
-    </div>
-  </div>
-</div>
-
-
+            {/* Title Icon + Avg Guess (no box) */}
+            <div className="flex flex-col justify-center items-center space-y-2 text-center">
+              <p className="text-base text-gray-600 font-medium">Your Rank:</p>
+              <img
+                src={`/icons/${iconFilename}`}
+                alt={`${title} icon`}
+                className="w-32 h-12 object-contain"
+              />
+              <div>
+                <p className="text-xl font-bold text-gray-800">{avgGuesses}</p>
+                <p className="text-sm text-gray-600">Avg guesses per win</p>
+              </div>
+            </div>
+          </div>
         </DialogContent>
       </div>
     </Dialog>
