@@ -119,7 +119,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
               <img
                 src={`/icons/${iconFilename}`}
                 alt={`${title} icon`}
-                className="w-34 h-34 object-contain"
+                className="w-30 h-30 object-contain"
               />
               <div>
                 <p className="text-3xl font-bold text-gray-800">{avgGuesses}</p>
