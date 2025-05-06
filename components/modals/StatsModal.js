@@ -30,7 +30,10 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 
   // Use alternate image name for Oracle title
   const iconFilename = `${title.toLowerCase()}.png`;
-
+  
+    // ✅ Put the console.log here
+  console.log("Chart data:", data);
+  
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
@@ -87,8 +90,6 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             />
 
               <div className="overflow-visible">
-              console.log("Chart data:", data);
-
                 <ResponsiveContainer width={220} height={220}>
                   <PieChart>
                     <Pie
@@ -121,7 +122,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
               <img
                 src={`/icons/${iconFilename}`}
                 alt={`${title} icon`}
-                className="w-30 h-30 object-contain"
+                className="w-28 h-28 object-contain"
               />
               <div>
                 <p className="text-3xl font-bold text-gray-800">{avgGuesses}</p>
