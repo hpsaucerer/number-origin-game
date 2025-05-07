@@ -32,7 +32,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-        <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-auto p-6 pt-4 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
+        <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-xs sm:max-w-md mx-auto p-6 pt-4 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
           {/* Dismiss Button */}
           <button
             onClick={onClose}
@@ -49,41 +49,40 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             </DialogHeader>
           </div>
 
-{/* Stat boxes - now one row, consistent font */}
-<div className="grid grid-cols-5 gap-2 sm:gap-4 text-center my-6 w-full">
-  <div>
-    <p className="text-3xl font-bold">{stats.gamesPlayed}</p>
-    <p className="text-sm text-gray-600">Played</p>
-  </div>
-  <div>
-    <p className="text-3xl font-bold">
-      {stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}
-    </p>
-    <p className="text-sm text-gray-600">Win %</p>
-  </div>
-  <div>
-    <p className="text-3xl font-bold">{stats.guessDistribution[1] || 0}</p>
-    <p className="text-sm text-gray-600">Got it in 1</p>
-  </div>
-  <div>
-    <p className="text-3xl font-bold">{stats.currentStreak}</p>
-    <p className="text-sm text-gray-600">Current<br />Streak</p>
-  </div>
-  <div>
-    <p className="text-3xl font-bold">{stats.maxStreak}</p>
-    <p className="text-sm text-gray-600">Max<br />Streak</p>
-  </div>
-</div>
+          {/* Stat boxes */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center my-6 w-full">
+            <div>
+              <p className="text-xl sm:text-3xl font-bold">{stats.gamesPlayed}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Played</p>
+            </div>
+            <div>
+              <p className="text-xl sm:text-3xl font-bold">
+                {stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}
+              </p>
+              <p className="text-xs sm:text-sm text-gray-600">Win %</p>
+            </div>
+            <div>
+              <p className="text-xl sm:text-3xl font-bold">{stats.guessDistribution[1] || 0}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Got it in 1</p>
+            </div>
+            <div>
+              <p className="text-xl sm:text-3xl font-bold">{stats.currentStreak}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Current<br />Streak</p>
+            </div>
+            <div>
+              <p className="text-xl sm:text-3xl font-bold">{stats.maxStreak}</p>
+              <p className="text-xs sm:text-sm text-gray-600">Max<br />Streak</p>
+            </div>
+          </div>
 
-
-          {/* Chart + Title */}
+          {/* Chart + Rank Badge */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full mt-4">
             {/* Chart Section */}
             <div className="flex flex-col items-center flex-shrink-0">
               <img
                 src="/icons/Ring-icon.png"
                 alt="Ring o' Results"
-                className="w-24 h-24 sm:w-28 sm:h-28 mb-0"
+                className="w-20 h-20 sm:w-28 sm:h-28 mb-0"
                 style={{ marginBottom: "-12px" }}
               />
               <div className="overflow-visible">
@@ -115,15 +114,15 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 
             {/* Rank Badge */}
             <div className="flex flex-col justify-center items-center space-y-2 text-center flex-shrink-0">
-              <p className="text-base text-gray-600 font-medium">Your Rank:</p>
+              <p className="text-sm sm:text-base text-gray-600 font-medium">Your Rank:</p>
               <img
                 src={`/icons/${iconFilename}`}
                 alt={`${title} icon`}
-                className="w-32 h-32 sm:w-36 sm:h-36 object-contain"
+                className="w-24 h-24 sm:w-36 sm:h-36 object-contain"
               />
               <div>
-                <p className="text-3xl font-bold text-gray-800">{avgGuesses}</p>
-                <p className="text-sm text-gray-600">Avg guesses per win</p>
+                <p className="text-xl sm:text-3xl font-bold text-gray-800">{avgGuesses}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Avg guesses per win</p>
               </div>
             </div>
           </div>
