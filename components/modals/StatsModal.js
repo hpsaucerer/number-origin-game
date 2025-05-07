@@ -27,13 +27,8 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
   ).toFixed(2);
 
   const title = getPlayerTitle(stats);
-
-  // Use alternate image name for Oracle title
   const iconFilename = `${title.toLowerCase()}.png`;
-  
-    // ✅ Put the console.log here
-  console.log("Chart data:", data);
-  
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
@@ -54,41 +49,43 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             </DialogHeader>
           </div>
 
-          {/* Stat boxes */}
-          <div className="grid grid-cols-4 gap-4 text-center my-6">
-            <div>
-              <p className="text-3xl font-bold">{stats.gamesPlayed}</p>
-              <p className="text-sm text-gray-600">Played</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold">
-                {stats.gamesPlayed > 0
-                  ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
-                  : 0}
-              </p>
-              <p className="text-sm text-gray-600">Win %</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold">{stats.currentStreak}</p>
-              <p className="text-sm text-gray-600">Current<br />Streak</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold">{stats.maxStreak}</p>
-              <p className="text-sm text-gray-600">Max<br />Streak</p>
-            </div>
-          </div>
+{/* Stat boxes - now one row, consistent font */}
+<div className="grid grid-cols-5 gap-2 sm:gap-4 text-center my-6 w-full">
+  <div>
+    <p className="text-3xl font-bold">{stats.gamesPlayed}</p>
+    <p className="text-sm text-gray-600">Played</p>
+  </div>
+  <div>
+    <p className="text-3xl font-bold">
+      {stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}
+    </p>
+    <p className="text-sm text-gray-600">Win %</p>
+  </div>
+  <div>
+    <p className="text-3xl font-bold">{stats.guessDistribution[1] || 0}</p>
+    <p className="text-sm text-gray-600">Got it in 1</p>
+  </div>
+  <div>
+    <p className="text-3xl font-bold">{stats.currentStreak}</p>
+    <p className="text-sm text-gray-600">Current<br />Streak</p>
+  </div>
+  <div>
+    <p className="text-3xl font-bold">{stats.maxStreak}</p>
+    <p className="text-sm text-gray-600">Max<br />Streak</p>
+  </div>
+</div>
 
-          {/* Chart + Title Side-by-Side */}
-          <div className="flex flex-row items-center justify-center gap-6 w-full mt-4">
-            {/* Chart + Ring */}
-            <div className="flex flex-col items-center">
-            <img
-            src="/icons/Ring-icon.png"
-            alt="Ring o' Results"
-            className="w-28 h-28 mx-auto mb-0"
-            style={{ marginBottom: "-12px" }} // 🧠 shrinks space visually
-            />
 
+          {/* Chart + Title */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full mt-4">
+            {/* Chart Section */}
+            <div className="flex flex-col items-center flex-shrink-0">
+              <img
+                src="/icons/Ring-icon.png"
+                alt="Ring o' Results"
+                className="w-24 h-24 sm:w-28 sm:h-28 mb-0"
+                style={{ marginBottom: "-12px" }}
+              />
               <div className="overflow-visible">
                 <ResponsiveContainer width={220} height={220}>
                   <PieChart>
@@ -106,7 +103,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
                       {data.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
-                          fill={/1\s*guess/i.test(entry.name) ? "#FFDD43" : COLORS[index % COLORS.length]}
+                          fill={/1\s*guess/i.test(entry.name) ? "#d4af37" : COLORS[index % COLORS.length]}
                         />
                       ))}
                       <Label content={renderCenterLabel} position="center" />
@@ -116,15 +113,14 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
               </div>
             </div>
 
-            {/* Title Icon + Avg Guess (no box) */}
-            <div className="flex flex-col justify-center items-center space-y-2 text-center">
+            {/* Rank Badge */}
+            <div className="flex flex-col justify-center items-center space-y-2 text-center flex-shrink-0">
               <p className="text-base text-gray-600 font-medium">Your Rank:</p>
-<img
-  src={`/icons/${iconFilename}`}
-  alt={`${title} icon`}
-  className="w-28 h-28 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain mx-auto"
-/>
-
+              <img
+                src={`/icons/${iconFilename}`}
+                alt={`${title} icon`}
+                className="w-32 h-32 sm:w-36 sm:h-36 object-contain"
+              />
               <div>
                 <p className="text-3xl font-bold text-gray-800">{avgGuesses}</p>
                 <p className="text-sm text-gray-600">Avg guesses per win</p>
