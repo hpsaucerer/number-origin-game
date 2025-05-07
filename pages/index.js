@@ -173,6 +173,7 @@ const synonymMap = {
   "13 colonies": "thirteen colonies",
   "original 13": "13 original",
   "united states": "america",
+  states: "colonies",
 };
 
 function normalizeGuess(input) {
