@@ -29,8 +29,6 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
   const title = getPlayerTitle(stats);
   const iconFilename = `${title.toLowerCase()}.png`;
 
-  console.log("Chart data:", data);
-
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
@@ -52,7 +50,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
           </div>
 
           {/* Stat boxes */}
-          <div className="grid grid-cols-4 gap-4 text-center my-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center my-6 w-full">
             <div>
               <p className="text-3xl font-bold">{stats.gamesPlayed}</p>
               <p className="text-sm text-gray-600">Played</p>
@@ -62,6 +60,10 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
                 {stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}
               </p>
               <p className="text-sm text-gray-600">Win %</p>
+            </div>
+            <div>
+              <p className="text-3xl font-bold">{stats.guessDistribution[1] || 0}</p>
+              <p className="text-sm text-green-600">Got it 1</p>
             </div>
             <div>
               <p className="text-3xl font-bold">{stats.currentStreak}</p>
