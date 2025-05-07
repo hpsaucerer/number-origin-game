@@ -734,45 +734,54 @@ const acceptableFuse = new Fuse(
     const nearMissEssential = uniqueEssentialMatchCount === 1;
     const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
 
+    const lenientFuzzyPass =
+  bestMatch?.score <= 0.25 &&
+  matchedRequired.length >= 2 &&
+  cleanedGuess.length > 12;
 
     // ✅ Final match logic
-    const isCorrectGuess =
-      isExactAnswerMatch ||
-      exactAcceptableMatch ||
-      isAcceptableGuess ||
-      (
-        bestMatch?.score <= 0.5 &&
-        hasStrongMatch &&
-        requiredMatched &&
-        strongEssentialHit
-      ) ||
-(
-  hasOnlyEssentialMatch &&
-  cleanedGuess.length > 12 &&
-  matchedRequired.length >= 1
-);
-
-    // 🧠 Track why it passed or failed
-    const matchType = isExactAnswerMatch
-      ? "exact_answer"
-      : exactAcceptableMatch
-      ? "exact_acceptable"
-      : isAcceptableGuess
-      ? "fuzzy_acceptable"
-      : (
-          bestMatch?.score <= 0.5 &&
-          hasStrongMatch &&
-          requiredMatched &&
-          strongEssentialHit
-        )
-      ? "fuzzy_with_required"
-: (
+const isCorrectGuess =
+  isExactAnswerMatch ||
+  exactAcceptableMatch ||
+  isAcceptableGuess ||
+  (
+    bestMatch?.score <= 0.5 &&
+    hasStrongMatch &&
+    requiredMatched &&
+    strongEssentialHit
+  ) ||
+  (
     hasOnlyEssentialMatch &&
     cleanedGuess.length > 12 &&
     matchedRequired.length >= 1
-  )
-? "essential_only_fallback"
-      : "none";
+  ) ||
+  lenientFuzzyPass;
+
+
+    // 🧠 Track why it passed or failed
+const matchType = isExactAnswerMatch
+  ? "exact_answer"
+  : exactAcceptableMatch
+  ? "exact_acceptable"
+  : isAcceptableGuess
+  ? "fuzzy_acceptable"
+  : (
+      bestMatch?.score <= 0.5 &&
+      hasStrongMatch &&
+      requiredMatched &&
+      strongEssentialHit
+    )
+  ? "fuzzy_with_required"
+  : (
+      hasOnlyEssentialMatch &&
+      cleanedGuess.length > 12 &&
+      matchedRequired.length >= 1
+    )
+  ? "essential_only_fallback"
+  : lenientFuzzyPass
+  ? "lenient_fuzzy_fallback"
+  : "none";
+
 
 
 // ✅ Log the guess to Supabase with error handling
@@ -789,7 +798,9 @@ const { error } = await supabase.from("Player_responses").insert([
       essentialHit: matchedEssential,
       requiredHit: matchedRequired,
       fuzzyScore: bestMatch?.score ?? null,
-      relaxedRule: hasOnlyEssentialMatch && cleanedGuess.length > 12
+      relaxedRule:
+  (hasOnlyEssentialMatch && cleanedGuess.length > 12 && matchedRequired.length >= 1) ||
+  lenientFuzzyPass
     }),
   }
 ]);
