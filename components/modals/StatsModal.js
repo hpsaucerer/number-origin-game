@@ -119,11 +119,12 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             {/* Title Icon + Avg Guess (no box) */}
             <div className="flex flex-col justify-center items-center space-y-2 text-center">
               <p className="text-base text-gray-600 font-medium">Your Rank:</p>
-              <img
-                src={`/icons/${iconFilename}`}
-                alt={`${title} icon`}
-                className="w-28 h-28 object-contain"
-              />
+<img
+  src={`/icons/${iconFilename}`}
+  alt={`${title} icon`}
+  className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain mx-auto"
+/>
+
               <div>
                 <p className="text-3xl font-bold text-gray-800">{avgGuesses}</p>
                 <p className="text-sm text-gray-600">Avg guesses per win</p>
