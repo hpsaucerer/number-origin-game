@@ -32,7 +32,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-        <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-xs sm:max-w-md mx-auto p-6 pt-4 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
+        <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md sm:max-w-xl mx-auto p-6 pt-4 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
           {/* Dismiss Button */}
           <button
             onClick={onClose}
@@ -76,7 +76,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
           </div>
 
           {/* Chart + Rank Badge */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full mt-4">
+          <div className="flex flex-row items-center justify-center gap-6 w-full mt-4 flex-wrap">
             {/* Chart Section */}
             <div className="flex flex-col items-center flex-shrink-0">
               <img
