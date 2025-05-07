@@ -122,7 +122,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 <img
   src={`/icons/${iconFilename}`}
   alt={`${title} icon`}
-  className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain mx-auto"
+  className="w-24 h-24 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain mx-auto"
 />
 
               <div>
