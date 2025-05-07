@@ -106,7 +106,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
                       {data.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
-                          fill={/1\s*guess/i.test(entry.name) ? "#FFD700" : COLORS[index % COLORS.length]}
+                          fill={/1\s*guess/i.test(entry.name) ? "#b49137" : COLORS[index % COLORS.length]}
                         />
                       ))}
                       <Label content={renderCenterLabel} position="center" />
