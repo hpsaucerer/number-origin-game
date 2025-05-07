@@ -740,10 +740,10 @@ const acceptableFuse = new Fuse(
     const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
 
 const relaxedRule =
-  hasOnlyEssentialMatch &&
-  cleanedGuess.length > 12 &&
+  matchedEssential.length >= 1 &&
   matchedRequired.length >= 2 &&
-  (bestMatch?.score ?? 1) <= 0.4;
+  cleanedGuess.length > 12 &&
+  (bestMatch?.score ?? 1) <= 0.6;
 
 
     // ✅ Final match logic
