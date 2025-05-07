@@ -798,6 +798,7 @@ const { error } = await supabase.from("Player_responses").insert([
       essentialHit: matchedEssential,
       requiredHit: matchedRequired,
       fuzzyScore: bestMatch?.score ?? null,
+      matchedAnswer: bestMatch?.item?.label ?? null,
       relaxedRule:
   (hasOnlyEssentialMatch && cleanedGuess.length > 12 && matchedRequired.length >= 1) ||
   lenientFuzzyPass
