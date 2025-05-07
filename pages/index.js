@@ -729,10 +729,11 @@ const acceptableFuse = new Fuse(
     const acceptableResults = acceptableFuse.search(cleanedGuess);
     const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.35); // tighter match threshold
 
-    const essentialMatchCount = matchedEssential.length;
-    const strongEssentialHit = essentialMatchCount >= 2;
-    const nearMissEssential = essentialMatchCount === 1;
-    const hasOnlyEssentialMatch = hasStrongMatch && essentialMatchCount >= 2;
+    const uniqueEssentialMatchCount = new Set(matchedEssential).size;
+    const strongEssentialHit = uniqueEssentialMatchCount >= 2; // replaces old logic
+    const nearMissEssential = uniqueEssentialMatchCount === 1;
+    const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
+
 
     // ✅ Final match logic
     const isCorrectGuess =
@@ -745,9 +746,11 @@ const acceptableFuse = new Fuse(
         requiredMatched &&
         strongEssentialHit
       ) ||
-      (
-        hasOnlyEssentialMatch && cleanedGuess.length > 12
-      );
+(
+  hasOnlyEssentialMatch &&
+  cleanedGuess.length > 12 &&
+  matchedRequired.length >= 1
+);
 
     // 🧠 Track why it passed or failed
     const matchType = isExactAnswerMatch
@@ -763,12 +766,12 @@ const acceptableFuse = new Fuse(
           strongEssentialHit
         )
       ? "fuzzy_with_required"
-      : (
-          strongEssentialHit &&
-          matchedEssential.length >= 2 &&
-          cleanedGuess.length > 12
-        )
-      ? "essential_only_fallback"
+: (
+    hasOnlyEssentialMatch &&
+    cleanedGuess.length > 12 &&
+    matchedRequired.length >= 1
+  )
+? "essential_only_fallback"
       : "none";
 
 
