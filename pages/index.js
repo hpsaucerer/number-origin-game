@@ -735,7 +735,7 @@ const acceptableFuse = new Fuse(
     const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
 
     const lenientFuzzyPass =
-  bestMatch?.score <= 0.5 &&
+  bestMatch?.score <= 0.55 &&
   matchedRequired.length >= 2 &&
   cleanedGuess.length > 12;
 
