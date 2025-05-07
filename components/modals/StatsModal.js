@@ -31,8 +31,8 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
-        <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md sm:max-w-xl mx-auto p-6 pt-4 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
+      <div className="fixed inset-0 flex items-center justify-center z-50 px-2 sm:px-4">
+        <DialogContent className="relative bg-white rounded-xl shadow-xl w-full max-w-md sm:max-w-xl mx-auto p-4 sm:p-6 pt-3 sm:pt-4 overflow-y-auto max-h-[90vh] flex flex-col items-center justify-center">
           {/* Dismiss Button */}
           <button
             onClick={onClose}
@@ -45,56 +45,56 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
           {/* Title */}
           <div className="w-full flex flex-col items-start">
             <DialogHeader className="w-full">
-              <h2 className="text-xl text-gray-800 text-left">Statistics</h2>
+              <h2 className="text-lg sm:text-xl text-gray-800 text-left">Statistics</h2>
             </DialogHeader>
           </div>
 
           {/* Stat boxes */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center my-6 w-full">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4 text-center my-4 sm:my-6 w-full">
             <div>
-              <p className="text-xl sm:text-3xl font-bold">{stats.gamesPlayed}</p>
+              <p className="text-lg sm:text-3xl font-bold">{stats.gamesPlayed}</p>
               <p className="text-xs sm:text-sm text-gray-600">Played</p>
             </div>
             <div>
-              <p className="text-xl sm:text-3xl font-bold">
+              <p className="text-lg sm:text-3xl font-bold">
                 {stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}
               </p>
               <p className="text-xs sm:text-sm text-gray-600">Win %</p>
             </div>
             <div>
-              <p className="text-xl sm:text-3xl font-bold">{stats.guessDistribution[1] || 0}</p>
+              <p className="text-lg sm:text-3xl font-bold">{stats.guessDistribution[1] || 0}</p>
               <p className="text-xs sm:text-sm text-gray-600">Got it in 1</p>
             </div>
             <div>
-              <p className="text-xl sm:text-3xl font-bold">{stats.currentStreak}</p>
+              <p className="text-lg sm:text-3xl font-bold">{stats.currentStreak}</p>
               <p className="text-xs sm:text-sm text-gray-600">Current<br />Streak</p>
             </div>
             <div>
-              <p className="text-xl sm:text-3xl font-bold">{stats.maxStreak}</p>
+              <p className="text-lg sm:text-3xl font-bold">{stats.maxStreak}</p>
               <p className="text-xs sm:text-sm text-gray-600">Max<br />Streak</p>
             </div>
           </div>
 
           {/* Chart + Rank Badge */}
-          <div className="flex flex-row items-center justify-center gap-6 w-full mt-4 flex-wrap">
+          <div className="flex flex-row items-center justify-center gap-4 sm:gap-6 w-full mt-2 sm:mt-4 flex-wrap">
             {/* Chart Section */}
             <div className="flex flex-col items-center flex-shrink-0">
               <img
                 src="/icons/Ring-icon.png"
                 alt="Ring o' Results"
-                className="w-20 h-20 sm:w-28 sm:h-28 mb-0"
-                style={{ marginBottom: "-12px" }}
+                className="w-16 h-16 sm:w-28 sm:h-28 mb-0"
+                style={{ marginBottom: "-10px" }}
               />
               <div className="overflow-visible">
-                <ResponsiveContainer width={220} height={220}>
+                <ResponsiveContainer width={200} height={200}>
                   <PieChart>
                     <Pie
                       data={data}
                       dataKey="value"
                       cx="50%"
                       cy="50%"
-                      innerRadius={50}
-                      outerRadius={75}
+                      innerRadius={45}
+                      outerRadius={70}
                       label={combinedLabel}
                       labelLine={false}
                       isAnimationActive={true}
@@ -114,14 +114,14 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 
             {/* Rank Badge */}
             <div className="flex flex-col justify-center items-center space-y-2 text-center flex-shrink-0">
-              <p className="text-sm sm:text-base text-gray-600 font-medium">Your Rank:</p>
+              <p className="text-xs sm:text-base text-gray-600 font-medium">Your Rank:</p>
               <img
                 src={`/icons/${iconFilename}`}
                 alt={`${title} icon`}
-                className="w-24 h-24 sm:w-36 sm:h-36 object-contain"
+                className="w-20 h-20 sm:w-36 sm:h-36 object-contain"
               />
               <div>
-                <p className="text-xl sm:text-3xl font-bold text-gray-800">{avgGuesses}</p>
+                <p className="text-lg sm:text-3xl font-bold text-gray-800">{avgGuesses}</p>
                 <p className="text-xs sm:text-sm text-gray-600">Avg guesses per win</p>
               </div>
             </div>
