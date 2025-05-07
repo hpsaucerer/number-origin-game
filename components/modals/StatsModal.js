@@ -74,7 +74,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
           </div>
 
           {/* Chart + Rank Badge */}
-          <div className="flex flex-row items-center justify-center gap-4 sm:gap-6 w-full mt-2 sm:mt-4 flex-wrap">
+          <div className="flex flex-row items-center justify-center gap-4 sm:gap-x-10 sm:gap-y-6 w-full mt-2 sm:mt-4 flex-wrap">
             {/* Chart Section */}
             <div className="flex flex-col items-center flex-shrink-0">
               <img
