@@ -49,25 +49,27 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             </DialogHeader>
           </div>
 
-          {/* Stat boxes */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 text-center my-4 sm:my-6 w-full">
-            <div>
-              <p className="text-lg sm:text-3xl font-bold">{stats.gamesPlayed}</p>
-              <p className="text-xs sm:text-sm text-gray-600">Played</p>
-            </div>
-            <div>
-              <p className="text-lg sm:text-3xl font-bold">
-                {stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}
-              </p>
-              <p className="text-xs sm:text-sm text-gray-600">Win %</p>
-            </div>
-            <div>
-              <p className="text-lg sm:text-3xl font-bold">{stats.currentStreak}</p>
-              <p className="text-xs sm:text-sm text-gray-600">Current<br />Streak</p>
-            </div>
-            <div>
-              <p className="text-lg sm:text-3xl font-bold">{stats.maxStreak}</p>
-              <p className="text-xs sm:text-sm text-gray-600">Max<br />Streak</p>
+          {/* Stat boxes - always a single line */}
+          <div className="overflow-x-auto w-full">
+            <div className="min-w-[350px] grid grid-cols-4 gap-4 text-center my-4 sm:my-6 w-full">
+              <div>
+                <p className="text-lg sm:text-3xl font-bold">{stats.gamesPlayed}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Played</p>
+              </div>
+              <div>
+                <p className="text-lg sm:text-3xl font-bold">
+                  {stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-600">Win %</p>
+              </div>
+              <div>
+                <p className="text-lg sm:text-3xl font-bold">{stats.currentStreak}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Current<br />Streak</p>
+              </div>
+              <div>
+                <p className="text-lg sm:text-3xl font-bold">{stats.maxStreak}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Max<br />Streak</p>
+              </div>
             </div>
           </div>
 
@@ -78,8 +80,8 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
               <img
                 src="/icons/Ring-icon.png"
                 alt="Ring o' Results"
-                className="w-16 h-16 sm:w-28 sm:h-28 mb-0"
-                style={{ marginBottom: "-10px" }}
+                className="w-24 h-24 sm:w-32 sm:h-32 mb-0"
+                style={{ marginBottom: "-8px" }}
               />
               <div className="overflow-visible">
                 <ResponsiveContainer width={200} height={200}>
@@ -108,13 +110,13 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
               </div>
             </div>
 
-            {/* Rank Badge + Additional Stats */}
+            {/* Rank Badge + Bonus Stats */}
             <div className="flex flex-col justify-center items-center space-y-2 text-center flex-shrink-0">
               <p className="text-base sm:text-base text-gray-600 font-medium">Rank:</p>
               <img
                 src={`/icons/${iconFilename}`}
                 alt={`${title} icon`}
-                className="w-20 h-20 sm:w-36 sm:h-36 object-contain"
+                className="w-24 h-24 sm:w-40 sm:h-40 object-contain"
               />
               <div>
                 <p className="text-lg sm:text-3xl font-bold text-gray-800">{avgGuesses}</p>
