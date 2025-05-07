@@ -51,7 +51,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 
           {/* Stat boxes - always a single line */}
           <div className="overflow-x-auto w-full">
-            <div className="min-w-[350px] grid grid-cols-4 gap-4 text-center my-4 sm:my-6 w-full">
+            <div className="min-w-[350px] grid grid-cols-4 gap-2 text-center my-4 sm:my-6 w-full">
               <div>
                 <p className="text-lg sm:text-3xl font-bold">{stats.gamesPlayed}</p>
                 <p className="text-xs sm:text-sm text-gray-600">Played</p>
