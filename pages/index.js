@@ -221,6 +221,22 @@ const categoryColorMap = {
   Sport: "#e53935",      // red
 };
 
+function getPlayerTitle(stats) {
+  const { gamesWon, guessDistribution } = stats;
+  if (gamesWon === 0) return "Dabbler";
+
+  const totalGuesses = Object.entries(guessDistribution)
+    .filter(([key]) => key !== "failed")
+    .reduce((sum, [key, value]) => sum + parseInt(key) * value, 0);
+
+  const avgGuesses = totalGuesses / gamesWon;
+
+  if (avgGuesses <= 1.5) return "Oracle";
+  if (avgGuesses <= 2.2) return "Mage";
+  if (avgGuesses <= 3.0) return "Scribe";
+  return "Dabbler";
+}
+
 export default function Home() {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
