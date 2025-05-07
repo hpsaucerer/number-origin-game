@@ -50,7 +50,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
           </div>
 
           {/* Stat boxes */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4 text-center my-4 sm:my-6 w-full">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 text-center my-4 sm:my-6 w-full">
             <div>
               <p className="text-lg sm:text-3xl font-bold">{stats.gamesPlayed}</p>
               <p className="text-xs sm:text-sm text-gray-600">Played</p>
@@ -60,10 +60,6 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
                 {stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}
               </p>
               <p className="text-xs sm:text-sm text-gray-600">Win %</p>
-            </div>
-            <div>
-              <p className="text-lg sm:text-3xl font-bold">{stats.guessDistribution[1] || 0}</p>
-              <p className="text-xs sm:text-sm text-gray-600">Got it in 1</p>
             </div>
             <div>
               <p className="text-lg sm:text-3xl font-bold">{stats.currentStreak}</p>
@@ -112,7 +108,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
               </div>
             </div>
 
-            {/* Rank Badge */}
+            {/* Rank Badge + Additional Stats */}
             <div className="flex flex-col justify-center items-center space-y-2 text-center flex-shrink-0">
               <p className="text-xs sm:text-base text-gray-600 font-medium">Your Rank:</p>
               <img
@@ -123,6 +119,10 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
               <div>
                 <p className="text-lg sm:text-3xl font-bold text-gray-800">{avgGuesses}</p>
                 <p className="text-xs sm:text-sm text-gray-600">Avg guesses per win</p>
+              </div>
+              <div>
+                <p className="text-lg sm:text-xl font-bold text-gray-800 mt-1">{stats.guessDistribution[1] || 0}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Got it in 1</p>
               </div>
             </div>
           </div>
