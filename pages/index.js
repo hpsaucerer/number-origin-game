@@ -740,7 +740,7 @@ const acceptableFuse = new Fuse(
     const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
 
     const lenientFuzzyPass =
-  bestMatch?.score <= 0.575 &&
+  bestMatch?.score <= 0.6 &&
   matchedRequired.length >= 2 &&
   cleanedGuess.length > 12;
 
