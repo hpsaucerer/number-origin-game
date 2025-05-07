@@ -739,10 +739,12 @@ const acceptableFuse = new Fuse(
     const nearMissEssential = uniqueEssentialMatchCount === 1;
     const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
 
-    const lenientFuzzyPass =
-  bestMatch?.score <= 0.6 &&
+const relaxedRule =
+  hasOnlyEssentialMatch &&
+  cleanedGuess.length > 12 &&
   matchedRequired.length >= 2 &&
-  cleanedGuess.length > 12;
+  (bestMatch?.score ?? 1) <= 0.4;
+
 
     // ✅ Final match logic
 const isCorrectGuess =
@@ -755,12 +757,8 @@ const isCorrectGuess =
     requiredMatched &&
     strongEssentialHit
   ) ||
-  (
-    hasOnlyEssentialMatch &&
-    cleanedGuess.length > 12 &&
-    matchedRequired.length >= 1
-  ) ||
-  lenientFuzzyPass;
+  relaxedRule;
+
 
 
     // 🧠 Track why it passed or failed
@@ -777,16 +775,9 @@ const matchType = isExactAnswerMatch
       strongEssentialHit
     )
   ? "fuzzy_with_required"
-  : (
-      hasOnlyEssentialMatch &&
-      cleanedGuess.length > 12 &&
-      matchedRequired.length >= 1
-    )
-  ? "essential_only_fallback"
-  : lenientFuzzyPass
-  ? "lenient_fuzzy_fallback"
+  : relaxedRule
+  ? "relaxed_rule"
   : "none";
-
 
 
 // ✅ Log the guess to Supabase with error handling
@@ -800,14 +791,23 @@ const { error } = await supabase.from("Player_responses").insert([
     attempt: attempts + 1,
     device_id: localStorage.getItem("deviceId") || "unknown",
     notes: JSON.stringify({
-      essentialHit: matchedEssential,
-      requiredHit: matchedRequired,
+  essentialHit: matchedEssential,
+  requiredHit: matchedRequired,
+  fuzzyScore: bestMatch?.score ?? null,
+  matchedAnswer: bestMatch?.item?.label ?? null,
+  relaxedRule: relaxedRule,
+  relaxedRuleDetails: relaxedRule
+  ? {
+      hasOnlyEssentialMatch,
+      cleanedGuessLength: cleanedGuess.length,
+      matchedRequiredCount: matchedRequired.length,
       fuzzyScore: bestMatch?.score ?? null,
-      matchedAnswer: bestMatch?.item?.label ?? null,
-      relaxedRule:
-  (hasOnlyEssentialMatch && cleanedGuess.length > 12 && matchedRequired.length >= 1) ||
-  lenientFuzzyPass
-    }),
+      bestMatchLabel: bestMatch?.item?.label ?? null
+    }
+  : null
+
+}),
+
   }
 ]);
 
