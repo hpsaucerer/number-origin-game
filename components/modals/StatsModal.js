@@ -110,7 +110,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
 
             {/* Rank Badge + Additional Stats */}
             <div className="flex flex-col justify-center items-center space-y-2 text-center flex-shrink-0">
-              <p className="text-xs sm:text-base text-gray-600 font-medium">Your Rank:</p>
+              <p className="text-base sm:text-base text-gray-600 font-medium">Rank:</p>
               <img
                 src={`/icons/${iconFilename}`}
                 alt={`${title} icon`}
