@@ -168,6 +168,10 @@ const synonymMap = {
   britain: "england",
   english: "england",
   french: "france",
+  us: "american",
+  "the 13": "the thirteen",
+  "13 colonies": "thirteen colonies",
+  "original 13": "13 original",
 };
 
 function normalizeGuess(input) {
