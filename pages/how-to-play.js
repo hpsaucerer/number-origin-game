@@ -7,7 +7,7 @@ import CategoryPills from "@/components/category-pills";
 import StatsModal from "@/components/modals/StatsModal";
 import AchievementsModal from "@/components/AchievementsModal";
 import useStats from "@/hooks/useStats"; // your custom hook
-import Footer from "@/components/ui/footer"; // Adjust path if needed
+import Footer from "@/components/ui/Footer"; // Adjust path if needed
 
 export default function HowToPlayPage() {
   const [showStats, setShowStats] = useState(false);
