@@ -721,7 +721,10 @@ const allAnswers = [
 
     
     const normalizedGuess = cleanedGuess.replace(/\s+/g, '');
-    const acceptableStrings = puzzle.acceptableGuesses || puzzle.acceptable_guesses || [];
+    const acceptableStrings = (puzzle.acceptableGuesses || puzzle.acceptable_guesses || [])
+     .map(normalizeGuess)
+     .filter(g => g.split(" ").length >= 2); // 🚫 Exclude too-short normalized guesses
+
 
     const exactAcceptableMatch = acceptableStrings.some(
       g => normalizeGuess(g).replace(/\s+/g, '') === normalizedGuess
