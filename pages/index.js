@@ -711,6 +711,13 @@ const allAnswers = [
 
     const [bestMatch] = fuse.search(cleanedGuess);
 
+    const bestMatchLabel = bestMatch?.item?.label ?? "";
+    const essentialInBestMatch = puzzle.essential_keywords.filter((kw) =>
+     bestMatchLabel.includes(kw)
+   );
+    const essentialCoverage = essentialInBestMatch.length / puzzle.essential_keywords.length;
+
+    
     const normalizedGuess = cleanedGuess.replace(/\s+/g, '');
     const acceptableStrings = puzzle.acceptableGuesses || puzzle.acceptable_guesses || [];
 
@@ -744,7 +751,8 @@ const relaxedRule =
   matchedEssential.length >= 1 &&
   matchedRequired.length >= 2 &&
   cleanedGuess.length > 12 &&
-  (bestMatch?.score ?? 1) <= 0.6;
+  (bestMatch?.score ?? 1) <= 0.6 &&
+  essentialCoverage >= 0.5;
 
 
     // ✅ Final match logic
@@ -797,13 +805,15 @@ const { error } = await supabase.from("Player_responses").insert([
   fuzzyScore: bestMatch?.score ?? null,
   matchedAnswer: bestMatch?.item?.label ?? null,
   relaxedRule: relaxedRule,
-  relaxedRuleDetails: relaxedRule
+relaxedRuleDetails: relaxedRule
   ? {
       hasOnlyEssentialMatch,
       cleanedGuessLength: cleanedGuess.length,
       matchedRequiredCount: matchedRequired.length,
       fuzzyScore: bestMatch?.score ?? null,
-      bestMatchLabel: bestMatch?.item?.label ?? null
+      bestMatchLabel: bestMatchLabel,
+      essentialCoverage,
+      essentialInBestMatch
     }
   : null
 
