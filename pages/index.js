@@ -754,8 +754,8 @@ const guessWordCount = cleanedGuess.trim().split(/\s+/).length;
 
 const isAcceptableGuess =
   topScore !== null &&
-  topScore <= 0.45 && // Adjust if needed
-  guessWordCount >= 2;
+  topScore <= 0.45 &&
+  (guessWordCount >= 2 || topScore <= 0.1); // ✅ allow 1-word guesses if they're very close
 
 debugLog("🧠 Acceptable guess check:", {
   cleanedGuess,
