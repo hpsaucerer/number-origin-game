@@ -719,10 +719,14 @@ const allAnswers = [
     const essentialCoverage = essentialInBestMatch.length / (puzzle.essential_keywords.length || 1);
 
     
-    const normalizedGuess = cleanedGuess.replace(/\s+/g, '');
-    const acceptableStrings = (puzzle.acceptableGuesses || puzzle.acceptable_guesses || [])
-     .map(normalizeGuess)
-     .filter(g => g.split(" ").length >= 2); // 🚫 Exclude too-short normalized guesses
+const normalizedGuess = cleanedGuess.replace(/\s+/g, '');
+
+const acceptableStrings = (puzzle.acceptableGuesses || puzzle.acceptable_guesses || [])
+  .map(normalizeGuess)
+  .filter(g => g.split(" ").length >= 2); // 🚫 Exclude too-short normalized guesses
+
+// 🐛 Debug log for inspection
+debugLog("🔍 Acceptable normalized strings:", acceptableStrings);
 
 
     const exactAcceptableMatch = acceptableStrings.some(
@@ -731,32 +735,41 @@ const allAnswers = [
 
     const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
 
-
 const acceptableFuse = new Fuse(
-  acceptableStrings.map(g => ({ label: normalizeGuess(g) })),
+  acceptableStrings.map(label => ({ label })),
   {
     keys: ["label"],
-    threshold: 0.4,
+    threshold: 0.45, // slightly relaxed
     distance: 100,
+    includeScore: true,
     ignoreLocation: true,
   }
 );
 
-
 const acceptableResults = acceptableFuse.search(cleanedGuess);
+
+const bestAcceptable = acceptableResults[0];
+const topScore = bestAcceptable?.score ?? null;
 const guessWordCount = cleanedGuess.trim().split(/\s+/).length;
-debugLog("Cleaned guess word count:", guessWordCount); // Optional for auditing
 
 const isAcceptableGuess =
-  acceptableResults.some(r => r.score <= 0.35) &&
+  topScore !== null &&
+  topScore <= 0.45 && // Adjust if needed
   guessWordCount >= 2;
-    
-debugLog("✅ isAcceptableGuess:", isAcceptableGuess, {
+
+debugLog("🧠 Acceptable guess check:", {
+  cleanedGuess,
   guessWordCount,
-  topScore: acceptableResults[0]?.score,
-  topLabel: acceptableResults[0]?.item?.label,
-  allScores: acceptableResults.map(r => r.score)
+  topScore,
+  topLabel: bestAcceptable?.item?.label,
+  isAcceptableGuess,
+  acceptableStrings,
+  allAcceptableResults: acceptableResults.map(r => ({
+    label: r.item.label,
+    score: r.score,
+  })),
 });
+
     
 // Calculate keyword coverage ratios
 const essentialTotal = puzzle.essential_keywords.length || 1;
