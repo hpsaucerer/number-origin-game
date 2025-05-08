@@ -33,15 +33,9 @@ const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
 
 // 🐛 Controlled debug logger
 function debugLog(...args) {
-  if (!DEV_MODE || process.env.NODE_ENV === "production") return;
+  if (!DEV_MODE) return; // ✅ Remove NODE_ENV check
 
-  const forbiddenFields = [
-    "answer",
-    "acceptable_guesses",
-    "essential_keywords",
-    "keywords",
-    "clues",
-  ];
+  const forbiddenFields = [/*...*/];
 
   const hasSensitiveData = args.some(
     (arg) =>
@@ -57,6 +51,7 @@ function debugLog(...args) {
 
   console.log("[DEBUG]", ...args);
 }
+
 
 async function logCategoryReveal(puzzleId) {
   const deviceId = localStorage.getItem("deviceId") || "unknown";
@@ -465,6 +460,10 @@ useEffect(() => {
 
 useEffect(() => {
   localStorage.removeItem("earnedTiles");
+}, []);
+  
+useEffect(() => {
+  console.log("✅ DEV_MODE from env:", process.env.NEXT_PUBLIC_DEV_MODE);
 }, []);
 
 useEffect(() => {
