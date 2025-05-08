@@ -751,8 +751,14 @@ debugLog("Cleaned guess word count:", guessWordCount); // Optional for auditing
 const isAcceptableGuess =
   acceptableResults.some(r => r.score <= 0.35) &&
   guessWordCount >= 2;
-
-
+    
+debugLog("✅ isAcceptableGuess:", isAcceptableGuess, {
+  guessWordCount,
+  topScore: acceptableResults[0]?.score,
+  topLabel: acceptableResults[0]?.item?.label,
+  allScores: acceptableResults.map(r => r.score)
+});
+    
 // Calculate keyword coverage ratios
 const essentialTotal = puzzle.essential_keywords.length || 1;
 const requiredTotal = (puzzle.keywords?.length || 1);
