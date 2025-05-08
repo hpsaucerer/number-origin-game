@@ -169,6 +169,9 @@ const synonymMap = {
   "original 13": "13 original",
   "united states": "america",
   states: "colonies",
+  "fastest ever": "record",
+  global: "world",
+  "9.58 sec": "9.58 seconds",
 };
 
 function normalizeGuess(input) {
