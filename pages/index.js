@@ -755,10 +755,17 @@ const bestAcceptable = acceptableResults[0];
 const topScore = bestAcceptable?.score ?? null;
 const guessWordCount = cleanedGuess.trim().split(/\s+/).length;
 
+const strongEssentialHit = new Set(matchedEssential).size >= 2;
+const isMeaningfulGuess = guessWordCount >= 2;
+
+// 🚫 Only allow 1-word guesses if VERY strong essential + required match
 const isAcceptableGuess =
   topScore !== null &&
   topScore <= 0.45 &&
-  (guessWordCount >= 2 || topScore <= 0.1); // ✅ allow 1-word guesses if they're very close
+  (
+    isMeaningfulGuess ||
+    (strongEssentialHit && requiredMatched && topScore <= 0.1)
+  );
 
 debugLog("🧠 Acceptable guess check:", {
   cleanedGuess,
