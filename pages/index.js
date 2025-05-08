@@ -755,8 +755,12 @@ const bestAcceptable = acceptableResults[0];
 const topScore = bestAcceptable?.score ?? null;
 const guessWordCount = cleanedGuess.trim().split(/\s+/).length;
 
-const strongEssentialHit = new Set(matchedEssential).size >= 2;
-const isMeaningfulGuess = guessWordCount >= 2;
+const isMeaningfulGuess =
+  guessWordCount >= 2 ||
+  (
+    cleanedGuess.length >= 12 &&
+    (strongEssentialHit || requiredMatched)
+  );
 
 // 🚫 Only allow 1-word guesses if VERY strong essential + required match
 const isAcceptableGuess =
