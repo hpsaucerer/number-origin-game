@@ -742,9 +742,13 @@ const acceptableFuse = new Fuse(
 
 
 const acceptableResults = acceptableFuse.search(cleanedGuess);
+const guessWordCount = cleanedGuess.trim().split(/\s+/).length;
+debugLog("Cleaned guess word count:", guessWordCount); // Optional for auditing
+
 const isAcceptableGuess =
   acceptableResults.some(r => r.score <= 0.35) &&
-  cleanedGuess.split(" ").length >= 2;
+  guessWordCount >= 2;
+
 
 // Calculate keyword coverage ratios
 const essentialTotal = puzzle.essential_keywords.length || 1;
@@ -817,7 +821,7 @@ notes: JSON.stringify({
   fuzzyScore: bestMatch?.score ?? null,
   matchedAnswer: bestMatch?.item?.label ?? null,
   relaxedRule,
-  guessWordCount: cleanedGuess.split(" ").length,
+  guessWordCount,
   relaxedRuleDetails: relaxedRule
     ? {
         hasOnlyEssentialMatch,
