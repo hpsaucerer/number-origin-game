@@ -712,10 +712,12 @@ const allAnswers = [
     const [bestMatch] = fuse.search(cleanedGuess);
 
     const bestMatchLabel = bestMatch?.item?.label ?? "";
+    const normalizedBestMatch = normalizeGuess(bestMatchLabel);
     const essentialInBestMatch = puzzle.essential_keywords.filter((kw) =>
-     bestMatchLabel.includes(kw)
-   );
-    const essentialCoverage = essentialInBestMatch.length / puzzle.essential_keywords.length;
+     normalizedBestMatch.includes(normalizeGuess(kw))
+    );
+
+    const essentialCoverage = essentialInBestMatch.length / (puzzle.essential_keywords.length || 1);
 
     
     const normalizedGuess = cleanedGuess.replace(/\s+/g, '');
@@ -739,22 +741,30 @@ const acceptableFuse = new Fuse(
 );
 
 
-    const acceptableResults = acceptableFuse.search(cleanedGuess);
-    const isAcceptableGuess =
-      acceptableResults.some(r => r.score <= 0.35) &&
-      cleanedGuess.split(" ").length >= 2;
+const acceptableResults = acceptableFuse.search(cleanedGuess);
+const isAcceptableGuess =
+  acceptableResults.some(r => r.score <= 0.35) &&
+  cleanedGuess.split(" ").length >= 2;
 
-    const uniqueEssentialMatchCount = new Set(matchedEssential).size;
-    const strongEssentialHit = uniqueEssentialMatchCount >= 2; // replaces old logic
-    const nearMissEssential = uniqueEssentialMatchCount === 1;
-    const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
+// Calculate keyword coverage ratios
+const essentialTotal = puzzle.essential_keywords.length || 1;
+const requiredTotal = (puzzle.keywords?.length || 1);
 
+const essentialCoverageRatio = matchedEssential.length / essentialTotal;
+const requiredCoverageRatio = matchedRequired.length / requiredTotal;
+
+const uniqueEssentialMatchCount = new Set(matchedEssential).size;
+const strongEssentialHit = uniqueEssentialMatchCount >= 2;
+const nearMissEssential = uniqueEssentialMatchCount === 1;
+const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
+
+// Relaxed fallback rule using coverage ratios
 const relaxedRule =
-  matchedEssential.length >= 1 &&
-  matchedRequired.length >= 2 &&
+  essentialCoverageRatio >= 0.5 &&
+  requiredCoverageRatio >= 0.5 &&
   cleanedGuess.length > 12 &&
-  (bestMatch?.score ?? 1) <= 0.6 &&
-  essentialCoverage >= 0.5;
+  (bestMatch?.score ?? 1) <= 0.6;
+
 
 
     // ✅ Final match logic
@@ -801,24 +811,27 @@ const { error } = await supabase.from("Player_responses").insert([
     match_type: matchType,
     attempt: attempts + 1,
     device_id: localStorage.getItem("deviceId") || "unknown",
-    notes: JSON.stringify({
-  essentialHit: matchedEssential,
-  requiredHit: matchedRequired,
+notes: JSON.stringify({
+   essentialHit: [...new Set(matchedEssential)],
+   requiredHit: [...new Set(matchedRequired)],
   fuzzyScore: bestMatch?.score ?? null,
   matchedAnswer: bestMatch?.item?.label ?? null,
-  relaxedRule: relaxedRule,
-relaxedRuleDetails: relaxedRule
-  ? {
-      hasOnlyEssentialMatch,
-      cleanedGuessLength: cleanedGuess.length,
-      matchedRequiredCount: matchedRequired.length,
-      fuzzyScore: bestMatch?.score ?? null,
-      bestMatchLabel: bestMatchLabel,
-      essentialCoverage,
-      essentialInBestMatch
-    }
-  : null
-
+  relaxedRule,
+  guessWordCount: cleanedGuess.split(" ").length,
+  relaxedRuleDetails: relaxedRule
+    ? {
+        hasOnlyEssentialMatch,
+        cleanedGuessLength: cleanedGuess.length,
+        matchedRequiredCount: matchedRequired.length,
+        fuzzyScore: bestMatch?.score ?? null,
+        bestMatchLabel: bestMatchLabel,
+        essentialCoverage,
+        essentialInBestMatch,
+        essentialCoverageRatio,
+        requiredCoverageRatio
+      }
+    : null,
+  acceptedByLabel: acceptableResults[0]?.item?.label ?? null
 }),
 
   }
