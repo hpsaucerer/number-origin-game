@@ -740,7 +740,9 @@ const acceptableFuse = new Fuse(
 
 
     const acceptableResults = acceptableFuse.search(cleanedGuess);
-    const isAcceptableGuess = acceptableResults.some(r => r.score <= 0.35); // tighter match threshold
+    const isAcceptableGuess =
+      acceptableResults.some(r => r.score <= 0.35) &&
+      cleanedGuess.split(" ").length >= 2;
 
     const uniqueEssentialMatchCount = new Set(matchedEssential).size;
     const strongEssentialHit = uniqueEssentialMatchCount >= 2; // replaces old logic
