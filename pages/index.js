@@ -755,6 +755,9 @@ const bestAcceptable = acceptableResults[0];
 const topScore = bestAcceptable?.score ?? null;
 const guessWordCount = cleanedGuess.trim().split(/\s+/).length;
 
+const uniqueEssentialMatchCount = new Set(matchedEssential).size;
+const strongEssentialHit = uniqueEssentialMatchCount >= 2;
+    
 const isMeaningfulGuess =
   guessWordCount >= 2 ||
   (
@@ -792,8 +795,6 @@ const requiredTotal = (puzzle.keywords?.length || 1);
 const essentialCoverageRatio = matchedEssential.length / essentialTotal;
 const requiredCoverageRatio = matchedRequired.length / requiredTotal;
 
-const uniqueEssentialMatchCount = new Set(matchedEssential).size;
-const strongEssentialHit = uniqueEssentialMatchCount >= 2;
 const nearMissEssential = uniqueEssentialMatchCount === 1;
 const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
 
