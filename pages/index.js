@@ -172,6 +172,8 @@ const synonymMap = {
   "fastest ever": "record",
   global: "world",
   "9.58 sec": "9.58 seconds",
+  "100 metre": "100m",
+  "100 meter: "100m",
 };
 
 function normalizeGuess(input = "") {
