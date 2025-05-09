@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
   const { data: puzzle, error } = await supabase
     .from("puzzles")
-    .select("id, number, answer, acceptable_guesses, essential_keywords, keywords, formatted, category, clues, fun_fact, date, reveal_formatted_at")
+    .select("id, number, answer, acceptable_guesses, essential_keywords, keywords, formatted, category, clues, fun_fact, date, reveal_formatted_at, conflicts")
     .eq("date", today)
     .single();
 
