@@ -904,39 +904,38 @@ const { error } = await supabase.from("Player_responses").insert([
     match_type: matchType,
     attempt: attempts + 1,
     device_id: localStorage.getItem("deviceId") || "unknown",
-notes: JSON.stringify({
-  essentialHit: [...new Set(matchedEssential)],
-  requiredHit: [...new Set(matchedRequired)],
-  fuzzyScore: bestMatch?.score ?? null,
-  matchedAnswer: bestMatch?.item?.label ?? null,
-  relaxedRule,
-  guessWordCount,
-  conflictDetected: hasConflict
-  ? conflictWords.filter(w =>
-      new RegExp(`\\b${w}\\b`, "i").test(normalizedGuessForConflicts)
-    )
-  : [],
-  relaxedRuleDetails: relaxedRule
-    ? {
-        hasOnlyEssentialMatch,
-        cleanedGuessLength: cleanedGuess.length,
-        matchedRequiredCount: matchedRequired.length,
-        fuzzyScore: bestMatch?.score ?? null,
-        bestMatchLabel: bestMatchLabel,
-        essentialCoverage,
-        essentialInBestMatch,
-        essentialCoverageRatio,
-        requiredCoverageRatio
-      }
-    : null,
-  acceptedByLabel: acceptableResults[0]?.item?.label ?? null
-  llmUsed: matchType === "llm_accept",
-  llmRaw: matchType === "llm_accept" ? raw : null,
-}),
-
-
+    llmUsed: matchType === "llm_accept",
+    llmRaw: matchType === "llm_accept" ? raw : null,
+    notes: JSON.stringify({
+      essentialHit: [...new Set(matchedEssential)],
+      requiredHit: [...new Set(matchedRequired)],
+      fuzzyScore: bestMatch?.score ?? null,
+      matchedAnswer: bestMatch?.item?.label ?? null,
+      relaxedRule,
+      guessWordCount,
+      conflictDetected: hasConflict
+        ? conflictWords.filter(w =>
+            new RegExp(`\\b${w}\\b`, "i").test(normalizedGuessForConflicts)
+          )
+        : [],
+      relaxedRuleDetails: relaxedRule
+        ? {
+            hasOnlyEssentialMatch,
+            cleanedGuessLength: cleanedGuess.length,
+            matchedRequiredCount: matchedRequired.length,
+            fuzzyScore: bestMatch?.score ?? null,
+            bestMatchLabel: bestMatchLabel,
+            essentialCoverage,
+            essentialInBestMatch,
+            essentialCoverageRatio,
+            requiredCoverageRatio
+          }
+        : null,
+      acceptedByLabel: acceptableResults[0]?.item?.label ?? null
+    }),
   }
 ]);
+
 
 if (error) {
   console.error("❌ Supabase insert error:", error);
