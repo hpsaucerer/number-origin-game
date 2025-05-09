@@ -930,6 +930,8 @@ notes: JSON.stringify({
       }
     : null,
   acceptedByLabel: acceptableResults[0]?.item?.label ?? null
+  llmUsed: matchType === "llm_accept",
+  llmRaw: matchType === "llm_accept" ? raw : null,
 }),
 
 
