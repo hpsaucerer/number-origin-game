@@ -637,6 +637,21 @@ const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalizeGuess(guess);
   const puzzleId = puzzle?.id ?? 0;
 
+const lowerGuess = cleanedGuess.toLowerCase();
+
+const categoryConflicts = {
+  sports: ["women", "female", "girls"],
+  // Add others as needed
+};
+
+const conflictWords =
+  puzzle.conflicts?.length > 0
+    ? puzzle.conflicts
+    : categoryConflicts[puzzle.category?.toLowerCase()] || [];
+
+const hasConflict = conflictWords.some(word => lowerGuess.includes(word));
+
+  
   const {
     matchCount,
     hasStrongMatch,
@@ -808,7 +823,7 @@ const relaxedRule =
 
 
     // ✅ Final match logic
-const isCorrectGuess =
+const isCorrectGuess = !hasConflict && (
   isExactAnswerMatch ||
   exactAcceptableMatch ||
   isAcceptableGuess ||
@@ -818,7 +833,8 @@ const isCorrectGuess =
     requiredMatched &&
     strongEssentialHit
   ) ||
-  relaxedRule;
+  relaxedRule
+);
 
 
 
@@ -852,12 +868,13 @@ const { error } = await supabase.from("Player_responses").insert([
     attempt: attempts + 1,
     device_id: localStorage.getItem("deviceId") || "unknown",
 notes: JSON.stringify({
-   essentialHit: [...new Set(matchedEssential)],
-   requiredHit: [...new Set(matchedRequired)],
+  essentialHit: [...new Set(matchedEssential)],
+  requiredHit: [...new Set(matchedRequired)],
   fuzzyScore: bestMatch?.score ?? null,
   matchedAnswer: bestMatch?.item?.label ?? null,
   relaxedRule,
   guessWordCount,
+  conflictDetected: hasConflict ? conflictWords.filter(w => lowerGuess.includes(w)) : [],
   relaxedRuleDetails: relaxedRule
     ? {
         hasOnlyEssentialMatch,
@@ -873,6 +890,7 @@ notes: JSON.stringify({
     : null,
   acceptedByLabel: acceptableResults[0]?.item?.label ?? null
 }),
+
 
   }
 ]);
