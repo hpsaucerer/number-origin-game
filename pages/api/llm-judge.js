@@ -56,13 +56,13 @@ Respond with only "Yes" or "No".
 
     console.log("📡 Polling Replicate until prediction completes...");
 
-    // Step 2: Poll until prediction completes
+    // Step 2: Poll until prediction completes (up to 60 seconds)
     let finalOutput = null;
     let attempts = 0;
-    const maxAttempts = 20;
+    const maxAttempts = 60;
 
     while (attempts < maxAttempts) {
-      await new Promise((r) => setTimeout(r, 1000)); // Wait 1s
+      await new Promise((r) => setTimeout(r, 1000)); // 1 second
       const pollResponse = await fetch(pollUrl, {
         headers: {
           Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
@@ -86,7 +86,7 @@ Respond with only "Yes" or "No".
     }
 
     if (!finalOutput) {
-      console.warn("⚠️ LLM output not ready after max attempts.");
+      console.warn("⚠️ LLM output not ready after max attempts (timeout).");
       return res.status(500).json({ accept: false, raw: "timeout" });
     }
 
