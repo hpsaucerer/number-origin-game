@@ -639,9 +639,9 @@ const handleGuess = async (isClueReveal = false) => {
 
 const lowerGuess = cleanedGuess.toLowerCase();
 const normalizedGuessForConflicts = lowerGuess
-  .replace(/[’']/g, "")         // remove apostrophes
-  .replace(/\b(\w+)s\b/g, "$1") // convert possessives (e.g., "womens" → "women")
-  .replace(/\b(\w+)'s\b/g, "$1"); // fallback if apostrophe survived normalization
+  .replace(/[’']/g, "")                      // remove apostrophes
+  .replace(/\b(\w+)(?:'s|s)\b/g, "$1");      // normalize both possessive and plural forms
+
 
 const categoryConflicts = {
   sports: ["women", "female", "girls"],
@@ -880,7 +880,9 @@ notes: JSON.stringify({
   matchedAnswer: bestMatch?.item?.label ?? null,
   relaxedRule,
   guessWordCount,
-  conflictDetected: hasConflict ? conflictWords.filter(w => lowerGuess.includes(w)) : [],
+  conflictDetected: hasConflict
+  ? conflictWords.filter(w => normalizedGuessForConflicts.includes(w))
+  : [],
   relaxedRuleDetails: relaxedRule
     ? {
         hasOnlyEssentialMatch,
