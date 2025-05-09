@@ -1,4 +1,6 @@
 export default async function handler(req, res) {
+  console.log("🛬 Incoming request to LLM judge");
+
   const { guess, puzzle } = req.body;
 
   // Normalize curly quotes to straight quotes for consistency
@@ -51,9 +53,29 @@ Respond with only "Yes" or "No".
     console.log("🧠 LLM Raw Output:", output);
 
     const accept = output.includes("yes");
+
+    if (accept) {
+      console.log("✅ LLM accepted guess");
+    } else {
+      console.warn("🚫 LLM rejected guess");
+    }
+
     res.status(200).json({ accept, raw: output });
   } catch (error) {
-    console.error("❌ LLM API Error:", error);
+    let errorText = "unknown";
+
+    try {
+      const clone = error?.response?.clone?.();
+      errorText = clone ? await clone.text() : "no clone available";
+    } catch {
+      try {
+        errorText = await error.text();
+      } catch {
+        errorText = "failed to read error body";
+      }
+    }
+
+    console.error("❌ LLM API Error:", error, "Details:", errorText);
     res.status(500).json({ accept: false, raw: "error" });
   }
 }
