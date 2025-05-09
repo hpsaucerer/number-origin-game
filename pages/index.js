@@ -659,7 +659,8 @@ const hasConflict = conflictWords.some(word =>
   new RegExp(`\\b${word}\\b`, "i").test(normalizedGuessForConflicts)
 );
 
-debugLog("🚫 Matched conflicts:", conflictWords.filter(w =>
+debugLog("🛑 Normalized guess for conflicts:", normalizedGuessForConflicts);
+debugLog("🚫 Final matched conflicts:", conflictWords.filter(w =>
   new RegExp(`\\b${w}\\b`, "i").test(normalizedGuessForConflicts)
 ));
 
