@@ -823,10 +823,10 @@ const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
 
 // Relaxed fallback rule using coverage ratios
 const relaxedRule =
-  essentialCoverageRatio >= 0.33 &&
+  essentialCoverageRatio >= 0.25 &&
   requiredCoverageRatio >= 0.25 && // ← previously 0.5
   guessWordCount >= 3 &&           // ← use word count instead of char length
-  (bestMatch?.score ?? 1) <= 0.6;
+  (bestMatch?.score ?? 1) <= 0.65;
 
 debugLog("🧪 Relaxed Rule Check", {
   essentialCoverageRatio,
