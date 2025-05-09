@@ -830,7 +830,7 @@ const isCorrectGuess = !hasConflict && (
   exactAcceptableMatch ||
   isAcceptableGuess ||
   (
-    bestMatch?.score <= 0.5 &&
+    bestMatch?.score <= 0.65 &&
     hasStrongMatch &&
     requiredMatched &&
     strongEssentialHit
@@ -848,7 +848,7 @@ const matchType = isExactAnswerMatch
   : isAcceptableGuess
   ? "fuzzy_acceptable"
   : (
-      bestMatch?.score <= 0.5 &&
+      bestMatch?.score <= 0.65 &&
       hasStrongMatch &&
       requiredMatched &&
       strongEssentialHit
