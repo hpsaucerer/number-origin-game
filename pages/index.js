@@ -653,12 +653,16 @@ const conflictWords =
     ? puzzle.conflicts
     : categoryConflicts[puzzle.category?.toLowerCase()] || [];
 
-const hasConflict = conflictWords.some(word =>
+const normalizedConflicts = conflictWords.map(w =>
+  w.toLowerCase().replace(/[’']/g, "").replace(/\bs\b/, "").replace(/\b(women|female|girl)s?\b/g, "$1")
+);
+
+const hasConflict = normalizedConflicts.some(word =>
   new RegExp(`\\b${word}\\b`, "i").test(normalizedGuessForConflicts)
 );
 
 debugLog("🛑 Normalized guess for conflicts:", normalizedGuessForConflicts);
-debugLog("🚫 Final matched conflicts:", conflictWords.filter(w =>
+debugLog("🚫 Final matched conflicts:", normalizedConflicts.filter(w =>
   new RegExp(`\\b${w}\\b`, "i").test(normalizedGuessForConflicts)
 ));
 
