@@ -639,10 +639,8 @@ const handleGuess = async (isClueReveal = false) => {
 
 const lowerGuess = cleanedGuess.toLowerCase();
 const normalizedGuessForConflicts = lowerGuess
-  .replace(/[’']/g, "")           // remove apostrophes
-  .replace(/womens/g, "women")    // explicitly catch this
-  .replace(/girls/g, "girl")      // optional
-  .replace(/females/g, "female"); // optional
+  .replace(/[’']/g, "") // remove apostrophes
+  .replace(/\b(women|female|girl)s?\b/g, "$1"); // normalize plural/possessives
 
 
 const categoryConflicts = {
@@ -655,14 +653,19 @@ const conflictWords =
     ? puzzle.conflicts
     : categoryConflicts[puzzle.category?.toLowerCase()] || [];
 
-const hasConflict = conflictWords.some(word =>
-  normalizedGuessForConflicts.includes(word)
+const normalizedConflicts = conflictWords.map(w =>
+  w.toLowerCase().replace(/[’']/g, "").replace(/\bs\b/, "").replace(/\b(women|female|girl)s?\b/g, "$1")
 );
 
-debugLog("🛑 Conflict check string:", normalizedGuessForConflicts);
-debugLog("🚫 Matched conflicts:", conflictWords.filter(w =>
-  normalizedGuessForConflicts.includes(w)
+const hasConflict = normalizedConflicts.some(word =>
+  new RegExp(`\\b${word}\\b`, "i").test(normalizedGuessForConflicts)
+);
+
+debugLog("🛑 Normalized guess for conflicts:", normalizedGuessForConflicts);
+debugLog("🚫 Final matched conflicts:", normalizedConflicts.filter(w =>
+  new RegExp(`\\b${w}\\b`, "i").test(normalizedGuessForConflicts)
 ));
+
 
   const {
     matchCount,
@@ -828,10 +831,17 @@ const hasOnlyEssentialMatch = hasStrongMatch && uniqueEssentialMatchCount >= 2;
 // Relaxed fallback rule using coverage ratios
 const relaxedRule =
   essentialCoverageRatio >= 0.33 &&
-  requiredCoverageRatio >= 0.5 &&
-  cleanedGuess.length > 12 &&
+  requiredCoverageRatio >= 0.25 && // ← previously 0.5
+  guessWordCount >= 3 &&           // ← use word count instead of char length
   (bestMatch?.score ?? 1) <= 0.6;
 
+debugLog("🧪 Relaxed Rule Check", {
+  essentialCoverageRatio,
+  requiredCoverageRatio,
+  guessWordCount,
+  fuzzyScore: bestMatch?.score ?? null,
+  relaxedRule
+});
 
 
     // ✅ Final match logic
@@ -887,7 +897,9 @@ notes: JSON.stringify({
   relaxedRule,
   guessWordCount,
   conflictDetected: hasConflict
-  ? conflictWords.filter(w => normalizedGuessForConflicts.includes(w))
+  ? conflictWords.filter(w =>
+      new RegExp(`\\b${w}\\b`, "i").test(normalizedGuessForConflicts)
+    )
   : [],
   relaxedRuleDetails: relaxedRule
     ? {
