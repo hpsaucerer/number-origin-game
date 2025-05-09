@@ -47,9 +47,13 @@ Respond with only "Yes" or "No".
       }),
     });
 
-    const result = await response.json();
-    const output = result?.output?.toLowerCase() ?? "";
+    const rawResponseText = await response.text();
+    console.log("📦 Raw response from Replicate:", rawResponseText);
 
+    const result = JSON.parse(rawResponseText);
+    console.log("📊 LLM prediction status:", result.status);
+
+    const output = result?.output?.toLowerCase() ?? "";
     console.log("🧠 LLM Raw Output:", output);
 
     const accept = output.includes("yes");
