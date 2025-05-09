@@ -175,6 +175,8 @@ const synonymMap = {
   "9.58 sec": "9.58 seconds",
   "100 metre": "100m",
   "100 meter": "100m",
+  "fe": iron,
+  "element 26": iron,
 };
 
 function normalizeGuess(input = "") {
