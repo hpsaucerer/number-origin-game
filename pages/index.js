@@ -857,7 +857,7 @@ let isCorrectGuess = !hasConflict && (
 );
 
 // 🧠 If initial checks failed, let the LLM decide
-if (!isCorrectGuess && cleanedGuess.length >= 8 && guessWordCount >= 3) {
+if (!isCorrectGuess && (guessWordCount >= 3 || cleanedGuess.length >= 8))
   try {
     const { accept, raw } = await askLLMFallback({ guess, puzzle });
 
