@@ -839,6 +839,7 @@ debugLog("🧪 Relaxed Rule Check", {
   relaxedRule
 });
 
+let raw = null; // 👈 Hoist raw so it's accessible outside try block
 
 // ✅ Final match logic
 let matchType = "none"; // allow override by LLM later
@@ -859,9 +860,10 @@ let isCorrectGuess = !hasConflict && (
 // 🧠 If initial checks failed, let the LLM decide
 if (!isCorrectGuess && (guessWordCount >= 3 || cleanedGuess.length >= 8)) {
   try {
-    const { accept, raw } = await askLLMFallback({ guess, puzzle });
+    const result = await askLLMFallback({ guess, puzzle });
+    raw = result.raw;
 
-    if (accept) {
+    if (result.accept) {
       isCorrectGuess = true;
       matchType = "llm_accept";
       debugLog("🧠 LLM accepted fallback:", raw);
@@ -872,6 +874,7 @@ if (!isCorrectGuess && (guessWordCount >= 3 || cleanedGuess.length >= 8)) {
     console.error("❌ LLM fallback error:", err);
   }
 }
+
 
 
 // 🧠 Track why it passed or failed (only if not set by LLM)
