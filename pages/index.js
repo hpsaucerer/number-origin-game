@@ -656,13 +656,13 @@ const conflictWords =
     : categoryConflicts[puzzle.category?.toLowerCase()] || [];
 
 const hasConflict = conflictWords.some(word =>
-  normalizedGuessForConflicts.includes(word)
+  new RegExp(`\\b${word}\\b`, "i").test(normalizedGuessForConflicts)
 );
 
-debugLog("🛑 Conflict check string:", normalizedGuessForConflicts);
 debugLog("🚫 Matched conflicts:", conflictWords.filter(w =>
-  normalizedGuessForConflicts.includes(w)
+  new RegExp(`\\b${w}\\b`, "i").test(normalizedGuessForConflicts)
 ));
+
 
   const {
     matchCount,
