@@ -27,6 +27,7 @@ import AchievementsModal from "@/components/AchievementsModal";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
 import { getCookiePreferences } from "@/utils/cookies";
+import { askLLMFallback } from '../lib/llm'; // adjust if needed
 
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
@@ -839,8 +840,10 @@ debugLog("🧪 Relaxed Rule Check", {
 });
 
 
-    // ✅ Final match logic
-const isCorrectGuess = !hasConflict && (
+// ✅ Final match logic
+let matchType = "none"; // allow override by LLM later
+
+let isCorrectGuess = !hasConflict && (
   isExactAnswerMatch ||
   exactAcceptableMatch ||
   isAcceptableGuess ||
@@ -853,25 +856,42 @@ const isCorrectGuess = !hasConflict && (
   relaxedRule
 );
 
+// 🧠 If initial checks failed, let the LLM decide
+if (!isCorrectGuess && cleanedGuess.length >= 8 && guessWordCount >= 3) {
+  try {
+    const { accept, raw } = await askLLMFallback({ guess, puzzle });
 
+    if (accept) {
+      isCorrectGuess = true;
+      matchType = "llm_accept";
+      debugLog("🧠 LLM accepted fallback:", raw);
+    } else {
+      debugLog("🧠 LLM rejected fallback:", raw);
+    }
+  } catch (err) {
+    console.error("❌ LLM fallback error:", err);
+  }
+}
 
-    // 🧠 Track why it passed or failed
-const matchType = isExactAnswerMatch
-  ? "exact_answer"
-  : exactAcceptableMatch
-  ? "exact_acceptable"
-  : isAcceptableGuess
-  ? "fuzzy_acceptable"
-  : (
-      bestMatch?.score <= 0.65 &&
-      hasStrongMatch &&
-      requiredMatched &&
-      strongEssentialHit
-    )
-  ? "fuzzy_with_required"
-  : relaxedRule
-  ? "relaxed_rule"
-  : "none";
+// 🧠 Track why it passed or failed (only if not set by LLM)
+if (matchType === "none") {
+  matchType = isExactAnswerMatch
+    ? "exact_answer"
+    : exactAcceptableMatch
+    ? "exact_acceptable"
+    : isAcceptableGuess
+    ? "fuzzy_acceptable"
+    : (
+        bestMatch?.score <= 0.65 &&
+        hasStrongMatch &&
+        requiredMatched &&
+        strongEssentialHit
+      )
+    ? "fuzzy_with_required"
+    : relaxedRule
+    ? "relaxed_rule"
+    : "none";
+}
 
 
 // ✅ Log the guess to Supabase with error handling
