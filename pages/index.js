@@ -887,7 +887,9 @@ notes: JSON.stringify({
   relaxedRule,
   guessWordCount,
   conflictDetected: hasConflict
-  ? conflictWords.filter(w => normalizedGuessForConflicts.includes(w))
+  ? conflictWords.filter(w =>
+      new RegExp(`\\b${w}\\b`, "i").test(normalizedGuessForConflicts)
+    )
   : [],
   relaxedRuleDetails: relaxedRule
     ? {
