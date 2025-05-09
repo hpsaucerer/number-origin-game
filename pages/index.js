@@ -659,6 +659,10 @@ const hasConflict = conflictWords.some(word =>
   normalizedGuessForConflicts.includes(word)
 );
 
+debugLog("🛑 Conflict check string:", normalizedGuessForConflicts);
+debugLog("🚫 Matched conflicts:", conflictWords.filter(w =>
+  normalizedGuessForConflicts.includes(w)
+));
 
   const {
     matchCount,
