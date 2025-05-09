@@ -174,17 +174,13 @@ const synonymMap = {
   "9.58 sec": "9.58 seconds",
 };
 
-function normalizeGuess(input) {
-  if (!input) return "";
-
+function normalizeGuess(input = "") {
   return input
     .toLowerCase()
-    .replace(/[’'`]/g, "")               // Remove apostrophes
-    .replace(/[^a-z0-9\s]/g, "")         // Remove punctuation
-    .split(/\s+/)                        // Split words safely
-    .filter(word => !fillerWords.includes(word)) // Drop filler words
-    .map(word => synonymMap[word] || word)       // Apply synonym mapping
-    .join(" ")
+    .replace(/\b(\d+)\s*(m|km|kg|cm|s|ms|g|lb|lbs|ft|hz|nm|mm|mph|kph)\b/g, '$1$2') // join units
+    .replace(/[’']/g, '') // remove apostrophes
+    .replace(/[^a-z0-9\s]/gi, '') // remove punctuation
+    .replace(/\s+/g, ' ') // normalize whitespace
     .trim();
 }
 
