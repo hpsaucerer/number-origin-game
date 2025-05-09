@@ -1,65 +1,112 @@
 export default async function handler(req, res) {
+  console.log("🛬 Incoming request to LLM judge");
+
   const { guess, puzzle } = req.body;
 
-  function normalizeLLMInput(str = "") {
-    return str
-      .toLowerCase()
-      .replace(/[’']/g, "") // remove apostrophes
-      .replace(/[^a-z0-9\s]/gi, "") // remove punctuation
-      .replace(/\s+/g, " ") // normalize whitespace
-      .trim();
-  }
+  const normalizeQuotes = (text) =>
+    text.replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
 
-  const cleanGuess = normalizeLLMInput(guess);
-  const cleanAnswer = normalizeLLMInput(puzzle.answer);
-  const acceptable = (puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).join(", ");
+  const cleanedGuess = normalizeQuotes(guess);
+  const cleanedAnswer = normalizeQuotes(puzzle.answer);
 
   const prompt = `
 You are evaluating a user guess in a trivia game.
 
 Puzzle: What is the significance of the number ${puzzle.number ?? "(unknown)"}?
 
-Target Answer: ${cleanAnswer}
+Target Answer: ${cleanedAnswer}
 Essential Keywords: ${puzzle.essential_keywords.join(", ")}
 Required Keywords: ${(puzzle.keywords || []).join(", ")}
-Acceptable Alternate Guesses: ${acceptable}
 
-User Guess: ${cleanGuess}
+User Guess: ${cleanedGuess}
 
 Question: Does the user guess clearly refer to the same concept as the target answer?
 
 Respond with only "Yes" or "No".
   `.trim();
 
-  // ✅ Optional debug log in development
-  if (process.env.NODE_ENV !== "production") {
-    console.log("🧠 LLM Prompt:\n", prompt);
-  }
+  console.log("🧠 LLM Prompt:\n", prompt);
 
-  const response = await fetch("https://api.replicate.com/v1/predictions", {
-    method: "POST",
-    headers: {
-      Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      version: "meta/meta-llama-3-8b-instruct",
-      input: {
-        prompt,
-        system_prompt: "Respond strictly with Yes or No.",
-        temperature: 0.2,
-        max_new_tokens: 30,
+  try {
+    const initialResponse = await fetch("https://api.replicate.com/v1/predictions", {
+      method: "POST",
+      headers: {
+        Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+        "Content-Type": "application/json",
       },
-    }),
-  });
+      body: JSON.stringify({
+        version: "meta/meta-llama-3-8b-instruct",
+        input: {
+          prompt,
+          system_prompt:
+            "Respond strictly with Yes or No. Accept if the guess refers to the same real-world concept, even if phrased differently or spelled in British English.",
+          temperature: 0.2,
+          max_new_tokens: 30,
+        },
+      }),
+    });
 
-  const result = await response.json();
-  const output = result?.output?.toLowerCase() ?? "";
+    const prediction = await initialResponse.json();
+    const pollUrl = prediction?.urls?.get;
 
-  if (process.env.NODE_ENV !== "production") {
-    console.log("🧠 LLM Raw Output:\n", output);
+    if (!pollUrl) {
+      throw new Error("Missing polling URL from Replicate response.");
+    }
+
+    console.log("📡 Polling Replicate until prediction completes...");
+
+    let finalOutput = null;
+    let attempts = 0;
+    const maxAttempts = 60;
+
+    while (attempts < maxAttempts) {
+      await new Promise((r) => setTimeout(r, 1000));
+      const pollResponse = await fetch(pollUrl, {
+        headers: {
+          Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const pollData = await pollResponse.json();
+      console.log(`🔄 Poll attempt ${attempts + 1} → Status: ${pollData.status}`);
+
+      if (pollData.status === "succeeded") {
+        console.log("📦 Full Replicate pollData:", JSON.stringify(pollData, null, 2));
+
+        const rawOutput = Array.isArray(pollData.output)
+          ? pollData.output.join(" ")
+          : pollData.output ?? "";
+
+        finalOutput = typeof rawOutput === "string" ? rawOutput.toLowerCase() : "";
+        break;
+      }
+
+      if (pollData.status === "failed") {
+        throw new Error("Prediction failed");
+      }
+
+      attempts++;
+    }
+
+    if (!finalOutput || !finalOutput.trim()) {
+      console.warn("⚠️ LLM output not ready or empty after max attempts.");
+      return res.status(500).json({ accept: false, raw: "timeout" });
+    }
+
+    console.log("🧠 LLM Raw Output:", finalOutput);
+
+    const accept = finalOutput.includes("yes");
+
+    if (accept) {
+      console.log("✅ LLM accepted guess");
+    } else {
+      console.warn("🚫 LLM rejected guess");
+    }
+
+    res.status(200).json({ accept, raw: finalOutput });
+  } catch (error) {
+    console.error("❌ LLM API Error:", error);
+    res.status(500).json({ accept: false, raw: "error" });
   }
-
-  const accept = output.includes("yes");
-  res.status(200).json({ accept, raw: output });
 }
