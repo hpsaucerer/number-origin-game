@@ -639,8 +639,10 @@ const handleGuess = async (isClueReveal = false) => {
 
 const lowerGuess = cleanedGuess.toLowerCase();
 const normalizedGuessForConflicts = lowerGuess
-  .replace(/[’']/g, "")                      // remove apostrophes
-  .replace(/\b(\w+)(?:'s|s)\b/g, "$1");      // normalize both possessive and plural forms
+  .replace(/[’']/g, "")           // remove apostrophes
+  .replace(/womens/g, "women")    // explicitly catch this
+  .replace(/girls/g, "girl")      // optional
+  .replace(/females/g, "female"); // optional
 
 
 const categoryConflicts = {
