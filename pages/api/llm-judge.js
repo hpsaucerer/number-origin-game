@@ -28,7 +28,6 @@ Respond with only "Yes" or "No".
   console.log("🧠 LLM Prompt:\n", prompt);
 
   try {
-    // Step 1: Initiate prediction
     const initialResponse = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
@@ -56,13 +55,12 @@ Respond with only "Yes" or "No".
 
     console.log("📡 Polling Replicate until prediction completes...");
 
-    // Step 2: Poll until prediction completes (up to 60 seconds)
     let finalOutput = null;
     let attempts = 0;
     const maxAttempts = 60;
 
     while (attempts < maxAttempts) {
-      await new Promise((r) => setTimeout(r, 1000)); // 1 second
+      await new Promise((r) => setTimeout(r, 1000));
       const pollResponse = await fetch(pollUrl, {
         headers: {
           Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
@@ -74,7 +72,13 @@ Respond with only "Yes" or "No".
       console.log(`🔄 Poll attempt ${attempts + 1} → Status: ${pollData.status}`);
 
       if (pollData.status === "succeeded") {
-        finalOutput = pollData.output?.toLowerCase?.() ?? "";
+        console.log("📦 Full Replicate pollData:", JSON.stringify(pollData, null, 2));
+
+        const rawOutput = Array.isArray(pollData.output)
+          ? pollData.output.join(" ")
+          : pollData.output ?? "";
+
+        finalOutput = typeof rawOutput === "string" ? rawOutput.toLowerCase() : "";
         break;
       }
 
@@ -85,8 +89,8 @@ Respond with only "Yes" or "No".
       attempts++;
     }
 
-    if (!finalOutput) {
-      console.warn("⚠️ LLM output not ready after max attempts (timeout).");
+    if (!finalOutput || !finalOutput.trim()) {
+      console.warn("⚠️ LLM output not ready or empty after max attempts.");
       return res.status(500).json({ accept: false, raw: "timeout" });
     }
 
