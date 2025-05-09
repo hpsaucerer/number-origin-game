@@ -177,7 +177,7 @@ const synonymMap = {
 function normalizeGuess(input = "") {
   return input
     .toLowerCase()
-    .replace(/\b(\d+)\s*(m|km|kg|cm|s|ms|g|lb|lbs|ft|hz|nm|mm|mph|kph)\b/g, '$1$2') // join units
+    .replace(/\b(\d+)\s*(m|km|kg|cm|s|ms|g|lb|lbs|ft|hz|nm|mm|mph|kph)\b/g, '$1$2') // join '100 m' → '100m'
     .replace(/[’']/g, '') // remove apostrophes
     .replace(/[^a-z0-9\s]/gi, '') // remove punctuation
     .replace(/\s+/g, ' ') // normalize whitespace
@@ -633,10 +633,7 @@ const handleGuess = async (isClueReveal = false) => {
   const cleanedGuess = normalizeGuess(guess);
   const puzzleId = puzzle?.id ?? 0;
 
-const lowerGuess = cleanedGuess.toLowerCase();
-const normalizedGuessForConflicts = lowerGuess
-  .replace(/[’']/g, "") // remove apostrophes
-  .replace(/\b(women|female|girl)s?\b/g, "$1"); // normalize plural/possessives
+const normalizedGuessForConflicts = normalizeGuess(cleanedGuess);
 
 
 const categoryConflicts = {
