@@ -638,6 +638,10 @@ const handleGuess = async (isClueReveal = false) => {
   const puzzleId = puzzle?.id ?? 0;
 
 const lowerGuess = cleanedGuess.toLowerCase();
+const normalizedGuessForConflicts = lowerGuess
+  .replace(/[’']/g, "")         // remove apostrophes
+  .replace(/\b(\w+)s\b/g, "$1") // convert possessives (e.g., "womens" → "women")
+  .replace(/\b(\w+)'s\b/g, "$1"); // fallback if apostrophe survived normalization
 
 const categoryConflicts = {
   sports: ["women", "female", "girls"],
@@ -648,8 +652,6 @@ const conflictWords =
   puzzle.conflicts?.length > 0
     ? puzzle.conflicts
     : categoryConflicts[puzzle.category?.toLowerCase()] || [];
-
-const normalizedGuessForConflicts = lowerGuess.replace(/[’']/g, "").replace(/\b(\w+)'s\b/g, "$1");
 
 const hasConflict = conflictWords.some(word =>
   normalizedGuessForConflicts.includes(word)
