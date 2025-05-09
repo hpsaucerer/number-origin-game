@@ -856,6 +856,12 @@ let isCorrectGuess = !hasConflict && (
   ) ||
   relaxedRule
 );
+    
+debugLog("🧪 LLM Fallback Gate", {
+  isCorrectGuess,
+  guessWordCount,
+  cleanedGuessLength: cleanedGuess.length,
+});
 
 // 🧠 If initial checks failed, let the LLM decide
 if (!isCorrectGuess && (guessWordCount >= 3 || cleanedGuess.length >= 8)) {
