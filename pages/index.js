@@ -649,11 +649,13 @@ const conflictWords =
     ? puzzle.conflicts
     : categoryConflicts[puzzle.category?.toLowerCase()] || [];
 
+const normalizedGuessForConflicts = lowerGuess.replace(/[’']/g, "").replace(/\b(\w+)'s\b/g, "$1");
+
 const hasConflict = conflictWords.some(word =>
-  lowerGuess.replace(/[’']/g, "").includes(word) // normalize apostrophes
+  normalizedGuessForConflicts.includes(word)
 );
 
-  
+
   const {
     matchCount,
     hasStrongMatch,
