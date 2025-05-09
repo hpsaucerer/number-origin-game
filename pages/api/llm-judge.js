@@ -3,7 +3,6 @@ export default async function handler(req, res) {
 
   const { guess, puzzle } = req.body;
 
-  // Normalize curly quotes to straight quotes for consistency
   const normalizeQuotes = (text) =>
     text.replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
 
@@ -29,7 +28,8 @@ Respond with only "Yes" or "No".
   console.log("🧠 LLM Prompt:\n", prompt);
 
   try {
-    const response = await fetch("https://api.replicate.com/v1/predictions", {
+    // Step 1: Initiate prediction
+    const initialResponse = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
         Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
@@ -47,16 +47,52 @@ Respond with only "Yes" or "No".
       }),
     });
 
-    const rawResponseText = await response.text();
-    console.log("📦 Raw response from Replicate:", rawResponseText);
+    const prediction = await initialResponse.json();
+    const pollUrl = prediction?.urls?.get;
 
-    const result = JSON.parse(rawResponseText);
-    console.log("📊 LLM prediction status:", result.status);
+    if (!pollUrl) {
+      throw new Error("Missing polling URL from Replicate response.");
+    }
 
-    const output = result?.output?.toLowerCase() ?? "";
-    console.log("🧠 LLM Raw Output:", output);
+    console.log("📡 Polling Replicate until prediction completes...");
 
-    const accept = output.includes("yes");
+    // Step 2: Poll until prediction completes
+    let finalOutput = null;
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    while (attempts < maxAttempts) {
+      await new Promise((r) => setTimeout(r, 1000)); // Wait 1s
+      const pollResponse = await fetch(pollUrl, {
+        headers: {
+          Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const pollData = await pollResponse.json();
+      console.log(`🔄 Poll attempt ${attempts + 1} → Status: ${pollData.status}`);
+
+      if (pollData.status === "succeeded") {
+        finalOutput = pollData.output?.toLowerCase?.() ?? "";
+        break;
+      }
+
+      if (pollData.status === "failed") {
+        throw new Error("Prediction failed");
+      }
+
+      attempts++;
+    }
+
+    if (!finalOutput) {
+      console.warn("⚠️ LLM output not ready after max attempts.");
+      return res.status(500).json({ accept: false, raw: "timeout" });
+    }
+
+    console.log("🧠 LLM Raw Output:", finalOutput);
+
+    const accept = finalOutput.includes("yes");
 
     if (accept) {
       console.log("✅ LLM accepted guess");
@@ -64,22 +100,9 @@ Respond with only "Yes" or "No".
       console.warn("🚫 LLM rejected guess");
     }
 
-    res.status(200).json({ accept, raw: output });
+    res.status(200).json({ accept, raw: finalOutput });
   } catch (error) {
-    let errorText = "unknown";
-
-    try {
-      const clone = error?.response?.clone?.();
-      errorText = clone ? await clone.text() : "no clone available";
-    } catch {
-      try {
-        errorText = await error.text();
-      } catch {
-        errorText = "failed to read error body";
-      }
-    }
-
-    console.error("❌ LLM API Error:", error, "Details:", errorText);
+    console.error("❌ LLM API Error:", error);
     res.status(500).json({ accept: false, raw: "error" });
   }
 }
