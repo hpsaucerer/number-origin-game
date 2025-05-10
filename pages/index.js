@@ -874,7 +874,10 @@ const hasNoMatchEvidence = !isExactAnswerMatch &&
   matchedEssential.length === 0 &&
   matchedRequired.length === 0;
 
-if (hasNoMatchEvidence) {
+// 🛡 Block LLM fallback if the guess has known conflicting terms
+if (hasConflict) {
+  debugLog("🚫 LLM fallback blocked due to conflict match:", conflictWords);
+} else if (hasNoMatchEvidence) {
   debugLog("🚫 LLM fallback blocked: no sufficient matching evidence");
 } else if (!isCorrectGuess && (guessWordCount >= 3 || cleanedGuess.length >= 8)) {
   try {
@@ -892,6 +895,7 @@ if (hasNoMatchEvidence) {
     console.error("❌ LLM fallback error:", err);
   }
 }
+
 
 
 // 🧠 Track why it passed or failed (only if not set by LLM)
