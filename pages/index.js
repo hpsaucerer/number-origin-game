@@ -885,27 +885,26 @@ if (hasConflict) {
 } else if (hasNoMatchEvidence) {
   debugLog("🚫 LLM fallback blocked: no sufficient matching evidence");
 } else if (!isCorrectGuess && (guessWordCount >= 3 || cleanedGuess.length >= 8)) {
-  try {
-    const result = await askLLMFallback({ guess, puzzle });
-    raw = result.raw;
+  const result = await askLLMFallback({ guess, puzzle });
+  raw = result.raw;
 
-    const hasTooLittleEvidence =
-  matchedEssential.length < 1 &&
-  matchedRequired.length < 1 &&
-  !normalizeGuess(puzzle.answer).split(" ").some(part =>
-    normalizeGuess(cleanedGuess).includes(part)
-  );
+  const hasTooLittleEvidence =
+    matchedEssential.length < 1 &&
+    matchedRequired.length < 1 &&
+    !normalizeGuess(puzzle.answer).split(" ").some(part =>
+      normalizeGuess(cleanedGuess).includes(part)
+    );
 
-if (result.accept && hasTooLittleEvidence) {
-  debugLog("🚫 LLM accepted vague guess — rejected via safeguard");
-} else if (result.accept) {
-  isCorrectGuess = true;
-  matchType = "llm_accept";
-  debugLog("🧠 LLM accepted fallback:", raw);
-} else {
-  debugLog("🧠 LLM rejected fallback:", raw);
+  if (result.accept && hasTooLittleEvidence) {
+    debugLog("🚫 LLM accepted vague guess — rejected via safeguard");
+  } else if (result.accept) {
+    isCorrectGuess = true;
+    matchType = "llm_accept";
+    debugLog("🧠 LLM accepted fallback:", raw);
+  } else {
+    debugLog("🧠 LLM rejected fallback:", raw);
+  }
 }
-
 
 // 🧠 Track why it passed or failed (only if not set by LLM)
 if (matchType === "none") {
