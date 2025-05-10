@@ -1527,6 +1527,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
 </footer>
+</div> {/* CLOSE div properly here */}
 </>
-); // ✅ closes the return JSX block
-}   // ✅ closes the Home component function
+);
+} // Close Home function
