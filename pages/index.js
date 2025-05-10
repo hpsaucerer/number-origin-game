@@ -962,19 +962,20 @@ const { error } = await supabase.from("Player_responses").insert([
             essentialCoverage,
             essentialInBestMatch,
             essentialCoverageRatio,
-            requiredCoverageRatio
+            requiredCoverageRatio,
           }
         : null,
       acceptedByLabel: acceptableResults[0]?.item?.label ?? null,
-        // 👇 New line here
-  llmReason: matchType === "llm_accept"
-    ? hasTooLittleEvidence
-      ? "blocked-vague"
-      : "accepted"
-    : "not_used"
+      llmReason:
+        matchType === "llm_accept"
+          ? hasTooLittleEvidence
+            ? "blocked-vague"
+            : "accepted"
+          : "not_used",
     }),
-  }
+  },
 ]);
+
 
 
 if (error) {
@@ -1492,8 +1493,8 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
     </div>
 
-  </DialogContent>
-</div>
+ </DialogContent>
+</div> {/* <-- This closes the <Dialog> content wrapper */}
 </Dialog>
 
 <StatsModal
@@ -1505,7 +1506,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   renderCenterLabel={renderCenterLabel}
   combinedLabel={combinedLabel}
 />
-    
+
 <AchievementsModal
   open={showAchievements}
   onClose={() => setShowAchievements(false)}
@@ -1516,18 +1517,17 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   onClose={() => {
     setShowWhatsNew(false);
     setShowTokenBubble(true);
-    setTimeout(() => setShowTokenBubble(false), 3000); // hide after 3s
+    setTimeout(() => setShowTokenBubble(false), 3000);
   }}
-  earnedTiles={[0, 1, 2]} // based on the indexes of "NUMERUS"
+  earnedTiles={[0, 1, 2]}
 />
-    
+
 <CookieConsentBanner />
 
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
   © {new Date().getFullYear()} B Puzzled. All rights reserved.
 </footer>
-</div> {/* CLOSE div properly here */}
-</>
-);
-} // Close Home function
 
+</> {/* Close outer fragment */}
+);   {/* Close return */}
+}    {/* Close Home component function */}
