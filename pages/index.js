@@ -833,7 +833,7 @@ const relaxedRule =
   essentialCoverageRatio >= 0.25 &&
   requiredCoverageRatio >= 0.25 && // ← previously 0.5
   guessWordCount >= 3 &&           // ← use word count instead of char length
-  (bestMatch?.score ?? 1) <= 0.65;
+  (bestMatch?.score ?? 1) <= 0.7;
 
 debugLog("🧪 Relaxed Rule Check", {
   essentialCoverageRatio,
