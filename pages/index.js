@@ -865,8 +865,18 @@ debugLog("🧪 LLM Fallback Gate", {
   cleanedGuessLength: cleanedGuess.length,
 });
 
-// 🧠 If initial checks failed, let the LLM decide
-if (!isCorrectGuess && (guessWordCount >= 3 || cleanedGuess.length >= 8)) {
+// 🧠 If initial checks failed, evaluate LLM fallback — but block weak guesses
+const hasNoMatchEvidence = !isExactAnswerMatch &&
+  !exactAcceptableMatch &&
+  !isAcceptableGuess &&
+  !relaxedRule &&
+  (!bestMatch || bestMatch.score > 0.65) &&
+  matchedEssential.length === 0 &&
+  matchedRequired.length === 0;
+
+if (hasNoMatchEvidence) {
+  debugLog("🚫 LLM fallback blocked: no sufficient matching evidence");
+} else if (!isCorrectGuess && (guessWordCount >= 3 || cleanedGuess.length >= 8)) {
   try {
     const result = await askLLMFallback({ guess, puzzle });
     raw = result.raw;
@@ -882,7 +892,6 @@ if (!isCorrectGuess && (guessWordCount >= 3 || cleanedGuess.length >= 8)) {
     console.error("❌ LLM fallback error:", err);
   }
 }
-
 
 
 // 🧠 Track why it passed or failed (only if not set by LLM)
