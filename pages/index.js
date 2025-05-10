@@ -846,7 +846,9 @@ debugLog("🧪 Relaxed Rule Check", {
   relaxedRule
 });
 
-let raw = null; // 👈 Hoist raw so it's accessible outside try block
+let raw = null; // 👈 Hoist raw
+let hasTooLittleEvidence = false; // 👈 Hoist this too
+
 
 // ✅ Final match logic
 let matchType = "none"; // allow override by LLM later
@@ -888,12 +890,19 @@ if (hasConflict) {
   const result = await askLLMFallback({ guess, puzzle });
   raw = result.raw;
 
-  const hasTooLittleEvidence =
-    matchedEssential.length < 1 &&
-    matchedRequired.length < 1 &&
-    !normalizeGuess(puzzle.answer).split(" ").some(part =>
-      normalizeGuess(cleanedGuess).includes(part)
-    );
+const vaguePlaceholders = ["something", "someone", "somewhere", "thing", "stuff"];
+const containsVaguePlaceholder = vaguePlaceholders.some(p =>
+  new RegExp(`\\b${p}\\b`, "i").test(cleanedGuess)
+);
+
+const minimalEvidence = matchedEssential.length < 2 && matchedRequired.length < 1;
+
+const lacksDirectReference = !normalizeGuess(puzzle.answer)
+  .split(" ")
+  .some(part => normalizeGuess(cleanedGuess).includes(part));
+
+hasTooLittleEvidence = containsVaguePlaceholder || (minimalEvidence && lacksDirectReference);
+
 
   if (result.accept && hasTooLittleEvidence) {
     debugLog("🚫 LLM accepted vague guess — rejected via safeguard");
