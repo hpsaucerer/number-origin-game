@@ -766,11 +766,7 @@ const exactAcceptableMatch = acceptableStrings.some(
 debugLog("🔍 Acceptable normalized strings:", acceptableStrings);
 
 
-    const exactAcceptableMatch = acceptableStrings.some(
-      g => normalizeGuess(g).replace(/\s+/g, '') === normalizedGuess
-    );
-
-    const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
+const isExactAnswerMatch = normalizeGuess(puzzle.answer) === cleanedGuess;
 
 const acceptableFuse = new Fuse(
   acceptableStrings.map(label => ({ label })),
