@@ -178,8 +178,8 @@ const synonymMap = {
   "fe": "iron",
   "element 26": "iron",
   "chess board": "chessboard",
-  "squares": tiles,
-  "spaces": tiles,
+  "squares": "tiles",
+  "spaces": "tiles",
 };
 
 function normalizeGuess(input = "") {
