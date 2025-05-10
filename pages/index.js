@@ -177,7 +177,7 @@ const synonymMap = {
   "100 meter": "100m",
   "fe": "iron",
   "element 26": "iron",
-  "chess board": chessboard,
+  "chess board": "chessboard",
   "squares": tiles,
   "spaces": tiles,
 };
