@@ -889,18 +889,22 @@ if (hasConflict) {
     const result = await askLLMFallback({ guess, puzzle });
     raw = result.raw;
 
-    if (result.accept) {
-      isCorrectGuess = true;
-      matchType = "llm_accept";
-      debugLog("🧠 LLM accepted fallback:", raw);
-    } else {
-      debugLog("🧠 LLM rejected fallback:", raw);
-    }
-  } catch (err) {
-    console.error("❌ LLM fallback error:", err);
-  }
-}
+    const hasTooLittleEvidence =
+  matchedEssential.length < 1 &&
+  matchedRequired.length < 1 &&
+  !normalizeGuess(puzzle.answer).split(" ").some(part =>
+    normalizeGuess(cleanedGuess).includes(part)
+  );
 
+if (result.accept && hasTooLittleEvidence) {
+  debugLog("🚫 LLM accepted vague guess — rejected via safeguard");
+} else if (result.accept) {
+  isCorrectGuess = true;
+  matchType = "llm_accept";
+  debugLog("🧠 LLM accepted fallback:", raw);
+} else {
+  debugLog("🧠 LLM rejected fallback:", raw);
+}
 
 
 // 🧠 Track why it passed or failed (only if not set by LLM)
@@ -961,7 +965,13 @@ const { error } = await supabase.from("Player_responses").insert([
             requiredCoverageRatio
           }
         : null,
-      acceptedByLabel: acceptableResults[0]?.item?.label ?? null
+      acceptedByLabel: acceptableResults[0]?.item?.label ?? null,
+        // 👇 New line here
+  llmReason: matchType === "llm_accept"
+    ? hasTooLittleEvidence
+      ? "blocked-vague"
+      : "accepted"
+    : "not_used"
     }),
   }
 ]);
