@@ -3,6 +3,12 @@ export default async function handler(req, res) {
 
   const { guess, puzzle, labelMatch } = req.body;
 
+  // ✅ Defensive check for required puzzle structure
+  if (!puzzle || !puzzle.answer || !puzzle.number || !puzzle.essential_keywords) {
+    console.error("❌ Invalid puzzle data received:", puzzle);
+    return res.status(400).json({ accept: false, raw: "invalid puzzle" });
+  }
+
   // Confirm puzzle is complete
   console.log("🧩 Received puzzle data:", puzzle);
 
@@ -20,6 +26,12 @@ export default async function handler(req, res) {
   ) {
     console.log("✅ Accepted by label match fallback.");
     return res.status(200).json({ accept: true, reason: "label override" });
+  }
+
+  // 🔒 Block any guess that includes known conflicts
+  if (labelMatch?.conflictDetected?.length > 0) {
+    console.log("🚫 Rejected due to conflict terms:", labelMatch.conflictDetected);
+    return res.status(200).json({ accept: false, reason: "conflict rejection" });
   }
 
   const prompt = `
@@ -52,7 +64,7 @@ Respond with only "Yes" or "No".
         input: {
           prompt,
           system_prompt:
-            "Respond strictly with Yes or No. Accept if the guess refers to the same real-world concept, even if phrased differently or spelled in British English.",
+            "Respond strictly with Yes or No. Only say Yes if the guess refers specifically to the same real-world concept as the target answer. Do not accept related or similar guesses that refer to a different concept.",
           temperature: 0.2,
           max_new_tokens: 30,
         },
@@ -117,7 +129,7 @@ Respond with only "Yes" or "No".
       console.warn("🚫 LLM rejected guess");
     }
 
-    res.status(200).json({ accept, raw: finalOutput });
+    res.status(200).json({ accept, raw: finalOutput, reason: "llm" });
   } catch (error) {
     console.error("❌ LLM API Error:", error);
     res.status(500).json({ accept: false, raw: "error" });
