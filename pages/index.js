@@ -846,7 +846,9 @@ debugLog("🧪 Relaxed Rule Check", {
   relaxedRule
 });
 
-let raw = null; // 👈 Hoist raw so it's accessible outside try block
+let raw = null; // 👈 Hoist raw
+let hasTooLittleEvidence = false; // 👈 Hoist this too
+
 
 // ✅ Final match logic
 let matchType = "none"; // allow override by LLM later
@@ -888,7 +890,7 @@ if (hasConflict) {
   const result = await askLLMFallback({ guess, puzzle });
   raw = result.raw;
 
-  const hasTooLittleEvidence =
+ hasTooLittleEvidence =
     matchedEssential.length < 1 &&
     matchedRequired.length < 1 &&
     !normalizeGuess(puzzle.answer).split(" ").some(part =>
