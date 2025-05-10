@@ -890,12 +890,14 @@ if (hasConflict) {
   const result = await askLLMFallback({ guess, puzzle });
   raw = result.raw;
 
- hasTooLittleEvidence =
-    matchedEssential.length < 1 &&
-    matchedRequired.length < 1 &&
-    !normalizeGuess(puzzle.answer).split(" ").some(part =>
-      normalizeGuess(cleanedGuess).includes(part)
-    );
+const minimalEvidence = matchedEssential.length < 2 && matchedRequired.length < 1;
+
+const lacksDirectReference = !normalizeGuess(puzzle.answer)
+  .split(" ")
+  .some(part => normalizeGuess(cleanedGuess).includes(part));
+
+hasTooLittleEvidence = minimalEvidence && lacksDirectReference;
+
 
   if (result.accept && hasTooLittleEvidence) {
     debugLog("🚫 LLM accepted vague guess — rejected via safeguard");
