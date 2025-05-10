@@ -1,24 +1,37 @@
 export default async function handler(req, res) {
   console.log("🛬 Incoming request to LLM judge");
 
-  const { guess, puzzle } = req.body;
+  const { guess, puzzle, labelMatch } = req.body;
+
+  // Confirm puzzle is complete
+  console.log("🧩 Received puzzle data:", puzzle);
 
   const normalizeQuotes = (text) =>
     text.replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
 
-  const cleanedGuess = normalizeQuotes(guess);
-  const cleanedAnswer = normalizeQuotes(puzzle.answer);
+  const cleanedGuess = normalizeQuotes(guess).trim().toLowerCase();
+  const cleanedAnswer = normalizeQuotes(puzzle.answer).trim().toLowerCase();
+
+  // ✅ Emergency override if label match is solid
+  if (
+    cleanedGuess === cleanedAnswer ||
+    labelMatch?.matchedAnswer === cleanedAnswer ||
+    labelMatch?.essentialHit?.includes(cleanedAnswer)
+  ) {
+    console.log("✅ Accepted by label match fallback.");
+    return res.status(200).json({ accept: true, reason: "label override" });
+  }
 
   const prompt = `
 You are evaluating a user guess in a trivia game.
 
 Puzzle: What is the significance of the number ${puzzle.number ?? "(unknown)"}?
 
-Target Answer: ${cleanedAnswer}
+Target Answer: ${puzzle.answer}
 Essential Keywords: ${puzzle.essential_keywords.join(", ")}
 Required Keywords: ${(puzzle.keywords || []).join(", ")}
 
-User Guess: ${cleanedGuess}
+User Guess: ${guess}
 
 Question: Does the user guess clearly refer to the same concept as the target answer?
 
