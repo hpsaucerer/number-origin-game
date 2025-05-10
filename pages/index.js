@@ -1529,3 +1529,4 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     </footer>
   </>
 );
+}
