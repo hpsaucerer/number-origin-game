@@ -1524,10 +1524,8 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 <CookieConsentBanner />
 
-<footer className="text-center text-sm text-gray-500 mt-10 pb-4">
-  © {new Date().getFullYear()} B Puzzled. All rights reserved.
-</footer>
-
-</> {/* Close outer fragment */}
-);   {/* Close return */}
-}    {/* Close Home component function */}
+    <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
+      © {new Date().getFullYear()} B Puzzled. All rights reserved.
+    </footer>
+  </>
+);
