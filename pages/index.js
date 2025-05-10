@@ -752,9 +752,15 @@ const allAnswers = [
     
 const normalizedGuess = cleanedGuess.replace(/\s+/g, '');
 
-const acceptableStrings = (puzzle.acceptableGuesses || puzzle.acceptable_guesses || [])
-  .map(normalizeGuess)
-  .filter(g => g.split(" ").length >= 2); // 🚫 Exclude too-short normalized guesses
+const allNormalizedAcceptable = (puzzle.acceptableGuesses || puzzle.acceptable_guesses || []).map(normalizeGuess);
+
+const acceptableStrings = allNormalizedAcceptable.filter(g => g.split(" ").length >= 2);
+const singleWordAcceptables = new Set(allNormalizedAcceptable.filter(g => g.split(" ").length === 1));
+
+const exactAcceptableMatch = acceptableStrings.some(
+  g => normalizeGuess(g).replace(/\s+/g, '') === normalizedGuess
+) || singleWordAcceptables.has(cleanedGuess);
+
 
 // 🐛 Debug log for inspection
 debugLog("🔍 Acceptable normalized strings:", acceptableStrings);
