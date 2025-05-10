@@ -890,13 +890,18 @@ if (hasConflict) {
   const result = await askLLMFallback({ guess, puzzle });
   raw = result.raw;
 
+const vaguePlaceholders = ["something", "someone", "somewhere", "thing", "stuff"];
+const containsVaguePlaceholder = vaguePlaceholders.some(p =>
+  new RegExp(`\\b${p}\\b`, "i").test(cleanedGuess)
+);
+
 const minimalEvidence = matchedEssential.length < 2 && matchedRequired.length < 1;
 
 const lacksDirectReference = !normalizeGuess(puzzle.answer)
   .split(" ")
   .some(part => normalizeGuess(cleanedGuess).includes(part));
 
-hasTooLittleEvidence = minimalEvidence && lacksDirectReference;
+hasTooLittleEvidence = containsVaguePlaceholder || (minimalEvidence && lacksDirectReference);
 
 
   if (result.accept && hasTooLittleEvidence) {
