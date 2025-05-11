@@ -855,6 +855,10 @@ const relaxedRule =
   guessWordCount >= 3 &&           // ← use word count instead of char length
   (bestMatch?.score ?? 1) <= 0.7;
 
+const veryCloseTypoMatch = bestMatch?.score !== undefined &&
+  bestMatch.score <= 0.15 && // VERY close match
+  (matchedEssential.length > 0 || matchedRequired.length > 0);
+
 debugLog("🧪 Relaxed Rule Check", {
   essentialCoverageRatio,
   requiredCoverageRatio,
@@ -880,7 +884,8 @@ let isCorrectGuess = !hasConflict && (
     requiredMatched &&
     strongEssentialHit
   ) ||
-  relaxedRule
+  relaxedRule ||
+  veryCloseTypoMatch // ✅ NEW condition here
 );
     
 debugLog("🧪 LLM Fallback Gate", {
@@ -954,6 +959,8 @@ if (matchType === "none") {
     ? "fuzzy_with_required"
     : relaxedRule
     ? "relaxed_rule"
+    : veryCloseTypoMatch
+    ? "fuzzy_typo" // ✅ NEW branch
     : "none";
 }
 
