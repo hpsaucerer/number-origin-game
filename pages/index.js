@@ -828,9 +828,10 @@ const isAcceptableGuess =
 const typoForgivenessGuess =
   !isAcceptableGuess &&
   guessWordCount === 1 &&
-  topScore !== null &&
-  topScore <= 0.15 &&
-  bestAcceptable?.item?.label === normalizeGuess(puzzle.answer); // Match true answer, not just any label
+  bestMatch?.score !== undefined &&
+  bestMatch.score <= 0.15 &&
+  allAnswers.some(({ label }) => label === bestMatch.item.label);
+
 
 // override if typo forgiveness applies
 if (typoForgivenessGuess) {
