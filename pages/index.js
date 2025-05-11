@@ -189,7 +189,8 @@ const synonymMap = {
   "burn": "ignite",
   "burn": "combust",
   "catches fire": "burns",
-  "needed": "required",  
+  "needed": "required",
+  "temp": "temperature",
 };
 
 function normalizeGuess(input = "") {
