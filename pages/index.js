@@ -908,7 +908,12 @@ const lacksDirectReference = !normalizeGuess(puzzle.answer)
   .split(" ")
   .some(part => normalizeGuess(cleanedGuess).includes(part));
 
-hasTooLittleEvidence = containsVaguePlaceholder || (minimalEvidence && lacksDirectReference);
+const mathLikeGuess = /\b\d+\s*(squared|cubed|[\+\-\*\/^])\b/i.test(cleanedGuess);
+
+hasTooLittleEvidence =
+  containsVaguePlaceholder ||
+  mathLikeGuess ||
+  (minimalEvidence && lacksDirectReference);
 
 
   if (result.accept && hasTooLittleEvidence) {
