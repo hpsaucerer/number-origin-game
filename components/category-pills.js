@@ -5,7 +5,7 @@ const categories = [
   {
     label: "Maths",
     color: "bg-blue-200 text-blue-800",
-    tooltip: "Equations, constants, mathematical discoveries, calculations.",
+    tooltip: "Equations, constants, mathematical discoveries, calculations, equivalents.",
   },
   {
     label: "Geography",
@@ -25,7 +25,7 @@ const categories = [
   {
     label: "Culture",
     color: "bg-purple-200 text-purple-800",
-    tooltip: "Movies, literature, music, art.",
+    tooltip: "Movies, literature, music, art, games.",
   },
   {
     label: "Sport",

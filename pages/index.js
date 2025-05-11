@@ -362,6 +362,7 @@ const [readyToRunTour, setReadyToRunTour] = useState(false);
 
 const TILE_WORD = "NUMERUS";
 const [showTokenBubble, setShowTokenBubble] = useState(false);
+const [isSubmitting, setIsSubmitting] = useState(false);
 
 useEffect(() => {
   const hasGivenStarterTokens = localStorage.getItem("starterTokensGiven");
@@ -638,6 +639,9 @@ function awardTile() {
 
 
 const handleGuess = async (isClueReveal = false) => {
+  if (isSubmitting) return;
+  setIsSubmitting(true);
+
   const cleanedGuess = normalizeGuess(guess);
   const puzzleId = puzzle?.id ?? 0;
 
@@ -1065,6 +1069,8 @@ if (nextClue && !revealedClues.includes(nextClue)) {
   } catch (error) {
     console.error("❌ Error in handleGuess:", error);
     setInputError("Something went wrong. Try again!");
+  } finally {
+    setIsSubmitting(false);
   }
 };
 
