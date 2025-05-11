@@ -48,7 +48,7 @@ export default function HowToPlayPage() {
                 <img src="/icons/one.png" alt="Look Icon" className="w-8 h-8 mt-1" />
                 <div>
                   <strong>Look at the number.</strong><br />
-                  What could it signify?
+                  What could it represent?
                 </div>
               </li>
               <li className="flex items-start gap-4">
