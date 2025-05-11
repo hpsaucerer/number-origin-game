@@ -180,6 +180,16 @@ const synonymMap = {
   "chess board": "chessboard",
   "squares": "tiles",
   "spaces": "tiles",
+  "auto-ignition": "auto ignition",
+  "autoignition": "auto-igntion",
+  "ignition": "combust",
+  "ignition": "flame point",
+  "auto-ignition": "self-ignition",
+  "auto-ignites": "self-ignites",
+  "burn": "ignite",
+  "burn": "combust",
+  "catches fire": "burns",
+  "needed": "required",  
 };
 
 function normalizeGuess(input = "") {
