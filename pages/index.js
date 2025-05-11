@@ -797,11 +797,14 @@ const isMeaningfulGuess =
     cleanedGuess.length >= 12 &&
     (strongEssentialHit || requiredMatched)
   );
+    
+const failsKeywordMinimum = matchedEssential.length === 0 && matchedRequired.length === 0;
 
 // 🚫 Only allow 1-word guesses if VERY strong essential + required match
 const isAcceptableGuess =
   topScore !== null &&
   topScore <= 0.45 &&
+  !failsKeywordMinimum &&
   (
     isMeaningfulGuess ||
     (strongEssentialHit && requiredMatched && topScore <= 0.1)
