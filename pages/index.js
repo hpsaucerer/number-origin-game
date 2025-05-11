@@ -829,7 +829,8 @@ const typoForgivenessGuess =
   !isAcceptableGuess &&
   guessWordCount === 1 &&
   topScore !== null &&
-  topScore <= 0.15;
+  topScore <= 0.15 &&
+  bestAcceptable?.item?.label === normalizeGuess(puzzle.answer); // Match true answer, not just any label
 
 // override if typo forgiveness applies
 if (typoForgivenessGuess) {
@@ -887,19 +888,25 @@ let hasTooLittleEvidence = false; // 👈 Hoist this too
 // ✅ Final match logic
 let matchType = "none"; // allow override by LLM later
 
-let isCorrectGuess = !hasConflict && (
-  isExactAnswerMatch ||
-  exactAcceptableMatch ||
-  isAcceptableGuess ||
-  typoForgivenessGuess ||
+let isCorrectGuess = (
+  (typoForgivenessGuess && !hasConflict) ||
   (
-    bestMatch?.score <= 0.65 &&
-    hasStrongMatch &&
-    requiredMatched &&
-    strongEssentialHit
-  ) ||
-  relaxedRule
+    !hasConflict &&
+    (
+      isExactAnswerMatch ||
+      exactAcceptableMatch ||
+      isAcceptableGuess ||
+      (
+        bestMatch?.score <= 0.65 &&
+        hasStrongMatch &&
+        requiredMatched &&
+        strongEssentialHit
+      ) ||
+      relaxedRule
+    )
+  )
 );
+
     
 debugLog("🧪 LLM Fallback Gate", {
   isCorrectGuess,
