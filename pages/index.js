@@ -824,6 +824,23 @@ const isAcceptableGuess =
     (strongEssentialHit && requiredMatched && topScore <= 0.1)
   );
 
+// ✨ Allow typo forgiveness for single-word guesses if very close match
+const typoForgivenessGuess =
+  !isAcceptableGuess &&
+  guessWordCount === 1 &&
+  topScore !== null &&
+  topScore <= 0.15;
+
+// override if typo forgiveness applies
+if (typoForgivenessGuess) {
+  debugLog("✅ Typo forgiveness applied:", {
+    cleanedGuess,
+    topScore,
+    topLabel: bestAcceptable?.item?.label,
+  });
+}
+
+
 debugLog("🧠 Acceptable guess check:", {
   cleanedGuess,
   guessWordCount,
@@ -855,10 +872,6 @@ const relaxedRule =
   guessWordCount >= 3 &&           // ← use word count instead of char length
   (bestMatch?.score ?? 1) <= 0.7;
 
-const veryCloseTypoMatch = bestMatch?.score !== undefined &&
-  bestMatch.score <= 0.15 && // VERY close match
-  (matchedEssential.length > 0 || matchedRequired.length > 0);
-
 debugLog("🧪 Relaxed Rule Check", {
   essentialCoverageRatio,
   requiredCoverageRatio,
@@ -878,14 +891,14 @@ let isCorrectGuess = !hasConflict && (
   isExactAnswerMatch ||
   exactAcceptableMatch ||
   isAcceptableGuess ||
+  typoForgivenessGuess ||
   (
     bestMatch?.score <= 0.65 &&
     hasStrongMatch &&
     requiredMatched &&
     strongEssentialHit
   ) ||
-  relaxedRule ||
-  veryCloseTypoMatch // ✅ NEW condition here
+  relaxedRule
 );
     
 debugLog("🧪 LLM Fallback Gate", {
@@ -959,8 +972,8 @@ if (matchType === "none") {
     ? "fuzzy_with_required"
     : relaxedRule
     ? "relaxed_rule"
-    : veryCloseTypoMatch
-    ? "fuzzy_typo" // ✅ NEW branch
+    : typoForgivenessGuess
+    ? "fuzzy_typo"
     : "none";
 }
 
