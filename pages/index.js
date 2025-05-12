@@ -658,6 +658,9 @@ const handleGuess = async (isClueReveal = false) => {
 
 const normalizedGuessForConflicts = normalizeGuess(cleanedGuess);
 
+// 👇 NEW: puzzle-specific thresholds for minimum guess quality
+const minGuessWords = puzzle.min_guess_words ?? 1;
+const minEssentialKeywords = puzzle.min_essential_keywords ?? 1;
 
 const categoryConflicts = {
   sports: ["women", "female", "girls"],
@@ -815,11 +818,17 @@ const isMeaningfulGuess =
     
 const failsKeywordMinimum = matchedEssential.length === 0 && matchedRequired.length === 0;
 
+// ❗️NEW: Block vague guesses like "temperature" or "fire" based on puzzle criteria
+const failsMinimumContent =
+  guessWordCount < minGuessWords ||
+  matchedEssential.length < minEssentialKeywords;
+
 // 🚫 Only allow 1-word guesses if VERY strong essential + required match
 const isAcceptableGuess =
   topScore !== null &&
   topScore <= 0.45 &&
   !failsKeywordMinimum &&
+  !failsMinimumContent && // 👈 NEW safeguard
   (
     isMeaningfulGuess ||
     (strongEssentialHit && requiredMatched && topScore <= 0.1)
@@ -829,6 +838,7 @@ const isAcceptableGuess =
 const typoForgivenessGuess =
   !isAcceptableGuess &&
   guessWordCount === 1 &&
+  !failsMinimumContent && // 👈 NEW
   bestMatch?.score !== undefined &&
   bestMatch.score <= 0.15 &&
   allAnswers.some(({ label }) => label === bestMatch.item.label);
@@ -939,7 +949,10 @@ const containsVaguePlaceholder = vaguePlaceholders.some(p =>
   new RegExp(`\\b${p}\\b`, "i").test(cleanedGuess)
 );
 
-const minimalEvidence = matchedEssential.length < 2 && matchedRequired.length < 1;
+const minimalEvidence =
+  matchedEssential.length < minEssentialKeywords ||
+  guessWordCount < minGuessWords;
+
 
 const lacksDirectReference = !normalizeGuess(puzzle.answer)
   .split(" ")
@@ -950,7 +963,8 @@ const mathLikeGuess = /\b\d+\s*(squared|cubed|[\+\-\*\/^])\b/i.test(cleanedGuess
 hasTooLittleEvidence =
   containsVaguePlaceholder ||
   mathLikeGuess ||
-  (minimalEvidence && lacksDirectReference);
+  matchedEssential.length < minEssentialKeywords ||
+  guessWordCount < minGuessWords;
 
 
   if (result.accept && hasTooLittleEvidence) {
