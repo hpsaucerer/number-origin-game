@@ -818,6 +818,15 @@ const isMeaningfulGuess =
     
 const failsKeywordMinimum = matchedEssential.length === 0 && matchedRequired.length === 0;
 
+debugLog("🧠 Content quality checks", {
+  isMeaningfulGuess,
+  strongEssentialHit,
+  requiredMatched,
+  topScore,
+  failsMinimumContent,
+  failsKeywordMinimum,
+});
+
 debugLog("🚫 failsKeywordMinimum check:", {
   matchedEssential,
   matchedRequired,
