@@ -818,6 +818,12 @@ const isMeaningfulGuess =
     
 const failsKeywordMinimum = matchedEssential.length === 0 && matchedRequired.length === 0;
 
+debugLog("🚫 failsKeywordMinimum check:", {
+  matchedEssential,
+  matchedRequired,
+  failsKeywordMinimum
+});
+
 // ❗️NEW: Block vague guesses like "temperature" or "fire" based on puzzle criteria
 const failsMinimumContent =
   guessWordCount < minGuessWords ||
