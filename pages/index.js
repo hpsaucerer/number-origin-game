@@ -963,7 +963,8 @@ const mathLikeGuess = /\b\d+\s*(squared|cubed|[\+\-\*\/^])\b/i.test(cleanedGuess
 hasTooLittleEvidence =
   containsVaguePlaceholder ||
   mathLikeGuess ||
-  (minimalEvidence && lacksDirectReference);
+  matchedEssential.length < minEssentialKeywords ||
+  guessWordCount < minGuessWords;
 
 
   if (result.accept && hasTooLittleEvidence) {
