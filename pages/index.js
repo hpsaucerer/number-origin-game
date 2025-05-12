@@ -949,7 +949,10 @@ const containsVaguePlaceholder = vaguePlaceholders.some(p =>
   new RegExp(`\\b${p}\\b`, "i").test(cleanedGuess)
 );
 
-const minimalEvidence = matchedEssential.length < 2 && matchedRequired.length < 1;
+const minimalEvidence =
+  matchedEssential.length < minEssentialKeywords ||
+  guessWordCount < minGuessWords;
+
 
 const lacksDirectReference = !normalizeGuess(puzzle.answer)
   .split(" ")
