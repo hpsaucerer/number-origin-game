@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 export default async function handler(req, res) {
   const { data, error } = await supabase
     .from("puzzles")
-    .select("id, number, answer, acceptable_guesses, essential_keywords, keywords, formatted, category, clues, fun_fact, date, reveal_formatted_at, conflicts")
+    .select("id, number, answer, acceptable_guesses, essential_keywords, keywords, formatted, category, clues, fun_fact, date, reveal_formatted_at, conflicts, min_guess_words, min_essential_keywords")
     .order("date", { ascending: true });
 
   if (error) {
