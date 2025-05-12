@@ -829,6 +829,16 @@ const failsMinimumContent =
   guessWordCount < minGuessWords ||
   matchedEssential.length < minEssentialKeywords;
 
+// ✅ Now it's safe to log
+debugLog("🧠 Content quality checks", {
+  isMeaningfulGuess,
+  strongEssentialHit,
+  requiredMatched,
+  topScore,
+  failsMinimumContent,
+  failsKeywordMinimum,
+});
+    
 // 🚫 Only allow 1-word guesses if VERY strong essential + required match
 const isAcceptableGuess =
   topScore !== null &&
