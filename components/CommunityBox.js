@@ -3,8 +3,8 @@ import Link from "next/link";
 
 const CommunityBox = () => {
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm mt-4 text-center">
-      <div className="flex flex-col items-center gap-2 mb-2">
+    <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 pt-2 pb-4 shadow-sm mt-4 text-center">
+      <div className="flex flex-col items-center gap-1 mb-2">
         <img
           src="/icons/numerus-community.png" // adjust if needed
           alt="Community Logo"
