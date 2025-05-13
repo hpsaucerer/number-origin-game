@@ -26,7 +26,7 @@ export default function CommunityPage() {
         {/* Title with icon */}
         <div className="flex items-center justify-center gap-3 mb-4">
           <img
-            src="/icons/numerus-community-logo.png" // Change this if your icon file is different
+            src="/icons/logo-numerus-community.png" // Change this if your icon file is different
             alt="Community Icon"
             className="w-32 h-auto object-contain"
           />
