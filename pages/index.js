@@ -192,6 +192,7 @@ const synonymMap = {
   "catches fire": "burns",
   "needed": "required",
   "temp": "temperature",
+  "ft": "feet",
 };
 
 function normalizeGuess(input = "") {
