@@ -109,12 +109,14 @@ export default function SuggestPuzzleForm() {
 
       {error && <p className="text-red-600">{error}</p>}
 
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-      >
-        Submit Puzzle
-      </button>
+<button
+  type="submit"
+  className="w-full text-white font-semibold py-2 px-4 rounded hover:opacity-90 transition"
+  style={{ backgroundColor: "#3b82f6" }} // ← Your brand blue here
+>
+  Submit Puzzle
+</button>
+
     </form>
   );
 }
