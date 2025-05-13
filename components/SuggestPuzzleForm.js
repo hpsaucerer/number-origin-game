@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase"; // adjust if path differs
 
 export default function SuggestPuzzleForm() {
   const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ export default function SuggestPuzzleForm() {
     email: "",
     wantsUpdates: false,
   });
+
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
@@ -26,7 +27,7 @@ export default function SuggestPuzzleForm() {
     const { number, answer, displayName, location, email, wantsUpdates } = formData;
 
     if (!number || !answer || !displayName || !location || !email) {
-      setError("Please complete all fields.");
+      setError("Please fill in all fields.");
       return;
     }
 
@@ -42,7 +43,7 @@ export default function SuggestPuzzleForm() {
     ]);
 
     if (error) {
-      console.error(error);
+      console.error("Submission error:", error);
       setError("Something went wrong. Please try again.");
     } else {
       setSubmitted(true);
@@ -50,52 +51,50 @@ export default function SuggestPuzzleForm() {
   };
 
   if (submitted) {
-    return <p className="text-green-700 mt-4">🎉 Thanks for your submission!</p>;
+    return <p className="text-green-600 text-center">🎉 Thanks! Your puzzle has been submitted.</p>;
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
-      <h2 className="text-xl font-semibold">Suggest a Puzzle</h2>
-
       <input
         type="text"
         name="number"
-        placeholder="Enter a number"
-        className="w-full p-2 border rounded"
+        placeholder="Number (e.g. 42, 3.14)"
         value={formData.number}
         onChange={handleChange}
+        className="w-full p-2 border rounded"
       />
       <input
         type="text"
         name="answer"
-        placeholder="What does it represent?"
-        className="w-full p-2 border rounded"
+        placeholder="What does the number represent?"
         value={formData.answer}
         onChange={handleChange}
+        className="w-full p-2 border rounded"
       />
       <input
         type="text"
         name="displayName"
-        placeholder="Your name"
-        className="w-full p-2 border rounded"
+        placeholder="Your name (for credit)"
         value={formData.displayName}
         onChange={handleChange}
+        className="w-full p-2 border rounded"
       />
       <input
         type="text"
         name="location"
-        placeholder="Your location"
-        className="w-full p-2 border rounded"
+        placeholder="Your location (e.g. London)"
         value={formData.location}
         onChange={handleChange}
+        className="w-full p-2 border rounded"
       />
       <input
         type="email"
         name="email"
-        placeholder="Email address"
-        className="w-full p-2 border rounded"
+        placeholder="Email (to notify if selected)"
         value={formData.email}
         onChange={handleChange}
+        className="w-full p-2 border rounded"
       />
 
       <label className="flex items-center gap-2">
@@ -105,13 +104,16 @@ export default function SuggestPuzzleForm() {
           checked={formData.wantsUpdates}
           onChange={handleChange}
         />
-        I’d like to receive updates about the game.
+        I’d like to receive occasional game updates
       </label>
 
       {error && <p className="text-red-600">{error}</p>}
 
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-        Submit Suggestion
+      <button
+        type="submit"
+        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+      >
+        Submit Puzzle
       </button>
     </form>
   );
