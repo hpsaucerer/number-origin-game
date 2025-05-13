@@ -264,10 +264,10 @@ const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 const guessStepContent = (
   <div>
     <p>
-      Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc. Can you get it in one?
+      Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
     </p>
     <p>
-      <strong>You have 4 guesses to solve the puzzle.</strong>
+      <strong>You have 4 guesses to solve the puzzle... but, can you get it in one?</strong>
     </p>
   </div>
 );
