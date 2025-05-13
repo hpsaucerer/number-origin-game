@@ -317,7 +317,7 @@ const joyrideSteps = [
   content: "These are your tokens. Use them to reveal the category for tricky puzzles. You start with 3 and can earn more!",
   placement: "bottom",
   disableBeacon: true,
-}
+},
   {
     target: ".achievements-button",
     content: achievementsStepContent,
