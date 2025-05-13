@@ -313,12 +313,6 @@ const joyrideSteps = [
     wait: 500,
   },
   {
-  target: ".token-counter",
-  content: "These are your tokens. Use them to reveal the category for tricky puzzles. You start with 3 and can earn more!",
-  placement: "bottom",
-  disableBeacon: true,
-},
-  {
     target: ".achievements-button",
     content: achievementsStepContent,
     disableBeacon: true,
@@ -332,7 +326,15 @@ const joyrideSteps = [
     disableScrolling: true,
     wait: 500,
   },
+  {
+    target: ".token-counter",
+    content: "Fianlly, These are your tokens. Use them to reveal the category for tricky puzzles. You start with 3 and can earn more!",
+    placement: "bottom",
+    disableBeacon: true,
+    wait: 500,
+  },
 ];
+
 
     
   const { stats, setStats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
