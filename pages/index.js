@@ -22,6 +22,7 @@ import Fuse from "fuse.js";
 import Joyride from "react-joyride";
 import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
+import CommunityBox from "@/components/CommunityBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
 import AchievementsModal from "@/components/AchievementsModal";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
@@ -1504,7 +1505,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     <p className="text-sm text-gray-600">
       Next puzzle in: <span className="font-mono">{countdown}</span>
     </p>
-    <FeedbackBox />
+    <CommunityBox />
   </div>
 )}
 
