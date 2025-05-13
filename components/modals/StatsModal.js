@@ -78,10 +78,9 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             {/* Chart Section */}
             <div className="flex flex-col items-center flex-shrink-0">
               <img
-                src="/icons/Ring-icon.png"
+                src="/icons/Ring-o-results-icon.png"
                 alt="Ring o' Results"
-                className="w-24 h-24 sm:w-32 sm:h-32 mb-0"
-                style={{ marginBottom: "-8px" }}
+                className="w-28 sm:w-36 h-auto object-contain -mb-1"
               />
               <div className="overflow-visible">
                 <ResponsiveContainer width={200} height={200}>

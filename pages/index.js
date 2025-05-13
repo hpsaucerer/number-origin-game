@@ -22,6 +22,7 @@ import Fuse from "fuse.js";
 import Joyride from "react-joyride";
 import StatsModal from "@/components/modals/StatsModal";
 import FeedbackBox from "@/components/FeedbackBox";
+import CommunityBox from "@/components/CommunityBox";
 import { supabase } from "@/lib/supabase"; // or wherever your `supabase.js` file lives
 import AchievementsModal from "@/components/AchievementsModal";
 import WhatsNewModal from "@/components/modals/WhatsNewModal";
@@ -266,7 +267,7 @@ const guessStepContent = (
       Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
     </p>
     <p>
-      <strong>You have 4 guesses to solve the puzzle.</strong>
+      <strong>You have 4 guesses to solve the puzzle... but, can you get it in one?</strong>
     </p>
   </div>
 );
@@ -325,7 +326,15 @@ const joyrideSteps = [
     disableScrolling: true,
     wait: 500,
   },
+  {
+    target: ".token-counter",
+    content: "Finally, these are your tokens. Use them to reveal the category for tricky puzzles. You start with 3 and can earn more!",
+    placement: "bottom",
+    disableBeacon: true,
+    wait: 500,
+  },
 ];
+
 
     
   const { stats, setStats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
@@ -1340,13 +1349,13 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   <CardContent className="relative">
 
     {/* 🟡 Token Counter INSIDE Card */}
-    <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10">
-      <div className={`bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md
-        ${justEarnedToken ? "token-pop token-glow" : ""} 
-        ${spendingToken ? "animate-token-spin" : ""}
-      `}>
-        {tokenCount}
-      </div>
+    <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10 token-counter">
+     <div className={`bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md
+      ${justEarnedToken ? "token-pop token-glow" : ""} 
+      ${spendingToken ? "animate-token-spin" : ""}
+     `}>
+    {tokenCount}
+  </div>
       {showTokenBubble && (
   <div className="absolute -top-6 right-0 bg-white border border-green-400 text-green-600 px-2 py-1 text-xs rounded shadow">
     +3 free tokens!
@@ -1504,7 +1513,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     <p className="text-sm text-gray-600">
       Next puzzle in: <span className="font-mono">{countdown}</span>
     </p>
-    <FeedbackBox />
+    <CommunityBox />
   </div>
 )}
 
@@ -1607,15 +1616,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   onClose={() => setShowAchievements(false)}
 />
 
-<WhatsNewModal
-  open={showWhatsNew}
-  onClose={() => {
-    setShowWhatsNew(false);
-    setShowTokenBubble(true);
-    setTimeout(() => setShowTokenBubble(false), 3000);
-  }}
-  earnedTiles={[0, 1, 2]}
-/>
 
 <CookieConsentBanner />
 
