@@ -328,7 +328,7 @@ const joyrideSteps = [
   },
   {
     target: ".token-counter",
-    content: "Fianlly, These are your tokens. Use them to reveal the category for tricky puzzles. You start with 3 and can earn more!",
+    content: "Finally, these are your tokens. Use them to reveal the category for tricky puzzles. You start with 3 and can earn more!",
     placement: "bottom",
     disableBeacon: true,
     wait: 500,
