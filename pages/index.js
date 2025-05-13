@@ -716,10 +716,11 @@ debugLog("🚫 Final matched conflicts:", normalizedConflicts.filter(w =>
   debugLog("Matched Essential:", matchedEssential, "from:", cleanedGuess);
   debugLog("Essential keywords:", puzzle.essential_keywords);
 
-  if (!isClueReveal && !cleanedGuess) {
-    setInputError("Please enter a guess before submitting.");
-    return;
-  }
+if (!isClueReveal && !cleanedGuess) {
+  setInputError("Please enter a guess before submitting.");
+  setIsSubmitting(false); // 🛠 Unlock submit if blank
+  return;
+}
 
   setInputError("");
 
@@ -1432,20 +1433,23 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
       {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
     </p>
 
-    {/* Guess input */}
-    <Input
-      value={guess}
-      onChange={(e) => setGuess(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          if (guess.trim()) handleGuess();
-        }
-      }}
-      placeholder="Enter your guess..."
-      className="w-full guess-input"
-      disabled={!puzzle}
-    />
+{/* Guess input */}
+<Input
+  value={guess}
+  onChange={(e) => {
+    setGuess(e.target.value);
+    if (inputError) setInputError(""); // 🧽 Clear error on typing
+  }}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (guess.trim()) handleGuess();
+    }
+  }}
+  placeholder="Enter your guess..."
+  className="w-full guess-input"
+  disabled={!puzzle}
+/>
 
     {/* Buttons */}
     {inputError && (
