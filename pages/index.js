@@ -264,7 +264,7 @@ const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 const guessStepContent = (
   <div>
     <p>
-      Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc.
+      Type what you think the number could relate to; e.g. <em>'keys on a piano'</em>, <em>'moon landing'</em> etc. Can you get it in one?
     </p>
     <p>
       <strong>You have 4 guesses to solve the puzzle.</strong>
