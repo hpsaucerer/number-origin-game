@@ -313,6 +313,12 @@ const joyrideSteps = [
     wait: 500,
   },
   {
+  target: ".token-counter",
+  content: "These are your tokens. Use them to reveal the category for tricky puzzles. You start with 3 and can earn more!",
+  placement: "bottom",
+  disableBeacon: true,
+}
+  {
     target: ".achievements-button",
     content: achievementsStepContent,
     disableBeacon: true,
@@ -1341,13 +1347,13 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   <CardContent className="relative">
 
     {/* 🟡 Token Counter INSIDE Card */}
-    <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10">
-      <div className={`bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md
-        ${justEarnedToken ? "token-pop token-glow" : ""} 
-        ${spendingToken ? "animate-token-spin" : ""}
-      `}>
-        {tokenCount}
-      </div>
+    <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10 token-counter">
+     <div className={`bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md
+      ${justEarnedToken ? "token-pop token-glow" : ""} 
+      ${spendingToken ? "animate-token-spin" : ""}
+     `}>
+    {tokenCount}
+  </div>
       {showTokenBubble && (
   <div className="absolute -top-6 right-0 bg-white border border-green-400 text-green-600 px-2 py-1 text-xs rounded shadow">
     +3 free tokens!
@@ -1608,15 +1614,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   onClose={() => setShowAchievements(false)}
 />
 
-<WhatsNewModal
-  open={showWhatsNew}
-  onClose={() => {
-    setShowWhatsNew(false);
-    setShowTokenBubble(true);
-    setTimeout(() => setShowTokenBubble(false), 3000);
-  }}
-  earnedTiles={[0, 1, 2]}
-/>
 
 <CookieConsentBanner />
 
