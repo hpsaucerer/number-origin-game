@@ -28,7 +28,7 @@ export default function CommunityPage() {
           <img
             src="/icons/numerus-cummunity.png" // Change this if your icon file is different
             alt="Community Icon"
-            className="w-8 h-8 sm:w-10 sm:h-10"
+            className="w-16 h-16 sm:w-20 sm:h-20 -mt-1"
           />
           <h1 className="text-xl font-bold text-gray-800">Suggest a Puzzle</h1>
         </div>
