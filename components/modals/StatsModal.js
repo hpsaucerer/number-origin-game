@@ -78,7 +78,7 @@ export default function StatsModal({ open, onClose, stats, data, COLORS, renderC
             {/* Chart Section */}
             <div className="flex flex-col items-center flex-shrink-0">
               <img
-                src="/icons/Ring-o-results.png"
+                src="/icons/Ring-o-results-icon.png"
                 alt="Ring o' Results"
                 className="w-28 sm:w-36 h-auto object-contain -mb-1"
               />
