@@ -6,7 +6,7 @@ const CommunityBox = () => {
     <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-4 shadow-sm mt-4 text-center">
       <div className="flex flex-col items-center gap-2 mb-2">
         <img
-          src="/icons/community-badge.svg" // adjust if needed
+          src="/icons/numerus-community.png" // adjust if needed
           alt="Community Logo"
           className="w-20 sm:w-24 h-auto object-contain"
         />
