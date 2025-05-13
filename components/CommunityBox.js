@@ -8,7 +8,7 @@ const CommunityBox = () => {
         <img
           src="/icons/numerus-community.png" // adjust if needed
           alt="Community Logo"
-          className="w-20 sm:w-24 h-auto object-contain"
+          className="w-32 sm:w-26 h-auto object-contain"
         />
         <h2 className="text-lg font-semibold text-gray-800">
           Have a puzzle suggestion?
