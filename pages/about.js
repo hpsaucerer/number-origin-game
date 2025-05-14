@@ -64,7 +64,7 @@ export default function AboutPage() {
               <FaXTwitter />
             </a>
             <a
-              href="https://facebook.com/numerusgame"
+              href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
@@ -73,7 +73,7 @@ export default function AboutPage() {
               <FaFacebook />
             </a>
             <a
-              href="https://tiktok.com/@numerusgame"
+              href="https://tiktok.com/@numerus_game"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="TikTok"
