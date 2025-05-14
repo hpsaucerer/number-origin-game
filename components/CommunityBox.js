@@ -14,7 +14,7 @@ const CommunityBox = () => {
           Have a puzzle suggestion?
         </h2>
         <p className="text-gray-600 text-sm">
-          Share a number — we might feature it!
+          Share a number and we might feature it!
         </p>
       </div>
       <Link href="/community">
