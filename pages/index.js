@@ -804,7 +804,7 @@ const acceptableFuse = new Fuse(
   acceptableStrings.map(label => ({ label })),
   {
     keys: ["label"],
-    threshold: 0.45, // slightly relaxed
+    threshold: 0.55, // slightly relaxed
     distance: 100,
     includeScore: true,
     ignoreLocation: true,
