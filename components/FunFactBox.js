@@ -11,7 +11,7 @@ export default function FunFactBox({ puzzle }) {
         <img
           src="/icons/nugget-knowledge.png"
           alt="Fun Fact Icon"
-          className="w-24 h-auto max-h-24 -mt-6 -mb-2"
+          className="w-28 h-auto max-h-28 mt-2 mb-3"
         />
         <p className="text-sm md:text-lg leading-relaxed text-center text-gray-800">
           {funFact}
