@@ -64,7 +64,7 @@ export default function AboutPage() {
               <FaXTwitter />
             </a>
             <a
-              href="https://facebook.com"
+              href="https://facebook.com/profile.php?id=61576235077398"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
