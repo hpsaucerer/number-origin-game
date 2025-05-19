@@ -17,16 +17,16 @@ export default function Archive() {
     if (!mounted) return;
 
     try {
-      const today = new Date().toISOString().split("T")[0];
-      const token = localStorage.getItem("archiveToken");
+const today = new Date().toISOString().split("T")[0];
+const token = localStorage.getItem("archiveToken");
 
-      if (token === today) {
-        const filtered = puzzles.filter(p => p.date !== today);
-        setAvailable(filtered);
-        setAllowed(true);
-      } else {
-        router.replace("/"); // Redirect if no valid token
-      }
+if (token === today) {
+  const filtered = puzzles.filter(p => p.date && p.date < today); // ✅ Only past puzzles
+  setAvailable(filtered);
+  setAllowed(true);
+} else {
+  router.replace("/");
+}
     } catch (err) {
       console.error("🔴 localStorage access error:", err);
       router.replace("/");
