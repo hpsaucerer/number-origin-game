@@ -81,6 +81,12 @@ useEffect(() => {
     setEarnedTiles(storedIndexes);
   }
 
+// 🪙 Grant archive token if not already set
+if (!localStorage.getItem("archiveToken")) {
+  localStorage.setItem("archiveToken", today);
+  console.log("✅ Archive token granted.");
+}
+
   if (isCorrect) {
     confetti({
       particleCount: 100,
