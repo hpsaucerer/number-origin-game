@@ -11,7 +11,10 @@ export default function ArchivePuzzlePage() {
 
   useEffect(() => {
     if (id && puzzles) {
-      const selected = puzzles.find(p => p.id.toString() === id);
+      const selected = puzzles.find(p => {
+  if (p?.id == null) return false;
+  return p.id.toString() === id;
+});
       if (selected) {
         setPuzzle(selected);
       } else {
