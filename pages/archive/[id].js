@@ -1,21 +1,24 @@
+// pages/archive/[id].js
+import { supabase } from "@/lib/supabase";
 import Home from "../index";
-import { fetchAllPuzzles } from "@/lib/api"; // or import puzzles from "../../data/puzzles";
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
 
-  const all = await fetchAllPuzzles(); // or use your local `puzzles` array
-  const puzzle = all.find((p) => p.id.toString() === id);
+  const { data, error } = await supabase
+    .from("puzzles")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-  if (!puzzle) {
-    return {
-      notFound: true,
-    };
+  if (error || !data) {
+    console.error("❌ Supabase fetch error:", error);
+    return { notFound: true };
   }
 
   return {
     props: {
-      overridePuzzle: puzzle,
+      overridePuzzle: data,
       isArchive: true,
     },
   };
