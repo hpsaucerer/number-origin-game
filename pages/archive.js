@@ -3,41 +3,37 @@ import { useRouter } from "next/router";
 import puzzles from "../data/puzzles";
 import { format } from "date-fns";
 
-function isToday(dateStr) {
-  const today = new Date().toISOString().split("T")[0];
-  return dateStr === today;
-}
-
 export default function Archive() {
   const [available, setAvailable] = useState([]);
+  const [mounted, setMounted] = useState(false); // ✅ track mounting
   const [allowed, setAllowed] = useState(false);
-  const [checkedToken, setCheckedToken] = useState(false); // ✅ NEW
   const router = useRouter();
 
   useEffect(() => {
-    // ✅ Wait for browser context (important for SSR or static builds)
-    if (typeof window !== "undefined") {
+    setMounted(true); // ✅ wait until this is true before accessing localStorage
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    try {
       const token = localStorage.getItem("archiveToken");
+
       if (token === "1") {
-        setAllowed(true);
         const today = new Date().toISOString().split("T")[0];
         const filtered = puzzles.filter(p => p.date !== today);
         setAvailable(filtered);
+        setAllowed(true);
       } else {
-        router.push("/"); // ⛔ Redirect if no token
+        router.replace("/"); // ⛔ no token, redirect safely
       }
-      setCheckedToken(true); // ✅ Only mark check complete once logic runs
+    } catch (err) {
+      console.error("🔴 localStorage access error:", err);
+      router.replace("/"); // fallback
     }
-  }, []);
+  }, [mounted]);
 
-  const handleSelect = (id) => {
-    localStorage.removeItem("archiveToken");
-    localStorage.setItem("lastPlayedArchive", id.toString()); // optional tracking
-    router.push(`/archive/${id}`);
-  };
-
-  if (!checkedToken) return null; // ✅ wait for token check to finish
-  if (!allowed) return null;      // ✅ don't render unless verified
+  if (!mounted || !allowed) return null;
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
@@ -52,7 +48,11 @@ export default function Archive() {
         {available.map((puzzle) => (
           <button
             key={puzzle.id}
-            onClick={() => handleSelect(puzzle.id)}
+            onClick={() => {
+              localStorage.removeItem("archiveToken");
+              localStorage.setItem("lastPlayedArchive", puzzle.id.toString());
+              router.push(`/archive/${puzzle.id}`);
+            }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
             <p className="text-lg font-semibold">#{puzzle.id}</p>
