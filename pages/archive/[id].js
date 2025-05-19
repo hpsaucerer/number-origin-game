@@ -1,41 +1,26 @@
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import puzzles from "../../data/puzzles";
 import Home from "../index";
+import { fetchAllPuzzles } from "@/lib/api"; // or import puzzles from "../../data/puzzles";
 
-export default function ArchivePuzzlePage() {
-  const router = useRouter();
-  const { id } = router.query;
+export async function getServerSideProps(context) {
+  const { id } = context.params;
 
-  const [puzzle, setPuzzle] = useState(null);
-
-  useEffect(() => {
-    if (id && puzzles) {
-      const selected = puzzles.find(p => {
-  if (p?.id == null) return false;
-  return p.id.toString() === id;
-});
-      if (selected) {
-        setPuzzle(selected);
-      } else {
-        router.push("/archive");
-      }
-    }
-  }, [id]);
-
-  // ✅ Track played archive puzzle
-  useEffect(() => {
-    if (puzzle?.id) {
-      const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
-      if (!played.includes(puzzle.id)) {
-        localStorage.setItem("playedArchive", JSON.stringify([...played, puzzle.id]));
-      }
-    }
-  }, [puzzle]);
+  const all = await fetchAllPuzzles(); // or use your local `puzzles` array
+  const puzzle = all.find((p) => p.id.toString() === id);
 
   if (!puzzle) {
-    return <p className="text-center py-10">Loading puzzle...</p>;
+    return {
+      notFound: true,
+    };
   }
 
-  return <Home overridePuzzle={puzzle} isArchive={true} />;
+  return {
+    props: {
+      overridePuzzle: puzzle,
+      isArchive: true,
+    },
+  };
+}
+
+export default function ArchivePage(props) {
+  return <Home {...props} />;
 }
