@@ -51,13 +51,13 @@ export default function Archive() {
             onClick={() => {
               localStorage.removeItem("archiveToken");
               localStorage.setItem("lastPlayedArchive", puzzle.id.toString());
-              router.push(`/archive/${puzzle.id}`);
+              window.location.href = `/archive/${puzzle.id}`;
             }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
             <p className="text-lg font-semibold">#{puzzle.id}</p>
             <p className="text-gray-700">
-              {puzzle.formatted || puzzle.number}
+              {puzzle.number}
             </p>
             <p className="text-sm text-gray-500">
               {format(new Date(puzzle.date), "MMMM d, yyyy")}
