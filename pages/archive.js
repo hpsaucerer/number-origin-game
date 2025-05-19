@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
-import { supabase } from "@/lib/supabase"; // adjust path as needed
+import { supabase } from "@/lib/supabase"; // adjust path if needed
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
@@ -10,7 +10,7 @@ export default function Archive() {
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true); // ensure we're on client
+    setMounted(true); // Ensure client-side
   }, []);
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function Archive() {
                 return;
               }
 
-              localStorage.removeItem("archiveToken");
+              // 🔁 Keep archiveToken for refresh/fallback support
               localStorage.setItem("lastPlayedArchive", id.toString());
               router.push(`/archive/${id}`);
             }}
