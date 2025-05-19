@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import puzzles from "../../data/puzzles"; // adjust if your path is different
-import Home from "../index"; // or import your main puzzle component if separate
+import puzzles from "../../data/puzzles";
+import Home from "../index";
 
 export default function ArchivePuzzlePage() {
   const router = useRouter();
@@ -15,10 +15,20 @@ export default function ArchivePuzzlePage() {
       if (selected) {
         setPuzzle(selected);
       } else {
-        router.push("/archive"); // fallback if ID is invalid
+        router.push("/archive");
       }
     }
   }, [id]);
+
+  // ✅ Track played archive puzzle
+  useEffect(() => {
+    if (puzzle?.id) {
+      const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
+      if (!played.includes(puzzle.id)) {
+        localStorage.setItem("playedArchive", JSON.stringify([...played, puzzle.id]));
+      }
+    }
+  }, [puzzle]);
 
   if (!puzzle) {
     return <p className="text-center py-10">Loading puzzle...</p>;
