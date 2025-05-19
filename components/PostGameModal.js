@@ -30,6 +30,7 @@ export default function PostGameModal({
   puzzleNumber,
   shareResult,
   attempts,
+  isArchive
 }) {
   if (!puzzle || !stats) return null;
 
@@ -134,6 +135,17 @@ useEffect(() => {
               The answer was: <span className="block text-sm font-bold mt-1">{puzzle.answer}</span>
             </div>
           </div>
+
+{!isArchive && (
+  <div className="flex justify-center mt-2 mb-4">
+    <button
+      onClick={() => window.location.href = "/archive"}
+      className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-md transition"
+    >
+      Play Another Puzzle
+    </button>
+  </div>
+)}
 
           {/* 🎁 Earned Tiles & Token */}
           <div className="flex flex-col items-center mt-6">
