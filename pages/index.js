@@ -553,9 +553,10 @@ if (isArchive && overridePuzzle) {
     setPuzzleNumber(index + 1);
   } else {
     console.warn("⚠️ No puzzle returned for today.");
-  }
+   }
+ }
 }
-
+  
   loadPuzzles();
 }, [selectedPuzzleIndex]);
 
