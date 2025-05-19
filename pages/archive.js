@@ -57,22 +57,23 @@ export default function Archive() {
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
         {available.map((puzzle) => (
-          <button
-            key={puzzle.id}
-            onClick={() => {
-              const id = puzzle?.id;
-              if (!id || isNaN(Number(id))) {
-                console.error("❌ Invalid puzzle ID:", puzzle);
-                return;
-              }
+<button
+  key={puzzle.id}
+  onClick={() => {
+    const puzzleNumber = puzzle?.puzzle_number;
+    if (!puzzleNumber || isNaN(Number(puzzleNumber))) {
+      console.error("❌ Invalid puzzle_number:", puzzle);
+      return;
+    }
 
-              // 🔁 Keep archiveToken for refresh/fallback support
-              localStorage.setItem("lastPlayedArchive", id.toString());
-              router.push(`/archive/${id}`);
-            }}
+    localStorage.removeItem("archiveToken");
+    localStorage.setItem("lastPlayedArchive", puzzleNumber.toString());
+    router.push(`/archive/${puzzleNumber}`);
+  }}
+
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
-            <p className="text-lg font-semibold">#{puzzle.id}</p>
+            <p className="text-lg font-semibold">Numerus #{puzzle.puzzle_number}</p>
             <p className="text-gray-700">{puzzle.number}</p>
             <p className="text-sm text-gray-500">
               {format(new Date(puzzle.date), "MMMM d, yyyy")}
