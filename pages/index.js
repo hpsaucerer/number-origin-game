@@ -1394,6 +1394,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   shareResult={shareTextHandler}
   attempts={attempts}
   puzzleNumber={puzzleNumber} // ✅ Add this
+  isArchive={isArchive}
 />
    
            
