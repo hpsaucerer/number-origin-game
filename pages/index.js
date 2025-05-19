@@ -535,15 +535,15 @@ localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for Achievements
 
     setCompletedPuzzles(completed);
 
-    if (DEV_MODE && selectedPuzzleIndex !== null) {
-      const devPuzzle = all[selectedPuzzleIndex];
-      debugLog("🔧 DEV PUZZLE loaded.");
-      setPuzzle(devPuzzle);
-      setPuzzleNumber(selectedPuzzleIndex + 1);
-} else if (overridePuzzle) {
+if (isArchive && overridePuzzle) {
   debugLog("📦 Loaded archive puzzle from props.");
   setPuzzle(overridePuzzle);
   setPuzzleNumber(overridePuzzle.id);
+} else if (DEV_MODE && selectedPuzzleIndex !== null) {
+  const devPuzzle = all[selectedPuzzleIndex];
+  debugLog("🔧 DEV PUZZLE loaded.");
+  setPuzzle(devPuzzle);
+  setPuzzleNumber(selectedPuzzleIndex + 1);
 } else {
   const today = await fetchTodayPuzzle();
   if (today) {
@@ -555,7 +555,6 @@ localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for Achievements
     console.warn("⚠️ No puzzle returned for today.");
   }
 }
-  }
 
   loadPuzzles();
 }, [selectedPuzzleIndex]);
