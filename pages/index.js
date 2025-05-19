@@ -509,6 +509,16 @@ useEffect(() => {
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 useEffect(() => {
+  if (isArchive && puzzle?.id) {
+    const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
+    if (!played.includes(puzzle.id)) {
+      localStorage.setItem("playedArchive", JSON.stringify([...played, puzzle.id]));
+    }
+  }
+}, [isArchive, puzzle]);
+
+
+useEffect(() => {
   async function loadPuzzles() {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
