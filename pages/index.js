@@ -258,7 +258,7 @@ function getPlayerTitle(stats) {
   return "Dabbler";
 }
 
-export default function Home() {
+export default function Home({ overridePuzzle = null, isArchive = false }) {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
 // ✨ JSX lifted out to constants
@@ -540,18 +540,21 @@ localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for Achievements
       debugLog("🔧 DEV PUZZLE loaded.");
       setPuzzle(devPuzzle);
       setPuzzleNumber(selectedPuzzleIndex + 1);
-    } else {
-      const today = await fetchTodayPuzzle();
-      if (today) {
-        debugLog("✅ Today's puzzle loaded.");
-        setPuzzle(today);
-
-        const index = all.findIndex((p) => p.id === today.id);
-        setPuzzleNumber(index + 1);
-      } else {
-        console.warn("⚠️ No puzzle returned for today.");
-      }
-    }
+} else if (overridePuzzle) {
+  debugLog("📦 Loaded archive puzzle from props.");
+  setPuzzle(overridePuzzle);
+  setPuzzleNumber(overridePuzzle.id);
+} else {
+  const today = await fetchTodayPuzzle();
+  if (today) {
+    debugLog("✅ Today's puzzle loaded.");
+    setPuzzle(today);
+    const index = all.findIndex((p) => p.id === today.id);
+    setPuzzleNumber(index + 1);
+  } else {
+    console.warn("⚠️ No puzzle returned for today.");
+  }
+}
   }
 
   loadPuzzles();
@@ -1343,6 +1346,11 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </div>
 )}
 
+{isArchive && (
+  <p className="text-sm text-gray-500 text-center italic">
+    Archive Puzzle — just for fun!
+  </p>
+)}
              
       <h1 className="text-2xl font-bold mt-2">Today's number is:</h1>
 
