@@ -1,17 +1,28 @@
-import { fetchAllPuzzles } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 import Home from "../index";
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
 
-  const all = await fetchAllPuzzles();
+  const { data, error } = await supabase
+    .from("puzzles")
+    .select("*")
+    .order("date", { ascending: true });
 
-  // Sort chronologically by date
-  const sorted = all
-    .filter((p) => p.date)
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
+  if (error || !data) {
+    console.error("❌ Supabase fetch error:", error?.message || "No data");
+    return { notFound: true };
+  }
 
-  const puzzleIndex = sorted.findIndex((p) => p.puzzle_number.toString() === id);
+  // Sort by date to establish archive order
+  const sorted = data.filter(p => p.date).sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
+
+  const puzzleIndex = sorted.findIndex(
+    (p) => p.puzzle_number?.toString() === id
+  );
+
   const puzzle = sorted[puzzleIndex];
 
   if (!puzzle) {
@@ -22,7 +33,7 @@ export async function getServerSideProps(context) {
     props: {
       overridePuzzle: puzzle,
       isArchive: true,
-      archiveIndex: puzzleIndex + 1, // Numerus #1 is first
+      archiveIndex: puzzle.puzzle_number,
     },
   };
 }
