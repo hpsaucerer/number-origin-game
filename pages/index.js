@@ -1351,7 +1351,11 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     Archive Puzzle — just for fun!
   </p>
 )}
-             
+      {isArchive && (
+       <p className="text-sm text-gray-500 text-center italic">
+         Archive Puzzle — just for fun!
+      </p>
+      )}          
       <h1 className="text-2xl font-bold mt-2">Today's number is:</h1>
 
 <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
