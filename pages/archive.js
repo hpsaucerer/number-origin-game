@@ -57,20 +57,21 @@ export default function Archive() {
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
         {available.map((puzzle) => (
-<button
-  key={puzzle.id}
-  onClick={() => {
-    const puzzleNumber = puzzle?.puzzle_number;
-    if (!puzzleNumber || isNaN(Number(puzzleNumber))) {
-      console.error("❌ Invalid puzzle_number:", puzzle);
-      return;
-    }
+          <button
+            key={puzzle.id}
+            onClick={() => {
+              const puzzleNumber = puzzle?.puzzle_number;
+              if (!puzzleNumber || isNaN(Number(puzzleNumber))) {
+                console.error("❌ Invalid puzzle_number:", puzzle);
+                return;
+              }
 
-    localStorage.removeItem("archiveToken");
-    localStorage.setItem("lastPlayedArchive", puzzleNumber.toString());
-    router.push(`/archive/${puzzleNumber}`);
-  }}
+              localStorage.setItem("lastPlayedArchive", puzzleNumber.toString());
 
+              router.push(`/archive/${puzzleNumber}`).then(() => {
+                localStorage.removeItem("archiveToken");
+              });
+            }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
             <p className="text-lg font-semibold">Numerus #{puzzle.puzzle_number}</p>
