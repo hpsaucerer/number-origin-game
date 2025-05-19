@@ -1356,11 +1356,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </div>
 )}
 
-{isArchive && (
-  <p className="text-sm text-gray-500 text-center italic">
-    Archive Puzzle — just for fun!
-  </p>
-)}
       {isArchive && (
        <p className="text-sm text-gray-500 text-center italic">
          Archive Puzzle — just for fun!
