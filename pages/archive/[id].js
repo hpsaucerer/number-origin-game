@@ -35,7 +35,7 @@ export async function getServerSideProps(context) {
       isArchive: true,
       archiveIndex: puzzle.puzzle_number,
     },
-  };
+  }; 
 }
 
 export default function ArchivePage(props) {
