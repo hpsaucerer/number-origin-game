@@ -258,7 +258,7 @@ function getPlayerTitle(stats) {
   return "Dabbler";
 }
 
-export default function Home({ overridePuzzle = null, isArchive = false }) {
+export default function Home({ overridePuzzle = null, isArchive = false, archiveIndex = null }) {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
 // ✨ JSX lifted out to constants
@@ -1361,7 +1361,19 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
          Archive Puzzle — just for fun!
       </p>
       )}          
-      <h1 className="text-2xl font-bold mt-2">Today's number is:</h1>
+{puzzle?.date && (
+  <p className="text-sm text-gray-400 mt-2 italic">
+    {new Date(puzzle.date).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })}
+  </p>
+)}
+<h1 className="text-2xl font-bold">
+  {isArchive ? "This puzzle's number was:" : "Today's number is:"}
+</h1>
+
 
 <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
   <CardContent className="relative">
@@ -1555,7 +1567,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   <p className="text-lg font-semibold">{localDate}</p>
 )}
 
-      <p className="text-md font-medium">Numerus #{puzzleNumber}</p>
+<p className="text-md font-medium">
+  Numerus #{isArchive ? archiveIndex : puzzleNumber}
+</p>
 
       </div>
 
