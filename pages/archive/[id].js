@@ -1,25 +1,28 @@
-// pages/archive/[id].js
-import { supabase } from "@/lib/supabase";
+import { fetchAllPuzzles } from "@/lib/api";
 import Home from "../index";
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
 
-  const { data, error } = await supabase
-    .from("puzzles")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const all = await fetchAllPuzzles();
 
-  if (error || !data) {
-    console.error("❌ Supabase fetch error:", error);
+  // Sort chronologically by date
+  const sorted = all
+    .filter((p) => p.date)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const puzzleIndex = sorted.findIndex((p) => p.id.toString() === id);
+  const puzzle = sorted[puzzleIndex];
+
+  if (!puzzle) {
     return { notFound: true };
   }
 
   return {
     props: {
-      overridePuzzle: data,
+      overridePuzzle: puzzle,
       isArchive: true,
+      archiveIndex: puzzleIndex + 1, // Numerus #1 is first
     },
   };
 }
