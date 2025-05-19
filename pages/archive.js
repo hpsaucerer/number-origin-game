@@ -50,7 +50,11 @@ export default function Archive() {
             key={puzzle.id}
             onClick={() => {
               localStorage.removeItem("archiveToken");
-              localStorage.setItem("lastPlayedArchive", puzzle.id.toString());
+              const id = puzzle?.id;
+              if (typeof id === "number" || typeof id === "string") {
+                localStorage.setItem("lastPlayedArchive", id.toString());
+             }
+
               window.location.href = `/archive/${puzzle.id}`;
             }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
