@@ -6,13 +6,12 @@ export async function getServerSideProps(context) {
 
   const all = await fetchAllPuzzles();
 
-  // Sort chronologically by date (important for archiveIndex to match display order)
+  // Sort chronologically by date
   const sorted = all
     .filter((p) => p.date)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  // Match on puzzle_number instead of ID
-  const puzzleIndex = sorted.findIndex((p) => p.puzzle_number?.toString() === id);
+  const puzzleIndex = sorted.findIndex((p) => p.puzzle_number.toString() === id);
   const puzzle = sorted[puzzleIndex];
 
   if (!puzzle) {
@@ -23,7 +22,7 @@ export async function getServerSideProps(context) {
     props: {
       overridePuzzle: puzzle,
       isArchive: true,
-      archiveIndex: puzzle.puzzle_number, // ✅ Accurate display as Numerus #
+      archiveIndex: puzzleIndex + 1, // Numerus #1 is first
     },
   };
 }
