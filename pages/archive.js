@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import puzzles from "../data/puzzles";
 import { format } from "date-fns";
+import { supabase } from "@/lib/supabase"; // adjust path as needed
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
@@ -10,27 +10,38 @@ export default function Archive() {
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true); // Wait until component is mounted
+    setMounted(true); // ensure we're on client
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
 
-    try {
-const today = new Date().toISOString().split("T")[0];
-const token = localStorage.getItem("archiveToken");
+    const today = new Date().toISOString().split("T")[0];
+    const token = localStorage.getItem("archiveToken");
 
-if (token === today) {
-  const filtered = puzzles.filter(p => p.date && p.date < today); // ✅ Only past puzzles
-  setAvailable(filtered);
-  setAllowed(true);
-} else {
-  router.replace("/");
-}
-    } catch (err) {
-      console.error("🔴 localStorage access error:", err);
+    if (token !== today) {
       router.replace("/");
+      return;
     }
+
+    const fetchPuzzles = async () => {
+      const { data, error } = await supabase
+        .from("puzzles")
+        .select("*")
+        .order("date", { ascending: false });
+
+      if (error) {
+        console.error("❌ Error fetching puzzles:", error.message);
+        router.replace("/");
+        return;
+      }
+
+      const filtered = data.filter(p => p.date && p.date < today);
+      setAvailable(filtered);
+      setAllowed(true);
+    };
+
+    fetchPuzzles();
   }, [mounted]);
 
   if (!mounted || !allowed) return null;
@@ -49,20 +60,20 @@ if (token === today) {
           <button
             key={puzzle.id}
             onClick={() => {
-              localStorage.removeItem("archiveToken");
               const id = puzzle?.id;
-              if (typeof id === "number" || typeof id === "string") {
-                localStorage.setItem("lastPlayedArchive", id.toString());
-             }
+              if (!id || isNaN(Number(id))) {
+                console.error("❌ Invalid puzzle ID:", puzzle);
+                return;
+              }
 
-              window.location.href = `/archive/${puzzle.id}`;
+              localStorage.removeItem("archiveToken");
+              localStorage.setItem("lastPlayedArchive", id.toString());
+              router.push(`/archive/${id}`);
             }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
             <p className="text-lg font-semibold">#{puzzle.id}</p>
-            <p className="text-gray-700">
-              {puzzle.number}
-            </p>
+            <p className="text-gray-700">{puzzle.number}</p>
             <p className="text-sm text-gray-500">
               {format(new Date(puzzle.date), "MMMM d, yyyy")}
             </p>
