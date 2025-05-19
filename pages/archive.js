@@ -5,31 +5,31 @@ import { format } from "date-fns";
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
-  const [mounted, setMounted] = useState(false); // ✅ track mounting
+  const [mounted, setMounted] = useState(false);
   const [allowed, setAllowed] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true); // ✅ wait until this is true before accessing localStorage
+    setMounted(true); // Wait until component is mounted
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
 
     try {
+      const today = new Date().toISOString().split("T")[0];
       const token = localStorage.getItem("archiveToken");
 
-      if (token === "1") {
-        const today = new Date().toISOString().split("T")[0];
+      if (token === today) {
         const filtered = puzzles.filter(p => p.date !== today);
         setAvailable(filtered);
         setAllowed(true);
       } else {
-        router.replace("/"); // ⛔ no token, redirect safely
+        router.replace("/"); // Redirect if no valid token
       }
     } catch (err) {
       console.error("🔴 localStorage access error:", err);
-      router.replace("/"); // fallback
+      router.replace("/");
     }
   }, [mounted]);
 
