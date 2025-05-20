@@ -258,7 +258,7 @@ function getPlayerTitle(stats) {
   return "Dabbler";
 }
 
-export default function Home() {
+export default function Home({ overridePuzzle = null, isArchive = false, archiveIndex = null }) {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
 // ✨ JSX lifted out to constants
@@ -509,6 +509,16 @@ useEffect(() => {
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 useEffect(() => {
+  if (isArchive && puzzle?.id) {
+    const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
+    if (!played.includes(puzzle.id)) {
+      localStorage.setItem("playedArchive", JSON.stringify([...played, puzzle.id]));
+    }
+  }
+}, [isArchive, puzzle]);
+
+
+useEffect(() => {
   async function loadPuzzles() {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
@@ -535,25 +545,28 @@ localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for Achievements
 
     setCompletedPuzzles(completed);
 
-    if (DEV_MODE && selectedPuzzleIndex !== null) {
-      const devPuzzle = all[selectedPuzzleIndex];
-      debugLog("🔧 DEV PUZZLE loaded.");
-      setPuzzle(devPuzzle);
-      setPuzzleNumber(selectedPuzzleIndex + 1);
-    } else {
-      const today = await fetchTodayPuzzle();
-      if (today) {
-        debugLog("✅ Today's puzzle loaded.");
-        setPuzzle(today);
-
-        const index = all.findIndex((p) => p.id === today.id);
-        setPuzzleNumber(index + 1);
-      } else {
-        console.warn("⚠️ No puzzle returned for today.");
-      }
-    }
-  }
-
+if (isArchive && overridePuzzle) {
+  debugLog("📦 Loaded archive puzzle from props.");
+  setPuzzle(overridePuzzle);
+  setPuzzleNumber(overridePuzzle.id);
+} else if (DEV_MODE && selectedPuzzleIndex !== null) {
+  const devPuzzle = all[selectedPuzzleIndex];
+  debugLog("🔧 DEV PUZZLE loaded.");
+  setPuzzle(devPuzzle);
+  setPuzzleNumber(selectedPuzzleIndex + 1);
+} else {
+  const today = await fetchTodayPuzzle();
+  if (today) {
+    debugLog("✅ Today's puzzle loaded.");
+    setPuzzle(today);
+    const index = all.findIndex((p) => p.id === today.id);
+    setPuzzleNumber(index + 1);
+  } else {
+    console.warn("⚠️ No puzzle returned for today.");
+   }
+ }
+}
+  
   loadPuzzles();
 }, [selectedPuzzleIndex]);
 
@@ -1343,8 +1356,27 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </div>
 )}
 
-             
-      <h1 className="text-2xl font-bold mt-2">Today's number is:</h1>
+{isArchive && (
+  <>
+    <p className="text-sm text-gray-500 text-center italic">
+      One from the Archives...
+    </p>
+    {puzzle?.date && (
+      <p className="text-sm text-gray-400 mt-2 italic">
+        {new Date(puzzle.date).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}
+      </p>
+    )}
+  </>
+)}
+
+<h1 className="text-2xl font-bold">
+  {isArchive ? "This puzzle's number was:" : "Today's number is:"}
+</h1>
+
 
 <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
   <CardContent className="relative">
@@ -1382,6 +1414,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   shareResult={shareTextHandler}
   attempts={attempts}
   puzzleNumber={puzzleNumber} // ✅ Add this
+  isArchive={isArchive}
 />
    
            
@@ -1510,36 +1543,71 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {isCorrect && (
   <div className="mt-6 text-center space-y-3">
     <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
-    <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
-    <p className="text-sm text-gray-600">
-      Next puzzle in: <span className="font-mono">{countdown}</span>
-    </p>
+        
+ {/* ✅ Add this for consistency after returning */}
+    {!isArchive && (
+      <>
+        <p className="font-semibold text-gray-800 mt-2">
+          Come back tomorrow for your next workout!
+        </p>
+        <p className="text-sm text-gray-500">
+          Next puzzle in: {countdown}
+        </p>
+      </>
+    )}
     <CommunityBox />
+    {isArchive && (
+      <div className="mt-4">
+        <button
+          onClick={() => window.location.href = "/"}
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90"
+          style={{ backgroundColor: "#63c4a7" }}
+        >
+          Back to Daily Puzzle
+        </button>
+      </div>
+    )}
   </div>
 )}
 
-{/* ❌ Out of Guesses UI */}
 {!isCorrect && attempts >= maxGuesses && (
   <div className="mt-6 text-center space-y-3">
     <p className="text-red-600">Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.</p>
-    <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
-    <p className="text-sm text-gray-600">
-      Next puzzle in: <span className="font-mono">{countdown}</span>
-    </p>
+    ...
     <FeedbackBox />
+    {isArchive && (
+      <div className="mt-4">
+        <button
+          onClick={() => window.location.href = "/"}
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90"
+          style={{ backgroundColor: "#63c4a7" }}
+        >
+          Back to Daily Puzzle
+        </button>
+      </div>
+    )}
   </div>
 )}
+
 </CardContent>
 </Card>
 
-      <div className="flex flex-col items-center mt-4">
-{localDate && (
-  <p className="text-lg font-semibold">{localDate}</p>
-)}
 
-      <p className="text-md font-medium">Numerus #{puzzleNumber}</p>
+<div className="flex flex-col items-center mt-4">
+  <p className="text-lg font-semibold">
+    {isArchive && puzzle?.date
+      ? new Date(puzzle.date).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      : localDate}
+  </p>
+  <p className="text-md font-medium">
+    Numerus #{isArchive ? archiveIndex : puzzleNumber}
+  </p>
+</div>
 
-      </div>
 
 {gameOver && (
   <Button

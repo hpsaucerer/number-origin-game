@@ -30,6 +30,7 @@ export default function PostGameModal({
   puzzleNumber,
   shareResult,
   attempts,
+  isArchive
 }) {
   if (!puzzle || !stats) return null;
 
@@ -79,6 +80,12 @@ useEffect(() => {
     // Still need to show previously earned tiles
     setEarnedTiles(storedIndexes);
   }
+
+// 🪙 Grant archive token if not already set
+if (!localStorage.getItem("archiveToken")) {
+  localStorage.setItem("archiveToken", today);
+  console.log("✅ Archive token granted.");
+}
 
   if (isCorrect) {
     confetti({
@@ -134,6 +141,24 @@ useEffect(() => {
               The answer was: <span className="block text-sm font-bold mt-1">{puzzle.answer}</span>
             </div>
           </div>
+
+{!isArchive && (
+  <div className="flex flex-col items-center mt-3 space-y-2">
+    <p className="text-sm text-yellow-600 font-semibold animate-bounce">
+      🎁 Try one from the archive!
+    </p>
+    <Button
+      onClick={() => {
+        localStorage.setItem("archiveToken", new Date().toISOString().split("T")[0]);
+        window.location.href = "/archive";
+      }}
+      className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
+    >
+      Bonus Puzzle
+    </Button>
+  </div>
+)}
+
 
           {/* 🎁 Earned Tiles & Token */}
           <div className="flex flex-col items-center mt-6">
