@@ -143,15 +143,22 @@ if (!localStorage.getItem("archiveToken")) {
           </div>
 
 {!isArchive && (
-  <div className="flex justify-center mt-2 mb-4">
-    <button
-      onClick={() => window.location.href = "/archive"}
-      className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-md transition"
+  <div className="flex flex-col items-center mt-3 space-y-2">
+    <p className="text-sm text-yellow-600 font-semibold animate-bounce">
+      🎁 Try one from the archive!
+    </p>
+    <Button
+      onClick={() => {
+        localStorage.setItem("archiveToken", new Date().toISOString().split("T")[0]);
+        window.location.href = "/archive";
+      }}
+      className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
     >
-      Play Another Puzzle
-    </button>
+      Try a Bonus Puzzle
+    </Button>
   </div>
 )}
+
 
           {/* 🎁 Earned Tiles & Token */}
           <div className="flex flex-col items-center mt-6">
