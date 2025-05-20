@@ -1543,7 +1543,18 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {isCorrect && (
   <div className="mt-6 text-center space-y-3">
     <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
-    ...
+        
+ {/* ✅ Add this for consistency after returning */}
+    {!isArchive && (
+      <>
+        <p className="font-semibold text-gray-800 mt-2">
+          Come back tomorrow for your next workout!
+        </p>
+        <p className="text-sm text-gray-500">
+          Next puzzle in: {countdown}
+        </p>
+      </>
+    )}
     <CommunityBox />
     {isArchive && (
       <div className="mt-4">
