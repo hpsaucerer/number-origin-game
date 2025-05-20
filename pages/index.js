@@ -1593,16 +1593,21 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 </Card>
 
 
-      <div className="flex flex-col items-center mt-4">
-{localDate && (
-  <p className="text-lg font-semibold">{localDate}</p>
-)}
+<div className="flex flex-col items-center mt-4">
+  <p className="text-lg font-semibold">
+    {isArchive && puzzle?.date
+      ? new Date(puzzle.date).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      : localDate}
+  </p>
+  <p className="text-md font-medium">
+    Numerus #{isArchive ? archiveIndex : puzzleNumber}
+  </p>
+</div>
 
-<p className="text-md font-medium">
-  Numerus #{isArchive ? archiveIndex : puzzleNumber}
-</p>
-
-      </div>
 
 {gameOver && (
   <Button
