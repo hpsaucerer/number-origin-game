@@ -1582,8 +1582,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
         </button>
       </div>
     )}
-  </div>
-)}
 
 </CardContent>
 </Card>
