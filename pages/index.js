@@ -1543,48 +1543,44 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {isCorrect && (
   <div className="mt-6 text-center space-y-3">
     <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
-    <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
-    <p className="text-sm text-gray-600">
-      Next puzzle in: <span className="font-mono">{countdown}</span>
-    </p>
+    ...
     <CommunityBox />
-
-{isArchive && (
-  <div className="mt-4">
-    <button
-      onClick={() => window.location.href = "/"}
-      className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90"
-      style={{ backgroundColor: "#63c4a7" }} // 👈 Replace this with your actual brand color
-    >
-      Back to Daily Puzzle
-    </button>
-  </div>
-)}
-
-
-{/* ❌ Out of Guesses UI */}
-{!isCorrect && attempts >= maxGuesses && (
-  <div className="mt-6 text-center space-y-3">
-    <p className="text-red-600">Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.</p>
-    <p className="text-lg font-semibold text-gray-800">Come back tomorrow for your next workout!</p>
-    <p className="text-sm text-gray-600">
-      Next puzzle in: <span className="font-mono">{countdown}</span>
-    </p>
-    <FeedbackBox />
-
     {isArchive && (
       <div className="mt-4">
         <button
           onClick={() => window.location.href = "/"}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90"
+          style={{ backgroundColor: "#63c4a7" }}
         >
           Back to Daily Puzzle
         </button>
       </div>
     )}
+  </div>
+)}
+
+{!isCorrect && attempts >= maxGuesses && (
+  <div className="mt-6 text-center space-y-3">
+    <p className="text-red-600">Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.</p>
+    ...
+    <FeedbackBox />
+    {isArchive && (
+      <div className="mt-4">
+        <button
+          onClick={() => window.location.href = "/"}
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90"
+          style={{ backgroundColor: "#63c4a7" }}
+        >
+          Back to Daily Puzzle
+        </button>
+      </div>
+    )}
+  </div>
+)}
 
 </CardContent>
 </Card>
+
 
       <div className="flex flex-col items-center mt-4">
 {localDate && (
