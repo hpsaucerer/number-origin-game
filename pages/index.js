@@ -1356,20 +1356,23 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </div>
 )}
 
-      {isArchive && (
-       <p className="text-sm text-gray-500 text-center italic">
-         Archive Puzzle — just for fun!
+{isArchive && (
+  <>
+    <p className="text-sm text-gray-500 text-center italic">
+      One from the Archives...
+    </p>
+    {puzzle?.date && (
+      <p className="text-sm text-gray-400 mt-2 italic">
+        {new Date(puzzle.date).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}
       </p>
-      )}          
-{puzzle?.date && (
-  <p className="text-sm text-gray-400 mt-2 italic">
-    {new Date(puzzle.date).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    })}
-  </p>
+    )}
+  </>
 )}
+
 <h1 className="text-2xl font-bold">
   {isArchive ? "This puzzle's number was:" : "Today's number is:"}
 </h1>
@@ -1545,6 +1548,17 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
       Next puzzle in: <span className="font-mono">{countdown}</span>
     </p>
     <CommunityBox />
+
+    {isArchive && (
+      <div className="mt-4">
+        <button
+          onClick={() => window.location.href = "/"}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        >
+          Back to Daily Puzzle
+        </button>
+      </div>
+    )}
   </div>
 )}
 
@@ -1557,8 +1571,20 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
       Next puzzle in: <span className="font-mono">{countdown}</span>
     </p>
     <FeedbackBox />
+
+    {isArchive && (
+      <div className="mt-4">
+        <button
+          onClick={() => window.location.href = "/"}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        >
+          Back to Daily Puzzle
+        </button>
+      </div>
+    )}
   </div>
 )}
+
 </CardContent>
 </Card>
 
