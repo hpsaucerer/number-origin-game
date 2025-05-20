@@ -154,7 +154,7 @@ if (!localStorage.getItem("archiveToken")) {
       }}
       className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
     >
-      Try a Bonus Puzzle
+      Bonus Puzzle
     </Button>
   </div>
 )}
