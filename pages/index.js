@@ -377,7 +377,7 @@ const [localDate, setLocalDate] = useState("");
 const [showWhatsNew, setShowWhatsNew] = useState(false);
 
 const COMMUNITY_PUZZLES = {
-  "2025-05-22": { name: "Landon", country: "USA", flag: "🇺🇸" },
+  "2025-05-22": { name: "Landon", country: "USA", flag: USA" },
 };
 const contributor = COMMUNITY_PUZZLES[puzzle?.date];
 const isCommunityPuzzle = !!contributor;
@@ -1390,11 +1390,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </>
 )}
 
-{puzzle.date === "2025-05-22" && (
-<div className="shimmer-box text-yellow-800 text-center max-w-md mx-auto mt-4">
-  Today’s challenge comes from <strong>Landon, USA.</strong>
-</div>
-)}
 
 {isCommunityPuzzle ? (
   <>
