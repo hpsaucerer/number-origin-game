@@ -1385,8 +1385,8 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 )}
 
 {puzzle.date === "2025-05-22" && (
-  <div className="bg-yellow-100 border border-yellow-300 rounded-md text-sm font-medium text-yellow-800 px-4 py-2 text-center mb-4">
-    🎉 From our players, for our players — today’s challenge comes from <strong>Landon, USA</strong>.
+  <div className="bg-yellow-100 border border-yellow-300 rounded-md text-base font-medium text-yellow-800 px-4 py-2 text-center mb-4">
+    Today’s challenge comes from <strong>Landon, USA</strong>.
   </div>
 )}
 
