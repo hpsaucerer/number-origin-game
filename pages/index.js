@@ -1396,10 +1396,10 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     <img
       src="/icons/logo-numerus-community.png"
       alt="NumerUS Community"
-      className="w-24 h-auto mx-auto mb-2"
+      className="w-28 h-auto mx-auto mb-2"
     />
     <div className="shimmer-box text-center text-lg sm:text-xl max-w-md mx-auto">
-      Today’s number comes from <strong>{contributor.name} {contributor.flag}</strong>.
+      Today’s number comes from <strong>{contributor.name}, {contributor.flag}</strong>.
     </div>
   </>
 ) : (
