@@ -21,6 +21,11 @@ const getTileMessage = (count) => {
   }
 };
 
+function isNewPlayer() {
+  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  return completed.length === 0;
+}
+
 export default function PostGameModal({
   open,
   onClose,
@@ -142,7 +147,7 @@ if (!localStorage.getItem("archiveToken")) {
             </div>
           </div>
 
-{!isArchive && (
+{!isArchive && isNewPlayer() && (
   <div className="flex flex-col items-center mt-3 space-y-2">
     <p className="text-sm text-yellow-600 font-semibold animate-bounce">
       🎁 Try one from the archive!

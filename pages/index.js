@@ -546,9 +546,16 @@ localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for Achievements
     setCompletedPuzzles(completed);
 
 if (isArchive && overridePuzzle) {
-  debugLog("📦 Loaded archive puzzle from props.");
-  setPuzzle(overridePuzzle);
-  setPuzzleNumber(overridePuzzle.id);
+  if (isNewPlayer()) {
+    debugLog("📦 Archive puzzle loaded for new player.");
+    setPuzzle(overridePuzzle);
+    setPuzzleNumber(overridePuzzle.id);
+  } else {
+    console.warn("🚫 Archive mode blocked for returning player.");
+    window.location.href = "/"; // or show an error message
+    return;
+  }
+
 } else if (DEV_MODE && selectedPuzzleIndex !== null) {
   const devPuzzle = all[selectedPuzzleIndex];
   debugLog("🔧 DEV PUZZLE loaded.");
@@ -671,6 +678,10 @@ function awardTile() {
   }
 }
 
+function isNewPlayer() {
+  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  return completed.length === 0;
+}
 
 const handleGuess = async (isClueReveal = false) => {
   if (isSubmitting) return;
