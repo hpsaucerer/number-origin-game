@@ -1617,6 +1617,10 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   <p className="text-md font-medium">
     Numerus #{isArchive ? archiveIndex : puzzleNumber}
   </p>
+     {/* 🌟 Credit for specific date */}
+  {puzzle?.date === "2025-05-22" && (
+    <p className="text-sm text-gray-500 italic mt-1">by Landon, USA</p>
+  )} 
 </div>
 
 
