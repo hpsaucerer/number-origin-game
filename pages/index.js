@@ -1399,7 +1399,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {isCommunityPuzzle ? (
   <>
     <img
-      src="/icons/community-logo.png"
+      src="/icons/logo-numerus-community.png"
       alt="NumerUS Community"
       className="w-24 h-auto mx-auto mb-2"
     />
