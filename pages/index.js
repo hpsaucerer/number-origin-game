@@ -555,7 +555,6 @@ if (isArchive && overridePuzzle) {
     window.location.href = "/"; // or show an error message
     return;
   }
-}
 
 } else if (DEV_MODE && selectedPuzzleIndex !== null) {
   const devPuzzle = all[selectedPuzzleIndex];
