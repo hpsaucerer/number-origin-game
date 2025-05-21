@@ -1384,6 +1384,12 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </>
 )}
 
+{puzzle.date === "2025-05-22" && (
+  <div className="text-center text-sm font-semibold text-[#3B82F6] mb-3 px-2">
+    🎉 <span className="text-black">From our players, for our players</span> — today’s challenge comes from <span className="text-black">Landon, USA</span>.
+  </div>
+)}
+
 <h1 className="text-2xl font-bold">
   {isArchive ? "This puzzle's number was:" : "Today's number is:"}
 </h1>
@@ -1617,12 +1623,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   <p className="text-md font-medium">
     Numerus #{isArchive ? archiveIndex : puzzleNumber}
   </p>
-     {/* 🌟 Credit for specific date */}
-  {puzzle?.date === "2025-05-22" && (
-    <p className="text-sm text-gray-500 italic mt-1">by Landon, USA</p>
-  )} 
 </div>
-
 
 {gameOver && (
   <Button
