@@ -1,7 +1,9 @@
 @import './fonts.css';
 
-
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer base {
   html {
     @apply font-bevietnam;
@@ -10,9 +12,6 @@
     background-color: white;
   }
 }
-@tailwind components;
-@tailwind utilities;
-
 
 /* Ensure full height layout and mobile-safe scrolling */
 html, body {
@@ -27,17 +26,14 @@ html, body {
   box-sizing: border-box;
 }
 
-.recharts-pie-sector:focus {
-  outline: none;
-}
-
-.recharts-surface:focus {
-  outline: none !important;
-}
+/* Remove focus outlines from Recharts elements */
+.recharts-pie-sector:focus,
+.recharts-surface:focus,
 .recharts-wrapper:focus {
   outline: none !important;
 }
 
+/* Disable tap highlight on mobile */
 html, body, button, .recharts-wrapper, .recharts-surface {
   -webkit-tap-highlight-color: transparent;
 }
@@ -52,7 +48,6 @@ html, body, button, .recharts-wrapper, .recharts-surface {
     animation-timing-function: ease-in;
   }
 }
-
 .animate-bounce-once {
   animation: bounce-once 0.6s ease-out 1;
 }
@@ -65,17 +60,10 @@ html, body, button, .recharts-wrapper, .recharts-surface {
     background-position: 200%;
   }
 }
-
 .animate-shimmer {
   background: linear-gradient(90deg, #ffffff22, #ffffff66, #ffffff22);
   background-size: 200% 100%;
   animation: shimmer 2s infinite linear;
-}
-
-.animate-test {
-  animation: shimmer 2s infinite linear;
-  background: linear-gradient(90deg, red, yellow, red);
-  background-size: 200% 100%;
 }
 
 @keyframes pulse-grow {
@@ -86,7 +74,6 @@ html, body, button, .recharts-wrapper, .recharts-surface {
     transform: scale(1.08);
   }
 }
-
 .animate-pulse-grow {
   animation: pulse-grow 1s ease-in-out infinite;
 }
@@ -97,64 +84,33 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   display: none !important;
 }
 
-
 /* === Token Animation Styles === */
-
 .token-pop {
   animation: popIn 0.5s ease-out;
 }
-
 .token-glow {
   box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.8);
 }
-
 .token-whoosh {
   animation: whooshAway 1s ease-in forwards;
   position: fixed;
 }
-
-/* ✨ POP Animation */
 @keyframes popIn {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  70% {
-    transform: scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
 }
 @keyframes whooshAway {
-  0% {
-    transform: scale(1) translate(0, 0) rotate(0deg);
-    opacity: 1;
-  }
-  30% {
-    transform: scale(1.2) translate(-20px, -50px) rotate(-10deg);
-    opacity: 1;
-  }
-  60% {
-    transform: scale(1) translate(-60px, -120px) rotate(20deg);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(0.8) translate(-120px, -300px) rotate(45deg);
-    opacity: 0;
-  }
+  0% { transform: scale(1) translate(0, 0) rotate(0deg); opacity: 1; }
+  30% { transform: scale(1.2) translate(-20px, -50px) rotate(-10deg); opacity: 1; }
+  60% { transform: scale(1) translate(-60px, -120px) rotate(20deg); opacity: 0.9; }
+  100% { transform: scale(0.8) translate(-120px, -300px) rotate(45deg); opacity: 0; }
 }
 
 @keyframes bounce-final-letter {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
-
 .final-letter-bounce {
   animation: bounce-final-letter 0.6s ease infinite;
 }
@@ -166,41 +122,34 @@ html, body, button, .recharts-wrapper, .recharts-surface {
   75% { transform: rotate(1deg); }
   100% { transform: rotate(0deg); }
 }
-
 .mega-celebration {
   animation: mega-celebration-shake 0.5s ease-in-out;
-  animation-iteration-count: 6; /* 6 × 0.5s = 3 seconds wobble */
+  animation-iteration-count: 6;
 }
-
 
 @keyframes pulse-token {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
-
 .token-pulse {
   animation: pulse-token 1.5s ease-in-out infinite;
 }
+
 @keyframes spin-small {
   0% { transform: rotate(0deg) scale(1); }
   50% { transform: rotate(360deg) scale(1.2); }
   100% { transform: rotate(720deg) scale(1); }
 }
-
 .animate-token-spin {
   animation: spin-small 0.7s ease-in-out;
 }
+
 /* === WhatsNewModal Tile Animation === */
 .tile-animate {
   opacity: 0;
   transform: scale(0.9);
   animation: tileFadeIn 0.4s ease forwards;
 }
-
 .tile-animate:nth-child(1) { animation-delay: 0.1s; }
 .tile-animate:nth-child(2) { animation-delay: 0.25s; }
 .tile-animate:nth-child(3) { animation-delay: 0.4s; }
@@ -208,27 +157,21 @@ html, body, button, .recharts-wrapper, .recharts-surface {
 .tile-animate:nth-child(5) { animation-delay: 0.7s; }
 .tile-animate:nth-child(6) { animation-delay: 0.85s; }
 .tile-animate:nth-child(7) { animation-delay: 1s; }
-
 @keyframes tileFadeIn {
   to {
     opacity: 1;
     transform: scale(1);
   }
 }
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
 .animate-fade-in {
   animation: fade-in 1.2s ease-out forwards;
 }
+
 @keyframes glow-pop {
   0%, 100% {
     transform: scale(1);
@@ -239,12 +182,39 @@ html, body, button, .recharts-wrapper, .recharts-surface {
     box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
   }
 }
-
 .animate-glow-pop {
   animation: glow-pop 2s ease-in-out infinite;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* ✨ Shimmer Box Announcement */
+.shimmer-box {
+  position: relative;
+  overflow: hidden;
+  background: #fef3c7; /* same as bg-yellow-100 */
+  border: 1px solid #facc15; /* border-yellow-400 */
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1.25rem; /* ⬆️ Boosted for impact */
+  animation: shimmer 3s infinite linear;
+}
+.shimmer-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transform: skewX(-20deg);
+  animation: shine 2s infinite;
+}
+@keyframes shine {
+  0% { left: -75%; }
+  100% { left: 125%; }
+}
