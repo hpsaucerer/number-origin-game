@@ -474,17 +474,25 @@ useEffect(() => {
   setHasMounted(true);
 }, []);
 
+useEffect(() => {
+  if (isArchive) {
+    const archiveToken = localStorage.getItem("archiveToken");
+    const hasPlayed = localStorage.getItem("archiveTokenUsed") === "true";
+
+    // Block access if token has already been used
+    if (!archiveToken || hasPlayed) {
+      console.warn("🚫 Archive access blocked — no valid token or already used.");
+      window.location.href = "/"; // Or show a friendly modal
+    } else {
+      // Mark token as used
+      localStorage.setItem("archiveTokenUsed", "true");
+      console.log("✅ Archive token used.");
+    }
+  }
+}, [isArchive]);
+
 const [canPlayBonus, setCanPlayBonus] = useState(false);
 
-useEffect(() => {
-  if (!hasMounted || !puzzle || isArchive) return;
-
-  const archiveTokenDate = localStorage.getItem("archiveToken");
-  const hasArchiveToken = !!archiveTokenDate;
-  const playedArchiveToday = localStorage.getItem("playedBonusArchive") === archiveTokenDate;
-
-  setCanPlayBonus(hasArchiveToken && !playedArchiveToday);
-}, [hasMounted, puzzle, isArchive]);
 
 useEffect(() => {
   const resetAt = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
