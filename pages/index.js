@@ -539,6 +539,24 @@ useEffect(() => {
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 useEffect(() => {
+  if (isArchive) {
+    const archiveTokenDate = localStorage.getItem("archiveToken");
+    const playedArchiveToday = localStorage.getItem("playedBonusArchive");
+
+    const alreadyPlayedToday = archiveTokenDate && archiveTokenDate === playedArchiveToday;
+
+    if (alreadyPlayedToday) {
+      console.warn("🚫 Archive puzzle blocked — already used token today.");
+      window.location.href = "/"; // Or redirect to a modal/homepage
+    } else {
+      // ✅ Mark today's archive as played
+      localStorage.setItem("playedBonusArchive", archiveTokenDate);
+    }
+  }
+}, [isArchive]);
+
+
+useEffect(() => {
   if (isArchive && puzzle?.id) {
     const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
     if (!played.includes(puzzle.id)) {
