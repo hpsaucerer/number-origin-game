@@ -1468,13 +1468,18 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 />
    
            
-<p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
-  {(isCorrect ||
-    (puzzle.revealFormattedAt !== undefined &&
-     revealedClues.length >= puzzle.revealFormattedAt))
-    ? puzzle.formatted
-    : puzzle.number}
-</p>
+{(() => {
+  const shouldRevealFormatted =
+    isCorrect ||
+    (typeof puzzle.revealFormattedAt === "number" &&
+     revealedClues.length >= puzzle.revealFormattedAt);
+
+  return (
+    <p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
+      {shouldRevealFormatted ? puzzle.formatted : puzzle.number}
+    </p>
+  );
+})()}
 
           <div className="flex space-x-2 mt-2">
             {Array.from({ length: attempts }, (_, i) => (
