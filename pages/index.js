@@ -566,7 +566,6 @@ if (isArchive && overridePuzzle) {
   debugLog("🔧 DEV PUZZLE loaded.");
   setPuzzle(devPuzzle);
   setPuzzleNumber(selectedPuzzleIndex + 1);
-}
 } else {
   const today = await fetchTodayPuzzle();
   if (today) {
