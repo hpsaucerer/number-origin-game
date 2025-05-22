@@ -1469,10 +1469,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
    
            
 {(() => {
-  const shouldRevealFormatted =
-    isCorrect ||
-    (typeof puzzle.revealFormattedAt === "number" &&
-     revealedClues.length >= puzzle.revealFormattedAt);
+  const hasFormatted = typeof puzzle.formatted === "string";
+  const revealAt = typeof puzzle.revealFormattedAt === "number" ? puzzle.revealFormattedAt : 4;
+  const shouldRevealFormatted = hasFormatted && (isCorrect || revealedClues.length >= revealAt);
 
   return (
     <p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
