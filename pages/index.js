@@ -1470,8 +1470,8 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
            
 <p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
   {(isCorrect ||
-    (puzzle.revealFormattedAt &&
-      revealedClues.length >= puzzle.revealFormattedAt))
+    (puzzle.revealFormattedAt !== undefined &&
+     revealedClues.length >= puzzle.revealFormattedAt))
     ? puzzle.formatted
     : puzzle.number}
 </p>
