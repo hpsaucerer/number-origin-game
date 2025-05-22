@@ -462,6 +462,18 @@ useEffect(() => {
   setHasMounted(true);
 }, []);
 
+const [canPlayBonus, setCanPlayBonus] = useState(false);
+
+useEffect(() => {
+  if (!hasMounted || !puzzle || isArchive) return;
+
+  const archiveTokenDate = localStorage.getItem("archiveToken");
+  const hasArchiveToken = !!archiveTokenDate;
+  const playedArchiveToday = localStorage.getItem("playedBonusArchive") === archiveTokenDate;
+
+  setCanPlayBonus(hasArchiveToken && !playedArchiveToday);
+}, [hasMounted, puzzle, isArchive]);
+
 useEffect(() => {
   const resetAt = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
   const now = Date.now();
@@ -1452,6 +1464,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   attempts={attempts}
   puzzleNumber={puzzleNumber} // ✅ Add this
   isArchive={isArchive}
+  canPlayBonus={canPlayBonus}
 />
    
            
