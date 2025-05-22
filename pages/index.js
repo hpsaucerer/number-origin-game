@@ -559,15 +559,9 @@ if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
 }
 
 if (isArchive && overridePuzzle) {
-  if (isNewPlayer()) {
-    debugLog("📦 Archive puzzle loaded for new player.");
-    setPuzzle(overridePuzzle);
-    setPuzzleNumber(overridePuzzle.id);
-  } else {
-    console.warn("🚫 Archive mode blocked for returning player.");
-    window.location.href = "/"; // or show an error message
-    return;
-  }
+  setPuzzle(overridePuzzle);
+  setPuzzleNumber(overridePuzzle.id);
+}
 
 } else if (DEV_MODE && selectedPuzzleIndex !== null) {
   const devPuzzle = all[selectedPuzzleIndex];
