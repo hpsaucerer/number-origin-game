@@ -1482,7 +1482,10 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
            
 {(() => {
   const hasFormatted = typeof puzzle.formatted === "string";
-  const revealAt = typeof puzzle.revealFormattedAt === "number" ? puzzle.revealFormattedAt : 4;
+  const revealAt =
+  typeof puzzle.revealFormattedAt === "number"
+    ? puzzle.revealFormattedAt
+    : (puzzle.formatted ? 1 : Infinity);
   const shouldRevealFormatted = hasFormatted && (isCorrect || revealedClues.length >= revealAt);
 
   return (
