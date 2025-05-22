@@ -11,22 +11,23 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Failed to fetch puzzles" });
   }
 
-res.status(200).json(
-  data.map((p) => ({
-    id: p.id,
-    number: p.number,
-    formatted: p.formatted,
-    revealFormattedAt: p.reveal_formatted_at,
-    answer: p.answer,
-    clues: p.clues,
-    funfact: p.fun_fact,
-    keywords: p.keywords,
-    essentialKeywords: p.essential_keywords,
-    acceptableGuesses: p.acceptable_guesses,
-    category: p.category,
-    date: p.date,
-    conflicts: p.conflicts,
-    minGuessWords: p.min_guess_words,
-    minEssentialKeywords: p.min_essential_keywords,
-  }))
-);
+  res.status(200).json(
+    data.map((p) => ({
+      id: p.id,
+      number: p.number,
+      formatted: p.formatted,
+      revealFormattedAt: p.reveal_formatted_at,
+      answer: p.answer,
+      clues: p.clues,
+      funfact: p.fun_fact,
+      keywords: p.keywords,
+      essentialKeywords: p.essential_keywords,
+      acceptableGuesses: p.acceptable_guesses,
+      category: p.category,
+      date: p.date,
+      conflicts: p.conflicts,
+      minGuessWords: p.min_guess_words,
+      minEssentialKeywords: p.min_essential_keywords,
+    }))
+  );
+}
