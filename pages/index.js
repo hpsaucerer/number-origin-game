@@ -561,13 +561,12 @@ if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
 if (isArchive && overridePuzzle) {
   setPuzzle(overridePuzzle);
   setPuzzleNumber(overridePuzzle.id);
-}
-
 } else if (DEV_MODE && selectedPuzzleIndex !== null) {
   const devPuzzle = all[selectedPuzzleIndex];
   debugLog("🔧 DEV PUZZLE loaded.");
   setPuzzle(devPuzzle);
   setPuzzleNumber(selectedPuzzleIndex + 1);
+}
 } else {
   const today = await fetchTodayPuzzle();
   if (today) {
@@ -579,7 +578,6 @@ if (isArchive && overridePuzzle) {
     console.warn("⚠️ No puzzle returned for today.");
    }
  }
-}
   
   loadPuzzles();
 }, [selectedPuzzleIndex]);
