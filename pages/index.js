@@ -528,7 +528,7 @@ useEffect(() => {
   async function loadPuzzles() {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
-localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
+    localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
     let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
 
@@ -551,34 +551,35 @@ localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for Achievements
 
     setCompletedPuzzles(completed);
 
-// 🎁 Grant archive token for new players (once only)
-if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
-  const today = new Date().toISOString().split("T")[0];
-  localStorage.setItem("archiveToken", today);
-  console.log("✅ Archive token granted to new player.");
-}
+    // 🎁 Grant archive token for new players (once only)
+    if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
+      const today = new Date().toISOString().split("T")[0];
+      localStorage.setItem("archiveToken", today);
+      console.log("✅ Archive token granted to new player.");
+    }
 
-if (isArchive && overridePuzzle) {
-  setPuzzle(overridePuzzle);
-  setPuzzleNumber(overridePuzzle.id);
-} else if (DEV_MODE && selectedPuzzleIndex !== null) {
-  const devPuzzle = all[selectedPuzzleIndex];
-  debugLog("🔧 DEV PUZZLE loaded.");
-  setPuzzle(devPuzzle);
-  setPuzzleNumber(selectedPuzzleIndex + 1);
-} else {
-  const today = await fetchTodayPuzzle();
-  if (today) {
-    debugLog("✅ Today's puzzle loaded.");
-    setPuzzle(today);
-    const index = all.findIndex((p) => p.id === today.id);
-    setPuzzleNumber(index + 1);
-  } else {
-    console.warn("⚠️ No puzzle returned for today.");
-   }
- }
-  
-  loadPuzzles();
+    if (isArchive && overridePuzzle) {
+      setPuzzle(overridePuzzle);
+      setPuzzleNumber(overridePuzzle.id);
+    } else if (DEV_MODE && selectedPuzzleIndex !== null) {
+      const devPuzzle = all[selectedPuzzleIndex];
+      debugLog("🔧 DEV PUZZLE loaded.");
+      setPuzzle(devPuzzle);
+      setPuzzleNumber(selectedPuzzleIndex + 1);
+    } else {
+      const today = await fetchTodayPuzzle();
+      if (today) {
+        debugLog("✅ Today's puzzle loaded.");
+        setPuzzle(today);
+        const index = all.findIndex((p) => p.id === today.id);
+        setPuzzleNumber(index + 1);
+      } else {
+        console.warn("⚠️ No puzzle returned for today.");
+      }
+    }
+  }
+
+  loadPuzzles(); // ✅ must be inside useEffect body
 }, [selectedPuzzleIndex]);
 
 
