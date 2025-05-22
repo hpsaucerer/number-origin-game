@@ -371,6 +371,18 @@ const joyrideSteps = [
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
+  
+useEffect(() => {
+  if (puzzle && isArchive) {
+    console.log("🧩 Archive puzzle loaded:", {
+      number: puzzle.number,
+      formatted: puzzle.formatted,
+      revealFormattedAt: puzzle.revealFormattedAt,
+      answer: puzzle.answer,
+    });
+  }
+}, [puzzle, isArchive]);
+
 const [puzzleNumber, setPuzzleNumber] = useState(null);
 
 const [localDate, setLocalDate] = useState("");
