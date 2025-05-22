@@ -530,33 +530,39 @@ useEffect(() => {
     setAllPuzzles(all);
     localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
-    let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
+let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
+let isNewPlayer = false;
 
-    if (!Array.isArray(completed)) {
-      completed = [];
+if (!Array.isArray(completed)) {
+  completed = [];
 
-      all.forEach((p) => {
-        if (localStorage.getItem(`completed-${p.date}`) === "true") {
-          completed.push(p.id);
-        }
-      });
-
-      localStorage.setItem("completedPuzzles", JSON.stringify(completed));
-      console.log(
-        completed.length > 0
-          ? "✅ Migrated old completions to completedPuzzles."
-          : "🆕 No old completions found. Initialized empty completedPuzzles."
-      );
+  all.forEach((p) => {
+    if (localStorage.getItem(`completed-${p.date}`) === "true") {
+      completed.push(p.id);
     }
+  });
 
-    setCompletedPuzzles(completed);
+  localStorage.setItem("completedPuzzles", JSON.stringify(completed));
+  isNewPlayer = completed.length === 0;
 
-    // 🎁 Grant archive token for new players (once only)
-    if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
-      const today = new Date().toISOString().split("T")[0];
-      localStorage.setItem("archiveToken", today);
-      console.log("✅ Archive token granted to new player.");
-    }
+  console.log(
+    completed.length > 0
+      ? "✅ Migrated old completions to completedPuzzles."
+      : "🆕 No old completions found. Initialized empty completedPuzzles."
+  );
+} else {
+  isNewPlayer = completed.length === 0;
+}
+
+setCompletedPuzzles(completed);
+
+// 🎁 Grant archive token for new players (once only)
+if (isNewPlayer && !localStorage.getItem("archiveToken")) {
+  const today = new Date().toISOString().split("T")[0];
+  localStorage.setItem("archiveToken", today);
+  console.log("✅ Archive token granted to new player.");
+}
+
 
     if (isArchive && overridePuzzle) {
       setPuzzle(overridePuzzle);
