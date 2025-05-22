@@ -35,7 +35,8 @@ export default function PostGameModal({
   puzzleNumber,
   shareResult,
   attempts,
-  isArchive
+  isArchive,
+  canPlayBonus
 }) {
   if (!puzzle || !stats) return null;
 
@@ -149,7 +150,7 @@ if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
             </div>
           </div>
 
-{!isArchive && isNewPlayer() && (
+{!isArchive && canPlayBonus && (
   <div className="flex flex-col items-center mt-3 space-y-2">
     <p className="text-sm text-yellow-600 font-semibold animate-bounce">
       🎁 Try one from the archive!
