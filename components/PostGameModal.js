@@ -86,11 +86,13 @@ useEffect(() => {
     setEarnedTiles(storedIndexes);
   }
 
-// 🪙 Grant archive token if not already set
-if (!localStorage.getItem("archiveToken")) {
+// 🎁 Grant archive token for new players only (once)
+const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
   localStorage.setItem("archiveToken", today);
-  console.log("✅ Archive token granted.");
+  console.log("✅ Archive token granted to new player.");
 }
+
 
   if (isCorrect) {
     confetti({
