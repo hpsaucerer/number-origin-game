@@ -551,6 +551,13 @@ localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for Achievements
 
     setCompletedPuzzles(completed);
 
+// 🎁 Grant archive token for new players (once only)
+if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
+  const today = new Date().toISOString().split("T")[0];
+  localStorage.setItem("archiveToken", today);
+  console.log("✅ Archive token granted to new player.");
+}
+
 if (isArchive && overridePuzzle) {
   if (isNewPlayer()) {
     debugLog("📦 Archive puzzle loaded for new player.");
