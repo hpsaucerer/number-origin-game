@@ -376,6 +376,12 @@ const [puzzleNumber, setPuzzleNumber] = useState(null);
 const [localDate, setLocalDate] = useState("");
 const [showWhatsNew, setShowWhatsNew] = useState(false);
 
+const COMMUNITY_PUZZLES = {
+  "2025-05-22": { name: "Landon", country: "USA", flag: "USA" },
+};
+const contributor = COMMUNITY_PUZZLES[puzzle?.date];
+const isCommunityPuzzle = !!contributor;
+  
 const [showTour, setShowTour] = useState(false);
 const [stepIndex, setStepIndex] = useState(0);
 const [tourKey, setTourKey] = useState(Date.now()); // forces  reset if needed
@@ -1384,9 +1390,24 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </>
 )}
 
-<h1 className="text-2xl font-bold">
-  {isArchive ? "This puzzle's number was:" : "Today's number is:"}
-</h1>
+
+{isCommunityPuzzle ? (
+  <>
+    <img
+      src="/icons/logo-numerus-community.png"
+      alt="NumerUS Community"
+      className="w-28 h-auto mx-auto mb-2"
+    />
+    <div className="shimmer-box text-center text-lg sm:text-xl max-w-md mx-auto">
+      Today’s number comes from <strong>{contributor.name}, {contributor.flag}</strong>.
+    </div>
+  </>
+) : (
+  <h1 className="text-2xl font-bold">
+    {isArchive ? "This puzzle's number was:" : "Today's number is:"}
+  </h1>
+)}
+
 
 
 <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
@@ -1618,7 +1639,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     Numerus #{isArchive ? archiveIndex : puzzleNumber}
   </p>
 </div>
-
 
 {gameOver && (
   <Button
