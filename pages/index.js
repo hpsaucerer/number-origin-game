@@ -389,8 +389,9 @@ const [localDate, setLocalDate] = useState("");
 const [showWhatsNew, setShowWhatsNew] = useState(false);
 
 const COMMUNITY_PUZZLES = {
-  "2025-05-22": { name: "Landon", country: "USA", flag: "USA" },
+  "2025-05-22": { name: "Landon", city: "Memphis", country: "USA", flag: "USA" },
 };
+
 const contributor = COMMUNITY_PUZZLES[puzzle?.date];
 const isCommunityPuzzle = !!contributor;
   
@@ -1437,7 +1438,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
       className="w-28 h-auto mx-auto"
     />
     <div className="shimmer-box text-center text-lg sm:text-xl max-w-md mx-auto">
-      Today’s number comes from <strong>{contributor.name}, {contributor.flag}</strong>.
+      Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
     </div>
   </>
 ) : (
