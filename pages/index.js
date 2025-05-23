@@ -1442,7 +1442,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     </div>
   </>
 ) : (
-  <h1 className="text-2xl font-bold">
+  <h1 className="text-2xl font-bold mt-4">
     {isArchive ? "This puzzle's number was:" : "Today's number is:"}
   </h1>
 )}
