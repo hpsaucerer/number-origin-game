@@ -57,7 +57,10 @@ function debugLog(...args) {
 
 
 async function logCategoryReveal(puzzleId) {
-  const deviceId = localStorage.getItem("deviceId") || "unknown";
+let deviceId = "unknown";
+if (typeof window !== "undefined") {
+  deviceId = localStorage.getItem("deviceId") || "unknown";
+}
 
   const { error } = await supabase.from("Player_responses").insert([
     {
@@ -262,9 +265,14 @@ function getPlayerTitle(stats) {
 export default function Home({ overridePuzzle = null, isArchive = false, archiveIndex = null }) {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
-const [canPlayBonus, setCanPlayBonus] = useState(() => {
-  return localStorage.getItem("canPlayBonus") === "true";
-});
+const [canPlayBonus, setCanPlayBonus] = useState(false);
+
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    const value = localStorage.getItem("canPlayBonus") === "true";
+    setCanPlayBonus(value);
+  }
+}, []);
 
 // ✨ JSX lifted out to constants
 const guessStepContent = (
@@ -411,6 +419,8 @@ const [showTokenBubble, setShowTokenBubble] = useState(false);
 const [isSubmitting, setIsSubmitting] = useState(false);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   const hasGivenStarterTokens = localStorage.getItem("starterTokensGiven");
   let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
 
@@ -428,6 +438,8 @@ useEffect(() => {
 
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+  
   const hasSeenTour = localStorage.getItem("seenTour") === "true";
 
   if (!puzzle || !hasMounted) return;
@@ -460,13 +472,14 @@ if (!hasSeenTour) {
     };
 
     setTimeout(tryStartTour, 300);
-  } else {
+  } else if (typeof window !== "undefined") {
     const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
     if (!hasSeenWhatsNew) {
       setShowWhatsNew(true);
       localStorage.setItem("seenWhatsNew", "true");
     }
   }
+  
 }, [puzzle, hasMounted]);
 
 
@@ -482,6 +495,8 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+  
   const archiveIntroSeen = localStorage.getItem("seenArchiveIntro") === "true";
   if (!archiveIntroSeen) {
     setShowArchiveIntro(true);
@@ -506,6 +521,8 @@ useEffect(() => {
 }, [isArchive]);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+  
   const resetAt = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
   const now = Date.now();
 
@@ -529,6 +546,8 @@ useEffect(() => {
 
     
 useEffect(() => {
+  if (typeof window === "undefined") return;
+  
   const existingId = localStorage.getItem("deviceId");
   if (!existingId) {
     const newId = crypto.randomUUID();
@@ -537,6 +556,8 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+  
   localStorage.removeItem("earnedTiles");
 }, []);
   
@@ -545,7 +566,7 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (!puzzle) return;
+  if (typeof window === "undefined") return;
 
   const gameState = {
     attempts,
@@ -559,6 +580,8 @@ useEffect(() => {
 
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+  
   if (isArchive && puzzle?.id) {
     const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
     if (!played.includes(puzzle.id)) {
