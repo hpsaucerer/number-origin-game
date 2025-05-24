@@ -505,9 +505,6 @@ useEffect(() => {
   }
 }, [isArchive]);
 
-const [canPlayBonus, setCanPlayBonus] = useState(false);
-
-
 useEffect(() => {
   const resetAt = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
   const now = Date.now();
