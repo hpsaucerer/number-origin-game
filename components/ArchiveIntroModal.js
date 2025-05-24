@@ -6,16 +6,17 @@ export default function ArchiveIntroModal({ open, onClose }) {
     const today = new Date().toISOString().split("T")[0];
 
     localStorage.setItem("seenArchiveIntro", "true");
-    localStorage.setItem("archiveToken", today);
 
-    const hasUsed = localStorage.getItem("archiveTokenUsed") === "true";
-    if (!hasUsed) {
+    // Only grant the token if one hasn't been granted yet
+    if (!localStorage.getItem("archiveToken")) {
+      localStorage.setItem("archiveToken", today);
       console.log("🎁 Archive token granted via intro modal.");
     } else {
-      console.log("ℹ️ Archive token was already used.");
+      console.log("ℹ️ Archive token already exists.");
     }
 
-    onClose();
+    // ✅ Redirect to archive page
+    window.location.href = "/archive";
   };
 
   return (
