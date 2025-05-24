@@ -12,13 +12,13 @@ export default async function handler(req, res) {
   }
 
   const trimmedId = deviceId.trim();
-  console.log("🔍 Incoming trimmed deviceId:", `"${trimmedId}"`);
+  console.log("Incoming trimmed deviceId:", `"${trimmedId}"`);
 
-  // 🔍 Find an unused token for this device
+  // 🔍 Find an unused token for this exact device ID
   const { data: tokenRow, error } = await supabase
     .from("ArchiveTokens")
     .select("*")
-    .filter("device_id", "eq", trimmedId)
+    .eq("device_id", trimmedId)
     .eq("used", false)
     .limit(1)
     .single();
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: "No valid archive token found" });
   }
 
-  // ✅ Mark token as used, with added error logging
+  // ✅ Mark token as used
   const { error: updateError } = await supabase
     .from("ArchiveTokens")
     .update({
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     .eq("id", tokenRow.id);
 
   if (updateError) {
-    console.error("❌ Failed to mark token as used:", updateError);
+    console.error("Failed to mark token as used:", updateError);
     return res.status(500).json({ error: "Failed to mark token as used" });
   }
 
