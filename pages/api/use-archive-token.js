@@ -11,19 +11,20 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing deviceId" });
   }
 
-  const trimmedId = deviceId.trim(); // ✅ define it here
-  console.log("Incoming deviceId:", trimmedId);
+  const trimmedId = deviceId.trim();
+  console.log("🔍 Incoming trimmed deviceId:", `"${trimmedId}"`);
 
   // 🔍 Find an unused token for this device
   const { data: tokenRow, error } = await supabase
     .from("ArchiveTokens")
     .select("*")
-    .ilike("device_id", trimmedId) // ✅ now this works
+    .filter("device_id", "eq", trimmedId)
     .eq("used", false)
     .limit(1)
     .single();
 
   if (error || !tokenRow) {
+    console.error("❌ No valid archive token found for:", trimmedId);
     return res.status(403).json({ error: "No valid archive token found" });
   }
 
@@ -37,7 +38,7 @@ export default async function handler(req, res) {
     .eq("id", tokenRow.id);
 
   if (updateError) {
-    console.error("Failed to mark token as used:", updateError);
+    console.error("❌ Failed to mark token as used:", updateError);
     return res.status(500).json({ error: "Failed to mark token as used" });
   }
 
