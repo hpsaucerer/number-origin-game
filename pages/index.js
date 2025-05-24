@@ -261,8 +261,6 @@ function getPlayerTitle(stats) {
 export default function Home({ overridePuzzle = null, isArchive = false, archiveIndex = null }) {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
-const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
-
 const [canPlayBonus, setCanPlayBonus] = useState(() => {
   return localStorage.getItem("canPlayBonus") === "true";
 });
@@ -373,7 +371,8 @@ const joyrideSteps = [
   const [showAchievements, setShowAchievements] = useState(false);
   const [completedPuzzles, setCompletedPuzzles] = useState([]);
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
-    
+  const [showArchiveIntro, setShowArchiveIntro] = useState(false);
+
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
@@ -479,6 +478,13 @@ useEffect(() => {
 
 useEffect(() => {
   setHasMounted(true);
+}, []);
+
+useEffect(() => {
+  const archiveIntroSeen = localStorage.getItem("seenArchiveIntro") === "true";
+  if (!archiveIntroSeen) {
+    setShowArchiveIntro(true);
+  }
 }, []);
 
 useEffect(() => {
@@ -1780,6 +1786,27 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   onClose={() => setShowAchievements(false)}
 />
 
+<Dialog open={showArchiveIntro} onOpenChange={setShowArchiveIntro}>
+  <DialogContent className="max-w-sm mx-auto p-4 rounded shadow-xl">
+    <h2 className="text-xl font-bold mb-2">🎉 Archive Mode Unlocked!</h2>
+    <p className="mb-3 text-sm text-gray-700">
+      You can now access previous puzzles. We’re giving you a free token to try it out!
+    </p>
+    <p className="text-sm text-gray-500 mb-3">
+      Archive tokens let you play missed days — more ways to earn are coming soon.
+    </p>
+    <Button
+      className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded"
+      onClick={() => {
+        localStorage.setItem("seenArchiveIntro", "true");
+        setShowArchiveIntro(false);
+        // 👉 Token logic will go here later
+      }}
+    >
+      🎁 Got it!
+    </Button>
+  </DialogContent>
+</Dialog>
 
 <CookieConsentBanner />
 
