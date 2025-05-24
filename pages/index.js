@@ -29,6 +29,7 @@ import WhatsNewModal from "@/components/modals/WhatsNewModal";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
 import { getCookiePreferences } from "@/utils/cookies";
 import { askLLMFallback } from '../lib/llm'; // adjust if needed
+import ArchiveIntroModal from "@/components/modals/ArchiveIntroModal";
 
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
