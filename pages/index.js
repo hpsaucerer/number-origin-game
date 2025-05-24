@@ -687,14 +687,14 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
-  useEffect(() => {
-if (puzzle?.date) {
-  
-  const alreadyCompleted = localStorage.getItem(`completed-${puzzle.date}`) === "true";
-  if (alreadyCompleted) {
-    setIsCorrect(true);
-    // Clean up any leftover game state for this puzzle
-    localStorage.removeItem(`gameState-${puzzle.date}`);
+useEffect(() => {
+  if (puzzle?.date) {
+    const alreadyCompleted = localStorage.getItem(`completed-${puzzle.date}`) === "true";
+    if (alreadyCompleted) {
+      setIsCorrect(true);
+      // Clean up any leftover game state for this puzzle
+      localStorage.removeItem(`gameState-${puzzle.date}`);
+    }
   }
 }, [puzzle]);
 
