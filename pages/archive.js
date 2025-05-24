@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
-import { supabase } from "@/lib/supabase"; // adjust path if needed
+import { supabase } from "@/lib/supabase";
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
   const [mounted, setMounted] = useState(false);
   const [allowed, setAllowed] = useState(false);
+  const [completed, setCompleted] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -39,6 +40,9 @@ export default function Archive() {
       const filtered = data.filter(p => p.date && p.date < today);
       setAvailable(filtered);
       setAllowed(true);
+
+      const stored = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+      setCompleted(stored);
     };
 
     fetchPuzzles();
@@ -56,31 +60,47 @@ export default function Archive() {
       </p>
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {available.map((puzzle) => (
-          <button
-            key={puzzle.id}
-            onClick={() => {
-              const puzzleNumber = puzzle?.puzzle_number;
-              if (!puzzleNumber || isNaN(Number(puzzleNumber))) {
-                console.error("❌ Invalid puzzle_number:", puzzle);
-                return;
-              }
+        {available.map((puzzle) => {
+          const isCompleted = completed.includes(puzzle.id);
+          const puzzleNumber = puzzle.puzzle_number;
 
-              localStorage.setItem("lastPlayedArchive", puzzleNumber.toString());
+          return (
+            <button
+              key={puzzle.id}
+              onClick={() => {
+                if (isCompleted) return;
 
-              router.push(`/archive/${puzzleNumber}`).then(() => {
-                localStorage.removeItem("archiveToken");
-              });
-            }}
-            className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
-          >
-            <p className="text-lg font-semibold">Numerus #{puzzle.puzzle_number}</p>
-            <p className="text-gray-700">{puzzle.number}</p>
-            <p className="text-sm text-gray-500">
-              {format(new Date(puzzle.date), "MMMM d, yyyy")}
-            </p>
-          </button>
-        ))}
+                if (!puzzleNumber || isNaN(Number(puzzleNumber))) {
+                  console.error("❌ Invalid puzzle_number:", puzzle);
+                  return;
+                }
+
+                localStorage.setItem("lastPlayedArchive", puzzleNumber.toString());
+
+                router.push(`/archive/${puzzleNumber}`).then(() => {
+                  localStorage.removeItem("archiveToken");
+                });
+              }}
+              className={`bg-white border rounded-lg shadow-sm p-4 text-left transition relative ${
+                isCompleted ? "opacity-50 cursor-not-allowed" : "hover:shadow-md"
+              }`}
+              disabled={isCompleted}
+            >
+              <p className="text-lg font-semibold">
+                Numerus #{puzzleNumber}
+              </p>
+              <p className="text-gray-700">{puzzle.number}</p>
+              <p className="text-sm text-gray-500">
+                {format(new Date(puzzle.date), "MMMM d, yyyy")}
+              </p>
+              {isCompleted && (
+                <p className="absolute top-2 right-2 text-xs text-green-600 font-bold">
+                  ✓ Completed
+                </p>
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
