@@ -11,13 +11,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing deviceId" });
   }
 
-  console.log("Incoming deviceId:", deviceId);
+  const trimmedId = deviceId.trim(); // ✅ define it here
+  console.log("Incoming deviceId:", trimmedId);
 
   // 🔍 Find an unused token for this device
   const { data: tokenRow, error } = await supabase
     .from("ArchiveTokens")
     .select("*")
-    .eq("device_id", deviceId)
+    .ilike("device_id", trimmedId) // ✅ now this works
     .eq("used", false)
     .limit(1)
     .single();
