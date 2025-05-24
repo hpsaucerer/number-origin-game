@@ -20,14 +20,18 @@ function ModalManager() {
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const existingId = localStorage.getItem("deviceId");
-      if (!existingId) {
-        const newId = crypto.randomUUID();
-        localStorage.setItem("deviceId", newId);
-        console.log("📱 New deviceId generated:", newId);
-      } else {
-        console.log("📱 Existing deviceId found:", existingId);
+    if (typeof window !== "undefined") {
+      try {
+        let deviceId = localStorage.getItem("deviceId");
+        if (!deviceId) {
+          deviceId = crypto.randomUUID();
+          localStorage.setItem("deviceId", deviceId);
+          console.log("🆕 Generated new deviceId:", deviceId);
+        } else {
+          console.log("✅ Loaded existing deviceId from localStorage:", deviceId);
+        }
+      } catch (err) {
+        console.error("❌ Failed to access localStorage for deviceId:", err);
       }
     }
   }, []);
