@@ -780,6 +780,10 @@ debugLog("🚫 Final matched conflicts:", normalizedConflicts.filter(w =>
   const handleGameOver = (newAttempts) => {
   setStats((prev) => updateStats(prev, false));
 
+  if (isNewPlayer()) {
+  setCanPlayBonus(true);
+}
+
   if (typeof track === "function" && getCookiePreferences().analytics) {
     track("puzzle_failed", { correct: false, attempts: newAttempts, puzzleId });
     track("puzzle_guess_count", { guessCount: "✖", puzzleId });
@@ -1156,6 +1160,10 @@ if (error) {
 
     if (isCorrectGuess) {
       setIsCorrect(true);
+
+      if (isNewPlayer()) {
+    setCanPlayBonus(true); // ✅ Grant archive bonus if they win
+  }
       localStorage.setItem(`completed-${puzzle.date}`, "true");
       const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
       if (!existingCompleted.includes(puzzle.id)) {
