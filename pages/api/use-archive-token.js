@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"; // adjust if needed
+import { supabase } from "@/lib/supabase";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -12,23 +12,23 @@ export default async function handler(req, res) {
   }
 
   const trimmedId = deviceId.trim();
-  console.log("Incoming trimmed deviceId:", `"${trimmedId}"`);
+  console.log("📦 Incoming trimmed deviceId:", JSON.stringify(trimmedId));
 
-  // 🔍 Find an unused token for this exact device ID
+  // 🔍 Find matching token
   const { data: tokenRow, error } = await supabase
     .from("ArchiveTokens")
     .select("*")
-    .eq("device_id", trimmedId)
+    .ilike("device_id", trimmedId)  // case-insensitive match
     .eq("used", false)
+    .eq("token_date", new Date().toISOString().split("T")[0])
     .limit(1)
     .single();
 
   if (error || !tokenRow) {
-    console.error("❌ No valid archive token found for:", trimmedId);
+    console.error("❌ No valid archive token found for:", trimmedId, error);
     return res.status(403).json({ error: "No valid archive token found" });
   }
 
-  // ✅ Mark token as used
   const { error: updateError } = await supabase
     .from("ArchiveTokens")
     .update({
@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     .eq("id", tokenRow.id);
 
   if (updateError) {
-    console.error("Failed to mark token as used:", updateError);
+    console.error("❌ Failed to mark token as used:", updateError);
     return res.status(500).json({ error: "Failed to mark token as used" });
   }
 
