@@ -67,20 +67,42 @@ export default function Archive() {
           return (
             <button
               key={puzzle.id}
-              onClick={() => {
-                if (isCompleted) return;
+onClick={async () => {
+  if (isCompleted) return;
 
-                if (!puzzleNumber || isNaN(Number(puzzleNumber))) {
-                  console.error("❌ Invalid puzzle_number:", puzzle);
-                  return;
-                }
+  if (!puzzleNumber || isNaN(Number(puzzleNumber))) {
+    console.error("❌ Invalid puzzle_number:", puzzle);
+    return;
+  }
 
-                localStorage.setItem("lastPlayedArchive", puzzleNumber.toString());
+  // 🔑 Consume archive token
+  try {
+    const deviceId = localStorage.getItem("deviceId");
+    const res = await fetch("/api/use-archive-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ deviceId }),
+    });
 
-                router.push(`/archive/${puzzleNumber}`).then(() => {
-                  localStorage.removeItem("archiveToken");
-                });
-              }}
+    const result = await res.json();
+    if (!res.ok) {
+      console.error("❌ Token use failed:", result?.error);
+      alert("Unable to use archive token. Please try again.");
+      return;
+    }
+  } catch (err) {
+    console.error("❌ API error:", err);
+    alert("There was a problem validating your token.");
+    return;
+  }
+
+  // ✅ Proceed to archive puzzle
+  localStorage.setItem("lastPlayedArchive", puzzleNumber.toString());
+  router.push(`/archive/${puzzleNumber}`).then(() => {
+    localStorage.removeItem("archiveToken");
+  });
+}}
+
               className={`bg-white border rounded-lg shadow-sm p-4 text-left transition relative ${
                 isCompleted ? "opacity-50 cursor-not-allowed" : "hover:shadow-md"
               }`}
