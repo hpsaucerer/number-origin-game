@@ -4,9 +4,8 @@ import '@/styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import Head from 'next/head';
 import { ModalProvider, useModal } from '@/context/ModalContext';
-import AchievementsModal from '@/components/AchievementsModal'; // ✅ Import the modal
+import AchievementsModal from '@/components/AchievementsModal';
 import { useEffect } from 'react';
-
 
 // 👇 Helper wrapper to access modal inside provider
 function ModalManager() {
@@ -19,18 +18,16 @@ function ModalManager() {
   );
 }
 
-
-
 export default function App({ Component, pageProps }) {
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      let deviceId = localStorage.getItem("deviceId");
-      if (!deviceId) {
-        deviceId = crypto.randomUUID();
-        localStorage.setItem("deviceId", deviceId);
-        console.log("Generated new deviceId:", deviceId);
+    if (typeof window !== 'undefined') {
+      const existingId = localStorage.getItem("deviceId");
+      if (!existingId) {
+        const newId = crypto.randomUUID();
+        localStorage.setItem("deviceId", newId);
+        console.log("📱 New deviceId generated:", newId);
       } else {
-        console.log("Existing deviceId:", deviceId);
+        console.log("📱 Existing deviceId found:", existingId);
       }
     }
   }, []);
