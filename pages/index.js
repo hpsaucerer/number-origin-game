@@ -261,6 +261,12 @@ function getPlayerTitle(stats) {
 export default function Home({ overridePuzzle = null, isArchive = false, archiveIndex = null }) {
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
+const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
+
+const [canPlayBonus, setCanPlayBonus] = useState(() => {
+  return localStorage.getItem("canPlayBonus") === "true";
+});
+
 // ✨ JSX lifted out to constants
 const guessStepContent = (
   <div>
@@ -1158,18 +1164,21 @@ if (error) {
 }
 
 
-    if (isCorrectGuess) {
-      setIsCorrect(true);
+if (isCorrectGuess) {
+  setIsCorrect(true);
 
-      if (isNewPlayer()) {
+  if (isNewPlayer()) {
     setCanPlayBonus(true); // ✅ Grant archive bonus if they win
+    localStorage.setItem("canPlayBonus", "true"); // ✅ Persist bonus flag
   }
-      localStorage.setItem(`completed-${puzzle.date}`, "true");
-      const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-      if (!existingCompleted.includes(puzzle.id)) {
-       existingCompleted.push(puzzle.id);
-       localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
-   }
+
+  localStorage.setItem(`completed-${puzzle.date}`, "true");
+  const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  if (!existingCompleted.includes(puzzle.id)) {
+    existingCompleted.push(puzzle.id);
+    localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
+  }
+
 
       setStats((prev) => updateStats(prev, true, attempts + 1));
       setGuess("");
