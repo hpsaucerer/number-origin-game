@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"; // adjust if your Supabase client lives elsewhere
+import { supabase } from "@/lib/supabase"; // adjust if needed
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   if (!deviceId) {
     return res.status(400).json({ error: "Missing deviceId" });
   }
+
   console.log("Incoming deviceId:", deviceId);
 
   // 🔍 Find an unused token for this device
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: "No valid archive token found" });
   }
 
-  // ✅ Mark token as used
+  // ✅ Mark token as used, with added error logging
   const { error: updateError } = await supabase
     .from("ArchiveTokens")
     .update({
@@ -35,6 +36,7 @@ export default async function handler(req, res) {
     .eq("id", tokenRow.id);
 
   if (updateError) {
+    console.error("Failed to mark token as used:", updateError);
     return res.status(500).json({ error: "Failed to mark token as used" });
   }
 
