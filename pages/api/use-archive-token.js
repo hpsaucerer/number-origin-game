@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   if (!deviceId) {
     return res.status(400).json({ error: "Missing deviceId" });
   }
+  console.log("Incoming deviceId:", deviceId);
 
   // 🔍 Find an unused token for this device
   const { data: tokenRow, error } = await supabase
