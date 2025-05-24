@@ -30,6 +30,7 @@ import CookieConsentBanner from "@/components/CookieConsentBanner";
 import { getCookiePreferences } from "@/utils/cookies";
 import { askLLMFallback } from '../lib/llm'; // adjust if needed
 import ArchiveIntroModal from "@/components/ArchiveIntroModal";
+import { useRouter } from "next/router";
 
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
@@ -263,9 +264,11 @@ function getPlayerTitle(stats) {
 }
 
 export default function Home({ overridePuzzle = null, isArchive = false, archiveIndex = null }) {
-const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
+  const router = useRouter();
 
-const [canPlayBonus, setCanPlayBonus] = useState(false);
+  const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
+
+  const [canPlayBonus, setCanPlayBonus] = useState(false);
 
 useEffect(() => {
   if (typeof window !== "undefined") {
@@ -1836,6 +1839,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
       onClick={() => {
         localStorage.setItem("seenArchiveIntro", "true");
         setShowArchiveIntro(false);
+        router.push("/archive");
         // 👉 Token logic will go here later
       }}
     >
