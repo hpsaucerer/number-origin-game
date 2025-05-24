@@ -575,7 +575,9 @@ useEffect(() => {
     guess,
   };
 
+if (puzzle?.date) {
   localStorage.setItem(`gameState-${puzzle.date}`, JSON.stringify(gameState));
+}
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 
@@ -686,8 +688,8 @@ useEffect(() => {
 }, []);
 
   useEffect(() => {
-  if (!puzzle) return;
-
+if (puzzle?.date) {
+  
   const alreadyCompleted = localStorage.getItem(`completed-${puzzle.date}`) === "true";
   if (alreadyCompleted) {
     setIsCorrect(true);
@@ -731,16 +733,27 @@ function awardTile() {
 
   if (storedIndexes.length >= TILE_WORD.length) return;
 
-  const puzzleDate = puzzle?.date;
-  if (!puzzleDate || localStorage.getItem(`tile-earned-${puzzleDate}`) === "true") return;
+const puzzleDate = puzzle?.date;
 
-  const nextIndex = storedIndexes.length; // 0 → N, 1 → U, etc.
-  const newIndexes = [...storedIndexes, nextIndex];
+if (!puzzleDate) {
+  console.warn("⚠️ Skipping tile award — puzzleDate is undefined.");
+  return;
+}
 
-  // ✅ Save only earnedTileIndexes — not earnedTiles as letters
-  localStorage.setItem("earnedTileIndexes", JSON.stringify(newIndexes));
-  localStorage.setItem(`tile-earned-${puzzleDate}`, "true");
-  setEarnedTileIndexes(newIndexes);
+const alreadyEarned = localStorage.getItem(`tile-earned-${puzzleDate}`) === "true";
+if (alreadyEarned) {
+  console.log(`🧩 Tile already earned for ${puzzleDate}`);
+  return;
+}
+
+const nextIndex = storedIndexes.length; // 0 → N, 1 → U, etc.
+const newIndexes = [...storedIndexes, nextIndex];
+
+// ✅ Save only earnedTileIndexes — not earnedTiles as letters
+localStorage.setItem("earnedTileIndexes", JSON.stringify(newIndexes));
+localStorage.setItem(`tile-earned-${puzzleDate}`, "true");
+setEarnedTileIndexes(newIndexes);
+
 
   // ✅ Optional: if all tiles collected, give a token reward
   if (newIndexes.length === TILE_WORD.length) {
@@ -1199,7 +1212,9 @@ if (isCorrectGuess) {
     localStorage.setItem("canPlayBonus", "true"); // ✅ Persist bonus flag
   }
 
+  if (puzzle?.date) {
   localStorage.setItem(`completed-${puzzle.date}`, "true");
+}
   const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
   if (!existingCompleted.includes(puzzle.id)) {
     existingCompleted.push(puzzle.id);
