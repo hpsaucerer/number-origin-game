@@ -13,7 +13,7 @@ const getTileMessage = (count) => {
     case 1: return "Yay! You've got your first letter!";
     case 2: return "Another one in the bag, come back tomorrow for your third!";
     case 3: return "Three down, four to go - almost halfway!";
-    case 4: return "Getting closer to that token now.";
+    case 4: return "Getting closer to those tokens now.";
     case 5: return "You're on a roll!";
     case 6: return "Just one more day, you can do it!";
     case 7: return "Whoop! Well done, you've earned some tokens!";
