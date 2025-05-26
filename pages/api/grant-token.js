@@ -1,12 +1,28 @@
 // pages/api/grant-token.js
 import { supabase } from "@/lib/supabase";
 
+export const config = {
+  api: {
+    bodyParser: true, // Ensure body parsing is enabled (usually by default)
+  },
+};
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { device_id, source = "manual_grant" } = req.body;
+  let device_id = null;
+  let source = "manual_grant";
+
+  try {
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    device_id = body.device_id;
+    source = body.source || source;
+  } catch (err) {
+    console.error("❌ Failed to parse JSON body:", err.message);
+    return res.status(400).json({ error: "Invalid JSON body" });
+  }
 
   if (!device_id) {
     return res.status(400).json({ error: "Missing device_id" });
@@ -14,7 +30,6 @@ export default async function handler(req, res) {
 
   console.log("🛠️ Grant token for device:", device_id, "via source:", source);
 
-  // Check if there's already an unused token for this device
   const { data: existing, error: checkError } = await supabase
     .from("ArchiveTokens")
     .select("*")
@@ -32,27 +47,18 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, token_id: existing[0].id });
   }
 
-  // Insert a new token if none exist
-  const { data, error: insertError } = await supabase
-    .from("ArchiveTokens")
-    .insert([
-      {
-        device_id,
-        used: false,
-        token_date: new Date().toISOString().split("T")[0],
-        source,
-      },
-    ])
-    .select(); // Ensure inserted data is returned
+  const { data, error: insertError } = await supabase.from("ArchiveTokens").insert([
+    {
+      device_id,
+      used: false,
+      token_date: new Date().toISOString().split("T")[0],
+      source,
+    },
+  ]);
 
   if (insertError) {
     console.error("❌ Failed to insert new token:", insertError.message);
     return res.status(500).json({ error: insertError.message });
-  }
-
-  if (!data || data.length === 0) {
-    console.error("❌ Insert succeeded but no data returned.");
-    return res.status(500).json({ error: "No data returned after insert" });
   }
 
   return res.status(200).json({ success: true, token_id: data[0].id });
