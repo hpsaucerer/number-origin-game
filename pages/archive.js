@@ -89,10 +89,7 @@ useEffect(() => {
               }
 
               localStorage.setItem("lastPlayedArchive", puzzleNumber.toString());
-
-              router.push(`/archive/${puzzleNumber}`).then(() => {
-                router.push(`/archive/${puzzleNumber}`);
-              });
+              router.push(`/archive/${puzzleNumber}`);
             }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
