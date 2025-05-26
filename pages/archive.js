@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
 import { supabase } from "@/lib/supabase"; // adjust path if needed
+import { getOrCreateDeviceId } from "@/lib/device";
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
@@ -12,17 +13,38 @@ export default function Archive() {
   useEffect(() => {
     setMounted(true); // Ensure client-side
   }, []);
+  
+useEffect(() => {
+  if (!mounted) return;
+
+  const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
+  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+
+  if (!hasGranted && completed.length === 0) {
+    const deviceId = getOrCreateDeviceId();
+
+    fetch("/api/grant-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id: deviceId,
+        source: "archive_visit_bonus"
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          console.log("✅ Archive token granted via archive visit");
+          localStorage.setItem("firstTokenGranted", "true");
+        }
+      });
+  }
+}, [mounted]);
 
   useEffect(() => {
     if (!mounted) return;
 
     const today = new Date().toISOString().split("T")[0];
-    const token = localStorage.getItem("archiveToken");
-
-    if (token !== today) {
-      router.replace("/");
-      return;
-    }
 
     const fetchPuzzles = async () => {
       const { data, error } = await supabase
