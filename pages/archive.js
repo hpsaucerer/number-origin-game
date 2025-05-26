@@ -13,7 +13,7 @@ export default function Archive() {
   useEffect(() => {
     setMounted(true); // Ensure client-side
   }, []);
-  
+
   useEffect(() => {
     if (!mounted) return;
 
@@ -22,6 +22,9 @@ export default function Archive() {
 
     if (!hasGranted && completed.length === 0) {
       const deviceId = getOrCreateDeviceId();
+
+      // ✅ Ensure cookie is set so server can read it
+      document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
 
       fetch("/api/redeem-token", {
         method: "POST",
@@ -88,6 +91,7 @@ export default function Archive() {
               }
 
               const deviceId = getOrCreateDeviceId();
+              // ✅ Set device_id cookie for server access
               document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
 
               localStorage.setItem("archiveTokenUsed", "true");
