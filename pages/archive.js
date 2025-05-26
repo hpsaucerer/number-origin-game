@@ -14,32 +14,32 @@ export default function Archive() {
     setMounted(true); // Ensure client-side
   }, []);
   
-useEffect(() => {
-  if (!mounted) return;
+  useEffect(() => {
+    if (!mounted) return;
 
-  const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
-  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+    const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
+    const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
 
-  if (!hasGranted && completed.length === 0) {
-    const deviceId = getOrCreateDeviceId();
+    if (!hasGranted && completed.length === 0) {
+      const deviceId = getOrCreateDeviceId();
 
-    fetch("/api/redeem-token", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        device_id: deviceId,
-        source: "archive_visit_bonus"
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          console.log("✅ Archive token granted via archive visit");
-          localStorage.setItem("firstTokenGranted", "true");
-        }
-      });
-  }
-}, [mounted]);
+      fetch("/api/redeem-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          device_id: deviceId,
+          source: "archive_visit_bonus"
+        }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            console.log("✅ Archive token granted via archive visit");
+            localStorage.setItem("firstTokenGranted", "true");
+          }
+        });
+    }
+  }, [mounted]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -82,17 +82,14 @@ useEffect(() => {
           <button
             key={puzzle.id}
             onClick={() => {
-  if (!puzzle?.id) {
-    console.error("❌ Missing puzzle ID:", puzzle);
-    return;
-  }
+              if (!puzzle?.puzzle_number) {
+                console.error("❌ Missing puzzle number:", puzzle);
+                return;
+              }
 
-  localStorage.setItem("archiveTokenUsed", "true");
-  router.push({
-    pathname: "/",
-    query: { archive: puzzle.id },
-  });
-}}
+              localStorage.setItem("archiveTokenUsed", "true");
+              router.push(`/archive/${puzzle.puzzle_number}`);
+            }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
             <p className="text-lg font-semibold">Numerus #{puzzle.puzzle_number}</p>
