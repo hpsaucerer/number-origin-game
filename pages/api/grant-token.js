@@ -33,18 +33,26 @@ export default async function handler(req, res) {
   }
 
   // Insert a new token if none exist
-  const { data, error: insertError } = await supabase.from("ArchiveTokens").insert([
-    {
-      device_id,
-      used: false,
-      token_date: new Date().toISOString().split("T")[0],
-      source,
-    },
-  ]);
+  const { data, error: insertError } = await supabase
+    .from("ArchiveTokens")
+    .insert([
+      {
+        device_id,
+        used: false,
+        token_date: new Date().toISOString().split("T")[0],
+        source,
+      },
+    ])
+    .select(); // Ensure inserted data is returned
 
   if (insertError) {
     console.error("❌ Failed to insert new token:", insertError.message);
     return res.status(500).json({ error: insertError.message });
+  }
+
+  if (!data || data.length === 0) {
+    console.error("❌ Insert succeeded but no data returned.");
+    return res.status(500).json({ error: "No data returned after insert" });
   }
 
   return res.status(200).json({ success: true, token_id: data[0].id });
