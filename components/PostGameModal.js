@@ -64,6 +64,8 @@ export default function PostGameModal({
     return () => clearInterval(interval);
   }, []);
 
+const [showBonusButton, setShowBonusButton] = useState(false);
+
 useEffect(() => {
   if (!open) return;
 
@@ -123,6 +125,11 @@ if (completed.length === 0 && !hasGrantedFirstToken) {
     });
   }
 
+  // ✅ Safely trigger bonus button visibility
+if (!isArchive && isCorrect && localStorage.getItem("firstTokenGranted") === "true") {
+  setShowBonusButton(true);
+}
+
   return () => {
     document.body.style.overflow = "";
   };
@@ -170,7 +177,7 @@ if (completed.length === 0 && !hasGrantedFirstToken) {
             </div>
           </div>
 
-{!isArchive && localStorage.getItem("firstTokenGranted") === "true" && (
+{showBonusButton && (
   <div className="flex flex-col items-center mt-3 space-y-2">
     <p className="text-sm text-yellow-600 font-semibold animate-bounce">
       🎁 Try one from the archive!
