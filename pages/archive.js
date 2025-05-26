@@ -82,7 +82,6 @@ useEffect(() => {
           <button
             key={puzzle.id}
             onClick={() => {
-onClick={() => {
   if (!puzzle?.id) {
     console.error("❌ Missing puzzle ID:", puzzle);
     return;
