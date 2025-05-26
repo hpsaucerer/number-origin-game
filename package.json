@@ -23,7 +23,8 @@
     "react-joyride": "^2.6.1",
     "recharts": "^2.15.1",
     "string-similarity": "^4.0.4",
-    "date-fns": "^2.30.0"
+    "date-fns": "^2.30.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "22.13.10",
