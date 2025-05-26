@@ -29,6 +29,7 @@ import WhatsNewModal from "@/components/modals/WhatsNewModal";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
 import { getCookiePreferences } from "@/utils/cookies";
 import { askLLMFallback } from '../lib/llm'; // adjust if needed
+import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
 
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
@@ -257,10 +258,6 @@ function getPlayerTitle(stats) {
   if (avgGuesses <= 3.0) return "Scribe";
   return "Dabbler";
 }
-
-import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
-
-...
 
 export default function Home({ overridePuzzle = null, isArchive: initialIsArchive = false, archiveIndex = null }) {
   const router = useRouter();
