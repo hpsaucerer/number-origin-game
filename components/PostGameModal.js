@@ -167,10 +167,12 @@ export default function PostGameModal({
                 🎁 Try one from the archive!
               </p>
               <Button
-                onClick={() => {
-                  localStorage.setItem("archiveTokenUsed", "true");
-                  window.location.href = "/archive";
-                }}
+               onClick={() => {
+                localStorage.setItem("archiveTokenUsed", "true");
+                setTimeout(() => {
+                 window.location.href = "/archive";
+                }, 100);
+               }}
                 className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
               >
                 Bonus Puzzle
