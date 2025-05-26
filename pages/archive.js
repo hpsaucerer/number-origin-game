@@ -82,15 +82,18 @@ useEffect(() => {
           <button
             key={puzzle.id}
             onClick={() => {
-              const puzzleNumber = puzzle?.puzzle_number;
-              if (!puzzleNumber || isNaN(Number(puzzleNumber))) {
-                console.error("❌ Invalid puzzle_number:", puzzle);
-                return;
-              }
+onClick={() => {
+  if (!puzzle?.id) {
+    console.error("❌ Missing puzzle ID:", puzzle);
+    return;
+  }
 
-              localStorage.setItem("lastPlayedArchive", puzzleNumber.toString());
-              router.push(`/archive/${puzzleNumber}`);
-            }}
+  localStorage.setItem("archiveTokenUsed", "true");
+  router.push({
+    pathname: "/",
+    query: { archive: puzzle.id },
+  });
+}}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
             <p className="text-lg font-semibold">Numerus #{puzzle.puzzle_number}</p>
