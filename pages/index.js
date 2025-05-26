@@ -258,7 +258,17 @@ function getPlayerTitle(stats) {
   return "Dabbler";
 }
 
-export default function Home({ overridePuzzle = null, isArchive = false, archiveIndex = null }) {
+import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
+
+...
+
+export default function Home({ overridePuzzle = null, isArchive: initialIsArchive = false, archiveIndex = null }) {
+  const router = useRouter();
+
+  // ✅ Dynamic fallback from query param
+  const queryArchiveId = router?.query?.archive;
+  const isArchive = initialIsArchive || !!queryArchiveId;
+
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
 // ✨ JSX lifted out to constants
@@ -562,6 +572,19 @@ useEffect(() => {
   async function loadPuzzles() {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
+    if (queryArchiveId && all.length > 0) {
+  const archiveId = parseInt(queryArchiveId, 10);
+  const found = all.find((p) => p.id === archiveId);
+
+  if (found) {
+    setPuzzle(found);
+    setPuzzleNumber(found.puzzle_number ?? found.id);
+    return; // ✅ Early return to skip today’s puzzle
+  } else {
+    console.warn("🚫 Archive puzzle not found for ID:", archiveId);
+  }
+}
+
     localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
     if (isArchive && router?.query?.archive && all.length > 0) {
