@@ -519,10 +519,10 @@ useEffect(() => {
 
     
 useEffect(() => {
-  const existingId = localStorage.getItem("deviceId");
+  const existingId = localStorage.getItem("device_id");
   if (!existingId) {
     const newId = crypto.randomUUID();
-    localStorage.setItem("deviceId", newId);
+    localStorage.setItem("device_id", newId);
   }
 }, []);
 
@@ -1114,7 +1114,7 @@ const { error } = await supabase.from("Player_responses").insert([
     is_correct: isCorrectGuess,
     match_type: matchType,
     attempt: attempts + 1,
-    device_id: localStorage.getItem("deviceId") || "unknown",
+    device_id: localStorage.getItem("device_id") || "unknown",
     llmUsed: matchType === "llm_accept",
     llmRaw: matchType === "llm_accept" ? raw : null,
     notes: JSON.stringify({
