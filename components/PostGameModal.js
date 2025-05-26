@@ -5,6 +5,7 @@ import { Share2, X } from "lucide-react";
 import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 import confetti from "canvas-confetti";
+import { getOrCreateDeviceId } from "@/lib/device";
 
 const TILE_WORD = "NUMERUS";
 
@@ -87,13 +88,32 @@ useEffect(() => {
     setEarnedTiles(storedIndexes);
   }
 
-// 🎁 Grant archive token for new players only (once)
+// 🎁 Securely grant archive token to new players only (once)
 const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
-  localStorage.setItem("archiveToken", today);
-  console.log("✅ Archive token granted to new player.");
-}
+const hasGrantedFirstToken = localStorage.getItem("firstTokenGranted") === "true";
 
+if (completed.length === 0 && !hasGrantedFirstToken) {
+  const deviceId = getOrCreateDeviceId();
+
+  fetch("/api/grant-token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      device_id: deviceId,
+      source: "first_game_bonus"
+    }),
+  })
+    .then(res => res.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("✅ First archive token granted via API");
+        localStorage.setItem("firstTokenGranted", "true");
+      } else {
+        console.warn("⚠️ Token grant failed:", data.error);
+      }
+    })
+    .catch(err => console.error("❌ Grant token API error:", err));
+}
 
   if (isCorrect) {
     confetti({
