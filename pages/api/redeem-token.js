@@ -25,6 +25,8 @@ export default async function handler(req, res) {
   if (fetchError) {
     return res.status(500).json({ error: "Supabase error: " + fetchError.message });
   }
+  
+  console.log("🧪 Token lookup result:", tokens);
 
   if (!tokens || tokens.length === 0) {
     return res.status(403).json({ error: "No unused tokens found" });
