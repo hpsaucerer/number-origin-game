@@ -1,9 +1,13 @@
 import { supabase } from "@/lib/supabase";
 import Home from "../index";
+import cookie from "cookie";
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
-  const device_id = context.req.cookies.device_id; // or use custom header
+  
+  // ✅ Parse device_id from cookie manually
+  const cookies = cookie.parse(context.req.headers.cookie || "");
+  const device_id = cookies.device_id;
 
   // REDEEM ARCHIVE TOKEN
   const redeemRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/redeem-token`, {
