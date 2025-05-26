@@ -17,10 +17,13 @@ export default async function handler(req, res) {
   const { data: tokens, error: fetchError } = await supabase
     .from("ArchiveTokens")
     .select("*")
-    .eq("device_id", device_id)
+    .ilike("device_id", device_id)
     .eq("used", false)
     .order("token_date", { ascending: true })
     .limit(1);
+
+  console.log("🔍 Query check: device_id =", device_id);
+  console.log("🔍 Matching tokens returned:", tokens?.length, tokens);
 
   if (fetchError) {
     return res.status(500).json({ error: "Supabase error: " + fetchError.message });
