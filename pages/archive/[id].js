@@ -8,10 +8,14 @@ export async function getServerSideProps(context) {
   const cookies = cookie.parse(context.req.headers.cookie || "");
   const device_id = cookies.device_id;
 
-  // ✅ Construct absolute URL safely
+  // ✅ Construct absolute URL with fallback for local/dev/prod
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000';
+    : context.req.headers.host
+      ? `http://${context.req.headers.host}`
+      : 'http://localhost:3000';
+
+  console.log("📡 Fetching token from:", `${baseUrl}/api/redeem-token`);
 
   // ✅ REDEEM ARCHIVE TOKEN
   const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
