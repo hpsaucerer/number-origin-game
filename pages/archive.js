@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
-import { supabase } from "@/lib/supabase"; // adjust path if needed
+import { supabase } from "@/lib/supabase";
 import { getOrCreateDeviceId } from "@/lib/device";
 
 export default function Archive() {
@@ -11,7 +11,7 @@ export default function Archive() {
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true); // Ensure client-side
+    setMounted(true);
   }, []);
 
   useEffect(() => {
@@ -23,7 +23,6 @@ export default function Archive() {
     if (!hasGranted && completed.length === 0) {
       const deviceId = getOrCreateDeviceId();
 
-      // ✅ Ensure cookie is set so server can read it
       document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
 
       fetch("/api/redeem-token", {
@@ -73,9 +72,7 @@ export default function Archive() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        Pick an Archive Puzzle
-      </h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">Pick an Archive Puzzle</h1>
       <p className="text-gray-600 text-center mb-6">
         You've unlocked an extra puzzle — pick any past number to play again!
       </p>
@@ -93,12 +90,13 @@ export default function Archive() {
               const deviceId = getOrCreateDeviceId();
               document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
 
-              // 🧪 Debug logs
               console.log("🧪 Navigating to archive:", puzzle.puzzle_number);
               console.log("🧪 Current device_id cookie:", document.cookie);
 
-              localStorage.setItem("archiveTokenUsed", "true");
-              router.push(`/archive/${puzzle.puzzle_number}`);
+              // 👇 Delay navigation until next tick to ensure cookie is available to SSR
+              setTimeout(() => {
+                router.push(`/archive/${puzzle.puzzle_number}`);
+              }, 50);
             }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
