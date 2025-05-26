@@ -87,6 +87,9 @@ export default function Archive() {
                 return;
               }
 
+              const deviceId = getOrCreateDeviceId();
+              document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
+
               localStorage.setItem("archiveTokenUsed", "true");
               router.push(`/archive/${puzzle.puzzle_number}`);
             }}
