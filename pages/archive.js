@@ -91,8 +91,11 @@ export default function Archive() {
               }
 
               const deviceId = getOrCreateDeviceId();
-              // ✅ Set device_id cookie for server access
               document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
+
+              // 🧪 Debug logs
+              console.log("🧪 Navigating to archive:", puzzle.puzzle_number);
+              console.log("🧪 Current device_id cookie:", document.cookie);
 
               localStorage.setItem("archiveTokenUsed", "true");
               router.push(`/archive/${puzzle.puzzle_number}`);
