@@ -8,6 +8,10 @@ export async function getServerSideProps(context) {
   const cookies = cookie.parse(context.req.headers.cookie || "");
   const device_id = cookies.device_id;
 
+  // ✅ Add debug logs right after parsing cookies
+  console.log("📦 Received cookies:", cookies);
+  console.log("📦 Extracted device_id:", device_id);
+  
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000";
