@@ -564,6 +564,19 @@ useEffect(() => {
     setAllPuzzles(all);
     localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
+    if (isArchive && router?.query?.archive && all.length > 0) {
+      const archiveId = parseInt(router.query.archive, 10);
+      const found = all.find(p => p.id === archiveId);
+
+      if (found) {
+        setPuzzle(found);
+        setPuzzleNumber(found.puzzle_number ?? found.id); // fallback
+        return; // ✅ Stop here, don't load today
+      } else {
+        console.warn("🚫 Archive puzzle not found:", archiveId);
+      }
+    }
+
 let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
 let isNewPlayer = false;
 
