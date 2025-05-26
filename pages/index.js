@@ -663,6 +663,14 @@ useEffect(() => {
   }
 }, [puzzle]);
 
+  useEffect(() => {
+  if (!isCorrect || isArchive) return;
+
+  const granted = localStorage.getItem("firstTokenGranted") === "true";
+  if (granted) {
+    setCanPlayBonus(true);
+  }
+}, [isCorrect, isArchive]);
 
     useEffect(() => {
   if (puzzle && DEV_MODE) {
