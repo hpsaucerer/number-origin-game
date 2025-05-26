@@ -8,27 +8,29 @@ export async function getServerSideProps(context) {
   const cookies = cookie.parse(context.req.headers.cookie || "");
   const device_id = cookies.device_id;
 
-  // ✅ Construct absolute URL with fallback for local/dev/prod
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
-    : context.req.headers.host
-      ? `http://${context.req.headers.host}`
-      : 'http://localhost:3000';
+    : "http://localhost:3000";
 
-  console.log("📡 Fetching token from:", `${baseUrl}/api/redeem-token`);
+  const payload = {
+    device_id: device_id || "MISSING",
+    puzzle_id: parseInt(id),
+  };
 
-  // ✅ REDEEM ARCHIVE TOKEN
+  console.log("📦 archive [id] - token redemption payload:", payload);
+  console.log("🔗 Calling:", `${baseUrl}/api/redeem-token`);
+
   const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ device_id, puzzle_id: parseInt(id) })
+    body: JSON.stringify(payload),
   });
 
   if (!redeemRes.ok) {
+    console.warn("⚠️ Token redemption failed:", redeemRes.status);
     return { redirect: { destination: "/archive", permanent: false } };
   }
 
-  // ✅ Fetch puzzle
   const { data, error } = await supabase
     .from("puzzles")
     .select("*")
@@ -36,7 +38,7 @@ export async function getServerSideProps(context) {
 
   if (error || !data) return { notFound: true };
 
-  const sorted = data.filter(p => p.date).sort(
+  const sorted = data.filter((p) => p.date).sort(
     (a, b) => new Date(a.date) - new Date(b.date)
   );
 
@@ -56,7 +58,6 @@ export async function getServerSideProps(context) {
   };
 }
 
-// ✅ Fix: Add a default component export
 export default function ArchivePage(props) {
   return <Home {...props} />;
 }
