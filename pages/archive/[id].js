@@ -17,18 +17,20 @@ export async function getServerSideProps(context) {
     puzzle_id: parseInt(id),
   };
 
-  console.log("📦 archive [id] - token redemption payload:", payload);
-  console.log("🔗 Calling:", `${baseUrl}/api/redeem-token`);
+  if (!device_id) {
+    console.warn("🚫 No device_id found in cookies. Skipping token redemption.");
+  } else {
+    console.log("📦 archive [id] - token redemption payload:", payload);
+    const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  if (!redeemRes.ok) {
-    console.warn("⚠️ Token redemption failed:", redeemRes.status);
-    return { redirect: { destination: "/archive", permanent: false } };
+    if (!redeemRes.ok) {
+      console.warn("⚠️ Token redemption failed:", redeemRes.status);
+      return { redirect: { destination: "/archive", permanent: false } };
+    }
   }
 
   const { data, error } = await supabase
