@@ -6,37 +6,46 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { device_id, source } = req.body;
+  const { device_id, source = "manual_grant" } = req.body;
 
   if (!device_id) {
     return res.status(400).json({ error: "Missing device_id" });
   }
 
-  // Optional: Prevent granting multiple tokens
-  const { data: existing, error: fetchError } = await supabase
+  console.log("🛠️ Grant token for device:", device_id, "via source:", source);
+
+  // Check if there's already an unused token for this device
+  const { data: existing, error: checkError } = await supabase
     .from("ArchiveTokens")
     .select("*")
     .eq("device_id", device_id)
-    .eq("source", source || "first_game_bonus");
+    .eq("used", false)
+    .limit(1);
 
-  if (fetchError) {
-    return res.status(500).json({ error: fetchError.message });
+  if (checkError) {
+    console.error("❌ Error checking existing token:", checkError.message);
+    return res.status(500).json({ error: checkError.message });
   }
 
   if (existing && existing.length > 0) {
-    return res.status(409).json({ error: "Token already granted" });
+    console.log("✅ Reusing existing unused token:", existing[0].id);
+    return res.status(200).json({ success: true, token_id: existing[0].id });
   }
 
-  const { error: insertError } = await supabase.from("ArchiveTokens").insert({
-    device_id,
-    token_date: new Date().toISOString(),
-    used: false,
-    source: source || "first_game_bonus",
-  });
+  // Insert a new token if none exist
+  const { data, error: insertError } = await supabase.from("ArchiveTokens").insert([
+    {
+      device_id,
+      used: false,
+      token_date: new Date().toISOString().split("T")[0],
+      source,
+    },
+  ]);
 
   if (insertError) {
-    return res.status(500).json({ error: "Failed to grant token: " + insertError.message });
+    console.error("❌ Failed to insert new token:", insertError.message);
+    return res.status(500).json({ error: insertError.message });
   }
 
-  return res.status(200).json({ success: true });
+  return res.status(200).json({ success: true, token_id: data[0].id });
 }
