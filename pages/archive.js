@@ -23,7 +23,7 @@ useEffect(() => {
   if (!hasGranted && completed.length === 0) {
     const deviceId = getOrCreateDeviceId();
 
-    fetch("/api/grant-token", {
+    fetch("/api/redeem-token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
