@@ -6,54 +6,53 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { device_id, puzzle_id } = req.body;
+  let { device_id, puzzle_id } = req.body;
 
-  console.log("💬 redeem-token body:", req.body); // 👈 Log 1
+  console.log("💬 redeem-token body:", req.body);
 
   if (!device_id) {
     return res.status(400).json({ error: "Missing device_id" });
   }
 
+  // Normalize device_id to ensure consistent casing
+  device_id = device_id.trim().toLowerCase();
+
+  console.log("🔍 Querying for device_id:", device_id);
+
   const { data: tokens, error: fetchError } = await supabase
     .from("ArchiveTokens")
     .select("*")
-    .ilike("device_id", device_id)
+    .eq("device_id", device_id)
     .eq("used", false)
     .order("token_date", { ascending: true })
     .limit(1);
 
-  console.log("🔍 Query check: device_id =", device_id);
-  console.log("🔍 Matching tokens returned:", tokens?.length, tokens);
-
   if (fetchError) {
     return res.status(500).json({ error: "Supabase error: " + fetchError.message });
   }
-  
-  console.log("🧪 Token lookup result:", tokens);
 
   if (!tokens || tokens.length === 0) {
     return res.status(403).json({ error: "No unused tokens found" });
   }
 
   const token = tokens[0];
-  console.log("✅ token to redeem:", token); // 👈 Log 2
+  console.log("✅ token to redeem:", token);
 
   const { error: updateError } = await supabase
     .from("ArchiveTokens")
     .update({
       used: true,
       used_at: new Date().toISOString(),
-      puzzle_id: puzzle_id ? Number(puzzle_id) : null // 🛠 Ensure number type
+      puzzle_id: puzzle_id ? Number(puzzle_id) : null
     })
     .eq("id", token.id);
 
   if (updateError) {
-    console.error("❌ Failed to update token:", updateError.message); // 👈 Log 3
+    console.error("❌ Failed to update token:", updateError.message);
     return res.status(500).json({ error: "Failed to redeem token: " + updateError.message });
   } else {
-    console.log("✅ Token marked as used:", token.id); // 👈 Log 4
+    console.log("✅ Token marked as used:", token.id);
   }
 
   return res.status(200).json({ success: true, token_id: token.id });
 }
-
