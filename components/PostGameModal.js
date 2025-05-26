@@ -125,9 +125,15 @@ if (completed.length === 0 && !hasGrantedFirstToken) {
     });
   }
 
-  // ✅ Safely trigger bonus button visibility
-if (!isArchive && isCorrect && localStorage.getItem("firstTokenGranted") === "true") {
-  setShowBonusButton(true);
+// Watch for token grant *after* open and correct
+if (!isArchive && isCorrect) {
+  const interval = setInterval(() => {
+    if (localStorage.getItem("firstTokenGranted") === "true") {
+      setShowBonusButton(true);
+      clearInterval(interval);
+    }
+  }, 300);
+  return () => clearInterval(interval); // cleanup
 }
 
   return () => {
