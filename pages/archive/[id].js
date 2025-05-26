@@ -1,3 +1,7 @@
+import { supabase } from "@/lib/supabase";
+import Home from "../index";
+import cookie from "cookie";
+
 export async function getServerSideProps(context) {
   const { id } = context.params;
 
@@ -46,4 +50,9 @@ export async function getServerSideProps(context) {
       archiveIndex: puzzle.puzzle_number,
     },
   };
+}
+
+// ✅ Fix: Add a default component export
+export default function ArchivePage(props) {
+  return <Home {...props} />;
 }
