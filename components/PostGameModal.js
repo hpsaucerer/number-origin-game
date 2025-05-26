@@ -22,11 +22,6 @@ const getTileMessage = (count) => {
   }
 };
 
-function isNewPlayer() {
-  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-  return completed.length === 0;
-}
-
 export default function PostGameModal({
   open,
   onClose,
@@ -37,13 +32,13 @@ export default function PostGameModal({
   shareResult,
   attempts,
   isArchive,
-  canPlayBonus
 }) {
   if (!puzzle || !stats) return null;
 
   const [countdown, setCountdown] = useState("");
   const [earnedTiles, setEarnedTiles] = useState([]);
   const [justEarnedTile, setJustEarnedTile] = useState(false);
+  const [showBonusButton, setShowBonusButton] = useState(false);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -64,83 +59,66 @@ export default function PostGameModal({
     return () => clearInterval(interval);
   }, []);
 
-const [showBonusButton, setShowBonusButton] = useState(false);
+  useEffect(() => {
+    if (!open) return;
 
-useEffect(() => {
-  if (!open) return;
+    document.body.style.overflow = "hidden";
 
-  document.body.style.overflow = "hidden";
+    const today = new Date().toISOString().split("T")[0];
+    const alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
+    const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
-  const today = new Date().toISOString().split("T")[0]; // e.g., '2025-05-02'
-  const alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
+    if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length) {
+      const nextIndex = storedIndexes.length;
+      const updatedIndexes = [...storedIndexes, nextIndex];
 
-  const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+      localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
+      localStorage.setItem(`tile-earned-${today}`, "true");
 
-  if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length) {
-    const nextIndex = storedIndexes.length;
-    const updatedIndexes = [...storedIndexes, nextIndex];
-
-    localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
-    localStorage.setItem(`tile-earned-${today}`, "true");
-
-    setEarnedTiles(updatedIndexes);
-    setJustEarnedTile(true);
-  } else {
-    // Still need to show previously earned tiles
-    setEarnedTiles(storedIndexes);
-  }
-
-// 🎁 Securely grant archive token to new players only (once)
-const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-const hasGrantedFirstToken = localStorage.getItem("firstTokenGranted") === "true";
-
-if (completed.length === 0 && !hasGrantedFirstToken) {
-  const deviceId = getOrCreateDeviceId();
-
-  fetch("/api/grant-token", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      device_id: deviceId,
-      source: "first_game_bonus"
-    }),
-  })
-    .then(res => res.json())
-    .then((data) => {
-      if (data.success) {
-        console.log("✅ First archive token granted via API");
-        localStorage.setItem("firstTokenGranted", "true");
-      } else {
-        console.warn("⚠️ Token grant failed:", data.error);
-      }
-    })
-    .catch(err => console.error("❌ Grant token API error:", err));
-}
-
-  if (isCorrect) {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
-  }
-
-// Watch for token grant *after* open and correct
-if (!isArchive && isCorrect) {
-  const interval = setInterval(() => {
-    if (localStorage.getItem("firstTokenGranted") === "true") {
-      setShowBonusButton(true);
-      clearInterval(interval);
+      setEarnedTiles(updatedIndexes);
+      setJustEarnedTile(true);
+    } else {
+      setEarnedTiles(storedIndexes);
     }
-  }, 300);
-  return () => clearInterval(interval); // cleanup
-}
 
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, [open, isCorrect]);
+    const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
+    const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
 
+    if (!hasGranted) {
+      const deviceId = getOrCreateDeviceId();
+      fetch("/api/grant-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          device_id: deviceId,
+          source: "first_token_after_game"
+        }),
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.success) {
+            localStorage.setItem("firstTokenGranted", "true");
+            localStorage.setItem("archiveToken", today);
+            setShowBonusButton(true);
+          }
+        })
+        .catch((err) => console.error("❌ Grant token API error:", err));
+    } else if (!archiveUsed) {
+      setShowBonusButton(true);
+    }
+
+    if (isCorrect) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open, isCorrect]);
 
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
@@ -183,25 +161,23 @@ if (!isArchive && isCorrect) {
             </div>
           </div>
 
-{showBonusButton && (
-  <div className="flex flex-col items-center mt-3 space-y-2">
-    <p className="text-sm text-yellow-600 font-semibold animate-bounce">
-      🎁 Try one from the archive!
-    </p>
-    <Button
-      onClick={() => {
-        localStorage.setItem("archiveToken", new Date().toISOString().split("T")[0]);
-        window.location.href = "/archive";
-      }}
-      className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
-    >
-      Bonus Puzzle
-    </Button>
-  </div>
-)}
+          {showBonusButton && (
+            <div className="flex flex-col items-center mt-3 space-y-2">
+              <p className="text-sm text-yellow-600 font-semibold animate-bounce">
+                🎁 Try one from the archive!
+              </p>
+              <Button
+                onClick={() => {
+                  localStorage.setItem("archiveTokenUsed", "true");
+                  window.location.href = "/archive";
+                }}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
+              >
+                Bonus Puzzle
+              </Button>
+            </div>
+          )}
 
-
-          {/* 🎁 Earned Tiles & Token */}
           <div className="flex flex-col items-center mt-6">
             {earnedTiles.length > 0 && (
               <p className="mb-2 text-center text-brand font-semibold text-sm">
