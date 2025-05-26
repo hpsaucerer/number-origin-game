@@ -1,16 +1,16 @@
-import { supabase } from "@/lib/supabase";
-import Home from "../index";
-import cookie from "cookie";
-
 export async function getServerSideProps(context) {
   const { id } = context.params;
-  
-  // ✅ Parse device_id from cookie manually
+
   const cookies = cookie.parse(context.req.headers.cookie || "");
   const device_id = cookies.device_id;
 
-  // REDEEM ARCHIVE TOKEN
-  const redeemRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/redeem-token`, {
+  // ✅ Construct absolute URL safely
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000';
+
+  // ✅ REDEEM ARCHIVE TOKEN
+  const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ device_id, puzzle_id: parseInt(id) })
@@ -20,7 +20,7 @@ export async function getServerSideProps(context) {
     return { redirect: { destination: "/archive", permanent: false } };
   }
 
-  // Proceed to fetch puzzle
+  // ✅ Fetch puzzle
   const { data, error } = await supabase
     .from("puzzles")
     .select("*")
@@ -46,8 +46,4 @@ export async function getServerSideProps(context) {
       archiveIndex: puzzle.puzzle_number,
     },
   };
-}
-
-export default function ArchivePage(props) {
-  return <Home {...props} />;
 }
