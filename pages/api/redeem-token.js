@@ -1,74 +1,93 @@
 import { supabase } from "@/lib/supabase";
+import Home from "../index";
+import cookie from "cookie";
 
-export default async function handler(req, res) {
-  res.setHeader("Content-Type", "application/json");
+export async function getServerSideProps(context) {
+  const { id } = context.params;
 
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  const cookies = cookie.parse(context.req.headers.cookie || "");
+  const rawDeviceId = cookies.device_id;
+  const device_id = rawDeviceId?.trim().toLowerCase();
+
+  console.log("📦 Received cookies:", cookies);
+  console.log("📦 Normalized device_id:", device_id);
+
+  const baseUrl = context.req.headers.host.startsWith("localhost")
+    ? "http://localhost:3000"
+    : `https://${context.req.headers.host}`;
+
+  let resolvedPuzzleId = null;
+
+  // 🧠 Step 1: Resolve puzzle_number to internal puzzle.id
+  const { data: allPuzzles, error: puzzleError } = await supabase
+    .from("puzzles")
+    .select("*")
+    .order("date", { ascending: true });
+
+  if (puzzleError || !allPuzzles) {
+    console.error("❌ Error fetching puzzles:", puzzleError?.message);
+    return { notFound: true };
   }
 
-  const { device_id, puzzle_id, puzzle_number } = req.body;
+  const sorted = allPuzzles.filter(p => p.date).sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
 
-  if (!device_id || (!puzzle_id && puzzle_number === undefined)) {
-    return res.status(400).json({ error: "Missing device_id or puzzle identifier" });
+  const puzzleIndex = sorted.findIndex(p => p.puzzle_number?.toString() === id);
+  const puzzle = sorted[puzzleIndex];
+
+  if (!puzzle) {
+    console.warn("⚠️ No puzzle found for puzzle_number:", id);
+    return { notFound: true };
   }
 
-  let resolvedPuzzleId = puzzle_id;
+  resolvedPuzzleId = puzzle.id;
 
-  // 🔍 If puzzle_number is given, resolve to puzzle_id
-  if (!resolvedPuzzleId && puzzle_number !== undefined) {
-    const { data, error } = await supabase
-      .from("puzzles")
-      .select("id")
-      .eq("puzzle_number", puzzle_number)
-      .single();
+  // 🔁 Step 2: Attempt token redemption
+  if (device_id && resolvedPuzzleId) {
+    try {
+      console.log("🌐 Redeeming token for:", device_id, "→ puzzle_number:", id);
+      const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vercel-protection-bypass": "1",
+        },
+        body: JSON.stringify({
+          device_id,
+          puzzle_number: id, // ✅ use puzzle_number for token match
+        }),
+      });
 
-    if (error || !data) {
-      console.error("❌ Couldn't resolve puzzle_number to puzzle_id:", error?.message);
-      return res.status(400).json({ error: "Invalid puzzle_number" });
+      const contentType = redeemRes.headers.get("content-type") || "";
+
+      if (contentType.includes("application/json")) {
+        const data = await redeemRes.json();
+        console.log("🔁 Redemption response:", data);
+
+        if (!redeemRes.ok || !data.success) {
+          console.warn("⚠️ Redemption failed with response:", data);
+        }
+      } else {
+        console.warn("⚠️ Unexpected response format:", contentType);
+      }
+    } catch (err) {
+      console.error("❌ Redemption fetch threw error:", err.message);
     }
-
-    resolvedPuzzleId = data.id;
+  } else {
+    console.warn("⚠️ No device_id or resolvedPuzzleId — skipping redemption.");
   }
 
-  try {
-     const { data, error } = await supabase
-       .from("ArchiveTokens")
-       .select("*")
-       .eq("device_id", device_id)
-       .eq("used", false);
+  // ✅ Step 3: Return props for rendering
+  return {
+    props: {
+      overridePuzzle: puzzle,
+      isArchive: true,
+      archiveIndex: puzzle.puzzle_number,
+    },
+  };
+}
 
-    console.log("🧪 All matching tokens for device:", data);
-
-    if (error) {
-      console.error("🔴 Supabase query error:", error.message);
-      return res.status(500).json({ error: error.message });
-    }
-
-    if (!data) {
-      console.warn("🚫 No unused token found for this device.");
-      return res.status(403).json({ error: "No valid token" });
-    }
-
-    const token = data;
-
-    const { error: updateError } = await supabase
-      .from("ArchiveTokens")
-      .update({
-        used: true,
-        used_at: new Date().toISOString(),
-        puzzle_id: resolvedPuzzleId
-      })
-      .eq("id", token.id);
-
-    if (updateError) {
-      console.error("🔴 Failed to mark token as used:", updateError.message);
-      return res.status(500).json({ error: updateError.message });
-    }
-
-    return res.status(200).json({ success: true, token_id: token.id });
-  } catch (err) {
-    console.error("❌ Unexpected error in redeem-token:", err.message);
-    return res.status(500).json({ error: "Unexpected error" });
-  }
+export default function ArchivePage(props) {
+  return <Home {...props} />;
 }
