@@ -12,57 +12,32 @@ export async function getServerSideProps(context) {
   console.log("📦 Received cookies:", cookies);
   console.log("📦 Normalized device_id:", device_id);
 
-  const payload = {
-    device_id: device_id || "MISSING",
-    puzzle_number: parseInt(puzzle_number),
-  };
-
   if (!device_id) {
-    console.warn("🚫 No device_id found in cookies. Skipping token redemption.");
-  } else {
-    try {
-      console.log("📦 archive [puzzle_number] - token redemption payload:", payload);
-
-      const baseUrl =
-        process.env.INTERNAL_API_URL?.trim().replace(/\/$/, "") ||
-        (context.req.headers.host.startsWith("localhost")
-          ? "http://localhost:3000"
-          : `https://${context.req.headers.host}`);
-
-      const apiUrl = `${baseUrl}/api/redeem-token`;
-
-      console.log("🌐 Calling token redemption on:", apiUrl);
-
-      const redeemRes = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const contentType = redeemRes.headers.get("content-type") || "";
-      let data = null;
-
-      if (contentType.includes("application/json")) {
-        data = await redeemRes.json();
-      } else {
-        console.error("❌ Unexpected response type:", contentType);
-        return { redirect: { destination: "/archives", permanent: false } };
-      }
-
-      console.log("📨 Token redemption response:", data);
-
-      if (!redeemRes.ok) {
-        console.warn("⚠️ Token redemption failed:", redeemRes.status);
-        return { redirect: { destination: "/archives", permanent: false } };
-      }
-    } catch (err) {
-      console.error("❌ Token redemption threw error:", err.message);
-      return { redirect: { destination: "/archives", permanent: false } };
-    }
+    console.warn("🚫 No device_id found in cookies. Skipping archive access.");
+    return { redirect: { destination: "/archives", permanent: false } };
   }
 
+  // 🔍 Check for valid archive token
+  const { data: token, error: tokenError } = await supabase
+    .from("archive_tokens")
+    .select("*")
+    .eq("device_id", device_id)
+    .eq("puzzle_number", parseInt(puzzle_number))
+    .eq("used", false)
+    .maybeSingle();
+
+  if (tokenError || !token) {
+    console.warn("⚠️ No valid archive token found.");
+    return { redirect: { destination: "/archives", permanent: false } };
+  }
+
+  // ✅ Mark token as used
+  await supabase
+    .from("archive_tokens")
+    .update({ used: true, used_at: new Date().toISOString() })
+    .eq("id", token.id);
+
+  // 🧩 Load puzzle content
   const { data, error } = await supabase
     .from("puzzles")
     .select("*")
