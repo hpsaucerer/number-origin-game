@@ -32,14 +32,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { data, error } = await supabase
-      .from("ArchiveTokens")
-      .select("*")
-      .eq("device_id", device_id)
-      .eq("used", false)
-      .is("puzzle_id", null) // only use tokens that haven't been assigned yet
-      .limit(1)
-      .maybeSingle();
+     const { data, error } = await supabase
+       .from("ArchiveTokens")
+       .select("*")
+       .eq("device_id", device_id)
+       .eq("used", false);
+
+    console.log("🧪 All matching tokens for device:", data);
 
     if (error) {
       console.error("🔴 Supabase query error:", error.message);
