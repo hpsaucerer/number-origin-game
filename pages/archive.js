@@ -24,7 +24,7 @@ export default function Archive() {
       const deviceId = getOrCreateDeviceId();
 
       // ✅ Set cookie for SSR
-      document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
+      document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000`;
 
       fetch("/api/redeem-token", {
         method: "POST",
