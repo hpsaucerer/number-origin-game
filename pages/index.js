@@ -566,11 +566,10 @@ useEffect(() => {
 
 useEffect(() => {
   async function loadPuzzles() {
-    // ✅ If overridePuzzle exists (passed via getServerSideProps), use it
     if (isArchive && overridePuzzle) {
       setPuzzle(overridePuzzle);
       setPuzzleNumber(overridePuzzle.puzzle_number ?? overridePuzzle.id);
-      return; // 🛑 Prevent fetching and overwriting archive
+      return;
     }
 
     const all = await fetchAllPuzzles();
@@ -589,15 +588,16 @@ useEffect(() => {
       }
     }
 
-    // 📆 Fall back to today's puzzle
-    const todayPuzzle = all.find((p) => isToday(new Date(p.date)));
-    if (todayPuzzle) {
-      setPuzzle(todayPuzzle);
-      setPuzzleNumber(todayPuzzle.puzzle_number ?? todayPuzzle.id);
+    const today = await fetchTodayPuzzle();
+    if (today) {
+      debugLog("✅ Today's puzzle loaded.");
+      setPuzzle(today);
+      setPuzzleNumber(today.puzzle_number ?? today.id);
     }
   }
 
-  loadPuzzles();
+  loadPuzzles(); // ✅ Always call async logic inside the useEffect body
+
 }, [selectedPuzzleIndex]);
 
 
