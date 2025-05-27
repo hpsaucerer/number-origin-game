@@ -13,9 +13,9 @@ export async function getServerSideProps(context) {
   console.log("📦 Normalized device_id:", device_id);
 
   const baseUrl =
-    process.env.VERCEL_URL?.startsWith("http")
-      ? process.env.VERCEL_URL
-      : `https://${process.env.VERCEL_URL || "localhost:3000"}`;
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://number-origin-game.vercel.app"; // Replace with your Vercel domain if different
 
   const payload = {
     device_id: device_id || "MISSING",
