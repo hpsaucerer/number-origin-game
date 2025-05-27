@@ -5,10 +5,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  let device_id, source;
+  let device_id, source, puzzle_number;
 
   try {
-    ({ device_id, source = "manual_grant" } = req.body || {});
+    ({ device_id, source = "manual_grant", puzzle_number = null } = req.body || {});
   } catch (err) {
     console.error("❌ Error parsing JSON body:", err);
     return res.status(400).json({ error: "Invalid JSON body" });
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
   const normalizedId = device_id.trim().toLowerCase();
 
-  console.log("🛠️ Grant token for device:", normalizedId, "via source:", source);
+  console.log("🛠️ Grant token for device:", normalizedId, "via source:", source, "→ puzzle_number:", puzzle_number);
 
   try {
     const { data: existing, error: checkError } = await supabase
@@ -45,8 +45,9 @@ export default async function handler(req, res) {
         {
           device_id: normalizedId,
           used: false,
-          used_at: null,          // ✅ Explicit null
-          puzzle_id: null,        // ✅ Explicit null
+          used_at: null,
+          puzzle_id: null,
+          puzzle_number: puzzle_number ? parseInt(puzzle_number) : null,
           token_date: new Date().toISOString().split("T")[0],
           source,
         },
