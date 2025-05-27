@@ -34,10 +34,12 @@ export async function getServerSideProps(context) {
 
       const contentType = redeemRes.headers.get("content-type") || "";
       let data;
-      if (contentType.includes("application/json")) {
-        data = await redeemRes.json();
-      } else {
-        console.error("❌ Failed to parse redeem-token response: not JSON");
+      try {
+        data = contentType.includes("application/json")
+          ? await redeemRes.json()
+          : { error: "Invalid content type", contentType };
+      } catch (err) {
+        console.error("❌ JSON parse failed:", err.message);
         return { redirect: { destination: "/archive", permanent: false } };
       }
 
