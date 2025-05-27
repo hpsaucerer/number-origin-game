@@ -575,6 +575,7 @@ useEffect(() => {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
 
+
     if (queryArchiveId && all.length > 0) {
       const archiveId = parseInt(queryArchiveId, 10);
       const found = all.find((p) => p.id === archiveId);
