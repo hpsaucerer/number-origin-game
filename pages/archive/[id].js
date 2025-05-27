@@ -25,15 +25,18 @@ export async function getServerSideProps(context) {
     console.warn("🚫 No device_id found in cookies. Skipping token redemption.");
   } else {
     try {
-      console.log("📦 archive [id] - token redemption payload:", payload);
       const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-vercel-protection-bypass": "1", // ✅ Required on Vercel
+        },
         body: JSON.stringify(payload),
       });
 
       const contentType = redeemRes.headers.get("content-type") || "";
       let data;
+
       try {
         data = contentType.includes("application/json")
           ? await redeemRes.json()
