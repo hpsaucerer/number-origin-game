@@ -100,7 +100,7 @@ export default function Archive() {
 
               // ✅ Only navigate if valid puzzle_number
               setTimeout(() => {
-                router.push(`/archive/${puzzle.puzzle_number}`);
+                window.location.href = `/archive/${puzzle.puzzle_number}`;
               }, 50);
             }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
