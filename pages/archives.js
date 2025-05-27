@@ -24,7 +24,6 @@ export default function Archive() {
       const deviceId = getOrCreateDeviceId();
       const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
 
-      // ✅ Set cookie for SSR with optional domain
       document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
 
       fetch("/api/redeem-token", {
@@ -84,23 +83,21 @@ export default function Archive() {
           <button
             key={puzzle.id}
             onClick={() => {
-              if (!puzzle?.puzzle_number) {
-                console.error("❌ Missing puzzle number:", puzzle);
+              if (!puzzle?.id) {
+                console.error("❌ Missing puzzle ID:", puzzle);
                 return;
               }
 
               const deviceId = getOrCreateDeviceId();
               const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
 
-              // ✅ Set cookie again before navigating
               document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
 
-              console.log("🧪 Navigating to archive:", puzzle.puzzle_number);
+              console.log("🧪 Navigating to archive:", puzzle.id);
               console.log("🧪 Current device_id cookie:", document.cookie);
 
-              // ✅ Only navigate if valid puzzle_number
               setTimeout(() => {
-                window.location.href = `/archive/${puzzle.puzzle_number}`;
+                window.location.href = `/archive/${puzzle.id}`;
               }, 50);
             }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
