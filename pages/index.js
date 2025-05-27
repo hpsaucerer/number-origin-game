@@ -569,12 +569,11 @@ useEffect(() => {
     if (isArchive && overridePuzzle) {
       setPuzzle(overridePuzzle);
       setPuzzleNumber(overridePuzzle.puzzle_number ?? overridePuzzle.id);
-      return; // 🛑 Exit early to avoid fetching today's puzzle
+      return;
     }
 
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
-
 
     if (queryArchiveId && all.length > 0) {
       const archiveId = parseInt(queryArchiveId, 10);
@@ -592,19 +591,19 @@ useEffect(() => {
     if (process.env.NEXT_PUBLIC_DEV_MODE === "true" && devPuzzle) {
       setPuzzle(devPuzzle);
       setPuzzleNumber(selectedPuzzleIndex + 1);
-    } else {
-      const today = await fetchTodayPuzzle();
-      if (today) {
-        debugLog("✅ Today's puzzle loaded.");
-        setPuzzle(today);
-        setPuzzleNumber(today.puzzle_number ?? today.id);
-      }
+      return;
+    }
+
+    const today = await fetchTodayPuzzle();
+    if (today) {
+      debugLog("✅ Today's puzzle loaded.");
+      setPuzzle(today);
+      setPuzzleNumber(today.puzzle_number ?? today.id);
     }
   }
 
-  loadPuzzles(); // ✅ Safely call the async function
+  loadPuzzles(); // ✅ This is the async call inside useEffect
 }, [selectedPuzzleIndex]);
-
 
 
     localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
