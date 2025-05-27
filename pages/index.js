@@ -624,8 +624,11 @@ if (!Array.isArray(completed)) {
 setCompletedPuzzles(completed);
 
     if (isArchive && overridePuzzle) {
-      setPuzzle(overridePuzzle);
-      setPuzzleNumber(overridePuzzle.id);
+    setPuzzle(overridePuzzle);
+    setPuzzleNumber(overridePuzzle.puzzle_number ?? overridePuzzle.id);
+    return; // ✅ Prevent overriding the archive puzzle
+    }
+
     } else if (DEV_MODE && selectedPuzzleIndex !== null) {
       const devPuzzle = all[selectedPuzzleIndex];
       debugLog("🔧 DEV PUZZLE loaded.");
