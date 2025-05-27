@@ -6,10 +6,11 @@ export async function getServerSideProps(context) {
   const { id } = context.params;
 
   const cookies = cookie.parse(context.req.headers.cookie || "");
-  const device_id = cookies.device_id?.trim().toLowerCase();
+  const rawDeviceId = cookies.device_id;
+  const device_id = rawDeviceId?.trim().toLowerCase(); // ✅ Normalize to lowercase
 
   console.log("📦 Received cookies:", cookies);
-  console.log("📦 Extracted device_id:", device_id);
+  console.log("📦 Normalized device_id:", device_id);
 
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
