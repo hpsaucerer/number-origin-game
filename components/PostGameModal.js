@@ -170,7 +170,7 @@ export default function PostGameModal({
                onClick={() => {
                 localStorage.setItem("archiveTokenUsed", "true");
                 setTimeout(() => {
-                 window.location.href = "/archive";
+                 window.location.href = "/archives";
                 }, 100);
                }}
                 className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
