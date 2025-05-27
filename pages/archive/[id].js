@@ -6,9 +6,8 @@ export async function getServerSideProps(context) {
   const { id } = context.params;
 
   const cookies = cookie.parse(context.req.headers.cookie || "");
-  const device_id = cookies.device_id;
+  const device_id = cookies.device_id?.trim().toLowerCase();
 
-  // ✅ Debug logs for cookie parsing
   console.log("📦 Received cookies:", cookies);
   console.log("📦 Extracted device_id:", device_id);
 
@@ -17,31 +16,38 @@ export async function getServerSideProps(context) {
     : "http://localhost:3000";
 
   const payload = {
-    device_id: device_id ? device_id.trim().toLowerCase() : "MISSING",
+    device_id: device_id || "MISSING",
     puzzle_id: parseInt(id),
   };
 
   if (!device_id) {
     console.warn("🚫 No device_id found in cookies. Skipping token redemption.");
   } else {
-    console.log("📦 archive [id] - token redemption payload:", payload);
-    const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    let redeemJson = {};
     try {
-      redeemJson = await redeemRes.json();
+      console.log("📦 archive [id] - token redemption payload:", payload);
+      const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const contentType = redeemRes.headers.get("content-type") || "";
+      let data;
+      if (contentType.includes("application/json")) {
+        data = await redeemRes.json();
+      } else {
+        console.error("❌ Failed to parse redeem-token response: not JSON");
+        return { redirect: { destination: "/archive", permanent: false } };
+      }
+
+      console.log("📨 Token redemption response:", data);
+
+      if (!redeemRes.ok) {
+        console.warn("⚠️ Token redemption failed:", redeemRes.status);
+        return { redirect: { destination: "/archive", permanent: false } };
+      }
     } catch (err) {
-      console.error("❌ Failed to parse redeem-token response:", err);
-    }
-
-    console.log("📨 Token redemption response:", redeemJson);
-
-    if (!redeemRes.ok) {
-      console.warn("⚠️ Token redemption failed:", redeemRes.status);
+      console.error("❌ Token redemption threw error:", err.message);
       return { redirect: { destination: "/archive", permanent: false } };
     }
   }
