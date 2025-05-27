@@ -8,16 +8,16 @@ export async function getServerSideProps(context) {
   const cookies = cookie.parse(context.req.headers.cookie || "");
   const device_id = cookies.device_id;
 
-  // ✅ Add debug logs right after parsing cookies
+  // ✅ Debug logs for cookie parsing
   console.log("📦 Received cookies:", cookies);
   console.log("📦 Extracted device_id:", device_id);
-  
+
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000";
 
   const payload = {
-    device_id: device_id || "MISSING",
+    device_id: device_id ? device_id.trim().toLowerCase() : "MISSING",
     puzzle_id: parseInt(id),
   };
 
@@ -30,6 +30,15 @@ export async function getServerSideProps(context) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+
+    let redeemJson = {};
+    try {
+      redeemJson = await redeemRes.json();
+    } catch (err) {
+      console.error("❌ Failed to parse redeem-token response:", err);
+    }
+
+    console.log("📨 Token redemption response:", redeemJson);
 
     if (!redeemRes.ok) {
       console.warn("⚠️ Token redemption failed:", redeemRes.status);
