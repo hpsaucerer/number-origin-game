@@ -564,23 +564,42 @@ useEffect(() => {
   }
 }, [isArchive, puzzle]);
 
-
 useEffect(() => {
   async function loadPuzzles() {
+    // ✅ If overridePuzzle exists (passed via getServerSideProps), use it
+    if (isArchive && overridePuzzle) {
+      setPuzzle(overridePuzzle);
+      setPuzzleNumber(overridePuzzle.puzzle_number ?? overridePuzzle.id);
+      return; // 🛑 Prevent fetching and overwriting archive
+    }
+
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
-    if (queryArchiveId && all.length > 0) {
-  const archiveId = parseInt(queryArchiveId, 10);
-  const found = all.find((p) => p.id === archiveId);
 
-  if (found) {
-    setPuzzle(found);
-    setPuzzleNumber(found.puzzle_number ?? found.id);
-    return; // ✅ Early return to skip today’s puzzle
-  } else {
-    console.warn("🚫 Archive puzzle not found for ID:", archiveId);
+    if (queryArchiveId && all.length > 0) {
+      const archiveId = parseInt(queryArchiveId, 10);
+      const found = all.find((p) => p.id === archiveId);
+
+      if (found) {
+        setPuzzle(found);
+        setPuzzleNumber(found.puzzle_number ?? found.id);
+        return;
+      } else {
+        console.warn("🚫 Archive puzzle not found for ID:", archiveId);
+      }
+    }
+
+    // 📆 Fall back to today's puzzle
+    const todayPuzzle = all.find((p) => isToday(new Date(p.date)));
+    if (todayPuzzle) {
+      setPuzzle(todayPuzzle);
+      setPuzzleNumber(todayPuzzle.puzzle_number ?? todayPuzzle.id);
+    }
   }
-}
+
+  loadPuzzles();
+}, [selectedPuzzleIndex]);
+
 
     localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
