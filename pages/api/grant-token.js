@@ -46,7 +46,7 @@ export default async function handler(req, res) {
           device_id: normalizedId,
           used: false,
           used_at: null,
-          puzzle_id: null,
+          puzzle_number: null,
           puzzle_number: puzzle_number ? parseInt(puzzle_number) : null,
           token_date: new Date().toISOString().split("T")[0],
           source,
