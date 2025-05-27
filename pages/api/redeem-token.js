@@ -13,14 +13,16 @@ export default async function handler(req, res) {
   if (!device_id) {
     return res.status(400).json({ error: "Missing device_id" });
   }
+  
+console.log("🔎 Checking token for device_id:", device_id, "trimmed:", device_id.trim());
 
-  const { data: tokens, error: fetchError } = await supabase
-    .from("ArchiveTokens")
-    .select("*")
-    .eq("device_id", device_id)
-    .eq("used", false)
-    .order("token_date", { ascending: true })
-    .limit(1);
+const { data: tokens, error: fetchError } = await supabase
+  .from("ArchiveTokens")
+  .select("*")
+  .eq("device_id", device_id.trim())  // <-- TRIM the ID
+  .eq("used", false)
+  .order("token_date", { ascending: true })
+  .limit(1);
 
   if (fetchError) {
     return res.status(500).json({ error: "Supabase error: " + fetchError.message });
