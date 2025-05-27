@@ -37,13 +37,12 @@ export async function getServerSideProps(context) {
       });
 
       const contentType = redeemRes.headers.get("content-type") || "";
-      let data;
-      try {
-        data = contentType.includes("application/json")
-          ? await redeemRes.json()
-          : { error: "Invalid content type", contentType };
-      } catch (err) {
-        console.error("❌ JSON parse failed:", err.message);
+      let data = null;
+
+      if (contentType.includes("application/json")) {
+        data = await redeemRes.json();
+      } else {
+        console.error("❌ Unexpected response type:", contentType);
         return { redirect: { destination: "/archive", permanent: false } };
       }
 
