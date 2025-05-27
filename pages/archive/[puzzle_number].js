@@ -12,10 +12,6 @@ export async function getServerSideProps(context) {
   console.log("📦 Received cookies:", cookies);
   console.log("📦 Normalized device_id:", device_id);
 
-  const baseUrl = context.req.headers.host.startsWith("localhost")
-    ? "http://localhost:3000"
-    : `https://${context.req.headers.host}`;
-
   const payload = {
     device_id: device_id || "MISSING",
     puzzle_number: parseInt(puzzle_number),
@@ -26,12 +22,15 @@ export async function getServerSideProps(context) {
   } else {
     try {
       console.log("📦 archive [puzzle_number] - token redemption payload:", payload);
-      console.log("🌐 Calling token redemption on:", `${baseUrl}/api/redeem-token`);
-      const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
+
+      const apiUrl = "https://number-origin-game-n7dqu47ak-b-puzzled.vercel.app/api/redeem-token"; // Replace with your own Vercel deployment if different
+
+      console.log("🌐 Calling token redemption on:", apiUrl);
+
+      const redeemRes = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-vercel-protection-bypass": "1",
         },
         body: JSON.stringify(payload),
       });
