@@ -98,6 +98,7 @@ export default function Archive() {
               console.log("🧪 Navigating to archive:", puzzle.puzzle_number);
               console.log("🧪 Current device_id cookie:", document.cookie);
 
+              // ✅ Only navigate if valid puzzle_number
               setTimeout(() => {
                 router.push(`/archive/${puzzle.puzzle_number}`);
               }, 50);
