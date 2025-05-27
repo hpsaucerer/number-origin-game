@@ -22,9 +22,10 @@ export default function Archive() {
 
     if (!hasGranted && completed.length === 0) {
       const deviceId = getOrCreateDeviceId();
+      const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
 
-      // ✅ Set cookie for SSR
-      document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000`;
+      // ✅ Set cookie for SSR with optional domain
+      document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
 
       fetch("/api/redeem-token", {
         method: "POST",
@@ -89,14 +90,14 @@ export default function Archive() {
               }
 
               const deviceId = getOrCreateDeviceId();
+              const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
 
-              // ✅ Ensure cookie is available to SSR
-              document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
+              // ✅ Set cookie again before navigating
+              document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
 
               console.log("🧪 Navigating to archive:", puzzle.puzzle_number);
               console.log("🧪 Current device_id cookie:", document.cookie);
 
-              // 👇 Slight delay to ensure cookie is set before SSR
               setTimeout(() => {
                 router.push(`/archive/${puzzle.puzzle_number}`);
               }, 50);
