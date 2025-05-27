@@ -1,3 +1,4 @@
+// pages/archive/[id].js
 import { supabase } from "@/lib/supabase";
 import Home from "../index";
 import cookie from "cookie";
@@ -55,7 +56,7 @@ export async function getServerSideProps(context) {
         },
         body: JSON.stringify({
           device_id,
-          puzzle_number: id, // ✅ use puzzle_number for token match
+          puzzle_number: parseInt(id), // ✅ Pass as integer
         }),
       });
 
