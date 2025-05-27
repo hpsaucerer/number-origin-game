@@ -45,6 +45,8 @@ export default async function handler(req, res) {
         {
           device_id: normalizedId,
           used: false,
+          used_at: null,          // ✅ Explicit null
+          puzzle_id: null,        // ✅ Explicit null
           token_date: new Date().toISOString().split("T")[0],
           source,
         },
