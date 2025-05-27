@@ -3,7 +3,7 @@ import Home from "../index";
 import cookie from "cookie";
 
 export async function getServerSideProps(context) {
-  const { id } = context.params;
+  const { puzzle_number } = context.params;
 
   const cookies = cookie.parse(context.req.headers.cookie || "");
   const rawDeviceId = cookies.device_id;
@@ -13,22 +13,21 @@ export async function getServerSideProps(context) {
   console.log("📦 Normalized device_id:", device_id);
 
   const baseUrl = context.req.headers.host.startsWith("localhost")
-   ? "http://localhost:3000"
-   : `https://${context.req.headers.host}`;
+    ? "http://localhost:3000"
+    : `https://${context.req.headers.host}`;
 
   const payload = {
     device_id: device_id || "MISSING",
-    puzzle_id: parseInt(id),
+    puzzle_number: parseInt(puzzle_number),
   };
 
   if (!device_id) {
     console.warn("🚫 No device_id found in cookies. Skipping token redemption.");
   } else {
     try {
-   console.log("📦 archive [id] - token redemption payload:", payload);
-   console.log("🌐 Calling token redemption on:", `${baseUrl}/api/redeem-token`);
-   const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
-
+      console.log("📦 archive [puzzle_number] - token redemption payload:", payload);
+      console.log("🌐 Calling token redemption on:", `${baseUrl}/api/redeem-token`);
+      const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,48 +43,41 @@ export async function getServerSideProps(context) {
         data = await redeemRes.json();
       } else {
         console.error("❌ Unexpected response type:", contentType);
-        return { redirect: { destination: "/archive", permanent: false } };
+        return { redirect: { destination: "/archives", permanent: false } };
       }
 
       console.log("📨 Token redemption response:", data);
 
       if (!redeemRes.ok) {
         console.warn("⚠️ Token redemption failed:", redeemRes.status);
-        return { redirect: { destination: "/archive", permanent: false } };
+        return { redirect: { destination: "/archives", permanent: false } };
       }
     } catch (err) {
       console.error("❌ Token redemption threw error:", err.message);
-      return { redirect: { destination: "/archive", permanent: false } };
+      return { redirect: { destination: "/archives", permanent: false } };
     }
   }
 
   const { data, error } = await supabase
     .from("puzzles")
     .select("*")
-    .order("date", { ascending: true });
+    .eq("puzzle_number", puzzle_number)
+    .single();
 
-  if (error || !data) return { notFound: true };
-
-  const sorted = data.filter((p) => p.date).sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
-  );
-
-  const puzzleIndex = sorted.findIndex(
-    (p) => p.puzzle_number?.toString() === id
-  );
-
-  const puzzle = sorted[puzzleIndex];
-  if (!puzzle) return { notFound: true };
+  if (error || !data) {
+    console.error("❌ Puzzle not found for puzzle_number:", puzzle_number);
+    return { notFound: true };
+  }
 
   return {
     props: {
-      overridePuzzle: puzzle,
+      overridePuzzle: data,
       isArchive: true,
-      archiveIndex: puzzle.puzzle_number,
+      archiveIndex: data.puzzle_number,
     },
   };
 }
 
-export default function ArchivePage(props) {
+export default function ArchivePuzzlePage(props) {
   return <Home {...props} />;
 }
