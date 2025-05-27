@@ -623,14 +623,6 @@ if (!Array.isArray(completed)) {
 
 setCompletedPuzzles(completed);
 
-// 🎁 Grant archive token for new players (once only)
-if (isNewPlayer && !localStorage.getItem("archiveToken")) {
-  const today = new Date().toISOString().split("T")[0];
-  localStorage.setItem("archiveToken", today);
-  console.log("✅ Archive token granted to new player.");
-}
-
-
     if (isArchive && overridePuzzle) {
       setPuzzle(overridePuzzle);
       setPuzzleNumber(overridePuzzle.id);
@@ -1203,6 +1195,14 @@ if (error) {
        existingCompleted.push(puzzle.id);
        localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
    }
+
+      // 🎁 Archive token reward — only for new players, first correct puzzle
+     const alreadyGranted = localStorage.getItem("archiveToken");
+     if (!alreadyGranted && existingCompleted.length === 1) {
+     const today = new Date().toISOString().split("T")[0];
+     localStorage.setItem("archiveToken", today);
+     console.log("🎁 Archive token granted after first win!");
+    }
 
       setStats((prev) => updateStats(prev, true, attempts + 1));
       setGuess("");
