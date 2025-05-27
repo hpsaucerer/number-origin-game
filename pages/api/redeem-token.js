@@ -6,39 +6,36 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  let { device_id, puzzle_id } = req.body;
+  const { device_id, puzzle_id } = req.body;
 
-  // ✂️ Trim to sanitize input
-  if (typeof device_id === "string") {
-    device_id = device_id.trim();
-  }
-
-  console.log("💬 redeem-token sanitized body:", { device_id, puzzle_id });
+  console.log("💬 redeem-token body:", req.body); // Debug log
 
   if (!device_id) {
     return res.status(400).json({ error: "Missing device_id" });
   }
+
+  // ✅ Ensure we only redeem tokens valid for today or earlier
+  const today = new Date().toISOString().split("T")[0];
 
   const { data: tokens, error: fetchError } = await supabase
     .from("ArchiveTokens")
     .select("*")
     .eq("device_id", device_id)
     .eq("used", false)
+    .lte("token_date", today)
     .order("token_date", { ascending: true })
     .limit(1);
 
   if (fetchError) {
-    console.error("❌ Supabase fetch error:", fetchError.message);
     return res.status(500).json({ error: "Supabase error: " + fetchError.message });
   }
 
   if (!tokens || tokens.length === 0) {
-    console.warn("🚫 No valid tokens found for device:", device_id);
-    return res.status(403).json({ error: "No unused tokens found" });
+    return res.status(403).json({ error: "No valid unused tokens found" });
   }
 
   const token = tokens[0];
-  console.log("✅ Token selected for redemption:", token);
+  console.log("✅ token to redeem:", token); // Debug log
 
   const { error: updateError } = await supabase
     .from("ArchiveTokens")
@@ -50,10 +47,11 @@ export default async function handler(req, res) {
     .eq("id", token.id);
 
   if (updateError) {
-    console.error("❌ Token update failed:", updateError.message);
+    console.error("❌ Failed to update token:", updateError.message);
     return res.status(500).json({ error: "Failed to redeem token: " + updateError.message });
+  } else {
+    console.log("✅ Token marked as used:", token.id);
   }
 
-  console.log("✅ Token successfully redeemed:", token.id);
   return res.status(200).json({ success: true, token_id: token.id });
 }
