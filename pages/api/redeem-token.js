@@ -16,13 +16,16 @@ export default async function handler(req, res) {
   console.log("💬 redeem-token body:", req.body);
   console.log("🔎 Checking token for device_id:", normalizedId);
 
-  const { data: tokens, error: fetchError } = await supabase
-    .from("ArchiveTokens")
-    .select("*")
-    .eq("device_id", normalizedId)
-    .eq("used", false)
-    .order("token_date", { ascending: true })
-    .limit(1);
+const normalizedDeviceId = device_id?.trim().toLowerCase();
+console.log("🔍 Normalized device_id:", normalizedDeviceId);
+
+const { data: tokens, error: fetchError } = await supabase
+  .from("ArchiveTokens")
+  .select("*")
+  .filter("device_id", "eq", normalizedDeviceId)
+  .eq("used", false)
+  .order("token_date", { ascending: true })
+  .limit(1);
 
   if (fetchError) {
     return res.status(500).json({ error: "Supabase error: " + fetchError.message });
