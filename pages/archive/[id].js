@@ -12,10 +12,9 @@ export async function getServerSideProps(context) {
   console.log("📦 Received cookies:", cookies);
   console.log("📦 Normalized device_id:", device_id);
 
-  const baseUrl =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://number-origin-game.vercel.app"; // Replace with your Vercel domain if different
+  const baseUrl = context.req.headers.host.startsWith("localhost")
+   ? "http://localhost:3000"
+   : `https://${context.req.headers.host}`;
 
   const payload = {
     device_id: device_id || "MISSING",
@@ -26,8 +25,10 @@ export async function getServerSideProps(context) {
     console.warn("🚫 No device_id found in cookies. Skipping token redemption.");
   } else {
     try {
-      console.log("📦 archive [id] - token redemption payload:", payload);
-      const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
+   console.log("📦 archive [id] - token redemption payload:", payload);
+   console.log("🌐 Calling token redemption on:", `${baseUrl}/api/redeem-token`);
+   const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
+
         method: "POST",
         headers: {
           "Content-Type": "application/json",
