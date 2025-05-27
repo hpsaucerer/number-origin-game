@@ -7,14 +7,15 @@ export async function getServerSideProps(context) {
 
   const cookies = cookie.parse(context.req.headers.cookie || "");
   const rawDeviceId = cookies.device_id;
-  const device_id = rawDeviceId?.trim().toLowerCase(); // ✅ Normalize to lowercase
+  const device_id = rawDeviceId?.trim().toLowerCase();
 
   console.log("📦 Received cookies:", cookies);
   console.log("📦 Normalized device_id:", device_id);
 
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3000";
+  const baseUrl =
+    process.env.VERCEL_URL?.startsWith("http")
+      ? process.env.VERCEL_URL
+      : `https://${process.env.VERCEL_URL || "localhost:3000"}`;
 
   const payload = {
     device_id: device_id || "MISSING",
@@ -25,18 +26,18 @@ export async function getServerSideProps(context) {
     console.warn("🚫 No device_id found in cookies. Skipping token redemption.");
   } else {
     try {
+      console.log("📦 archive [id] - token redemption payload:", payload);
       const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-vercel-protection-bypass": "1", // ✅ Required on Vercel
+          "x-vercel-protection-bypass": "1",
         },
         body: JSON.stringify(payload),
       });
 
       const contentType = redeemRes.headers.get("content-type") || "";
       let data;
-
       try {
         data = contentType.includes("application/json")
           ? await redeemRes.json()
