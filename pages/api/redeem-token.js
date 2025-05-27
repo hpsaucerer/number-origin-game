@@ -5,55 +5,45 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  const { device_id, puzzle_id } = req.body;
+
+  if (!device_id || !puzzle_id) {
+    return res.status(400).json({ error: "Missing device_id or puzzle_id" });
+  }
+
   try {
-    const { device_id, puzzle_id } = req.body;
-
-    if (!device_id) {
-      return res.status(400).json({ error: "Missing device_id" });
-    }
-
-    const normalizedId = device_id.trim().toLowerCase();
-    console.log("🔍 Normalized device_id:", normalizedId);
-
-    const { data: tokens, error: fetchError } = await supabase
+    const { data, error } = await supabase
       .from("ArchiveTokens")
       .select("*")
-      .eq("device_id", normalizedId)
-      .eq("used", false)
-      .order("token_date", { ascending: true })
-      .limit(1);
+      .eq("device_id", device_id)
+      .eq("used", false);
 
-    if (fetchError) {
-      console.error("❌ Supabase fetch error:", fetchError.message);
-      return res.status(500).json({ error: fetchError.message });
+    if (error) {
+      console.error("🔴 Supabase query error:", error.message);
+      return res.status(500).json({ error: error.message });
     }
 
-    if (!tokens || tokens.length === 0) {
-      console.warn("🚫 No unused tokens found for:", normalizedId);
-      return res.status(403).json({ error: "No unused tokens found" });
+    if (!data || data.length === 0) {
+      console.warn("🚫 No unused token found for this device.");
+      return res.status(403).json({ error: "No valid token" });
     }
 
-    const token = tokens[0];
-    console.log("✅ Found token:", token.id);
+    const token = data[0];
 
     const { error: updateError } = await supabase
       .from("ArchiveTokens")
-      .update({
-        used: true,
-        used_at: new Date().toISOString(),
-        puzzle_id: puzzle_id ? Number(puzzle_id) : null,
-      })
+      .update({ used: true, used_at: new Date().toISOString() })
       .eq("id", token.id);
 
     if (updateError) {
-      console.error("❌ Update failed:", updateError.message);
-      return res.status(500).json({ error: "Token update failed" });
+      console.error("🔴 Failed to mark token as used:", updateError.message);
+      return res.status(500).json({ error: updateError.message });
     }
 
-    console.log("✅ Token marked used:", token.id);
     return res.status(200).json({ success: true, token_id: token.id });
   } catch (err) {
-    console.error("❌ Unexpected error:", err.message);
-    return res.status(500).json({ error: "Unexpected server error" });
+    console.error("❌ Unexpected error in redeem-token:", err.message);
+    return res.status(500).json({ error: "Unexpected error" });
   }
 }
+
