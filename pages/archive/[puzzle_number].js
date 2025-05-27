@@ -23,7 +23,8 @@ export async function getServerSideProps(context) {
     try {
       console.log("📦 archive [puzzle_number] - token redemption payload:", payload);
 
-      const apiUrl = "https://number-origin-game-n7dqu47ak-b-puzzled.vercel.app/api/redeem-token"; // Replace with your own Vercel deployment if different
+      const apiUrl =
+        process.env.INTERNAL_API_URL?.trim().replace(/\/$/, "") + "/api/redeem-token";
 
       console.log("🌐 Calling token redemption on:", apiUrl);
 
