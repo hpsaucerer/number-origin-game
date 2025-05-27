@@ -23,6 +23,7 @@ export default function Archive() {
     if (!hasGranted && completed.length === 0) {
       const deviceId = getOrCreateDeviceId();
 
+      // ✅ Set cookie for SSR
       document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
 
       fetch("/api/redeem-token", {
@@ -88,12 +89,14 @@ export default function Archive() {
               }
 
               const deviceId = getOrCreateDeviceId();
+
+              // ✅ Ensure cookie is available to SSR
               document.cookie = `device_id=${deviceId}; path=/; max-age=31536000`;
 
               console.log("🧪 Navigating to archive:", puzzle.puzzle_number);
               console.log("🧪 Current device_id cookie:", document.cookie);
 
-              // 👇 Delay navigation until next tick to ensure cookie is available to SSR
+              // 👇 Slight delay to ensure cookie is set before SSR
               setTimeout(() => {
                 router.push(`/archive/${puzzle.puzzle_number}`);
               }, 50);
