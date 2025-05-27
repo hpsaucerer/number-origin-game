@@ -17,24 +17,32 @@ export async function getServerSideProps(context) {
     return { redirect: { destination: "/archives", permanent: false } };
   }
 
-  // 🔍 Check for valid archive token
+  // 🔍 Check for valid archive token (generic or targeted)
   const { data: token, error: tokenError } = await supabase
-    .from("archive_tokens")
+    .from("ArchiveTokens")
     .select("*")
     .eq("device_id", device_id)
-    .eq("puzzle_number", parseInt(puzzle_number))
     .eq("used", false)
     .maybeSingle();
 
-  if (tokenError || !token) {
+  if (
+    tokenError ||
+    !token ||
+    (token.puzzle_number !== null &&
+      parseInt(token.puzzle_number) !== parseInt(puzzle_number))
+  ) {
     console.warn("⚠️ No valid archive token found.");
     return { redirect: { destination: "/archives", permanent: false } };
   }
 
-  // ✅ Mark token as used
+  // ✅ Mark token as used and optionally link to this puzzle
   await supabase
-    .from("archive_tokens")
-    .update({ used: true, used_at: new Date().toISOString() })
+    .from("ArchiveTokens")
+    .update({
+      used: true,
+      used_at: new Date().toISOString(),
+      puzzle_number: parseInt(puzzle_number),
+    })
     .eq("id", token.id);
 
   // 🧩 Load puzzle content
