@@ -1,4 +1,3 @@
-// pages/api/redeem-token.js
 import { supabase } from "@/lib/supabase";
 
 export default async function handler(req, res) {
@@ -8,52 +7,51 @@ export default async function handler(req, res) {
 
   const { device_id, puzzle_id } = req.body;
 
-  console.log("💬 redeem-token body:", req.body); // 👈 Log 1
-
   if (!device_id) {
     return res.status(400).json({ error: "Missing device_id" });
   }
-  
-console.log("🔎 Checking token for device_id:", device_id, "trimmed:", device_id.trim());
 
-const { data: tokens, error: fetchError } = await supabase
-  .from("ArchiveTokens")
-  .select("*")
-  .eq("device_id", device_id.trim().toLowerCase())
-  .eq("used", false)
-  .order("token_date", { ascending: true })
-  .limit(1);
-  
-console.log("🔍 Matching tokens from Supabase:", tokens);
+  const normalizedId = device_id.trim().toLowerCase();
+
+  console.log("💬 redeem-token body:", req.body);
+  console.log("🔎 Checking token for device_id:", normalizedId);
+
+  const { data: tokens, error: fetchError } = await supabase
+    .from("ArchiveTokens")
+    .select("*")
+    .eq("device_id", normalizedId)
+    .eq("used", false)
+    .order("token_date", { ascending: true })
+    .limit(1);
 
   if (fetchError) {
     return res.status(500).json({ error: "Supabase error: " + fetchError.message });
   }
 
-  // ✅ Add clear debug logging if no token match
+  console.log("🔍 Matching tokens from Supabase:", tokens);
+
   if (!tokens || tokens.length === 0) {
-    console.warn("🚫 No tokens found for device:", device_id);
+    console.warn("🚫 No tokens found for device:", normalizedId);
     return res.status(403).json({ error: "No unused tokens found" });
   }
 
   const token = tokens[0];
-  console.log("✅ token to redeem:", token); // 👈 Log 2
+  console.log("✅ token to redeem:", token);
 
   const { error: updateError } = await supabase
     .from("ArchiveTokens")
     .update({
       used: true,
       used_at: new Date().toISOString(),
-      puzzle_id: puzzle_id ? Number(puzzle_id) : null // 🛠 Ensure number type
+      puzzle_id: puzzle_id ? Number(puzzle_id) : null,
     })
     .eq("id", token.id);
 
   if (updateError) {
-    console.error("❌ Failed to update token:", updateError.message); // 👈 Log 3
+    console.error("❌ Failed to update token:", updateError.message);
     return res.status(500).json({ error: "Failed to redeem token: " + updateError.message });
-  } else {
-    console.log("✅ Token marked as used:", token.id); // 👈 Log 4
   }
 
+  console.log("✅ Token marked as used:", token.id);
   return res.status(200).json({ success: true, token_id: token.id });
 }
