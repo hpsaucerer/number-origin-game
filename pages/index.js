@@ -687,7 +687,11 @@ useEffect(() => {
 useEffect(() => {
   if (!gameOver || !isCorrect || isArchive !== true) return;
 
-  localStorage.setItem("justCompletedArchive", "true");
+  const tokenUsed = localStorage.getItem("archiveTokenUsed") === "true";
+  if (tokenUsed) {
+    localStorage.setItem("justCompletedArchive", "true");
+    localStorage.removeItem("archiveTokenUsed"); // clean it up
+  }
 
   const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
   if (!completed.includes(puzzle.id)) {
