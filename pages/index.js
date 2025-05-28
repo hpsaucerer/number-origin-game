@@ -684,6 +684,18 @@ useEffect(() => {
   }
 }, [isCorrect, isArchive]);
 
+// ✅ NEW: Mark archive puzzle as completed
+useEffect(() => {
+  if (!gameOver || !isCorrect || isArchive !== true) return;
+
+  localStorage.setItem("justCompletedArchive", "true");
+
+  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  if (!completed.includes(puzzle.id)) {
+    localStorage.setItem("completedPuzzles", JSON.stringify([...completed, puzzle.id]));
+  }
+}, [gameOver, isCorrect, isArchive]);
+
     useEffect(() => {
   if (puzzle && DEV_MODE) {
     // 🔁 Reset game state when switching puzzles in dev mode
