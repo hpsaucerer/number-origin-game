@@ -574,6 +574,7 @@ useEffect(() => {
 
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
+    localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
     if (queryArchiveId && all.length > 0) {
       const archiveId = parseInt(queryArchiveId, 10);
@@ -605,7 +606,6 @@ useEffect(() => {
   loadPuzzles(); // ✅ This is the async call inside useEffect
 }, [selectedPuzzleIndex]);
 
-    localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
     if (isArchive && router?.query?.archive && all.length > 0) {
       const archiveId = parseInt(router.query.archive, 10);
