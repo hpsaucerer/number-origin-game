@@ -554,7 +554,6 @@ useEffect(() => {
   localStorage.setItem(`gameState-${puzzle.date}`, JSON.stringify(gameState));
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
-
 useEffect(() => {
   if (isArchive && puzzle?.id) {
     const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
@@ -574,7 +573,7 @@ useEffect(() => {
 
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
-    localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
+    localStorage.setItem("allPuzzles", JSON.stringify(all));
 
     if (queryArchiveId && all.length > 0) {
       const archiveId = parseInt(queryArchiveId, 10);
@@ -601,9 +600,9 @@ useEffect(() => {
       setPuzzle(today);
       setPuzzleNumber(today.puzzle_number ?? today.id);
     }
-  }
+  } // 👈 move this closing brace to here, after the await block
 
-  loadPuzzles(); // ✅ This is the async call inside useEffect
+  loadPuzzles();
 }, [selectedPuzzleIndex]);
 
 
