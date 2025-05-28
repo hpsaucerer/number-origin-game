@@ -605,7 +605,6 @@ useEffect(() => {
   loadPuzzles(); // ✅ This is the async call inside useEffect
 }, [selectedPuzzleIndex]);
 
-
     localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
 
     if (isArchive && router?.query?.archive && all.length > 0) {
