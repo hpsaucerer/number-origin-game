@@ -1650,11 +1650,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {isCorrect && (
   <div className="mt-6 text-center space-y-3">
     <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
-        
- {/* ✅ Add this for consistency after returning */}
-{isCorrect && (
-  <div className="mt-6 text-center space-y-3">
-    <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
+
     {!isArchive && (
       <>
         <p className="font-semibold text-gray-800 mt-2">
@@ -1665,7 +1661,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
         </p>
       </>
     )}
+
     <CommunityBox />
+
     {isArchive && (
       <div className="flex flex-col items-center space-y-2 mt-4">
         <button
