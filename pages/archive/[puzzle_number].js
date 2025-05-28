@@ -25,15 +25,15 @@ export async function getServerSideProps(context) {
     .eq("used", false)
     .maybeSingle();
 
-  if (
-    tokenError ||
-    !token ||
-    (token.puzzle_number !== null &&
-      parseInt(token.puzzle_number) !== parseInt(puzzle_number))
-  ) {
-    console.warn("⚠️ No valid archive token found.");
-    return { redirect: { destination: "/archives", permanent: false } };
-  }
+const isTokenValid =
+  token &&
+  (!token.puzzle_number || parseInt(token.puzzle_number) === parseInt(puzzle_number));
+
+if (tokenError || !isTokenValid) {
+  console.warn("⚠️ No valid archive token found.");
+  return { redirect: { destination: "/archives", permanent: false } };
+}
+
 
   // ✅ Mark token as used and optionally link to this puzzle
   await supabase
