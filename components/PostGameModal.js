@@ -81,31 +81,32 @@ export default function PostGameModal({
       setEarnedTiles(storedIndexes);
     }
 
-    const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
-    const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
+const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
+const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
 
-    if (!hasGranted) {
-      const deviceId = getOrCreateDeviceId();
-      fetch("/api/grant-token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          device_id: deviceId,
-          source: "first_token_after_game"
-        }),
-      })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.success) {
-            localStorage.setItem("firstTokenGranted", "true");
-            localStorage.setItem("archiveToken", today);
-            setShowBonusButton(true);
-          }
-        })
-        .catch((err) => console.error("❌ Grant token API error:", err));
-    } else if (!archiveUsed) {
-      setShowBonusButton(true);
-    }
+// ✅ Only show bonus if this is NOT an archive puzzle
+if (!isArchive && !hasGranted) {
+  const deviceId = getOrCreateDeviceId();
+  fetch("/api/grant-token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      device_id: deviceId,
+      source: "first_token_after_game"
+    }),
+  })
+    .then(res => res.json())
+    .then((data) => {
+      if (data.success) {
+        localStorage.setItem("firstTokenGranted", "true");
+        localStorage.setItem("archiveToken", today);
+        setShowBonusButton(true);
+      }
+    })
+    .catch((err) => console.error("❌ Grant token API error:", err));
+} else if (!isArchive && !archiveUsed) {
+  setShowBonusButton(true);
+}
 
     if (isCorrect) {
       confetti({
