@@ -3,12 +3,15 @@ import { useRouter } from "next/router";
 import { format } from "date-fns";
 import { supabase } from "@/lib/supabase";
 import { getOrCreateDeviceId } from "@/lib/device";
+import { Dialog, DialogContent } from "@/components/ui/dialog"; // From shadcn/ui - ensure this component is available
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
   const [mounted, setMounted] = useState(false);
   const [allowed, setAllowed] = useState(false);
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
+  const [rewarded, setRewarded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -17,11 +20,37 @@ export default function Archive() {
   useEffect(() => {
     if (!mounted) return;
 
+    const deviceId = getOrCreateDeviceId();
+
+    // ✅ Show thank-you modal if player just finished an archive puzzle
+    const justFinished = localStorage.getItem("justCompletedArchive") === "true";
+    if (justFinished) {
+      setShowModal(true);
+      localStorage.removeItem("justCompletedArchive");
+
+      fetch("/api/grant-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          device_id: deviceId,
+          source: "archive_completion_reward"
+        }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            console.log("🎉 Bonus archive token granted for returning!");
+            setRewarded(true);
+          }
+        })
+        .catch((err) => console.error("❌ Reward grant error:", err));
+    }
+
+    // ✅ First-time archive visit bonus
     const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
     const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
 
     if (!hasGranted && completed.length === 0) {
-      const deviceId = getOrCreateDeviceId();
       const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
       document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
 
@@ -129,6 +158,25 @@ export default function Archive() {
           );
         })}
       </div>
+
+      {/* ✅ Completion Modal */}
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="max-w-md mx-auto text-center">
+          <h2 className="text-xl font-bold mb-2">Thanks for playing!</h2>
+          <p className="text-sm text-gray-700 mb-4">
+            Sorry about the earlier glitch — your archive puzzle was completed successfully.
+          </p>
+          <p className="text-green-600 font-semibold">
+            {rewarded ? "🎁 A bonus archive token has been added!" : "Loading bonus..."}
+          </p>
+          <button
+            onClick={() => setShowModal(false)}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Got it
+          </button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
