@@ -55,7 +55,6 @@ function debugLog(...args) {
   console.log("[DEBUG]", ...args);
 }
 
-
 async function logCategoryReveal(puzzleId) {
   const deviceId = localStorage.getItem("deviceId") || "unknown";
 
