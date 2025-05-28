@@ -95,7 +95,7 @@ export default function Archive() {
               console.log("🧪 Current device_id cookie:", document.cookie);
 
               localStorage.setItem("archiveTokenUsed", "true");
-              router.push(`/archive/${puzzle.puzzle_number}`);
+              router.push(`/?archive=${puzzle.id}`);
             }}
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
