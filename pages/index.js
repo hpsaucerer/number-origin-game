@@ -589,50 +589,39 @@ useEffect(() => {
       }
     }
 
-    // ✅ Apply the puzzle if found
     if (selected) {
       setPuzzle(selected);
       setPuzzleNumber(selected.puzzle_number ?? selected.id);
+
+      // ✅ Completion tracking
+      let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
+      let isNewPlayer = false;
+
+      if (!Array.isArray(completed)) {
+        completed = [];
+        all.forEach((p) => {
+          if (localStorage.getItem(`completed-${p.date}`) === "true") {
+            completed.push(p.id);
+          }
+        });
+        localStorage.setItem("completedPuzzles", JSON.stringify(completed));
+        isNewPlayer = completed.length === 0;
+
+        console.log(
+          completed.length > 0
+            ? "✅ Migrated old completions to completedPuzzles."
+            : "🆕 No old completions found. Initialized empty completedPuzzles."
+        );
+      } else {
+        isNewPlayer = completed.length === 0;
+      }
+
+      setCompletedPuzzles(completed);
     }
   }
 
   loadPuzzles();
 }, [selectedPuzzleIndex, isArchive, overridePuzzle, router]);
-
-    if (selected) {
-      setPuzzle(selected);
-      const index = all.findIndex(p => p.id === selected.id);
-      setPuzzleNumber(selected.puzzle_number ?? index + 1);
-    }
-
-    // Completion tracking
-    let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
-    let isNewPlayer = false;
-
-    if (!Array.isArray(completed)) {
-      completed = [];
-      all.forEach((p) => {
-        if (localStorage.getItem(`completed-${p.date}`) === "true") {
-          completed.push(p.id);
-        }
-      });
-      localStorage.setItem("completedPuzzles", JSON.stringify(completed));
-      isNewPlayer = completed.length === 0;
-
-      console.log(
-        completed.length > 0
-          ? "✅ Migrated old completions to completedPuzzles."
-          : "🆕 No old completions found. Initialized empty completedPuzzles."
-      );
-    } else {
-      isNewPlayer = completed.length === 0;
-    }
-
-    setCompletedPuzzles(completed);
-  }
-
-  loadPuzzles();
-}, [selectedPuzzleIndex]);
 
 
   const maxGuesses = 4;
