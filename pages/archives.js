@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { supabase } from "@/lib/supabase";
 import { getOrCreateDeviceId } from "@/lib/device";
 import { Dialog, DialogContent } from "@/components/ui/dialog"; // From shadcn/ui - ensure this component is available
+import Header from "@/components/ui/header";
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
@@ -108,7 +109,9 @@ useEffect(() => {
 
   if (!mounted || !allowed) return null;
 
-  return (
+return (
+  <>
+    <Header />
     <div className="max-w-3xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4 text-center">Pick an Archive Puzzle</h1>
       <p className="text-gray-600 text-center mb-6">
@@ -188,5 +191,6 @@ useEffect(() => {
         </DialogContent>
       </Dialog>
     </div>
-  );
-}
+  </>
+);
+
