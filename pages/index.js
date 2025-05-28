@@ -259,12 +259,6 @@ function getPlayerTitle(stats) {
 }
 
 export default function Home({ overridePuzzle = null, isArchive: initialIsArchive = false, archiveIndex = null }) {
-  const router = useRouter();
-console.log("🧠 Loaded props:", { overridePuzzle, isArchive: initialIsArchive, archiveIndex });
-
-  // ✅ Dynamic fallback from query param
-  const queryArchiveId = router?.query?.archive;
-  const isArchive = initialIsArchive || !!queryArchiveId;
 
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
