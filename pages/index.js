@@ -377,8 +377,18 @@ const joyrideSteps = [
     
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
+
 const [puzzle, setPuzzle] = useState(null);
-  
+const router = useRouter();
+const [routerReady, setRouterReady] = useState(false);
+
+useEffect(() => {
+  if (router.isReady) setRouterReady(true);
+}, [router.isReady]);
+
+const queryArchiveId = router?.query?.archive;
+const isArchive = initialIsArchive || !!queryArchiveId;
+
 useEffect(() => {
   if (puzzle && isArchive) {
     console.log("🧩 Archive puzzle loaded:", {
@@ -564,6 +574,8 @@ useEffect(() => {
 }, [isArchive, puzzle]);
 
 useEffect(() => {
+  if (!routerReady) return;
+
   async function loadPuzzles() {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
@@ -573,8 +585,8 @@ useEffect(() => {
 
     if (isArchive && overridePuzzle) {
       selected = overridePuzzle;
-    } else if (isArchive && router?.query?.archive) {
-      const archiveId = parseInt(router.query.archive, 10);
+    } else if (isArchive && queryArchiveId) {
+      const archiveId = parseInt(queryArchiveId, 10);
       selected = all.find(p => p.id === archiveId);
       if (!selected) {
         console.warn("🚫 Archive puzzle not found:", archiveId);
@@ -621,7 +633,7 @@ useEffect(() => {
   }
 
   loadPuzzles();
-}, [selectedPuzzleIndex, isArchive, overridePuzzle, router]);
+}, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
 
 
   const maxGuesses = 4;
