@@ -1,94 +1,50 @@
-// pages/archive/[id].js
 import { supabase } from "@/lib/supabase";
-import Home from "../index";
-import cookie from "cookie";
 
-export async function getServerSideProps(context) {
-  const { id } = context.params;
+export default async function handler(req, res) {
+  res.setHeader("Content-Type", "application/json");
 
-  const cookies = cookie.parse(context.req.headers.cookie || "");
-  const rawDeviceId = cookies.device_id;
-  const device_id = rawDeviceId?.trim().toLowerCase();
-
-  console.log("📦 Received cookies:", cookies);
-  console.log("📦 Normalized device_id:", device_id);
-
-  const baseUrl = context.req.headers.host.startsWith("localhost")
-    ? "http://localhost:3000"
-    : `https://${context.req.headers.host}`;
-
-  let resolvedPuzzleId = null;
-
-  // 🧠 Step 1: Resolve puzzle_number to internal puzzle.id
-  const { data: allPuzzles, error: puzzleError } = await supabase
-    .from("puzzles")
-    .select("*")
-    .order("date", { ascending: true });
-
-  if (puzzleError || !allPuzzles) {
-    console.error("❌ Error fetching puzzles:", puzzleError?.message);
-    return { notFound: true };
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const sorted = allPuzzles.filter(p => p.date).sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
-  );
+  const { device_id, puzzle_id } = req.body;
 
-  const puzzleIndex = sorted.findIndex(p => p.puzzle_number?.toString() === id);
-  const puzzle = sorted[puzzleIndex];
-
-  if (!puzzle) {
-    console.warn("⚠️ No puzzle found for puzzle_number:", id);
-    return { notFound: true };
+  if (!device_id || !puzzle_id) {
+    return res.status(400).json({ error: "Missing device_id or puzzle_id" });
   }
 
-  resolvedPuzzleId = puzzle.id;
+  try {
+    const { data, error } = await supabase
+      .from("ArchiveTokens")
+      .select("*")
+      .eq("device_id", device_id)
+      .eq("used", false);
 
-  // 🔁 Step 2: Attempt token redemption
-  if (device_id && resolvedPuzzleId) {
-    try {
-      console.log("🌐 Redeeming token for:", device_id, "→ puzzle_number:", id);
-      const redeemRes = await fetch(`${baseUrl}/api/redeem-token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-vercel-protection-bypass": "1",
-        },
-        body: JSON.stringify({
-          device_id,
-          puzzle_number: parseInt(id), // ✅ Pass as integer
-        }),
-      });
-
-      const contentType = redeemRes.headers.get("content-type") || "";
-
-      if (contentType.includes("application/json")) {
-        const data = await redeemRes.json();
-        console.log("🔁 Redemption response:", data);
-
-        if (!redeemRes.ok || !data.success) {
-          console.warn("⚠️ Redemption failed with response:", data);
-        }
-      } else {
-        console.warn("⚠️ Unexpected response format:", contentType);
-      }
-    } catch (err) {
-      console.error("❌ Redemption fetch threw error:", err.message);
+    if (error) {
+      console.error("🔴 Supabase query error:", error.message);
+      return res.status(500).json({ error: error.message });
     }
-  } else {
-    console.warn("⚠️ No device_id or resolvedPuzzleId — skipping redemption.");
+
+    if (!data || data.length === 0) {
+      console.warn("🚫 No unused token found for this device.");
+      return res.status(403).json({ error: "No valid token" });
+    }
+
+    const token = data[0];
+
+    const { error: updateError } = await supabase
+      .from("ArchiveTokens")
+      .update({ used: true, used_at: new Date().toISOString() })
+      .eq("id", token.id);
+
+    if (updateError) {
+      console.error("🔴 Failed to mark token as used:", updateError.message);
+      return res.status(500).json({ error: updateError.message });
+    }
+
+    return res.status(200).json({ success: true, token_id: token.id });
+  } catch (err) {
+    console.error("❌ Unexpected error in redeem-token:", err.message);
+    return res.status(500).json({ error: "Unexpected error" });
   }
-
-  // ✅ Step 3: Return props for rendering
-  return {
-    props: {
-      overridePuzzle: puzzle,
-      isArchive: true,
-      archiveIndex: puzzle.puzzle_number,
-    },
-  };
-}
-
-export default function ArchivePage(props) {
-  return <Home {...props} />;
 }
