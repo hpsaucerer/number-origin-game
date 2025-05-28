@@ -78,35 +78,56 @@ export default function Archive() {
       </p>
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {available.map((puzzle) => (
-          <button
-            key={puzzle.id}
-onClick={() => {
-  if (!puzzle?.puzzle_number) {
-    console.error("❌ Missing puzzle_number:", puzzle);
-    return;
-  }
+        {available.map((puzzle) => {
+          const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+          const isCompleted = completed.includes(puzzle.puzzle_number);
 
-  const deviceId = getOrCreateDeviceId();
-  const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
-  document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
+          return (
+            <button
+              key={puzzle.id}
+              onClick={async () => {
+                if (!puzzle?.puzzle_number) {
+                  console.error("❌ Missing puzzle_number:", puzzle);
+                  return;
+                }
 
-  console.log("🧪 Navigating to archive:", puzzle.puzzle_number);
-  console.log("🧪 Current device_id cookie:", document.cookie);
+                const deviceId = getOrCreateDeviceId();
+                const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
+                document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
 
-  // ✅ Do not mark token as used yet
-  router.push(`/archive/${puzzle.puzzle_number}`); // ✅ Navigate to correct dynamic route
-}}
+                const res = await fetch("/api/check-token", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    device_id: deviceId,
+                    puzzle_number: puzzle.puzzle_number
+                  }),
+                });
 
-            className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
-          >
-            <p className="text-lg font-semibold">Numerus #{puzzle.puzzle_number}</p>
-            <p className="text-gray-700">{puzzle.number}</p>
-            <p className="text-sm text-gray-500">
-              {format(new Date(puzzle.date), "MMMM d, yyyy")}
-            </p>
-          </button>
-        ))}
+                const result = await res.json();
+
+                if (result.valid) {
+                  router.push(`/archive/${puzzle.puzzle_number}`);
+                } else {
+                  alert("🪙 You're out of tokens — but don't worry, you can earn and buy more soon. Watch this space!");
+                }
+              }}
+              disabled={isCompleted}
+              className={`border rounded-lg p-4 text-left transition relative ${
+                isCompleted ? "bg-gray-200 opacity-60 cursor-default" : "bg-white hover:shadow-md"
+              }`}
+            >
+              <p className="text-lg font-semibold">
+                Numerus #{puzzle.puzzle_number}
+                {isCompleted && <span className="ml-2 text-green-600">✓</span>}
+              </p>
+              <p className="text-gray-700">{puzzle.number}</p>
+              <p className="text-sm text-gray-500">
+                {format(new Date(puzzle.date), "MMMM d, yyyy")}
+              </p>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
