@@ -582,23 +582,23 @@ useEffect(() => {
     console.log("📦 [loadPuzzles] queryArchiveId:", queryArchiveId);
 
 
-    if (isArchive && overridePuzzle) {
-      selected = overridePuzzle;
-    } else if (isArchive && queryArchiveId) {
-      const archiveId = parseInt(queryArchiveId, 10);
-      selected = all.find(p => p.id === archiveId);
-      if (!selected) {
-        console.warn("🚫 Archive puzzle not found:", archiveId);
-      }
-    } else {
-      const today = await fetchTodayPuzzle();
-      if (today) {
-        debugLog("✅ Today's puzzle loaded.");
-        selected = today;
-      } else {
-        console.warn("⚠️ No puzzle returned for today.");
-      }
-    }
+if (isArchive && overridePuzzle) {
+  selected = overridePuzzle;
+} else if (isArchive && queryArchiveId) {
+  const archivePuzzleNumber = parseInt(queryArchiveId, 10);
+  selected = all.find(p => p.puzzle_number === archivePuzzleNumber);
+  if (!selected) {
+    console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
+  }
+} else {
+  const today = await fetchTodayPuzzle();
+  if (today) {
+    debugLog("✅ Today's puzzle loaded.");
+    selected = today;
+  } else {
+    console.warn("⚠️ No puzzle returned for today.");
+  }
+}
 
     if (selected) {
       setPuzzle(selected);
