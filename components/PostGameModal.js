@@ -5,6 +5,7 @@ import { Share2, X } from "lucide-react";
 import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 import confetti from "canvas-confetti";
+import { getOrCreateDeviceId } from "@/lib/device";
 
 const TILE_WORD = "NUMERUS";
 
@@ -21,11 +22,6 @@ const getTileMessage = (count) => {
   }
 };
 
-function isNewPlayer() {
-  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-  return completed.length === 0;
-}
-
 export default function PostGameModal({
   open,
   onClose,
@@ -36,13 +32,13 @@ export default function PostGameModal({
   shareResult,
   attempts,
   isArchive,
-  canPlayBonus
 }) {
   if (!puzzle || !stats) return null;
 
   const [countdown, setCountdown] = useState("");
   const [earnedTiles, setEarnedTiles] = useState([]);
   const [justEarnedTile, setJustEarnedTile] = useState(false);
+  const [showBonusButton, setShowBonusButton] = useState(false);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -63,51 +59,67 @@ export default function PostGameModal({
     return () => clearInterval(interval);
   }, []);
 
-useEffect(() => {
-  if (!open) return;
+  useEffect(() => {
+    if (!open) return;
 
-  document.body.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
 
-  const today = new Date().toISOString().split("T")[0]; // e.g., '2025-05-02'
-  const alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
+    const today = new Date().toISOString().split("T")[0];
+    const alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
+    const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
-  const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+    if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length) {
+      const nextIndex = storedIndexes.length;
+      const updatedIndexes = [...storedIndexes, nextIndex];
 
-  if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length) {
-    const nextIndex = storedIndexes.length;
-    const updatedIndexes = [...storedIndexes, nextIndex];
+      localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
+      localStorage.setItem(`tile-earned-${today}`, "true");
 
-    localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
-    localStorage.setItem(`tile-earned-${today}`, "true");
+      setEarnedTiles(updatedIndexes);
+      setJustEarnedTile(true);
+    } else {
+      setEarnedTiles(storedIndexes);
+    }
 
-    setEarnedTiles(updatedIndexes);
-    setJustEarnedTile(true);
-  } else {
-    // Still need to show previously earned tiles
-    setEarnedTiles(storedIndexes);
-  }
+const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
+const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
 
-// 🎁 Grant archive token for new players only (once)
-const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
-  localStorage.setItem("archiveToken", today);
-  console.log("✅ Archive token granted to new player.");
+// ✅ Only show bonus if this is NOT an archive puzzle
+if (!isArchive && !hasGranted) {
+  const deviceId = getOrCreateDeviceId();
+  fetch("/api/grant-token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      device_id: deviceId,
+      source: "first_token_after_game"
+    }),
+  })
+    .then(res => res.json())
+    .then((data) => {
+      if (data.success) {
+        localStorage.setItem("firstTokenGranted", "true");
+        localStorage.setItem("archiveToken", today);
+        setShowBonusButton(true);
+      }
+    })
+    .catch((err) => console.error("❌ Grant token API error:", err));
+} else if (!isArchive && !archiveUsed) {
+  setShowBonusButton(true);
 }
 
+    if (isCorrect) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }
 
-  if (isCorrect) {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
-  }
-
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, [open, isCorrect]);
-
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open, isCorrect]);
 
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
@@ -150,25 +162,22 @@ if (completed.length === 0 && !localStorage.getItem("archiveToken")) {
             </div>
           </div>
 
-{!isArchive && canPlayBonus && (
-  <div className="flex flex-col items-center mt-3 space-y-2">
-    <p className="text-sm text-yellow-600 font-semibold animate-bounce">
-      🎁 Try one from the archive!
-    </p>
-    <Button
-      onClick={() => {
-        localStorage.setItem("archiveToken", new Date().toISOString().split("T")[0]);
-        window.location.href = "/archive";
-      }}
-      className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
-    >
-      Bonus Puzzle
-    </Button>
-  </div>
-)}
+          {showBonusButton && (
+            <div className="flex flex-col items-center mt-3 space-y-2">
+              <p className="text-sm text-yellow-600 font-semibold animate-bounce">
+                🎁 Try one from the archive!
+              </p>
+               <Button
+                 onClick={() => {
+                   window.location.href = "/archives";
+                 }}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
+              >
+                Bonus Puzzle
+              </Button>
+            </div>
+          )}
 
-
-          {/* 🎁 Earned Tiles & Token */}
           <div className="flex flex-col items-center mt-6">
             {earnedTiles.length > 0 && (
               <p className="mb-2 text-center text-brand font-semibold text-sm">

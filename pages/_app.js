@@ -4,8 +4,9 @@ import '@/styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import Head from 'next/head';
 import { ModalProvider, useModal } from '@/context/ModalContext';
-import AchievementsModal from '@/components/AchievementsModal'; // ✅ Import the modal
-
+import AchievementsModal from '@/components/AchievementsModal';
+import { useEffect } from 'react';
+import { getOrCreateDeviceId } from '@/lib/device'; // ✅ Add this import
 
 // 👇 Helper wrapper to access modal inside provider
 function ModalManager() {
@@ -18,9 +19,11 @@ function ModalManager() {
   );
 }
 
-
-
 export default function App({ Component, pageProps }) {
+  useEffect(() => {
+    getOrCreateDeviceId(); // ✅ Set device_id cookie if missing
+  }, []);
+
   return (
     <ModalProvider>
       <Head>
@@ -30,7 +33,6 @@ export default function App({ Component, pageProps }) {
           content="Numerus – The Daily Reverse Trivia Game. Strengthen your trivia muscle, one number at a time. Start your workout today!"
         />
         <meta name="google-site-verification" content="NFzRNjrQmkhs56W8QgrDymrXZy2rusezlOhR2fcBDRA" />
-
 
         {/* Optional Open Graph tags for social previews */}
         <meta property="og:title" content="Numerus – The Daily Reverse Trivia Game" />
@@ -43,7 +45,7 @@ export default function App({ Component, pageProps }) {
       <main>
         <Component {...pageProps} />
         <Analytics />
-        <ModalManager /> {/* ✅ Global modal mount */}
+        <ModalManager />
       </main>
     </ModalProvider>
   );

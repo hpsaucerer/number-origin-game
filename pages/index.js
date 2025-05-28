@@ -29,6 +29,7 @@ import WhatsNewModal from "@/components/modals/WhatsNewModal";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
 import { getCookiePreferences } from "@/utils/cookies";
 import { askLLMFallback } from '../lib/llm'; // adjust if needed
+import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
 
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
@@ -53,7 +54,6 @@ function debugLog(...args) {
 
   console.log("[DEBUG]", ...args);
 }
-
 
 async function logCategoryReveal(puzzleId) {
   const deviceId = localStorage.getItem("deviceId") || "unknown";
@@ -258,7 +258,8 @@ function getPlayerTitle(stats) {
   return "Dabbler";
 }
 
-export default function Home({ overridePuzzle = null, isArchive = false, archiveIndex = null }) {
+export default function Home({ overridePuzzle = null, isArchive: initialIsArchive = false, archiveIndex = null }) {
+
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
 // ✨ JSX lifted out to constants
@@ -370,8 +371,18 @@ const joyrideSteps = [
     
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
+
 const [puzzle, setPuzzle] = useState(null);
-  
+const router = useRouter();
+const [routerReady, setRouterReady] = useState(false);
+
+useEffect(() => {
+  if (router.isReady) setRouterReady(true);
+}, [router.isReady]);
+
+const queryArchiveId = router?.query?.archive;
+const isArchive = initialIsArchive || !!queryArchiveId;
+
 useEffect(() => {
   if (puzzle && isArchive) {
     console.log("🧩 Archive puzzle loaded:", {
@@ -476,21 +487,20 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (isArchive) {
+  if (isArchive && puzzle?.id) {
     const archiveToken = localStorage.getItem("archiveToken");
-    const hasPlayed = localStorage.getItem("archiveTokenUsed") === "true";
+    const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
+    const alreadyPlayed = played.includes(puzzle.id);
 
-    // Block access if token has already been used
-    if (!archiveToken || hasPlayed) {
-      console.warn("🚫 Archive access blocked — no valid token or already used.");
-      window.location.href = "/"; // Or show a friendly modal
+    if (!archiveToken || alreadyPlayed) {
+      console.warn("🚫 Archive access blocked — invalid token or puzzle already played.");
+      window.location.href = "/";
     } else {
-      // Mark token as used
-      localStorage.setItem("archiveTokenUsed", "true");
-      console.log("✅ Archive token used.");
+      localStorage.setItem("playedArchive", JSON.stringify([...played, puzzle.id]));
+      console.log("✅ Archive token accepted and puzzle allowed.");
     }
   }
-}, [isArchive]);
+}, [isArchive, puzzle]);
 
 const [canPlayBonus, setCanPlayBonus] = useState(false);
 
@@ -519,10 +529,10 @@ useEffect(() => {
 
     
 useEffect(() => {
-  const existingId = localStorage.getItem("deviceId");
+  const existingId = localStorage.getItem("device_id");
   if (!existingId) {
     const newId = crypto.randomUUID();
-    localStorage.setItem("deviceId", newId);
+    localStorage.setItem("device_id", newId);
   }
 }, []);
 
@@ -547,7 +557,6 @@ useEffect(() => {
   localStorage.setItem(`gameState-${puzzle.date}`, JSON.stringify(gameState));
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
-
 useEffect(() => {
   if (isArchive && puzzle?.id) {
     const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
@@ -557,70 +566,72 @@ useEffect(() => {
   }
 }, [isArchive, puzzle]);
 
-
 useEffect(() => {
+  if (!routerReady) return;
+
   async function loadPuzzles() {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
-    localStorage.setItem("allPuzzles", JSON.stringify(all)); // ✅ for AchievementsModal
+    localStorage.setItem("allPuzzles", JSON.stringify(all));
 
-let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
-let isNewPlayer = false;
+    let selected = null;
 
-if (!Array.isArray(completed)) {
-  completed = [];
+    console.log("📦 [loadPuzzles] overridePuzzle:", overridePuzzle);
+    console.log("📦 [loadPuzzles] isArchive:", isArchive);
+    console.log("📦 [loadPuzzles] queryArchiveId:", queryArchiveId);
 
-  all.forEach((p) => {
-    if (localStorage.getItem(`completed-${p.date}`) === "true") {
-      completed.push(p.id);
-    }
-  });
 
-  localStorage.setItem("completedPuzzles", JSON.stringify(completed));
-  isNewPlayer = completed.length === 0;
-
-  console.log(
-    completed.length > 0
-      ? "✅ Migrated old completions to completedPuzzles."
-      : "🆕 No old completions found. Initialized empty completedPuzzles."
-  );
+if (isArchive && overridePuzzle) {
+  selected = overridePuzzle;
+} else if (isArchive && queryArchiveId) {
+  const archivePuzzleNumber = parseInt(queryArchiveId, 10);
+  selected = all.find(p => p.puzzle_number === archivePuzzleNumber);
+  if (!selected) {
+    console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
+  }
 } else {
-  isNewPlayer = completed.length === 0;
+  const today = await fetchTodayPuzzle();
+  if (today) {
+    debugLog("✅ Today's puzzle loaded.");
+    selected = today;
+  } else {
+    console.warn("⚠️ No puzzle returned for today.");
+  }
 }
 
-setCompletedPuzzles(completed);
+    if (selected) {
+      setPuzzle(selected);
+      setPuzzleNumber(selected.puzzle_number ?? selected.id);
 
-// 🎁 Grant archive token for new players (once only)
-if (isNewPlayer && !localStorage.getItem("archiveToken")) {
-  const today = new Date().toISOString().split("T")[0];
-  localStorage.setItem("archiveToken", today);
-  console.log("✅ Archive token granted to new player.");
-}
+      // ✅ Completion tracking
+      let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
+      let isNewPlayer = false;
 
+      if (!Array.isArray(completed)) {
+        completed = [];
+        all.forEach((p) => {
+          if (localStorage.getItem(`completed-${p.date}`) === "true") {
+            completed.push(p.id);
+          }
+        });
+        localStorage.setItem("completedPuzzles", JSON.stringify(completed));
+        isNewPlayer = completed.length === 0;
 
-    if (isArchive && overridePuzzle) {
-      setPuzzle(overridePuzzle);
-      setPuzzleNumber(overridePuzzle.id);
-    } else if (DEV_MODE && selectedPuzzleIndex !== null) {
-      const devPuzzle = all[selectedPuzzleIndex];
-      debugLog("🔧 DEV PUZZLE loaded.");
-      setPuzzle(devPuzzle);
-      setPuzzleNumber(selectedPuzzleIndex + 1);
-    } else {
-      const today = await fetchTodayPuzzle();
-      if (today) {
-        debugLog("✅ Today's puzzle loaded.");
-        setPuzzle(today);
-        const index = all.findIndex((p) => p.id === today.id);
-        setPuzzleNumber(index + 1);
+        console.log(
+          completed.length > 0
+            ? "✅ Migrated old completions to completedPuzzles."
+            : "🆕 No old completions found. Initialized empty completedPuzzles."
+        );
       } else {
-        console.warn("⚠️ No puzzle returned for today.");
+        isNewPlayer = completed.length === 0;
       }
+
+      setCompletedPuzzles(completed);
     }
   }
 
-  loadPuzzles(); // ✅ must be inside useEffect body
-}, [selectedPuzzleIndex]);
+  loadPuzzles();
+}, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
 
 
   const maxGuesses = 4;
@@ -663,6 +674,30 @@ useEffect(() => {
   }
 }, [puzzle]);
 
+  useEffect(() => {
+  if (!isCorrect || isArchive) return;
+
+  const granted = localStorage.getItem("firstTokenGranted") === "true";
+  if (granted) {
+    setCanPlayBonus(true);
+  }
+}, [isCorrect, isArchive]);
+
+// ✅ NEW: Mark archive puzzle as completed
+useEffect(() => {
+  if (!gameOver || !isCorrect || isArchive !== true) return;
+
+  const tokenUsed = localStorage.getItem("archiveTokenUsed") === "true";
+  if (tokenUsed) {
+    localStorage.setItem("justCompletedArchive", "true");
+    localStorage.removeItem("archiveTokenUsed"); // clean it up
+  }
+
+  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  if (!completed.includes(puzzle.id)) {
+    localStorage.setItem("completedPuzzles", JSON.stringify([...completed, puzzle.id]));
+  }
+}, [gameOver, isCorrect, isArchive]);
 
     useEffect(() => {
   if (puzzle && DEV_MODE) {
@@ -1106,7 +1141,7 @@ const { error } = await supabase.from("Player_responses").insert([
     is_correct: isCorrectGuess,
     match_type: matchType,
     attempt: attempts + 1,
-    device_id: localStorage.getItem("deviceId") || "unknown",
+    device_id: localStorage.getItem("device_id") || "unknown",
     llmUsed: matchType === "llm_accept",
     llmRaw: matchType === "llm_accept" ? raw : null,
     notes: JSON.stringify({
@@ -1162,6 +1197,14 @@ if (error) {
        existingCompleted.push(puzzle.id);
        localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
    }
+
+      // 🎁 Archive token reward — only for new players, first correct puzzle
+     const alreadyGranted = localStorage.getItem("archiveToken");
+     if (!alreadyGranted && existingCompleted.length === 1) {
+     const today = new Date().toISOString().split("T")[0];
+     localStorage.setItem("archiveToken", today);
+     console.log("🎁 Archive token granted after first win!");
+    }
 
       setStats((prev) => updateStats(prev, true, attempts + 1));
       setGuess("");
@@ -1622,8 +1665,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {isCorrect && (
   <div className="mt-6 text-center space-y-3">
     <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
-        
- {/* ✅ Add this for consistency after returning */}
+
     {!isArchive && (
       <>
         <p className="font-semibold text-gray-800 mt-2">
@@ -1634,31 +1676,21 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
         </p>
       </>
     )}
-    <CommunityBox />
-    {isArchive && (
-      <div className="mt-4">
-        <button
-          onClick={() => window.location.href = "/"}
-          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90"
-          style={{ backgroundColor: "#63c4a7" }}
-        >
-          Back to Daily Puzzle
-        </button>
-      </div>
-    )}
-  </div>
-)}
 
-{!isCorrect && attempts >= maxGuesses && (
-  <div className="mt-6 text-center space-y-3">
-    <p className="text-red-600">Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.</p>
-    ...
-    <FeedbackBox />
+    <CommunityBox />
+
     {isArchive && (
-      <div className="mt-4">
+      <div className="flex flex-col items-center space-y-2 mt-4">
+        <button
+          onClick={() => window.location.href = "/archives"}
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
+          style={{ backgroundColor: "#b49137" }}
+        >
+          Back to Archive
+        </button>
         <button
           onClick={() => window.location.href = "/"}
-          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90"
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
           style={{ backgroundColor: "#63c4a7" }}
         >
           Back to Daily Puzzle
@@ -1670,7 +1702,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 </CardContent>
 </Card>
-
 
 <div className="flex flex-col items-center mt-4">
   <p className="text-lg font-semibold">
