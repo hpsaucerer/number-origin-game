@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import Home from "../index";
 import cookie from "cookie";
@@ -25,15 +26,14 @@ export async function getServerSideProps(context) {
     .eq("used", false)
     .maybeSingle();
 
-const isTokenValid =
-  token &&
-  (!token.puzzle_number || parseInt(token.puzzle_number) === parseInt(puzzle_number));
+  const isTokenValid =
+    token &&
+    (!token.puzzle_number || parseInt(token.puzzle_number) === parseInt(puzzle_number));
 
-if (tokenError || !isTokenValid) {
-  console.warn("⚠️ No valid archive token found.");
-  return { redirect: { destination: "/archives", permanent: false } };
-}
-
+  if (tokenError || !isTokenValid) {
+    console.warn("⚠️ No valid archive token found.");
+    return { redirect: { destination: "/archives", permanent: false } };
+  }
 
   // ✅ Mark token as used and optionally link to this puzzle
   await supabase
@@ -57,16 +57,22 @@ if (tokenError || !isTokenValid) {
     return { notFound: true };
   }
 
-return {
-  props: {
-    overridePuzzle: data,
-    isArchive: true,
-    archiveIndex: data.puzzle_number,
-  },
-};
-
+  return {
+    props: {
+      overridePuzzle: data,
+      isArchive: true,
+      archiveIndex: data.puzzle_number,
+    },
+  };
 }
 
 export default function ArchivePuzzlePage(props) {
+  // ✅ Set archiveTokenUsed only after successful load
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("archiveTokenUsed", "true");
+    }
+  }, []);
+
   return <Home {...props} />;
 }
