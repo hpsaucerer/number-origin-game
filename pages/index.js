@@ -1456,20 +1456,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 )}
 
 {isArchive && (
-  <>
-    <p className="text-sm text-gray-500 text-center italic">
-      One from the Archives...
-    </p>
-    {puzzle?.date && (
-      <p className="text-sm text-gray-400 mt-2 italic">
-        {new Date(puzzle.date).toLocaleDateString("en-GB", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        })}
-      </p>
-    )}
-  </>
+  <p className="text-sm text-gray-500 text-center italic">
+    One from the Archives...
+  </p>
 )}
 
 
