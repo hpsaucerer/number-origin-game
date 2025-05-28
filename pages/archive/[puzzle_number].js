@@ -57,13 +57,13 @@ export async function getServerSideProps(context) {
     return { notFound: true };
   }
 
-  return {
-    props: {
-      overridePuzzle: data,
-      isArchive: true,
-      archiveIndex: data.puzzle_number,
-    },
-  };
+return {
+  redirect: {
+    destination: `/?archive=${puzzle_number}`,
+    permanent: false,
+  },
+};
+
 }
 
 export default function ArchivePuzzlePage(props) {
