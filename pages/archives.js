@@ -81,21 +81,23 @@ export default function Archive() {
         {available.map((puzzle) => (
           <button
             key={puzzle.id}
-            onClick={() => {
-              if (!puzzle?.puzzle_number) {
-                console.error("❌ Missing puzzle_number:", puzzle);
-                return;
-              }
+onClick={() => {
+  if (!puzzle?.puzzle_number) {
+    console.error("❌ Missing puzzle_number:", puzzle);
+    return;
+  }
 
-              const deviceId = getOrCreateDeviceId();
-              const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
-              document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
+  const deviceId = getOrCreateDeviceId();
+  const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
+  document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
 
-              console.log("🧪 Navigating to archive:", puzzle.puzzle_number);
-              console.log("🧪 Current device_id cookie:", document.cookie);
+  console.log("🧪 Navigating to archive:", puzzle.puzzle_number);
+  console.log("🧪 Current device_id cookie:", document.cookie);
 
-              router.push(`/?archive=${puzzle.id}`);
-            }}
+  // ✅ Do not mark token as used yet
+  router.push(`/archive/${puzzle.puzzle_number}`); // ✅ Navigate to correct dynamic route
+}}
+
             className="bg-white border rounded-lg shadow-sm hover:shadow-md p-4 text-left transition"
           >
             <p className="text-lg font-semibold">Numerus #{puzzle.puzzle_number}</p>
