@@ -166,13 +166,10 @@ export default function PostGameModal({
               <p className="text-sm text-yellow-600 font-semibold animate-bounce">
                 🎁 Try one from the archive!
               </p>
-              <Button
-               onClick={() => {
-                localStorage.setItem("archiveTokenUsed", "true");
-                setTimeout(() => {
-                 window.location.href = "/archives";
-                }, 100);
-               }}
+               <Button
+                 onClick={() => {
+                   window.location.href = "/archives";
+                 }}
                 className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
               >
                 Bonus Puzzle
