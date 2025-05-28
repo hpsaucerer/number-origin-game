@@ -565,109 +565,65 @@ useEffect(() => {
 
 useEffect(() => {
   async function loadPuzzles() {
-    if (isArchive && overridePuzzle) {
-      setPuzzle(overridePuzzle);
-      setPuzzleNumber(overridePuzzle.puzzle_number ?? overridePuzzle.id);
-      return;
-    }
-
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
     localStorage.setItem("allPuzzles", JSON.stringify(all));
 
-    if (queryArchiveId && all.length > 0) {
-      const archiveId = parseInt(queryArchiveId, 10);
-      const found = all.find((p) => p.id === archiveId);
-
-      if (found) {
-        setPuzzle(found);
-        setPuzzleNumber(found.puzzle_number ?? found.id);
-        return;
-      } else {
-        console.warn("🚫 Archive puzzle not found for ID:", archiveId);
-      }
-    }
-
-    if (process.env.NEXT_PUBLIC_DEV_MODE === "true" && devPuzzle) {
-      setPuzzle(devPuzzle);
-      setPuzzleNumber(selectedPuzzleIndex + 1);
-      return;
-    }
-
-    const today = await fetchTodayPuzzle();
-    if (today) {
-      debugLog("✅ Today's puzzle loaded.");
-      setPuzzle(today);
-      setPuzzleNumber(today.puzzle_number ?? today.id);
-    }
-  } // 👈 move this closing brace to here, after the await block
-
-  loadPuzzles();
-}, [selectedPuzzleIndex]);
-
-
-    if (isArchive && router?.query?.archive && all.length > 0) {
-      const archiveId = parseInt(router.query.archive, 10);
-      const found = all.find(p => p.id === archiveId);
-
-      if (found) {
-        setPuzzle(found);
-        setPuzzleNumber(found.puzzle_number ?? found.id); // fallback
-        return; // ✅ Stop here, don't load today
-      } else {
-        console.warn("🚫 Archive puzzle not found:", archiveId);
-      }
-    }
-
-let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
-let isNewPlayer = false;
-
-if (!Array.isArray(completed)) {
-  completed = [];
-
-  all.forEach((p) => {
-    if (localStorage.getItem(`completed-${p.date}`) === "true") {
-      completed.push(p.id);
-    }
-  });
-
-  localStorage.setItem("completedPuzzles", JSON.stringify(completed));
-  isNewPlayer = completed.length === 0;
-
-  console.log(
-    completed.length > 0
-      ? "✅ Migrated old completions to completedPuzzles."
-      : "🆕 No old completions found. Initialized empty completedPuzzles."
-  );
-} else {
-  isNewPlayer = completed.length === 0;
-}
-
-setCompletedPuzzles(completed);
+    let selected = null;
 
     if (isArchive && overridePuzzle) {
-    setPuzzle(overridePuzzle);
-    setPuzzleNumber(overridePuzzle.puzzle_number ?? overridePuzzle.id);
-    return; // ✅ Prevent overriding the archive puzzle
-    } else if (DEV_MODE && selectedPuzzleIndex !== null) {
-      const devPuzzle = all[selectedPuzzleIndex];
-      debugLog("🔧 DEV PUZZLE loaded.");
-      setPuzzle(devPuzzle);
-      setPuzzleNumber(selectedPuzzleIndex + 1);
+      selected = overridePuzzle;
+    } else if (isArchive && router?.query?.archive) {
+      const archiveId = parseInt(router.query.archive, 10);
+      selected = all.find(p => p.id === archiveId);
+      if (!selected) {
+        console.warn("🚫 Archive puzzle not found:", archiveId);
+      }
+    } else if (process.env.NEXT_PUBLIC_DEV_MODE === "true" && devPuzzle) {
+      selected = devPuzzle;
     } else {
       const today = await fetchTodayPuzzle();
       if (today) {
         debugLog("✅ Today's puzzle loaded.");
-        setPuzzle(today);
-        const index = all.findIndex((p) => p.id === today.id);
-        setPuzzleNumber(index + 1);
+        selected = today;
       } else {
         console.warn("⚠️ No puzzle returned for today.");
       }
     }
+
+    if (selected) {
+      setPuzzle(selected);
+      const index = all.findIndex(p => p.id === selected.id);
+      setPuzzleNumber(selected.puzzle_number ?? index + 1);
+    }
+
+    // Completion tracking
+    let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
+    let isNewPlayer = false;
+
+    if (!Array.isArray(completed)) {
+      completed = [];
+      all.forEach((p) => {
+        if (localStorage.getItem(`completed-${p.date}`) === "true") {
+          completed.push(p.id);
+        }
+      });
+      localStorage.setItem("completedPuzzles", JSON.stringify(completed));
+      isNewPlayer = completed.length === 0;
+
+      console.log(
+        completed.length > 0
+          ? "✅ Migrated old completions to completedPuzzles."
+          : "🆕 No old completions found. Initialized empty completedPuzzles."
+      );
+    } else {
+      isNewPlayer = completed.length === 0;
+    }
+
+    setCompletedPuzzles(completed);
   }
 
-  loadPuzzles(); // ✅ must be inside useEffect body
+  loadPuzzles();
 }, [selectedPuzzleIndex]);
 
 
