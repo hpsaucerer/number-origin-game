@@ -58,9 +58,10 @@ export async function getServerSideProps(context) {
   }
 
 return {
-  redirect: {
-    destination: `/?archive=${puzzle_number}`,
-    permanent: false,
+  props: {
+    overridePuzzle: data,
+    isArchive: true,
+    archiveIndex: data.puzzle_number,
   },
 };
 
