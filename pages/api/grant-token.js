@@ -42,17 +42,16 @@ export default async function handler(req, res) {
     const { data: insertData, error: insertError } = await supabase
       .from("ArchiveTokens")
       .insert([
-        {
-          device_id: normalizedId,
-          used: false,
-          used_at: null,
-          puzzle_number: null,
-          puzzle_number: puzzle_number ? parseInt(puzzle_number) : null,
-          token_date: new Date().toISOString().split("T")[0],
-          source,
-        },
-      ])
-      .select();
+     {
+       device_id: normalizedId,
+       used: false,
+       used_at: null,
+       puzzle_number: puzzle_number ? parseInt(puzzle_number) : null,
+       token_date: new Date().toISOString().split("T")[0],
+       source,
+     },
+  ])
+  .select();
 
     if (insertError) {
       throw new Error(`Supabase insert error: ${insertError.message}`);
