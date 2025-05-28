@@ -487,21 +487,20 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (isArchive) {
+  if (isArchive && puzzle?.id) {
     const archiveToken = localStorage.getItem("archiveToken");
-    const hasPlayed = localStorage.getItem("archiveTokenUsed") === "true";
+    const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
+    const alreadyPlayed = played.includes(puzzle.id);
 
-    // Block access if token has already been used
-    if (!archiveToken || hasPlayed) {
-      console.warn("🚫 Archive access blocked — no valid token or already used.");
-      window.location.href = "/"; // Or show a friendly modal
+    if (!archiveToken || alreadyPlayed) {
+      console.warn("🚫 Archive access blocked — invalid token or puzzle already played.");
+      window.location.href = "/";
     } else {
-      // Mark token as used
-      localStorage.setItem("archiveTokenUsed", "true");
-      console.log("✅ Archive token used.");
+      localStorage.setItem("playedArchive", JSON.stringify([...played, puzzle.id]));
+      console.log("✅ Archive token accepted and puzzle allowed.");
     }
   }
-}, [isArchive]);
+}, [isArchive, puzzle]);
 
 const [canPlayBonus, setCanPlayBonus] = useState(false);
 
