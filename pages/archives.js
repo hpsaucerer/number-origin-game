@@ -143,6 +143,7 @@ export default function Archive() {
                 const result = await res.json();
 
                 if (result.valid) {
+                  localStorage.setItem("archiveTokenUsed", "true")
                   router.push(`/archive/${puzzle.puzzle_number}`);
                 } else {
                   alert("🪙 You're out of tokens — but don't worry, you can earn and buy more soon. Watch this space!");
