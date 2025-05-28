@@ -24,26 +24,33 @@ export default function Archive() {
 
     // ✅ Show thank-you modal if player just finished an archive puzzle
     const justFinished = localStorage.getItem("justCompletedArchive") === "true";
+    const alreadyRewarded = localStorage.getItem("archiveCompletionRewarded") === "true";
+
     if (justFinished) {
       setShowModal(true);
       localStorage.removeItem("justCompletedArchive");
 
-      fetch("/api/grant-token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          device_id: deviceId,
-          source: "archive_completion_reward"
-        }),
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            console.log("🎉 Bonus archive token granted for returning!");
-            setRewarded(true);
-          }
+      if (!alreadyRewarded) {
+        fetch("/api/grant-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            device_id: deviceId,
+            source: "archive_completion_reward"
+          }),
         })
-        .catch((err) => console.error("❌ Reward grant error:", err));
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              console.log("🎉 Bonus archive token granted for returning!");
+              localStorage.setItem("archiveCompletionRewarded", "true");
+              setRewarded(true);
+            }
+          })
+          .catch((err) => console.error("❌ Reward grant error:", err));
+      } else {
+        setRewarded(true);
+      }
     }
 
     // ✅ First-time archive visit bonus
