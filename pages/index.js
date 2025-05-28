@@ -1652,6 +1652,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
         
  {/* ✅ Add this for consistency after returning */}
+{isCorrect && (
+  <div className="mt-6 text-center space-y-3">
+    <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
     {!isArchive && (
       <>
         <p className="font-semibold text-gray-800 mt-2">
@@ -1664,29 +1667,17 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     )}
     <CommunityBox />
     {isArchive && (
-      <div className="mt-4">
+      <div className="flex flex-col items-center space-y-2 mt-4">
         <button
-          onClick={() => window.location.href = "/"}
-          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90"
-          style={{ backgroundColor: "#63c4a7" }}
+          onClick={() => window.location.href = "/archives"}
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
+          style={{ backgroundColor: "#b49137" }}
         >
-          Back to Daily Puzzle
+          Back to Archive
         </button>
-      </div>
-    )}
-  </div>
-)}
-
-{!isCorrect && attempts >= maxGuesses && (
-  <div className="mt-6 text-center space-y-3">
-    <p className="text-red-600">Unlucky, better luck tomorrow! The correct answer was {puzzle.answer}.</p>
-    ...
-    <FeedbackBox />
-    {isArchive && (
-      <div className="mt-4">
         <button
           onClick={() => window.location.href = "/"}
-          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90"
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
           style={{ backgroundColor: "#63c4a7" }}
         >
           Back to Daily Puzzle
@@ -1698,7 +1689,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 </CardContent>
 </Card>
-
 
 <div className="flex flex-col items-center mt-4">
   <p className="text-lg font-semibold">
