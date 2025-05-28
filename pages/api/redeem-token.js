@@ -1,50 +1,40 @@
+// pages/api/redeem-token.js
 import { supabase } from "@/lib/supabase";
 
 export default async function handler(req, res) {
-  res.setHeader("Content-Type", "application/json");
-
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({ success: false, error: "Method not allowed" });
   }
 
-  const { device_id, puzzle_id } = req.body;
+  const { device_id, puzzle_number } = req.body;
 
-  if (!device_id || !puzzle_id) {
-    return res.status(400).json({ error: "Missing device_id or puzzle_id" });
+  if (!device_id || typeof puzzle_number !== "number") {
+    return res.status(400).json({ success: false, error: "Missing device_id or puzzle_number" });
   }
 
-  try {
-    const { data, error } = await supabase
-      .from("ArchiveTokens")
-      .select("*")
-      .eq("device_id", device_id)
-      .eq("used", false);
+  const { data: token, error } = await supabase
+    .from("ArchiveTokens")
+    .select("*")
+    .eq("device_id", device_id)
+    .eq("used", false)
+    .maybeSingle();
 
-    if (error) {
-      console.error("🔴 Supabase query error:", error.message);
-      return res.status(500).json({ error: error.message });
-    }
-
-    if (!data || data.length === 0) {
-      console.warn("🚫 No unused token found for this device.");
-      return res.status(403).json({ error: "No valid token" });
-    }
-
-    const token = data[0];
-
-    const { error: updateError } = await supabase
-      .from("ArchiveTokens")
-      .update({ used: true, used_at: new Date().toISOString() })
-      .eq("id", token.id);
-
-    if (updateError) {
-      console.error("🔴 Failed to mark token as used:", updateError.message);
-      return res.status(500).json({ error: updateError.message });
-    }
-
-    return res.status(200).json({ success: true, token_id: token.id });
-  } catch (err) {
-    console.error("❌ Unexpected error in redeem-token:", err.message);
-    return res.status(500).json({ error: "Unexpected error" });
+  if (error || !token) {
+    return res.status(404).json({ success: false, error: "No valid token found" });
   }
+
+  const { error: updateError } = await supabase
+    .from("ArchiveTokens")
+    .update({
+      used: true,
+      used_at: new Date().toISOString(),
+      puzzle_number,
+    })
+    .eq("id", token.id);
+
+  if (updateError) {
+    return res.status(500).json({ success: false, error: "Token update failed" });
+  }
+
+  return res.status(200).json({ success: true });
 }
