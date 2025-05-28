@@ -261,6 +261,7 @@ function getPlayerTitle(stats) {
 
 export default function Home({ overridePuzzle = null, isArchive: initialIsArchive = false, archiveIndex = null }) {
   const router = useRouter();
+console.log("🧠 Loaded props:", { overridePuzzle, isArchive: initialIsArchive, archiveIndex });
 
   // ✅ Dynamic fallback from query param
   const queryArchiveId = router?.query?.archive;
@@ -582,6 +583,11 @@ useEffect(() => {
     localStorage.setItem("allPuzzles", JSON.stringify(all));
 
     let selected = null;
+
+    console.log("📦 [loadPuzzles] overridePuzzle:", overridePuzzle);
+    console.log("📦 [loadPuzzles] isArchive:", isArchive);
+    console.log("📦 [loadPuzzles] queryArchiveId:", queryArchiveId);
+
 
     if (isArchive && overridePuzzle) {
       selected = overridePuzzle;
