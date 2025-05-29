@@ -7,6 +7,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import Header from "@/components/ui/header";
 import { useModal } from "@/context/ModalContext"; // ✅ Add modal context
 import StatsModal from "@/components/modals/StatsModal"; // ✅ Import the Stats modal component
+import useStats from "@/hooks/useStats";
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
@@ -18,6 +19,7 @@ export default function Archive() {
   const router = useRouter();
 
   const { showStatsModal, setShowStatsModal, setShowAchievements } = useModal();
+  const stats = useStats(); // ✅ load stats data for modal
 
   useEffect(() => {
     setMounted(true);
@@ -218,8 +220,14 @@ export default function Archive() {
         </Dialog>
       </div>
 
-      {/* ✅ Stats Modal */}
-      <StatsModal open={showStatsModal} onClose={() => setShowStatsModal(false)} />
+     {/* ✅ Stats Modal with stats passed in */}
+    {stats && (
+  <StatsModal
+    open={showStatsModal}
+    onClose={() => setShowStatsModal(false)}
+    stats={stats}
+  />
+)}
     </>
   );
 }
