@@ -1,18 +1,17 @@
-// context/ModalContext.js
 import { createContext, useContext, useState } from "react";
 
 const ModalContext = createContext();
 
 export function ModalProvider({ children }) {
   const [showAchievements, setShowAchievements] = useState(false);
-  const [showStatsModal, setShowStatsModal] = useState(false); // ✅ Add this
+  const [showStatsModal, setShowStatsModal] = useState(false); // ✅ ADD THIS
 
   return (
     <ModalContext.Provider value={{
       showAchievements,
       setShowAchievements,
       showStatsModal,
-      setShowStatsModal
+      setShowStatsModal, // ✅ ADD THIS
     }}>
       {children}
     </ModalContext.Provider>
