@@ -38,8 +38,10 @@ export default async function handler(req, res) {
     if (existing && existing.length > 0) {
       console.log("✅ Reusing existing unused token:", existing[0].id);
 
+      console.log("📝 Logging to tokengrants table...");
+
       // Optionally log this reuse attempt in a tracking table
-      await supabase.from("TokenGrants").insert([{
+      await supabase.from("tokengrants").insert([{
         device_id: normalizedId,
         granted: false,
         token_date,
@@ -69,9 +71,10 @@ export default async function handler(req, res) {
     if (!insertData || insertData.length === 0) {
       throw new Error("Insert succeeded but no data returned.");
     }
-
+    console.log("📝 Logging to tokengrants table...");
+    
     // Track the successful issuance
-    await supabase.from("TokenGrants").insert([{
+    await supabase.from("tokengrants").insert([{
       device_id: normalizedId,
       granted: true,
       token_date,
@@ -83,8 +86,10 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error("❌ Internal server error in grant-token:", err.message);
 
+    console.log("📝 Logging to tokengrants table...");
+    
     // Log failed attempts too
-    await supabase.from("TokenGrants").insert([{
+    await supabase.from("tokengrants").insert([{
       device_id: device_id || "unknown",
       granted: false,
       token_date: new Date().toISOString().split("T")[0],
