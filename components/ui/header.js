@@ -22,45 +22,16 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
               ☰
             </button>
 
-            {menuOpen && (
-              <div className="absolute left-0 top-full mt-2 w-44 bg-white rounded-xl shadow-lg z-50 transition-all duration-200 ease-out">
-                <Link
-                  href="/"
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
-                >
-                  Daily Puzzle
-                </Link>
-                <Link
-                  href="/how-to-play"
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
-                >
-                  How to Play
-                </Link>
-                <Link
-                  href="/about"
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
-                >
-                  About
-                </Link>
-                <Link
-                 href="/community"
-                 onClick={() => setMenuOpen(false)}
-                 className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
-               >
-                 Community
-                 </Link>
-                <Link
-                  href="/contact"
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
-                >
-                  Contact
-                </Link>
-              </div>
-            )}
+{menuOpen && (
+  <div className="absolute left-0 top-full mt-2 w-44 bg-white rounded-xl shadow-lg z-50 transition-all duration-200 ease-out">
+    <Link href="/" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150">Daily Puzzle</Link>
+    <Link href="/how-to-play" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150">How to Play</Link>
+    <Link href="/archives" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150">Archive Puzzles</Link>
+    <Link href="/about" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150">About</Link>
+    <Link href="/community" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150">Community</Link>
+    <Link href="/contact" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150">Contact</Link>
+  </div>
+)}
           </div>
 
           {/* Logo */}
