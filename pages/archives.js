@@ -6,6 +6,7 @@ import { getOrCreateDeviceId } from "@/lib/device";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import Header from "@/components/ui/header";
 import { useModal } from "@/context/ModalContext"; // ✅ Add modal context
+import StatsModal from "@/components/modals/StatsModal"; // ✅ Import the Stats modal component
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
@@ -216,6 +217,9 @@ export default function Archive() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* ✅ Stats Modal */}
+      <StatsModal open={showStatsModal} onClose={() => setShowStatsModal(false)} />
     </>
   );
 }
