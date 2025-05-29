@@ -68,7 +68,7 @@ export default function PostGameModal({
     const alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
     const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
-    if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length) {
+    if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length && !isArchive) {
       const nextIndex = storedIndexes.length;
       const updatedIndexes = [...storedIndexes, nextIndex];
 
@@ -81,32 +81,31 @@ export default function PostGameModal({
       setEarnedTiles(storedIndexes);
     }
 
-const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
-const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
+    const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
+    const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
 
-// ✅ Only show bonus if this is NOT an archive puzzle
-if (!isArchive && !hasGranted) {
-  const deviceId = getOrCreateDeviceId();
-  fetch("/api/grant-token", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      device_id: deviceId,
-      source: "first_token_after_game"
-    }),
-  })
-    .then(res => res.json())
-    .then((data) => {
-      if (data.success) {
-        localStorage.setItem("firstTokenGranted", "true");
-        localStorage.setItem("archiveToken", today);
-        setShowBonusButton(true);
-      }
-    })
-    .catch((err) => console.error("❌ Grant token API error:", err));
-} else if (!isArchive && !archiveUsed) {
-  setShowBonusButton(true);
-}
+    if (!isArchive && !hasGranted) {
+      const deviceId = getOrCreateDeviceId();
+      fetch("/api/grant-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          device_id: deviceId,
+          source: "first_token_after_game"
+        }),
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.success) {
+            localStorage.setItem("firstTokenGranted", "true");
+            localStorage.setItem("archiveToken", today);
+            setShowBonusButton(true);
+          }
+        })
+        .catch((err) => console.error("❌ Grant token API error:", err));
+    } else if (!isArchive && !archiveUsed) {
+      setShowBonusButton(true);
+    }
 
     if (isCorrect) {
       confetti({
@@ -167,10 +166,10 @@ if (!isArchive && !hasGranted) {
               <p className="text-sm text-yellow-600 font-semibold animate-bounce">
                 🎁 Try one from the archive!
               </p>
-               <Button
-                 onClick={() => {
-                   window.location.href = "/archives";
-                 }}
+              <Button
+                onClick={() => {
+                  window.location.href = "/archives";
+                }}
                 className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold px-4 py-2 rounded-md shadow transition"
               >
                 Bonus Puzzle
@@ -178,36 +177,39 @@ if (!isArchive && !hasGranted) {
             </div>
           )}
 
-          <div className="flex flex-col items-center mt-6">
-            {earnedTiles.length > 0 && (
-              <p className="mb-2 text-center text-brand font-semibold text-sm">
-                {getTileMessage(earnedTiles.length)}
-              </p>
-            )}
-
-            <div className="flex items-center space-x-2">
-              {TILE_WORD.split("").map((letter, index) => {
-                const isEarned = earnedTiles.includes(index);
-                return (
-                  <div
-                    key={index}
-                    className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
-                      ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
-                      transition-all duration-300 ease-in-out`}
-                  >
-                    {letter}
-                  </div>
-                );
-              })}
-              {earnedTiles.length === TILE_WORD.length && (
-                <img
-                  src="/icons/token.png"
-                  alt="Token Earned"
-                  className="w-12 h-12 token-pulse ml-2"
-                />
+          {/* ✅ Only show NUMERUS tile progress for daily puzzles */}
+          {!isArchive && (
+            <div className="flex flex-col items-center mt-6">
+              {earnedTiles.length > 0 && (
+                <p className="mb-2 text-center text-brand font-semibold text-sm">
+                  {getTileMessage(earnedTiles.length)}
+                </p>
               )}
+
+              <div className="flex items-center space-x-2">
+                {TILE_WORD.split("").map((letter, index) => {
+                  const isEarned = earnedTiles.includes(index);
+                  return (
+                    <div
+                      key={index}
+                      className={`w-10 h-10 flex items-center justify-center rounded-md font-bold text-2xl
+                        ${isEarned ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-400'}
+                        transition-all duration-300 ease-in-out`}
+                    >
+                      {letter}
+                    </div>
+                  );
+                })}
+                {earnedTiles.length === TILE_WORD.length && (
+                  <img
+                    src="/icons/token.png"
+                    alt="Token Earned"
+                    className="w-12 h-12 token-pulse ml-2"
+                  />
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           <FunFactBox puzzle={puzzle} />
 
