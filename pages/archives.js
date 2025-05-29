@@ -221,7 +221,7 @@ export default function Archive() {
       </div>
 
      {/* ✅ Stats Modal with stats passed in */}
-    {stats && (
+{showStatsModal && stats && typeof stats === "object" && (
   <StatsModal
     open={showStatsModal}
     onClose={() => setShowStatsModal(false)}
