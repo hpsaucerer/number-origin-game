@@ -17,7 +17,7 @@ export default function Archive() {
   const [tokenCount, setTokenCount] = useState(0);
   const router = useRouter();
 
-  const { setShowStatsModal, setShowAchievements } = useModal(); // ✅ use context values
+  const { showStatsModal, setShowStatsModal, setShowAchievements } = useModal();
 
   useEffect(() => {
     setMounted(true);
