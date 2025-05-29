@@ -3,17 +3,20 @@ import { useRouter } from "next/router";
 import { format } from "date-fns";
 import { supabase } from "@/lib/supabase";
 import { getOrCreateDeviceId } from "@/lib/device";
-import { Dialog, DialogContent } from "@/components/ui/dialog"; // From shadcn/ui - ensure this component is available
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import Header from "@/components/ui/header";
+import { useModal } from "@/context/ModalContext"; // ✅ Add modal context
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
   const [mounted, setMounted] = useState(false);
   const [allowed, setAllowed] = useState(false);
-  const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [rewarded, setRewarded] = useState(false);
   const [tokenCount, setTokenCount] = useState(0);
+  const router = useRouter();
+
+  const { setShowStatsModal, setShowAchievements } = useModal(); // ✅ use context values
 
   useEffect(() => {
     setMounted(true);
@@ -45,7 +48,6 @@ export default function Archive() {
           .then(res => res.json())
           .then(data => {
             if (data.success) {
-              console.log("🎉 Bonus archive token granted for returning!");
               localStorage.setItem("archiveCompletionRewarded", "true");
               setRewarded(true);
             }
@@ -74,7 +76,6 @@ export default function Archive() {
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            console.log("✅ Archive token granted via archive visit");
             localStorage.setItem("firstTokenGranted", "true");
           }
         });
@@ -126,7 +127,10 @@ export default function Archive() {
 
   return (
     <>
-      <Header />
+      <Header
+        onStatsClick={() => setShowStatsModal(true)}
+        onAchievementsClick={() => setShowAchievements(true)}
+      />
       <div className="max-w-3xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-4 text-center">Welcome to the Archives</h1>
 
@@ -194,12 +198,11 @@ export default function Archive() {
           })}
         </div>
 
-        {/* ✅ Completion Modal */}
         <Dialog open={showModal} onOpenChange={setShowModal}>
           <DialogContent className="max-w-md mx-auto text-center">
             <h2 className="text-xl font-bold mb-2">Thanks for playing!</h2>
             <p className="text-sm text-gray-700 mb-4">
-              Some of you may have experienced a glitch yesterday in the game. Apologies! We've been working hard behind the scenes on an update and something broke in the game's logic. We really appreciate your support and patience!
+              Some of you may have experienced a glitch recently in the game. Apologies! We've been working hard behind the scenes on an update and something broke in the game's logic. We really appreciate your support and patience!
             </p>
             <p className="text-green-600 font-semibold">
               {rewarded ? "🎁 A bonus archive token has been added!" : "Loading bonus..."}
