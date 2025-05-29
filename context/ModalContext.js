@@ -5,9 +5,15 @@ const ModalContext = createContext();
 
 export function ModalProvider({ children }) {
   const [showAchievements, setShowAchievements] = useState(false);
+  const [showStatsModal, setShowStatsModal] = useState(false); // ✅ Add this
 
   return (
-    <ModalContext.Provider value={{ showAchievements, setShowAchievements }}>
+    <ModalContext.Provider value={{
+      showAchievements,
+      setShowAchievements,
+      showStatsModal,
+      setShowStatsModal
+    }}>
       {children}
     </ModalContext.Provider>
   );
