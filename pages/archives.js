@@ -128,7 +128,7 @@ export default function Archive() {
     <>
       <Header />
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-4 text-center">Pick an Archive Puzzle</h1>
+        <h1 className="text-2xl font-bold mb-4 text-center">Welcome to the Archives</h1>
 
         {tokenCount > 0 && (
           <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-2 rounded mb-4 text-center">
@@ -137,7 +137,7 @@ export default function Archive() {
         )}
 
         <p className="text-gray-600 text-center mb-6">
-          You've unlocked an extra puzzle — pick any past number to play again!
+          Missed a puzzle? Fear not! Use tokens to replay puzzles and boost your category achievements!
         </p>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
