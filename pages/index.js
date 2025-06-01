@@ -1463,23 +1463,23 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 
 {isCommunityPuzzle ? (
-  <>
-    {/* "A [logo] puzzle" line */}
-    <div className="flex items-center justify-center space-x-2 mb-2">
+  <div className="flex flex-col items-center space-y-1 mb-3">
+    {/* Logo Line */}
+    <div className="flex items-center justify-center space-x-2">
       <span className="text-base text-gray-800 font-medium">A</span>
       <img
         src="/icons/logo-numerus-community.png"
         alt="NumerUS Community"
-        className="h-6 sm:h-7 object-contain"
+        className="h-9 sm:h-10 object-contain"
       />
       <span className="text-base text-gray-800 font-medium">puzzle</span>
     </div>
 
-    {/* Contributor banner */}
-    <div className="shimmer-box text-center text-lg sm:text-xl max-w-md mx-auto">
+    {/* Yellow Box */}
+    <div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
       Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
     </div>
-  </>
+  </div>
 ) : (
   <h1 className="text-2xl font-bold mt-4">
     {isArchive ? "This puzzle's number was:" : "Today's number is:"}
