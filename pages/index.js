@@ -1464,18 +1464,18 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 {isCommunityPuzzle ? (
   <>
-    {/* "A [logo] puzzle" row */}
+    {/* "A [logo] puzzle" line */}
     <div className="flex items-center justify-center space-x-2 mb-2">
-      <span className="text-sm text-gray-700 font-medium">A</span>
+      <span className="text-base text-gray-800 font-medium">A</span>
       <img
         src="/icons/logo-numerus-community.png"
         alt="NumerUS Community"
-        className="h-5 sm:h-6 object-contain"
+        className="h-6 sm:h-7 object-contain"
       />
-      <span className="text-sm text-gray-700 font-medium">puzzle</span>
+      <span className="text-base text-gray-800 font-medium">puzzle</span>
     </div>
 
-    {/* Yellow contributor banner */}
+    {/* Contributor banner */}
     <div className="shimmer-box text-center text-lg sm:text-xl max-w-md mx-auto">
       Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
     </div>
