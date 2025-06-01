@@ -1464,11 +1464,18 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 {isCommunityPuzzle ? (
   <>
-    <img
-      src="/icons/logo-numerus-community.png"
-      alt="NumerUS Community"
-      className="w-28 h-auto mx-auto"
-    />
+    {/* "A [logo] puzzle" row */}
+    <div className="flex items-center justify-center space-x-2 mb-2">
+      <span className="text-sm text-gray-700 font-medium">A</span>
+      <img
+        src="/icons/logo-numerus-community.png"
+        alt="NumerUS Community"
+        className="h-5 sm:h-6 object-contain"
+      />
+      <span className="text-sm text-gray-700 font-medium">puzzle</span>
+    </div>
+
+    {/* Yellow contributor banner */}
     <div className="shimmer-box text-center text-lg sm:text-xl max-w-md mx-auto">
       Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
     </div>
@@ -1478,7 +1485,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     {isArchive ? "This puzzle's number was:" : "Today's number is:"}
   </h1>
 )}
-
 
 
 <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
