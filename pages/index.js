@@ -1464,21 +1464,26 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 {isCommunityPuzzle ? (
   <>
-    {/* Rectangular badge with logo and contributor info */}
-    <div className="flex flex-wrap sm:flex-nowrap items-center justify-center bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-md shadow-sm text-sm sm:text-base max-w-md mx-auto mb-2 text-center gap-2 sm:gap-3">
-  <span className="font-medium text-gray-800">A</span>
-  <img
-    src="/icons/logo-numerus-community.png"
-    alt="NumerUS Community"
-    className="h-7 sm:h-9 object-contain"
-  />
-  <span className="font-medium text-gray-800">puzzle from</span>
-  <span className="font-semibold text-black">
-    {contributor.name} in {contributor.city}, {contributor.country}
-  </span>
-</div>
+    {/* Community badge with stacked layout */}
+    <div className="flex flex-col items-center bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-md shadow-sm max-w-md mx-auto mb-2 text-sm sm:text-base text-center space-y-1">
+      {/* Line 1: A Numerus Community puzzle */}
+      <div className="flex items-center justify-center space-x-2 flex-wrap">
+        <span className="font-medium text-gray-800">A</span>
+        <img
+          src="/icons/logo-numerus-community.png"
+          alt="NumerUS Community"
+          className="h-10 sm:h-11 object-contain"
+        />
+        <span className="font-medium text-gray-800">puzzle</span>
+      </div>
+      
+      {/* Line 2: from Player */}
+      <div className="text-gray-800">
+        from <span className="font-semibold">{contributor.name} in {contributor.city}, {contributor.country}</span>
+      </div>
+    </div>
 
-    {/* Standard header below the badge */}
+    {/* Standard title */}
     <h1 className="text-2xl font-bold mt-1 mb-2 text-center">
       Today’s number is:
     </h1>
@@ -1486,8 +1491,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 ) : (
   <h1 className="text-2xl font-bold mt-4 text-center">
     {isArchive ? "This puzzle's number was:" : "Today’s number is:"}
-  </h1>
-)}
+  </h1
 
 
 <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
