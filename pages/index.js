@@ -400,7 +400,7 @@ const [localDate, setLocalDate] = useState("");
 const [showWhatsNew, setShowWhatsNew] = useState(false);
 
 const COMMUNITY_PUZZLES = {
-  "2025-05-22": { name: "Landon", city: "Memphis", country: "USA", flag: "USA" },
+  "2025-06-02": { name: "Holiday", city: "Ohio", country: "USA", flag: "USA" },
 };
 
 const contributor = COMMUNITY_PUZZLES[puzzle?.date];
@@ -748,7 +748,7 @@ function awardTile() {
   if (newIndexes.length === TILE_WORD.length) {
     const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
     localStorage.setItem("freeToken", (currentTokens + 1).toString());
-    setTokenCount(currentTokens + 2);
+    setTokenCount(currentTokens + 3);
     setJustEarnedToken(true);
 
     const tomorrow = new Date();
@@ -1461,18 +1461,24 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </p>
 )}
 
-
 {isCommunityPuzzle ? (
-  <>
-    <img
-      src="/icons/logo-numerus-community.png"
-      alt="NumerUS Community"
-      className="w-28 h-auto mx-auto"
-    />
-    <div className="shimmer-box text-center text-lg sm:text-xl max-w-md mx-auto">
+  <div className="flex flex-col items-center space-y-1 mb-3">
+    {/* Logo Line */}
+    <div className="flex items-center justify-center space-x-2">
+      <span className="text-base text-gray-800 font-medium">A</span>
+      <img
+        src="/icons/logo-numerus-community.png"
+        alt="NumerUS Community"
+        className="h-10 sm:h-11 object-contain"
+      />
+      <span className="text-base text-gray-800 font-medium">puzzle</span>
+    </div>
+
+    {/* Yellow Box */}
+    <div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
       Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
     </div>
-  </>
+  </div>
 ) : (
   <h1 className="text-2xl font-bold mt-4">
     {isArchive ? "This puzzle's number was:" : "Today's number is:"}
@@ -1480,9 +1486,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 )}
 
 
-
 <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
   <CardContent className="relative">
+
 
     {/* 🟡 Token Counter INSIDE Card */}
     <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10 token-counter">
@@ -1688,8 +1694,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     )}
   </div>
 )}
-
-</CardContent>
+  </CardContent>
 </Card>
 
 <div className="flex flex-col items-center mt-4">
