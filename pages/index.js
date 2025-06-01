@@ -1464,16 +1464,16 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 {isCommunityPuzzle ? (
   <div className="flex flex-col items-center mb-3">
-    {/* Unified banner with logo and text */}
-    <div className="flex items-center justify-center bg-yellow-100 border border-yellow-300 px-4 py-2 rounded shadow-sm space-x-2 max-w-md">
-      <span className="text-base text-gray-800 font-medium">A</span>
+    {/* Capsule badge */}
+    <div className="inline-flex items-center gap-2 bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-full shadow-sm text-sm sm:text-base">
+      <span className="font-medium text-gray-800">A</span>
       <img
         src="/icons/logo-numerus-community.png"
         alt="NumerUS Community"
         className="h-9 sm:h-10 object-contain"
       />
-      <span className="text-base text-gray-800 font-medium">puzzle:</span>
-      <span className="text-base font-semibold text-black text-center">
+      <span className="font-medium text-gray-800">puzzle from</span>
+      <span className="font-semibold text-black whitespace-nowrap">
         {contributor.name} in {contributor.city}, {contributor.country}
       </span>
     </div>
