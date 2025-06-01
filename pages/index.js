@@ -1463,21 +1463,19 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 
 {isCommunityPuzzle ? (
-  <div className="flex flex-col items-center space-y-1 mb-3">
-    {/* Logo Line */}
-    <div className="flex items-center justify-center space-x-2">
+  <div className="flex flex-col items-center mb-3">
+    {/* Unified banner with logo and text */}
+    <div className="flex items-center justify-center bg-yellow-100 border border-yellow-300 px-4 py-2 rounded shadow-sm space-x-2 max-w-md">
       <span className="text-base text-gray-800 font-medium">A</span>
       <img
         src="/icons/logo-numerus-community.png"
         alt="NumerUS Community"
         className="h-9 sm:h-10 object-contain"
       />
-      <span className="text-base text-gray-800 font-medium">puzzle</span>
-    </div>
-
-    {/* Yellow Box */}
-    <div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
-      Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
+      <span className="text-base text-gray-800 font-medium">puzzle:</span>
+      <span className="text-base font-semibold text-black text-center">
+        {contributor.name} in {contributor.city}, {contributor.country}
+      </span>
     </div>
   </div>
 ) : (
@@ -1485,6 +1483,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     {isArchive ? "This puzzle's number was:" : "Today's number is:"}
   </h1>
 )}
+
 
 
 <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
