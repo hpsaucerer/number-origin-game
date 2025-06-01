@@ -1461,7 +1461,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </p>
 )}
 
-
 {isCommunityPuzzle ? (
   <>
     {/* Community badge with stacked layout */}
@@ -1476,7 +1475,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
         />
         <span className="font-medium text-gray-800">puzzle</span>
       </div>
-      
+
       {/* Line 2: from Player */}
       <div className="text-gray-800">
         from <span className="font-semibold">{contributor.name} in {contributor.city}, {contributor.country}</span>
@@ -1489,13 +1488,20 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     </h1>
   </>
 ) : (
-  <h1 className="text-2xl font-bold mt-4 text-center">
-    {isArchive ? "This puzzle's number was:" : "Today’s number is:"}
-  </h1>
+  <>
+    <h1 className="text-2xl font-bold mt-4 text-center">
+      {isArchive ? "This puzzle's number was:" : "Today’s number is:"}
+    </h1>
 
+    {/* If you're adding this after the header, it must be wrapped too */}
+    <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
+      <CardContent className="relative">
+        {/* Your card content here */}
+      </CardContent>
+    </Card>
+  </>
+)}
 
-<Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
-  <CardContent className="relative">
 
     {/* 🟡 Token Counter INSIDE Card */}
     <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10 token-counter">
