@@ -400,7 +400,7 @@ const [localDate, setLocalDate] = useState("");
 const [showWhatsNew, setShowWhatsNew] = useState(false);
 
 const COMMUNITY_PUZZLES = {
-  "2025-05-22": { name: "Landon", city: "Memphis", country: "USA", flag: "USA" },
+  "2025-06-01": { name: "Holiday", city: "Ohio", country: "USA", flag: "USA" },
 };
 
 const contributor = COMMUNITY_PUZZLES[puzzle?.date];
