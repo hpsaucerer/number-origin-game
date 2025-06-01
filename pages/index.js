@@ -1462,34 +1462,26 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 )}
 
 {isCommunityPuzzle ? (
-  <>
-    {/* Community badge with stacked layout */}
-    <div className="flex flex-col items-center bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-md shadow-sm max-w-md mx-auto mb-2 text-sm sm:text-base text-center space-y-1">
-      {/* Line 1: A Numerus Community puzzle */}
-      <div className="flex items-center justify-center space-x-2 flex-wrap">
-        <span className="font-medium text-gray-800">A</span>
-        <img
-          src="/icons/logo-numerus-community.png"
-          alt="NumerUS Community"
-          className="h-10 sm:h-11 object-contain"
-        />
-        <span className="font-medium text-gray-800">puzzle</span>
-      </div>
-      
-      {/* Line 2: from Player */}
-      <div className="text-gray-800">
-        from <span className="font-semibold">{contributor.name} in {contributor.city}, {contributor.country}</span>
-      </div>
+  <div className="flex flex-col items-center space-y-1 mb-3">
+    {/* Logo Line */}
+    <div className="flex items-center justify-center space-x-2">
+      <span className="text-base text-gray-800 font-medium">A</span>
+      <img
+        src="/icons/logo-numerus-community.png"
+        alt="NumerUS Community"
+        className="h-9 sm:h-10 object-contain"
+      />
+      <span className="text-base text-gray-800 font-medium">puzzle</span>
     </div>
 
-    {/* Standard title */}
-    <h1 className="text-2xl font-bold mt-1 mb-2 text-center">
-      Today’s number is:
-    </h1>
-  </>
+    {/* Yellow Box */}
+    <div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
+      Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
+    </div>
+  </div>
 ) : (
-  <h1 className="text-2xl font-bold mt-4 text-center">
-    {isArchive ? "This puzzle's number was:" : "Today’s number is:"}
+  <h1 className="text-2xl font-bold mt-4">
+    {isArchive ? "This puzzle's number was:" : "Today's number is:"}
   </h1>
 )}
 
