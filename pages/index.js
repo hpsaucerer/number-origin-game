@@ -1708,9 +1708,6 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </div>
 )}
 
-</CardContent>
-</Card>
-
 <div className="flex flex-col items-center mt-4">
   <p className="text-lg font-semibold">
     {isArchive && puzzle?.date
