@@ -1469,7 +1469,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
       <img
         src="/icons/logo-numerus-community.png"
         alt="NumerUS Community"
-        className="h-9 sm:h-10 object-contain"
+        className="h-10 sm:h-11 object-contain"
       />
       <span className="text-base text-gray-800 font-medium">puzzle</span>
     </div>
