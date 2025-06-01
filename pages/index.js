@@ -748,7 +748,7 @@ function awardTile() {
   if (newIndexes.length === TILE_WORD.length) {
     const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
     localStorage.setItem("freeToken", (currentTokens + 1).toString());
-    setTokenCount(currentTokens + 2);
+    setTokenCount(currentTokens + 3);
     setJustEarnedToken(true);
 
     const tomorrow = new Date();
