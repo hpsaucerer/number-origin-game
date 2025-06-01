@@ -1465,18 +1465,18 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {isCommunityPuzzle ? (
   <>
     {/* Rectangular badge with logo and contributor info */}
-    <div className="flex items-center justify-center bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-md shadow-sm text-sm sm:text-base max-w-md mx-auto mb-2">
-      <span className="font-medium text-gray-800">A</span>
-      <img
-        src="/icons/logo-numerus-community.png"
-        alt="NumerUS Community"
-        className="h-9 sm:h-10 object-contain mx-2"
-      />
-      <span className="font-medium text-gray-800">puzzle from</span>
-      <span className="font-semibold text-black ml-2">
-        {contributor.name} in {contributor.city}, {contributor.country}
-      </span>
-    </div>
+    <div className="flex flex-wrap sm:flex-nowrap items-center justify-center bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-md shadow-sm text-sm sm:text-base max-w-md mx-auto mb-2 text-center gap-2 sm:gap-3">
+  <span className="font-medium text-gray-800">A</span>
+  <img
+    src="/icons/logo-numerus-community.png"
+    alt="NumerUS Community"
+    className="h-7 sm:h-9 object-contain"
+  />
+  <span className="font-medium text-gray-800">puzzle from</span>
+  <span className="font-semibold text-black">
+    {contributor.name} in {contributor.city}, {contributor.country}
+  </span>
+</div>
 
     {/* Standard header below the badge */}
     <h1 className="text-2xl font-bold mt-1 mb-2 text-center">
