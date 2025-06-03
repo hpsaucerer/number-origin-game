@@ -10,16 +10,20 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
   useEffect(() => {
     async function fetchLeaderboard() {
-      console.log("📅 Fetching leaderboard for date:", puzzleDate);
-      if (!puzzleDate) {
-        console.warn("⚠️ puzzleDate is missing or invalid.");
-        return;
-      }
+      const normalizedDate =
+        puzzleDate instanceof Date
+          ? puzzleDate.toISOString().split("T")[0]
+          : typeof puzzleDate === "string"
+          ? puzzleDate
+          : "";
+
+      console.log("📅 Raw puzzleDate prop:", puzzleDate);
+      console.log("✅ Normalized date used in query:", normalizedDate);
 
       const { data, error } = await supabase
         .from("leaderboard_entries")
         .select("nickname, guess_count, puzzle_date, is_correct")
-        .eq("puzzle_date", puzzleDate)
+        .eq("puzzle_date", normalizedDate)
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
         .limit(25);
@@ -27,7 +31,7 @@ export default function Leaderboard({ puzzleDate, onClose }) {
       if (error) {
         console.error("❌ Error fetching leaderboard:", error);
       } else {
-        console.log("📦 Leaderboard data fetched:", data);
+        console.log("📊 Leaderboard data fetched:", data);
         setEntries(data);
       }
 
