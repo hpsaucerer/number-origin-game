@@ -10,19 +10,12 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
   useEffect(() => {
     async function fetchLeaderboard() {
-      if (!puzzleDate) {
-        console.warn("⚠️ puzzleDate is undefined or null at fetch time.");
-        return;
-      }
-
-      const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
       console.log("📅 Raw puzzleDate prop:", puzzleDate);
-      console.log("✅ Normalized date used in query:", normalizedDate);
 
       const { data, error } = await supabase
         .from("leaderboard_entries")
         .select("nickname, guess_count")
-        .eq("puzzle_date", normalizedDate)
+        .eq("puzzle_date", puzzleDate) // ✅ use directly
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
         .limit(25);
@@ -30,16 +23,18 @@ export default function Leaderboard({ puzzleDate, onClose }) {
       if (error) {
         console.error("❌ Error fetching leaderboard:", error);
       } else {
-        console.log("📊 Leaderboard raw data:", data);
+        console.log("📊 Leaderboard data fetched:", data);
         console.log("🧪 Data type:", typeof data);
-        console.log("🔢 Entry count:", data?.length);
+        console.log("🧪 Entry count:", data?.length);
         setEntries(data);
       }
 
       setLoading(false);
     }
 
-    fetchLeaderboard();
+    if (puzzleDate) {
+      fetchLeaderboard();
+    }
   }, [puzzleDate]);
 
   return (
@@ -52,10 +47,9 @@ export default function Leaderboard({ puzzleDate, onClose }) {
           </button>
         </div>
 
-        {/* Debug UI section */}
-        <div className="mb-2 text-xs text-gray-500">
-          Debug: loading={String(loading)} | entries={entries.length}
-        </div>
+        <p className="text-xs text-gray-400 text-center">
+          Debug: loading={loading.toString()} | entries={entries.length}
+        </p>
 
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
