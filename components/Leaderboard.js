@@ -11,13 +11,15 @@ export default function Leaderboard({ puzzleDate, onClose }) {
   useEffect(() => {
     async function fetchLeaderboard() {
       const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
+
       console.log("📅 Raw puzzleDate prop:", puzzleDate);
       console.log("✅ Normalized date used in query:", normalizedDate);
+      console.log("🧪 typeof normalizedDate:", typeof normalizedDate);
 
       const { data, error } = await supabase
         .from("leaderboard_entries")
         .select("nickname, guess_count")
-        .filter("puzzle_date", "eq", normalizedDate)
+        .filter("puzzle_date", "eq", normalizedDate) // 👈 key change
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
         .limit(25);
@@ -32,7 +34,9 @@ export default function Leaderboard({ puzzleDate, onClose }) {
       setLoading(false);
     }
 
-    if (puzzleDate) fetchLeaderboard();
+    if (puzzleDate) {
+      fetchLeaderboard();
+    }
   }, [puzzleDate]);
 
   return (
@@ -45,7 +49,9 @@ export default function Leaderboard({ puzzleDate, onClose }) {
           </button>
         </div>
 
-        <p className="text-xs text-gray-400 mb-2">Debug: loading={loading.toString()} | entries={entries.length}</p>
+        <p className="text-xs text-gray-400 mb-2">
+          Debug: loading={String(loading)} | entries={entries.length}
+        </p>
 
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
