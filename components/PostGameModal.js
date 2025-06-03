@@ -133,6 +133,8 @@ export default function PostGameModal({
     };
     return map[key];
   };
+  
+console.log("🧩 puzzle.date:", puzzle.date, "Type:", typeof puzzle.date);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
