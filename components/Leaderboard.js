@@ -10,12 +10,26 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
   useEffect(() => {
     async function fetchLeaderboard() {
+      if (!puzzleDate) return;
+
+      // Normalize the date regardless of format (e.g., "2025-06-03", Date object, etc.)
+      let normalizedDate;
+      if (typeof puzzleDate === "string") {
+        normalizedDate = puzzleDate.split("T")[0];
+      } else if (puzzleDate instanceof Date) {
+        normalizedDate = puzzleDate.toISOString().split("T")[0];
+      } else {
+        console.warn("⚠️ Unrecognized puzzleDate format:", puzzleDate);
+        return;
+      }
+
       console.log("📅 Raw puzzleDate prop:", puzzleDate);
+      console.log("✅ Normalized date used in query:", normalizedDate);
 
       const { data, error } = await supabase
         .from("leaderboard_entries")
-        .select("nickname, guess_count")
-        .eq("puzzle_date", puzzleDate) // ✅ use directly
+        .select("nickname, guess_count, puzzle_date, is_correct")
+        .eq("puzzle_date", normalizedDate)
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
         .limit(25);
@@ -24,17 +38,13 @@ export default function Leaderboard({ puzzleDate, onClose }) {
         console.error("❌ Error fetching leaderboard:", error);
       } else {
         console.log("📊 Leaderboard data fetched:", data);
-        console.log("🧪 Data type:", typeof data);
-        console.log("🧪 Entry count:", data?.length);
         setEntries(data);
       }
 
       setLoading(false);
     }
 
-    if (puzzleDate) {
-      fetchLeaderboard();
-    }
+    fetchLeaderboard();
   }, [puzzleDate]);
 
   return (
@@ -47,8 +57,8 @@ export default function Leaderboard({ puzzleDate, onClose }) {
           </button>
         </div>
 
-        <p className="text-xs text-gray-400 text-center">
-          Debug: loading={loading.toString()} | entries={entries.length}
+        <p className="text-xs text-gray-400 text-center mb-2">
+          Debug: loading={String(loading)} | entries={entries.length}
         </p>
 
         {loading ? (
