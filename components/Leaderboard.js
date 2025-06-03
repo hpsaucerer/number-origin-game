@@ -4,16 +4,18 @@ import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 
-export default function Leaderboard({ puzzleId, onClose }) {
+export default function Leaderboard({ puzzleDate, onClose }) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchLeaderboard() {
+      console.log("📅 Fetching leaderboard for date:", puzzleDate);
+
       const { data, error } = await supabase
         .from("leaderboard_entries")
         .select("nickname, guess_count")
-        .eq("puzzle_date", puzzleId)
+        .eq("puzzle_date", puzzleDate)
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
         .limit(25);
@@ -28,7 +30,7 @@ export default function Leaderboard({ puzzleId, onClose }) {
     }
 
     fetchLeaderboard();
-  }, [puzzleId]);
+  }, [puzzleDate]);
 
   return (
     <Dialog open onOpenChange={onClose}>
