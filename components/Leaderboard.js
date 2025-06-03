@@ -10,19 +10,14 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
   useEffect(() => {
     async function fetchLeaderboard() {
-      const normalizedDate =
-        puzzleDate instanceof Date
-          ? puzzleDate.toISOString().split("T")[0]
-          : typeof puzzleDate === "string"
-          ? puzzleDate
-          : "";
+      const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
 
       console.log("📅 Raw puzzleDate prop:", puzzleDate);
       console.log("✅ Normalized date used in query:", normalizedDate);
 
       const { data, error } = await supabase
         .from("leaderboard_entries")
-        .select("nickname, guess_count, puzzle_date, is_correct")
+        .select("nickname, guess_count")
         .eq("puzzle_date", normalizedDate)
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
@@ -38,7 +33,9 @@ export default function Leaderboard({ puzzleDate, onClose }) {
       setLoading(false);
     }
 
-    fetchLeaderboard();
+    if (puzzleDate) {
+      fetchLeaderboard();
+    }
   }, [puzzleDate]);
 
   return (
