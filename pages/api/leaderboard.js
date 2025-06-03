@@ -8,17 +8,24 @@ export default async function handler(req, res) {
 
   const { device_id, puzzle_id, attempts, is_correct, name } = req.body;
 
-  if (!device_id || !puzzle_id || !name) {
+  if (!device_id || !puzzle_id || !name || attempts === undefined || is_correct === undefined) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
+  const formattedDate = new Date(puzzle_id).toISOString().split("T")[0];
+
   // Prevent duplicate submissions for the same puzzle by device
   const { data: existing, error: fetchError } = await supabase
-    .from("leaderboard_entries") // ✅ updated
+    .from("leaderboard_entries")
     .select("*")
     .eq("device_id", device_id)
-    .eq("puzzle_date", puzzle_id) // ✅ updated key to match schema
+    .eq("puzzle_date", formattedDate)
     .single();
+
+  if (fetchError) {
+    console.error("❌ Supabase fetch error:", fetchError);
+    return res.status(500).json({ message: "Database fetch failed", error: fetchError });
+  }
 
   if (existing) {
     return res.status(200).json({ message: "Already submitted" });
@@ -27,14 +34,15 @@ export default async function handler(req, res) {
   const { error } = await supabase.from("leaderboard_entries").insert([
     {
       device_id,
-      puzzle_date: puzzle_id, // ✅ column name must match Supabase table
+      puzzle_date: formattedDate,
       guess_count: attempts,
       is_correct,
-      nickname: name, // ✅ column name must match Supabase table
+      nickname: name,
     },
   ]);
 
   if (error) {
+    console.error("❌ Supabase insert error:", error);
     return res.status(500).json({ message: "Database insert failed", error });
   }
 
