@@ -8,44 +8,35 @@ export default function Leaderboard({ puzzleDate, onClose }) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchLeaderboard() {
-      if (!puzzleDate) return;
+useEffect(() => {
+  async function fetchLeaderboard() {
+    const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
 
-      // Normalize the date regardless of format (e.g., "2025-06-03", Date object, etc.)
-      let normalizedDate;
-      if (typeof puzzleDate === "string") {
-        normalizedDate = puzzleDate.split("T")[0];
-      } else if (puzzleDate instanceof Date) {
-        normalizedDate = puzzleDate.toISOString().split("T")[0];
-      } else {
-        console.warn("⚠️ Unrecognized puzzleDate format:", puzzleDate);
-        return;
-      }
+    console.log("📅 Raw puzzleDate prop:", puzzleDate);
+    console.log("✅ Normalized date used in query:", normalizedDate);
 
-      console.log("📅 Raw puzzleDate prop:", puzzleDate);
-      console.log("✅ Normalized date used in query:", normalizedDate);
+    const { data, error } = await supabase
+      .from("leaderboard_entries")
+      .select("nickname, guess_count")
+      .filter("puzzle_date", "eq", normalizedDate) // ⬅ safer than .eq() for edge types
+      .eq("is_correct", true)
+      .order("guess_count", { ascending: true })
+      .limit(25);
 
-      const { data, error } = await supabase
-        .from("leaderboard_entries")
-        .select("nickname, guess_count, puzzle_date, is_correct")
-        .eq("puzzle_date", normalizedDate)
-        .eq("is_correct", true)
-        .order("guess_count", { ascending: true })
-        .limit(25);
-
-      if (error) {
-        console.error("❌ Error fetching leaderboard:", error);
-      } else {
-        console.log("📊 Leaderboard data fetched:", data);
-        setEntries(data);
-      }
-
-      setLoading(false);
+    if (error) {
+      console.error("❌ Error fetching leaderboard:", error);
+    } else {
+      console.log("📊 Leaderboard data fetched:", data);
+      setEntries(data);
     }
 
+    setLoading(false);
+  }
+
+  if (puzzleDate) {
     fetchLeaderboard();
-  }, [puzzleDate]);
+  }
+}, [puzzleDate]);
 
   return (
     <Dialog open onOpenChange={onClose}>
