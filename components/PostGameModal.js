@@ -6,6 +6,7 @@ import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 import confetti from "canvas-confetti";
 import { getOrCreateDeviceId } from "@/lib/device";
+import Leaderboard from "@/components/Leaderboard"; // adjust path if needed
 
 const TILE_WORD = "NUMERUS";
 
@@ -39,6 +40,7 @@ export default function PostGameModal({
   const [earnedTiles, setEarnedTiles] = useState([]);
   const [justEarnedTile, setJustEarnedTile] = useState(false);
   const [showBonusButton, setShowBonusButton] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -245,6 +247,15 @@ export default function PostGameModal({
   </div>
 )}
 
+<div className="flex justify-center mt-5">
+  <Button
+    onClick={() => setShowLeaderboard(true)}
+    className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded shadow"
+  >
+    View Leaderboard
+  </Button>
+</div>
+
           <FunFactBox puzzle={puzzle} />
 
           <div className="mt-4 text-center">
@@ -267,6 +278,9 @@ export default function PostGameModal({
             </Button>
           </div>
         </div>
+      {showLeaderboard && (
+  <Leaderboard onClose={() => setShowLeaderboard(false)} puzzleId={puzzle.date} />
+)}
       </DialogContent>
     </Dialog>
   );
