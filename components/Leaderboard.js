@@ -13,7 +13,7 @@ export default function Leaderboard({ puzzleId, onClose }) {
       const { data, error } = await supabase
         .from("leaderboard_entries")
         .select("nickname, guess_count")
-        .eq("puzzle_date", new Date(puzzleId).toISOString().split("T")[0])
+        .eq("puzzle_date", puzzleId)
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
         .limit(25);
