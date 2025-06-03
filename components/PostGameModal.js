@@ -279,7 +279,7 @@ export default function PostGameModal({
           </div>
         </div>
       {showLeaderboard && (
-  <Leaderboard onClose={() => setShowLeaderboard(false)} puzzleDate={new Date(puzzle.date).toISOString().split("T")[0]} />
+  <Leaderboard onClose={() => setShowLeaderboard(false)} puzzleDate={puzzleNumber} />
 )}
       </DialogContent>
     </Dialog>
