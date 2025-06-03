@@ -227,7 +227,7 @@ export default function PostGameModal({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             device_id: deviceId,
-            puzzle_id: puzzleNumber,
+            puzzle_id: puzzle.date,
             attempts: isCorrect ? attempts + 1 : 4,
             is_correct: isCorrect,
             name: name.trim(),
