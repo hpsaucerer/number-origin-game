@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     .select("*")
     .eq("device_id", device_id)
     .eq("puzzle_date", formattedDate)
-    .single();
+    .maybeSingle()
 
   if (fetchError) {
     console.error("❌ Supabase fetch error:", fetchError);
