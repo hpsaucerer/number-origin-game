@@ -18,7 +18,7 @@ export default function Leaderboard({ puzzleDate, onClose }) {
       const { data, error } = await supabase
         .from("leaderboard_entries")
         .select("nickname, guess_count")
-        .eq("puzzle_date", "2025-06-03")
+        .eq("puzzle_date", normalizedDate)  // <-- dynamically uses prop now
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
         .limit(25);
