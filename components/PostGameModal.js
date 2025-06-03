@@ -210,6 +210,40 @@ export default function PostGameModal({
               </div>
             </div>
           )}
+{!isArchive && (
+  <div className="mt-5 px-4 text-center">
+    <p className="text-sm text-gray-700 mb-2">Want to see how you stack up?</p>
+    <Button
+      onClick={async () => {
+        const name = prompt("Enter your name or initials (max 20 chars):", "");
+        if (!name || name.length > 20) return;
+
+        const deviceId = getOrCreateDeviceId();
+
+        const res = await fetch("/api/leaderboard", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            device_id: deviceId,
+            puzzle_id: puzzleNumber,
+            attempts: isCorrect ? attempts + 1 : 4,
+            is_correct: isCorrect,
+            name: name.trim(),
+          }),
+        });
+
+        if (res.ok) {
+          alert("You're on the leaderboard!");
+        } else {
+          alert("Something went wrong submitting your score.");
+        }
+      }}
+      className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded shadow"
+    >
+      Submit Score to Leaderboard
+    </Button>
+  </div>
+)}
 
           <FunFactBox puzzle={puzzle} />
 
