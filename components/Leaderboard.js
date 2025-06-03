@@ -8,35 +8,32 @@ export default function Leaderboard({ puzzleDate, onClose }) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  async function fetchLeaderboard() {
-    const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
+  useEffect(() => {
+    async function fetchLeaderboard() {
+      const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
+      console.log("📅 Raw puzzleDate prop:", puzzleDate);
+      console.log("✅ Normalized date used in query:", normalizedDate);
 
-    console.log("📅 Raw puzzleDate prop:", puzzleDate);
-    console.log("✅ Normalized date used in query:", normalizedDate);
+      const { data, error } = await supabase
+        .from("leaderboard_entries")
+        .select("nickname, guess_count")
+        .filter("puzzle_date", "eq", normalizedDate)
+        .eq("is_correct", true)
+        .order("guess_count", { ascending: true })
+        .limit(25);
 
-    const { data, error } = await supabase
-      .from("leaderboard_entries")
-      .select("nickname, guess_count")
-      .filter("puzzle_date", "eq", normalizedDate) // ⬅ safer than .eq() for edge types
-      .eq("is_correct", true)
-      .order("guess_count", { ascending: true })
-      .limit(25);
+      if (error) {
+        console.error("❌ Error fetching leaderboard:", error);
+      } else {
+        console.log("📊 Leaderboard data fetched:", data);
+        setEntries(data);
+      }
 
-    if (error) {
-      console.error("❌ Error fetching leaderboard:", error);
-    } else {
-      console.log("📊 Leaderboard data fetched:", data);
-      setEntries(data);
+      setLoading(false);
     }
 
-    setLoading(false);
-  }
-
-  if (puzzleDate) {
-    fetchLeaderboard();
-  }
-}, [puzzleDate]);
+    if (puzzleDate) fetchLeaderboard();
+  }, [puzzleDate]);
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -48,9 +45,7 @@ useEffect(() => {
           </button>
         </div>
 
-        <p className="text-xs text-gray-400 text-center mb-2">
-          Debug: loading={String(loading)} | entries={entries.length}
-        </p>
+        <p className="text-xs text-gray-400 mb-2">Debug: loading={loading.toString()} | entries={entries.length}</p>
 
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
