@@ -14,23 +14,23 @@ export default async function handler(req, res) {
 
   // Prevent duplicate submissions for the same puzzle by device
   const { data: existing, error: fetchError } = await supabase
-    .from("leaderboard")
+    .from("leaderboard_entries") // ✅ updated
     .select("*")
     .eq("device_id", device_id)
-    .eq("puzzle_id", puzzle_id)
+    .eq("puzzle_date", puzzle_id) // ✅ updated key to match schema
     .single();
 
   if (existing) {
     return res.status(200).json({ message: "Already submitted" });
   }
 
-  const { error } = await supabase.from("leaderboard").insert([
+  const { error } = await supabase.from("leaderboard_entries").insert([
     {
       device_id,
-      puzzle_id,
-      attempts,
+      puzzle_date: puzzle_id, // ✅ column name must match Supabase table
+      guess_count: attempts,
       is_correct,
-      name,
+      nickname: name, // ✅ column name must match Supabase table
     },
   ]);
 
