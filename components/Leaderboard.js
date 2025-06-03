@@ -10,15 +10,19 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
   useEffect(() => {
     async function fetchLeaderboard() {
-      const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
+      if (!puzzleDate) {
+        console.warn("⚠️ puzzleDate is undefined or null at fetch time.");
+        return;
+      }
 
+      const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
       console.log("📅 Raw puzzleDate prop:", puzzleDate);
       console.log("✅ Normalized date used in query:", normalizedDate);
 
       const { data, error } = await supabase
         .from("leaderboard_entries")
         .select("nickname, guess_count")
-        .eq("puzzle_date", normalizedDate)  // <-- dynamically uses prop now
+        .eq("puzzle_date", normalizedDate)
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
         .limit(25);
@@ -26,16 +30,16 @@ export default function Leaderboard({ puzzleDate, onClose }) {
       if (error) {
         console.error("❌ Error fetching leaderboard:", error);
       } else {
-        console.log("📊 Leaderboard data fetched:", data);
+        console.log("📊 Leaderboard raw data:", data);
+        console.log("🧪 Data type:", typeof data);
+        console.log("🔢 Entry count:", data?.length);
         setEntries(data);
       }
 
       setLoading(false);
     }
 
-    if (puzzleDate) {
-      fetchLeaderboard();
-    }
+    fetchLeaderboard();
   }, [puzzleDate]);
 
   return (
@@ -46,6 +50,11 @@ export default function Leaderboard({ puzzleDate, onClose }) {
           <button onClick={onClose} aria-label="Close leaderboard">
             <X size={20} className="text-gray-500 hover:text-gray-700" />
           </button>
+        </div>
+
+        {/* Debug UI section */}
+        <div className="mb-2 text-xs text-gray-500">
+          Debug: loading={String(loading)} | entries={entries.length}
         </div>
 
         {loading ? (
