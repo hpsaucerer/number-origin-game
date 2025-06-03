@@ -12,6 +12,12 @@ export default function Leaderboard({ puzzleDate, onClose }) {
     async function fetchLeaderboard() {
       console.log("📅 Fetching leaderboard for date:", puzzleDate);
 
+      if (!puzzleDate || typeof puzzleDate !== "string") {
+        console.error("❌ Invalid puzzleDate passed to leaderboard:", puzzleDate);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from("leaderboard_entries")
         .select("nickname, guess_count")
@@ -23,6 +29,7 @@ export default function Leaderboard({ puzzleDate, onClose }) {
       if (error) {
         console.error("❌ Error fetching leaderboard:", error);
       } else {
+        console.log("📥 Leaderboard data fetched:", data);
         setEntries(data);
       }
 
