@@ -62,6 +62,10 @@ export default function PostGameModal({
   }, []);
 
   useEffect(() => {
+  console.log("🧩 puzzle.date:", puzzle.date, "Type:", typeof puzzle.date);
+}, [puzzle.date]);
+
+  useEffect(() => {
     if (!open) return;
 
     document.body.style.overflow = "hidden";
@@ -82,7 +86,7 @@ export default function PostGameModal({
     } else {
       setEarnedTiles(storedIndexes);
     }
-
+ 
     const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
     const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
 
@@ -134,7 +138,6 @@ export default function PostGameModal({
     return map[key];
   };
   
-console.log("🧩 puzzle.date:", puzzle.date, "Type:", typeof puzzle.date);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
