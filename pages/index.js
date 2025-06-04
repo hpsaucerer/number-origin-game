@@ -1457,15 +1457,16 @@ if (typeof window !== "undefined") {
     console.warn("🚫 Joyride target not found:", data.step.target);
     setShowTour(false);
   }
-}
+};
   
-<Header
-  onStatsClick={() => setShowStats(true)}
-  onAchievementsClick={() => setShowAchievements(true)}
-/>
+return (
+  <>
+    <Header
+      onStatsClick={() => setShowStats(true)}
+      onAchievementsClick={() => setShowAchievements(true)}
+    />
 
 <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
-
 
 {DEV_MODE && (
   <div className="mb-2 flex flex-col items-center">
