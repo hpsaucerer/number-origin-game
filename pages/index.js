@@ -31,6 +31,13 @@ import { getCookiePreferences } from "@/utils/cookies";
 import { askLLMFallback } from '../lib/llm'; // adjust if needed
 import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
 
+// ⏱️ Track puzzle start time
+if (!localStorage.getItem("puzzle_start_time")) {
+  const now = new Date().toISOString();
+  localStorage.setItem("puzzle_start_time", now);
+  console.log("⏱️ Puzzle start time recorded:", now);
+}
+
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
 
