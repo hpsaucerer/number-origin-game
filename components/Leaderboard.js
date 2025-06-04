@@ -4,6 +4,24 @@ import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 
+const MOCK_ENTRIES = [
+  { nickname: "MART", guess_count: 1 },
+  { nickname: "Han", guess_count: 1 },
+  { nickname: "Jude", guess_count: 2 },
+  { nickname: "Nouks", guess_count: 2 },
+  { nickname: "Tess", guess_count: 3 },
+  { nickname: "Liam", guess_count: 3 },
+  { nickname: "Zee", guess_count: 4 },
+  { nickname: "Kiko", guess_count: 4 },
+  { nickname: "Leo", guess_count: 4 },
+  { nickname: "Rin", guess_count: 4 },
+  { nickname: "Ola", guess_count: 4 },
+  { nickname: "Mira", guess_count: 5 },
+  { nickname: "Axel", guess_count: 5 },
+  { nickname: "Dune", guess_count: 6 },
+  { nickname: "Tali", guess_count: 6 },
+];
+
 export default function Leaderboard({ puzzleDate, onClose }) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,8 +42,9 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
       if (error) {
         console.error("❌ Error fetching leaderboard:", error);
+        setEntries(MOCK_ENTRIES);
       } else {
-        setEntries(data);
+        setEntries(data && data.length > 0 ? data : MOCK_ENTRIES);
       }
 
       setLoading(false);
