@@ -1458,8 +1458,7 @@ if (typeof window !== "undefined") {
     setShowTour(false);
   }
 }
-
-/> 
+  
 <Header
   onStatsClick={() => setShowStats(true)}
   onAchievementsClick={() => setShowAchievements(true)}
