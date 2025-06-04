@@ -1,7 +1,10 @@
-import { useEffect } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import Home from "../index";
 import cookie from "cookie";
+
+// 🧠 Dynamically import Home with SSR disabled
+const Home = dynamic(() => import("../index"), { ssr: false });
 
 export async function getServerSideProps(context) {
   const { puzzle_number } = context.params;
@@ -18,7 +21,6 @@ export async function getServerSideProps(context) {
     return { redirect: { destination: "/archives", permanent: false } };
   }
 
-  // 🔍 Check for valid archive token (generic or targeted)
   const { data: token, error: tokenError } = await supabase
     .from("ArchiveTokens")
     .select("*")
@@ -35,7 +37,6 @@ export async function getServerSideProps(context) {
     return { redirect: { destination: "/archives", permanent: false } };
   }
 
-  // ✅ Mark token as used and optionally link to this puzzle
   await supabase
     .from("ArchiveTokens")
     .update({
@@ -45,7 +46,6 @@ export async function getServerSideProps(context) {
     })
     .eq("id", token.id);
 
-  // 🧩 Load puzzle content
   const { data, error } = await supabase
     .from("puzzles")
     .select("*")
@@ -66,7 +66,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-// ✅ Client-only component to handle localStorage
+// ✅ Only run this browser-side
 function ArchiveTracker() {
   useEffect(() => {
     localStorage.setItem("archiveTokenUsed", "true");
