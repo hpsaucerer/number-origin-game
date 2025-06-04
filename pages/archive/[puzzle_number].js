@@ -66,13 +66,19 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function ArchivePuzzlePage(props) {
-  // ✅ Set archiveTokenUsed only after successful load
+// ✅ Client-only component to handle localStorage
+function ArchiveTracker() {
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("archiveTokenUsed", "true");
-    }
+    localStorage.setItem("archiveTokenUsed", "true");
   }, []);
+  return null;
+}
 
-  return <Home {...props} />;
+export default function ArchivePuzzlePage(props) {
+  return (
+    <>
+      <ArchiveTracker />
+      <Home {...props} />
+    </>
+  );
 }
