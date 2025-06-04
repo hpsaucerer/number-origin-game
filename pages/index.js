@@ -681,30 +681,36 @@ useEffect(() => {
   }
 }, [puzzle]);
 
-  useEffect(() => {
+useEffect(() => {
   if (!isCorrect || isArchive) return;
 
-  const granted = localStorage.getItem("firstTokenGranted") === "true";
-  if (granted) {
-    setCanPlayBonus(true);
+  if (typeof window !== "undefined") {
+    const granted = localStorage.getItem("firstTokenGranted") === "true";
+    if (granted) {
+      setCanPlayBonus(true);
+    }
   }
 }, [isCorrect, isArchive]);
+
 
 // ✅ NEW: Mark archive puzzle as completed
 useEffect(() => {
   if (!gameOver || !isCorrect || isArchive !== true) return;
 
-  const tokenUsed = localStorage.getItem("archiveTokenUsed") === "true";
-  if (tokenUsed) {
-    localStorage.setItem("justCompletedArchive", "true");
-    localStorage.removeItem("archiveTokenUsed"); // clean it up
-  }
+  if (typeof window !== "undefined") {
+    const tokenUsed = localStorage.getItem("archiveTokenUsed") === "true";
+    if (tokenUsed) {
+      localStorage.setItem("justCompletedArchive", "true");
+      localStorage.removeItem("archiveTokenUsed"); // clean it up
+    }
 
-  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-  if (!completed.includes(puzzle.id)) {
-    localStorage.setItem("completedPuzzles", JSON.stringify([...completed, puzzle.id]));
+    const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+    if (!completed.includes(puzzle.id)) {
+      localStorage.setItem("completedPuzzles", JSON.stringify([...completed, puzzle.id]));
+    }
   }
 }, [gameOver, isCorrect, isArchive]);
+
 
     useEffect(() => {
   if (puzzle && DEV_MODE) {
