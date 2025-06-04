@@ -4,23 +4,11 @@ import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 
-const MOCK_ENTRIES = [
-  { nickname: "MART", guess_count: 1 },
-  { nickname: "Han", guess_count: 1 },
-  { nickname: "Jude", guess_count: 2 },
-  { nickname: "Nouks", guess_count: 2 },
-  { nickname: "Tess", guess_count: 3 },
-  { nickname: "Liam", guess_count: 3 },
-  { nickname: "Zee", guess_count: 4 },
-  { nickname: "Kiko", guess_count: 4 },
-  { nickname: "Leo", guess_count: 4 },
-  { nickname: "Rin", guess_count: 4 },
-  { nickname: "Ola", guess_count: 4 },
-  { nickname: "Mira", guess_count: 5 },
-  { nickname: "Axel", guess_count: 5 },
-  { nickname: "Dune", guess_count: 6 },
-  { nickname: "Tali", guess_count: 6 },
-];
+function flagEmoji(code) {
+  if (!code) return "🌐";
+  const cc = code.toUpperCase();
+  return cc.replace(/./g, char => String.fromCodePoint(127397 + char.charCodeAt()));
+}
 
 export default function Leaderboard({ puzzleDate, onClose }) {
   const [entries, setEntries] = useState([]);
@@ -34,7 +22,7 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
       const { data, error } = await supabase
         .from("leaderboard_entries")
-        .select("nickname, guess_count")
+        .select("nickname, guess_count, country_code")
         .eq("puzzle_date", normalizedDate)
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
@@ -42,11 +30,25 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
       if (error) {
         console.error("❌ Error fetching leaderboard:", error);
-        setEntries(MOCK_ENTRIES);
-      } else {
-        setEntries(data && data.length > 0 ? data : MOCK_ENTRIES);
+        setLoading(false);
+        return;
       }
 
+      // 🧪 Add mock data here for testing
+      const mockEntries = [
+        { nickname: "Alice", guess_count: 1, country_code: "us" },
+        { nickname: "Bob", guess_count: 2, country_code: "gb" },
+        { nickname: "Chloe", guess_count: 1, country_code: "fr" },
+        { nickname: "Diego", guess_count: 3, country_code: "es" },
+        { nickname: "Eva", guess_count: 2, country_code: "de" },
+      ];
+
+      const combined = [...data, ...mockEntries];
+
+      // 🧠 Sort combined entries by guess count ascending
+      combined.sort((a, b) => a.guess_count - b.guess_count);
+
+      setEntries(combined);
       setLoading(false);
     }
 
@@ -70,8 +72,9 @@ export default function Leaderboard({ puzzleDate, onClose }) {
         ) : (
           <ol className="list-decimal pl-5 space-y-1 text-sm">
             {entries.map((entry, i) => (
-              <li key={i}>
-                <span className="font-bold">{i + 1}.</span>{" "}
+              <li key={i} className="flex items-center gap-2">
+                <span className="font-bold">{i + 1}.</span>
+                <span>{flagEmoji(entry.country_code)}</span>
                 <span className="font-medium">{entry.nickname}</span> —{" "}
                 {entry.guess_count} {entry.guess_count === 1 ? "guess" : "guesses"}
               </li>
