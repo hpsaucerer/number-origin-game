@@ -1225,104 +1225,83 @@ const { error } = await supabase.from("Player_responses").insert([
   },
 ]);
 
+try {
+  if (error) {
+    console.error("❌ Supabase insert error:", error);
+  } else {
+    console.log("✅ Guess successfully logged to Supabase!");
+  }
 
+  if (isCorrectGuess) {
+    setIsCorrect(true);
 
-if (error) {
-  console.error("❌ Supabase insert error:", error);
-} else {
-  console.log("✅ Guess successfully logged to Supabase!");
-}
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`completed-${puzzle.date}`, "true");
 
-if (isCorrectGuess) {
-  setIsCorrect(true);
+      const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+      if (!existingCompleted.includes(puzzle.id)) {
+        existingCompleted.push(puzzle.id);
+        localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
+      }
 
-  if (typeof window !== "undefined") {
-    localStorage.setItem(`completed-${puzzle.date}`, "true");
-
-    const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-    if (!existingCompleted.includes(puzzle.id)) {
-      existingCompleted.push(puzzle.id);
-      localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
+      // 🎁 Archive token reward — only for new players, first correct puzzle
+      const alreadyGranted = localStorage.getItem("archiveToken");
+      if (!alreadyGranted && existingCompleted.length === 1) {
+        const today = new Date().toISOString().split("T")[0];
+        localStorage.setItem("archiveToken", today);
+        console.log("🎁 Archive token granted after first win!");
+      }
     }
 
-    // 🎁 Archive token reward — only for new players, first correct puzzle
-    const alreadyGranted = localStorage.getItem("archiveToken");
-    if (!alreadyGranted && existingCompleted.length === 1) {
-      const today = new Date().toISOString().split("T")[0];
-      localStorage.setItem("archiveToken", today);
-      console.log("🎁 Archive token granted after first win!");
+    setStats((prev) => updateStats(prev, true, attempts + 1));
+    setGuess("");
+
+    if (typeof track === "function" && getCookiePreferences().analytics) {
+      track("puzzle_completed", {
+        correct: true,
+        guessCount: attempts + 1,
+        puzzleId,
+      });
+      track("puzzle_guess_count", {
+        guessCount: attempts + 1,
+        puzzleId,
+      });
     }
-  }
 
-  setStats((prev) => updateStats(prev, true, attempts + 1));
-  setGuess("");
-}
+    awardTile();
+    setTimeout(() => setShowPostGame(true), 500);
+  } else {
+    const newAttempts = attempts + 1;
+    setAttempts(newAttempts);
 
-if (isCorrectGuess) {
-  if (typeof track === "function" && getCookiePreferences().analytics) {
-    track("puzzle_completed", {
-      correct: true,
-      guessCount: attempts + 1,
-      puzzleId,
-    });
-    track("puzzle_guess_count", {
-      guessCount: attempts + 1,
-      puzzleId,
-    });
-  }
+    const clueIndex = revealedClues.length;
+    const nextClue = puzzle.clues?.[clueIndex];
 
-  awardTile();
-  setTimeout(() => setShowPostGame(true), 500);
-} // ← ✅ This closing brace is required
+    if (nextClue && !revealedClues.includes(nextClue)) {
+      setRevealedClues([...revealedClues, nextClue]);
+    }
 
-else if (nearMissEssential || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
-  const newAttempts = attempts + 1;
-  setAttempts(newAttempts);
-
-  const clueIndex = revealedClues.length;
-  const nextClue = puzzle.clues?.[clueIndex];
-
-  if (nextClue && !revealedClues.includes(nextClue)) {
-    setRevealedClues([...revealedClues, nextClue]);
-  }
-}
+    if (isNearMiss || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
       setInputError(
         nearMissEssential
           ? "You're close — try adding a more specific word!"
           : "You're on the right track!"
       );
-
-      if (newAttempts >= maxGuesses) {
-        awardTile(); // ✅ Only shown in first path
-        handleGameOver(newAttempts); // 👈 Wrapped tracking + stats
-      }
-
+    } else if (newAttempts >= maxGuesses) {
+      awardTile();
+      handleGameOver(newAttempts);
     } else {
-      const newAttempts = attempts + 1;
-      setAttempts(newAttempts);
-
-      const clueIndex = revealedClues.length;
-      const nextClue = puzzle.clues?.[clueIndex];
-
-      if (nextClue && !revealedClues.includes(nextClue)) {
-        setRevealedClues([...revealedClues, nextClue]);
-      }
-
-      if (newAttempts >= maxGuesses) {
-        handleGameOver(newAttempts); // 👈 Same logic reused here too
-      } else {
-        setInputError("Hmm, not quite. Try again or reveal a clue!");
-      }
-
-      setGuess(""); // ✅ Leave outside the if/else
+      setInputError("Hmm, not quite. Try again or reveal a clue!");
     }
-  } catch (error) {
-    console.error("❌ Error in handleGuess:", error);
-    setInputError("Something went wrong. Try again!");
-  } finally {
-    setIsSubmitting(false);
+
+    setGuess("");
   }
-};
+} catch (error) {
+  console.error("❌ Error in handleGuess:", error);
+  setInputError("Something went wrong. Try again!");
+} finally {
+  setIsSubmitting(false);
+}
 
     
 const handleClueReveal = () => {
