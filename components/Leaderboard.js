@@ -10,16 +10,14 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
   useEffect(() => {
     async function fetchLeaderboard() {
-      const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
+      if (!puzzleDate || isNaN(new Date(puzzleDate))) return;
 
-      console.log("📅 Raw puzzleDate prop:", puzzleDate);
-      console.log("✅ Normalized date used in query:", normalizedDate);
-      console.log("🧪 typeof normalizedDate:", typeof normalizedDate);
+      const normalizedDate = new Date(puzzleDate).toISOString().split("T")[0];
 
       const { data, error } = await supabase
         .from("leaderboard_entries")
         .select("nickname, guess_count")
-        .filter("puzzle_date", "eq", normalizedDate) // 👈 key change
+        .eq("puzzle_date", normalizedDate)
         .eq("is_correct", true)
         .order("guess_count", { ascending: true })
         .limit(25);
@@ -27,16 +25,13 @@ export default function Leaderboard({ puzzleDate, onClose }) {
       if (error) {
         console.error("❌ Error fetching leaderboard:", error);
       } else {
-        console.log("📊 Leaderboard data fetched:", data);
         setEntries(data);
       }
 
       setLoading(false);
     }
 
-    if (puzzleDate) {
-      fetchLeaderboard();
-    }
+    fetchLeaderboard();
   }, [puzzleDate]);
 
   return (
@@ -49,10 +44,6 @@ export default function Leaderboard({ puzzleDate, onClose }) {
           </button>
         </div>
 
-        <p className="text-xs text-gray-400 mb-2">
-          Debug: loading={String(loading)} | entries={entries.length}
-        </p>
-
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
         ) : entries.length === 0 ? (
@@ -61,6 +52,7 @@ export default function Leaderboard({ puzzleDate, onClose }) {
           <ol className="list-decimal pl-5 space-y-1 text-sm">
             {entries.map((entry, i) => (
               <li key={i}>
+                <span className="font-bold">{i + 1}.</span>{" "}
                 <span className="font-medium">{entry.nickname}</span> —{" "}
                 {entry.guess_count} {entry.guess_count === 1 ? "guess" : "guesses"}
               </li>
