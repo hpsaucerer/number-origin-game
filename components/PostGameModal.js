@@ -107,8 +107,16 @@ if (!startTime) {
       setEarnedTiles(storedIndexes);
     }
  
-    const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
-    const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
+if (typeof window !== "undefined") {
+  const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
+  const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
+
+  if (!isArchive && !hasGranted) {
+    // ... existing fetch logic ...
+  } else if (!isArchive && !archiveUsed) {
+    setShowBonusButton(true);
+  }
+}
 
     if (!isArchive && !hasGranted) {
       const deviceId = getOrCreateDeviceId();
