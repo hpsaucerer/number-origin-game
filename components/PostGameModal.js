@@ -7,6 +7,7 @@ import { track } from '@vercel/analytics';
 import confetti from "canvas-confetti";
 import { getOrCreateDeviceId } from "@/lib/device";
 import Leaderboard from "@/components/Leaderboard"; // adjust path if needed
+import { fetchCountryCode } from "@/utils/geo";
 
 const TILE_WORD = "NUMERUS";
 
@@ -64,6 +65,20 @@ export default function PostGameModal({
   useEffect(() => {
   console.log("🧩 puzzle.date:", puzzle.date, "Type:", typeof puzzle.date);
 }, [puzzle.date]);
+
+  useEffect(() => {
+  const maybeSetCountry = async () => {
+    const existing = localStorage.getItem("user_country_code");
+    if (!existing) {
+      const code = await fetchCountryCode();
+      if (code) {
+        localStorage.setItem("user_country_code", code);
+        console.log("🌍 Country code stored:", code);
+      }
+    }
+  };
+  maybeSetCountry();
+}, []);
 
   useEffect(() => {
     if (!open) return;
@@ -227,17 +242,20 @@ export default function PostGameModal({
 
         const deviceId = getOrCreateDeviceId();
 
-        const res = await fetch("/api/leaderboard", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            device_id: deviceId,
-            puzzle_id: puzzle.date,
-            attempts: isCorrect ? attempts + 1 : 4,
-            is_correct: isCorrect,
-            name: name.trim(),
-          }),
-        });
+const country = localStorage.getItem("user_country_code");
+
+const res = await fetch("/api/leaderboard", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    device_id: deviceId,
+    puzzle_id: puzzle.date,
+    attempts: isCorrect ? attempts + 1 : 4,
+    is_correct: isCorrect,
+    name: name.trim(),
+    country_code: country, // 👈 send it if available
+  }),
+});
 
         if (res.ok) {
           alert("You're on the leaderboard!");
