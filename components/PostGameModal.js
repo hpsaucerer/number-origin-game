@@ -244,6 +244,16 @@ export default function PostGameModal({
 
 const country = localStorage.getItem("user_country_code");
 
+const startTime = localStorage.getItem("puzzle_start_time");
+const endTime = new Date().toISOString();
+let time_taken_sec = null;
+
+if (startTime) {
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  time_taken_sec = Math.floor((end - start) / 1000);
+}
+
 const res = await fetch("/api/leaderboard", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -253,9 +263,12 @@ const res = await fetch("/api/leaderboard", {
     attempts: isCorrect ? attempts + 1 : 4,
     is_correct: isCorrect,
     name: name.trim(),
-    country_code: country, // 👈 send it if available
+    time_taken_sec, // 🆕 Send time taken in seconds
   }),
 });
+
+localStorage.removeItem("puzzle_start_time"); // ⏱️ Clean up
+
 
         if (res.ok) {
           alert("You're on the leaderboard!");
