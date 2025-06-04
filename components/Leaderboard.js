@@ -4,10 +4,14 @@ import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 
-function flagEmoji(code) {
-  if (!code) return "🌐";
-  const cc = code.toUpperCase();
-  return cc.replace(/./g, char => String.fromCodePoint(127397 + char.charCodeAt()));
+function getFlagEmoji(countryCode) {
+  if (!countryCode) return "";
+  return String.fromCodePoint(
+    ...countryCode
+      .toUpperCase()
+      .split("")
+      .map(char => 0x1f1e6 + char.charCodeAt(0) - 65)
+  );
 }
 
 export default function Leaderboard({ puzzleDate, onClose }) {
@@ -30,30 +34,24 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
       if (error) {
         console.error("❌ Error fetching leaderboard:", error);
-        setLoading(false);
-        return;
+      } else {
+        setEntries(data);
       }
 
-      // 🧪 Add mock data here for testing
-      const mockEntries = [
-        { nickname: "Alice", guess_count: 1, country_code: "us" },
-        { nickname: "Bob", guess_count: 2, country_code: "gb" },
-        { nickname: "Chloe", guess_count: 1, country_code: "fr" },
-        { nickname: "Diego", guess_count: 3, country_code: "es" },
-        { nickname: "Eva", guess_count: 2, country_code: "de" },
-      ];
-
-      const combined = [...data, ...mockEntries];
-
-      // 🧠 Sort combined entries by guess count ascending
-      combined.sort((a, b) => a.guess_count - b.guess_count);
-
-      setEntries(combined);
       setLoading(false);
     }
 
     fetchLeaderboard();
   }, [puzzleDate]);
+
+  const getRowClass = (rank) => {
+    switch (rank) {
+      case 0: return "bg-yellow-100";
+      case 1: return "bg-gray-100";
+      case 2: return "bg-orange-100";
+      default: return "";
+    }
+  };
 
   return (
     <Dialog open onOpenChange={onClose}>
@@ -70,13 +68,20 @@ export default function Leaderboard({ puzzleDate, onClose }) {
         ) : entries.length === 0 ? (
           <p className="text-sm text-gray-500">No scores submitted yet.</p>
         ) : (
-          <ol className="list-decimal pl-5 space-y-1 text-sm">
+          <ol className="pl-5 space-y-1 text-sm">
             {entries.map((entry, i) => (
-              <li key={i} className="flex items-center gap-2">
-                <span className="font-bold">{i + 1}.</span>
-                <span>{flagEmoji(entry.country_code)}</span>
-                <span className="font-medium">{entry.nickname}</span> —{" "}
-                {entry.guess_count} {entry.guess_count === 1 ? "guess" : "guesses"}
+              <li
+                key={i}
+                className={`rounded px-3 py-1 flex items-center justify-between ${getRowClass(i)}`}
+              >
+                <div>
+                  <span className="font-bold">{i + 1}.</span>{" "}
+                  <span className="mr-2">{getFlagEmoji(entry.country_code)}</span>
+                  <span className="font-medium">{entry.nickname}</span>
+                </div>
+                <span className="text-gray-600">
+                  {entry.guess_count} {entry.guess_count === 1 ? "guess" : "guesses"}
+                </span>
               </li>
             ))}
           </ol>
