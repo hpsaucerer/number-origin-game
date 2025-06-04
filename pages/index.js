@@ -611,12 +611,11 @@ useEffect(() => {
     console.log("📦 [loadPuzzles] isArchive:", isArchive);
     console.log("📦 [loadPuzzles] queryArchiveId:", queryArchiveId);
 
-    // ✅ Moved logic here
     if (isArchive && overridePuzzle) {
       selected = overridePuzzle;
     } else if (isArchive && queryArchiveId) {
       const archivePuzzleNumber = parseInt(queryArchiveId, 10);
-      selected = all.find(p => p.puzzle_number === archivePuzzleNumber);
+      selected = all.find((p) => p.puzzle_number === archivePuzzleNumber);
       if (!selected) {
         console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
       }
@@ -630,44 +629,44 @@ useEffect(() => {
       }
     }
 
-if (typeof window !== "undefined" && selected) {
-  setPuzzle(selected);
-  setPuzzleNumber(selected.puzzle_number ?? selected.id);
+    if (typeof window !== "undefined" && selected) {
+      setPuzzle(selected);
+      setPuzzleNumber(selected.puzzle_number ?? selected.id);
 
-  // ✅ Completion tracking
-  let completed = [];
-  let isNewPlayer = false;
+      // ✅ Completion tracking
+      let completed = [];
+      let isNewPlayer = false;
 
-  try {
-    completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
-  } catch {
-    completed = null;
-  }
-
-  if (!Array.isArray(completed)) {
-    completed = [];
-    all.forEach((p) => {
-      if (localStorage.getItem(`completed-${p.date}`) === "true") {
-        completed.push(p.id);
+      try {
+        completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
+      } catch {
+        completed = null;
       }
-    });
-    localStorage.setItem("completedPuzzles", JSON.stringify(completed));
-    isNewPlayer = completed.length === 0;
 
-    console.log(
-      completed.length > 0
-        ? "✅ Migrated old completions to completedPuzzles."
-        : "🆕 No old completions found. Initialized empty completedPuzzles."
-    );
-  } else {
-    isNewPlayer = completed.length === 0;
+      if (!Array.isArray(completed)) {
+        completed = [];
+        all.forEach((p) => {
+          if (localStorage.getItem(`completed-${p.date}`) === "true") {
+            completed.push(p.id);
+          }
+        });
+        localStorage.setItem("completedPuzzles", JSON.stringify(completed));
+        isNewPlayer = completed.length === 0;
+
+        console.log(
+          completed.length > 0
+            ? "✅ Migrated old completions to completedPuzzles."
+            : "🆕 No old completions found. Initialized empty completedPuzzles."
+        );
+      } else {
+        isNewPlayer = completed.length === 0;
+      }
+
+      setCompletedPuzzles(completed);
+    }
   }
 
-  setCompletedPuzzles(completed);
-}
-
-
-  loadPuzzles();
+  loadPuzzles(); // ✅ This must be *outside* the function body
 }, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
 
 
