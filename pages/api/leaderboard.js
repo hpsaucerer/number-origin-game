@@ -6,9 +6,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { device_id, puzzle_id, attempts, is_correct, name } = req.body;
+  // 🆕 Destructure new field from the request body
+  const { device_id, puzzle_id, attempts, is_correct, name, time_taken_sec } = req.body;
 
-  if (!device_id || !puzzle_id || !name || attempts === undefined || is_correct === undefined) {
+  if (
+    !device_id ||
+    !puzzle_id ||
+    !name ||
+    attempts === undefined ||
+    is_correct === undefined
+  ) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
@@ -20,7 +27,7 @@ export default async function handler(req, res) {
     .select("*")
     .eq("device_id", device_id)
     .eq("puzzle_date", formattedDate)
-    .maybeSingle()
+    .maybeSingle();
 
   if (fetchError) {
     console.error("❌ Supabase fetch error:", fetchError);
@@ -31,6 +38,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ message: "Already submitted" });
   }
 
+  // 🆕 Insert time_taken_sec along with other data
   const { error } = await supabase.from("leaderboard_entries").insert([
     {
       device_id,
@@ -38,6 +46,7 @@ export default async function handler(req, res) {
       guess_count: attempts,
       is_correct,
       nickname: name,
+      time_taken_sec: time_taken_sec ?? null, // optional fallback
     },
   ]);
 
