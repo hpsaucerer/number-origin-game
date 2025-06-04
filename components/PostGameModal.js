@@ -68,6 +68,7 @@ export default function PostGameModal({
 }, [puzzle.date]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
   const maybeSetCountry = async () => {
     const existing = localStorage.getItem("user_country_code");
     if (!existing) {
@@ -90,9 +91,27 @@ if (!startTime) {
 
     document.body.style.overflow = "hidden";
 
-    const today = new Date().toISOString().split("T")[0];
-    const alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
-    const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+let alreadyAwarded = false;
+let storedIndexes = [];
+
+if (typeof window !== "undefined") {
+  const today = new Date().toISOString().split("T")[0];
+  alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
+  storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+
+  if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length && !isArchive) {
+    const nextIndex = storedIndexes.length;
+    const updatedIndexes = [...storedIndexes, nextIndex];
+
+    localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
+    localStorage.setItem(`tile-earned-${today}`, "true");
+
+    setEarnedTiles(updatedIndexes);
+    setJustEarnedTile(true);
+  } else {
+    setEarnedTiles(storedIndexes);
+  }
+}
 
     if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length && !isArchive) {
       const nextIndex = storedIndexes.length;
@@ -112,34 +131,29 @@ if (typeof window !== "undefined") {
   const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
 
   if (!isArchive && !hasGranted) {
-    // ... existing fetch logic ...
+    const deviceId = getOrCreateDeviceId();
+    fetch("/api/grant-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id: deviceId,
+        source: "first_token_after_game"
+      }),
+    })
+      .then(res => res.json())
+      .then((data) => {
+        if (data.success) {
+          localStorage.setItem("firstTokenGranted", "true");
+          localStorage.setItem("archiveToken", today);
+          setShowBonusButton(true);
+        }
+      })
+      .catch((err) => console.error("❌ Grant token API error:", err));
   } else if (!isArchive && !archiveUsed) {
     setShowBonusButton(true);
   }
 }
 
-    if (!isArchive && !hasGranted) {
-      const deviceId = getOrCreateDeviceId();
-      fetch("/api/grant-token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          device_id: deviceId,
-          source: "first_token_after_game"
-        }),
-      })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.success) {
-            localStorage.setItem("firstTokenGranted", "true");
-            localStorage.setItem("archiveToken", today);
-            setShowBonusButton(true);
-          }
-        })
-        .catch((err) => console.error("❌ Grant token API error:", err));
-    } else if (!isArchive && !archiveUsed) {
-      setShowBonusButton(true);
-    }
 
     if (isCorrect) {
       confetti({
