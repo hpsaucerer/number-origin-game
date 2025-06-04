@@ -1258,31 +1258,34 @@ if (isCorrectGuess) {
   setGuess("");
 }
 
+if (isCorrectGuess) {
+  if (typeof track === "function" && getCookiePreferences().analytics) {
+    track("puzzle_completed", {
+      correct: true,
+      guessCount: attempts + 1,
+      puzzleId,
+    });
+    track("puzzle_guess_count", {
+      guessCount: attempts + 1,
+      puzzleId,
+    });
+  }
 
-      if (typeof track === "function" && getCookiePreferences().analytics) {
-        track("puzzle_completed", {
-          correct: true,
-          guessCount: attempts + 1,
-          puzzleId,
-        });
-        track("puzzle_guess_count", {
-          guessCount: attempts + 1,
-          puzzleId,
-        });
-      }
-      awardTile();
-      setTimeout(() => setShowPostGame(true), 500);
-    } else if (nearMissEssential || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
-      const newAttempts = attempts + 1;
-      setAttempts(newAttempts);
+  awardTile();
+  setTimeout(() => setShowPostGame(true), 500);
+} // ← ✅ This closing brace is required
 
-const clueIndex = revealedClues.length;
-const nextClue = puzzle.clues?.[clueIndex];
+else if (nearMissEssential || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
+  const newAttempts = attempts + 1;
+  setAttempts(newAttempts);
 
-if (nextClue && !revealedClues.includes(nextClue)) {
-  setRevealedClues([...revealedClues, nextClue]);
+  const clueIndex = revealedClues.length;
+  const nextClue = puzzle.clues?.[clueIndex];
+
+  if (nextClue && !revealedClues.includes(nextClue)) {
+    setRevealedClues([...revealedClues, nextClue]);
+  }
 }
-
       setInputError(
         nearMissEssential
           ? "You're close — try adding a more specific word!"
