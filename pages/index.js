@@ -32,10 +32,12 @@ import { askLLMFallback } from '../lib/llm'; // adjust if needed
 import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
 
 // ⏱️ Track puzzle start time
-if (!localStorage.getItem("puzzle_start_time")) {
-  const now = new Date().toISOString();
-  localStorage.setItem("puzzle_start_time", now);
-  console.log("⏱️ Puzzle start time recorded:", now);
+if (typeof window !== "undefined") {
+  if (!localStorage.getItem("puzzle_start_time")) {
+    const now = new Date().toISOString();
+    localStorage.setItem("puzzle_start_time", now);
+    console.log("⏱️ Puzzle start time recorded:", now);
+  }
 }
 
 // 🧪 Debug mode flag — uses environment variable
@@ -63,6 +65,8 @@ function debugLog(...args) {
 }
 
 async function logCategoryReveal(puzzleId) {
+  if (typeof window === "undefined") return;
+
   const deviceId = localStorage.getItem("deviceId") || "unknown";
 
   const { error } = await supabase.from("Player_responses").insert([
@@ -423,6 +427,8 @@ const [showTokenBubble, setShowTokenBubble] = useState(false);
 const [isSubmitting, setIsSubmitting] = useState(false);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   const hasGivenStarterTokens = localStorage.getItem("starterTokensGiven");
   let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
 
@@ -438,14 +444,15 @@ useEffect(() => {
   setTokenCount(currentTokens);
 }, []);
 
-
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   const hasSeenTour = localStorage.getItem("seenTour") === "true";
 
   if (!puzzle || !hasMounted) return;
 
-if (!hasSeenTour) {
- setWasFirstTimePlayer(true); // ✅ tracked in state now
+  if (!hasSeenTour) {
+    setWasFirstTimePlayer(true); // ✅ tracked in state now
 
     let attempts = 0;
     const maxTries = 10;
@@ -482,6 +489,7 @@ if (!hasSeenTour) {
 }, [puzzle, hasMounted]);
 
 
+
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
     timeZone: "Europe/London",
@@ -494,6 +502,8 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   if (isArchive && puzzle?.id) {
     const archiveToken = localStorage.getItem("archiveToken");
     const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
@@ -511,8 +521,9 @@ useEffect(() => {
 
 const [canPlayBonus, setCanPlayBonus] = useState(false);
 
-
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   const resetAt = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
   const now = Date.now();
 
@@ -524,18 +535,22 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   if (pendingWhatsNew) {
     const delay = setTimeout(() => {
       setShowWhatsNew(true);
       localStorage.setItem("seenWhatsNew", "true");
       setPendingWhatsNew(false); // reset
-    }, 500); // slight delay
+    }, 500);
     return () => clearTimeout(delay); // clean up on unmount
   }
 }, [pendingWhatsNew]);
 
     
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   const existingId = localStorage.getItem("device_id");
   if (!existingId) {
     const newId = crypto.randomUUID();
@@ -544,6 +559,8 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   localStorage.removeItem("earnedTiles");
 }, []);
   
@@ -552,6 +569,8 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   if (!puzzle) return;
 
   const gameState = {
@@ -565,6 +584,8 @@ useEffect(() => {
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 useEffect(() => {
+  if (typeof window === "undefined") return;
+
   if (isArchive && puzzle?.id) {
     const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
     if (!played.includes(puzzle.id)) {
@@ -579,13 +600,22 @@ useEffect(() => {
   async function loadPuzzles() {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
-    localStorage.setItem("allPuzzles", JSON.stringify(all));
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem("allPuzzles", JSON.stringify(all));
+    }
 
     let selected = null;
 
     console.log("📦 [loadPuzzles] overridePuzzle:", overridePuzzle);
     console.log("📦 [loadPuzzles] isArchive:", isArchive);
     console.log("📦 [loadPuzzles] queryArchiveId:", queryArchiveId);
+    
+    // ...rest of the logic
+  }
+
+  loadPuzzles();
+}, [routerReady]);
 
 
 if (isArchive && overridePuzzle) {
@@ -606,36 +636,42 @@ if (isArchive && overridePuzzle) {
   }
 }
 
-    if (selected) {
-      setPuzzle(selected);
-      setPuzzleNumber(selected.puzzle_number ?? selected.id);
+if (typeof window !== "undefined" && selected) {
+  setPuzzle(selected);
+  setPuzzleNumber(selected.puzzle_number ?? selected.id);
 
-      // ✅ Completion tracking
-      let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
-      let isNewPlayer = false;
+  // ✅ Completion tracking
+  let completed = [];
+  let isNewPlayer = false;
 
-      if (!Array.isArray(completed)) {
-        completed = [];
-        all.forEach((p) => {
-          if (localStorage.getItem(`completed-${p.date}`) === "true") {
-            completed.push(p.id);
-          }
-        });
-        localStorage.setItem("completedPuzzles", JSON.stringify(completed));
-        isNewPlayer = completed.length === 0;
-
-        console.log(
-          completed.length > 0
-            ? "✅ Migrated old completions to completedPuzzles."
-            : "🆕 No old completions found. Initialized empty completedPuzzles."
-        );
-      } else {
-        isNewPlayer = completed.length === 0;
-      }
-
-      setCompletedPuzzles(completed);
-    }
+  try {
+    completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
+  } catch {
+    completed = null;
   }
+
+  if (!Array.isArray(completed)) {
+    completed = [];
+    all.forEach((p) => {
+      if (localStorage.getItem(`completed-${p.date}`) === "true") {
+        completed.push(p.id);
+      }
+    });
+    localStorage.setItem("completedPuzzles", JSON.stringify(completed));
+    isNewPlayer = completed.length === 0;
+
+    console.log(
+      completed.length > 0
+        ? "✅ Migrated old completions to completedPuzzles."
+        : "🆕 No old completions found. Initialized empty completedPuzzles."
+    );
+  } else {
+    isNewPlayer = completed.length === 0;
+  }
+
+  setCompletedPuzzles(completed);
+}
+
 
   loadPuzzles();
 }, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
@@ -670,8 +706,8 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
-  useEffect(() => {
-  if (!puzzle) return;
+useEffect(() => {
+  if (!puzzle || typeof window === "undefined") return;
 
   const alreadyCompleted = localStorage.getItem(`completed-${puzzle.date}`) === "true";
   if (alreadyCompleted) {
@@ -680,6 +716,7 @@ useEffect(() => {
     localStorage.removeItem(`gameState-${puzzle.date}`);
   }
 }, [puzzle]);
+
 
 useEffect(() => {
   if (!isCorrect || isArchive) return;
@@ -732,6 +769,8 @@ function getYesterdayUK() {
 }
 
 function awardTile() {
+  if (typeof window === "undefined") return;
+
   const today = new Date().toLocaleDateString("en-GB", { timeZone: "Europe/London" });
   const lastPlayDate = localStorage.getItem("lastPlayDate");
 
@@ -749,15 +788,13 @@ function awardTile() {
   const puzzleDate = puzzle?.date;
   if (!puzzleDate || localStorage.getItem(`tile-earned-${puzzleDate}`) === "true") return;
 
-  const nextIndex = storedIndexes.length; // 0 → N, 1 → U, etc.
+  const nextIndex = storedIndexes.length;
   const newIndexes = [...storedIndexes, nextIndex];
 
-  // ✅ Save only earnedTileIndexes — not earnedTiles as letters
   localStorage.setItem("earnedTileIndexes", JSON.stringify(newIndexes));
   localStorage.setItem(`tile-earned-${puzzleDate}`, "true");
   setEarnedTileIndexes(newIndexes);
 
-  // ✅ Optional: if all tiles collected, give a token reward
   if (newIndexes.length === TILE_WORD.length) {
     const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
     localStorage.setItem("freeToken", (currentTokens + 1).toString());
@@ -772,6 +809,8 @@ function awardTile() {
 }
 
 function isNewPlayer() {
+  if (typeof window === "undefined") return false;
+
   const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
   return completed.length === 0;
 }
@@ -1201,26 +1240,31 @@ if (error) {
   console.log("✅ Guess successfully logged to Supabase!");
 }
 
+if (isCorrectGuess) {
+  setIsCorrect(true);
 
-    if (isCorrectGuess) {
-      setIsCorrect(true);
-      localStorage.setItem(`completed-${puzzle.date}`, "true");
-      const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-      if (!existingCompleted.includes(puzzle.id)) {
-       existingCompleted.push(puzzle.id);
-       localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
-   }
+  if (typeof window !== "undefined") {
+    localStorage.setItem(`completed-${puzzle.date}`, "true");
 
-      // 🎁 Archive token reward — only for new players, first correct puzzle
-     const alreadyGranted = localStorage.getItem("archiveToken");
-     if (!alreadyGranted && existingCompleted.length === 1) {
-     const today = new Date().toISOString().split("T")[0];
-     localStorage.setItem("archiveToken", today);
-     console.log("🎁 Archive token granted after first win!");
+    const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+    if (!existingCompleted.includes(puzzle.id)) {
+      existingCompleted.push(puzzle.id);
+      localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
     }
 
-      setStats((prev) => updateStats(prev, true, attempts + 1));
-      setGuess("");
+    // 🎁 Archive token reward — only for new players, first correct puzzle
+    const alreadyGranted = localStorage.getItem("archiveToken");
+    if (!alreadyGranted && existingCompleted.length === 1) {
+      const today = new Date().toISOString().split("T")[0];
+      localStorage.setItem("archiveToken", today);
+      console.log("🎁 Archive token granted after first win!");
+    }
+  }
+
+  setStats((prev) => updateStats(prev, true, attempts + 1));
+  setGuess("");
+}
+
 
       if (typeof track === "function" && getCookiePreferences().analytics) {
         track("puzzle_completed", {
@@ -1314,21 +1358,24 @@ const handleRevealCategory = () => {
 
   setSpendingToken(true);
 
-  setTimeout(() => {
-    setTokenCount((prev) => {
-      const newCount = prev - 1;
+setTimeout(() => {
+  setTokenCount((prev) => {
+    const newCount = prev - 1;
+
+    if (typeof window !== "undefined") {
       localStorage.setItem("freeToken", newCount.toString());
-      return newCount;
-    });
+    }
 
-    setCategoryRevealed(true);
-    setSpendingToken(false);
+    return newCount;
+  });
 
-    // ✅ Track usage in Supabase
-    logCategoryReveal(puzzle.id);
+  setCategoryRevealed(true);
+  setSpendingToken(false);
 
-  }, 1000);
-};
+  // ✅ Track usage in Supabase
+  logCategoryReveal(puzzle.id);
+}, 1000);
+
 
 const shareTextHandler = () => {
   shareResult({
@@ -1387,16 +1434,17 @@ return !hasMounted ? (
 callback={(data) => {
   debugLog("🔄 Joyride event:", data);
 
+if (typeof window !== "undefined") {
   // When the tour ends (finished or skipped)
   if (data.status === "finished" || data.status === "skipped") {
     setShowTour(false);
     localStorage.setItem("seenTour", "true");
 
     // ✅ Trigger What's New only if this is the first-time player
-const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
-if (wasFirstTimePlayer && !hasSeenWhatsNew) {
-  setPendingWhatsNew(true); // 🔁 Let useEffect handle it
-}
+    const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
+    if (wasFirstTimePlayer && !hasSeenWhatsNew) {
+      setPendingWhatsNew(true); // 🔁 Let useEffect handle it
+    }
 
     return;
   }
@@ -1434,7 +1482,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     console.warn("🚫 Joyride target not found:", data.step.target);
     setShowTour(false);
   }
-}}
+}
 
 /> 
 <Header
