@@ -137,7 +137,7 @@ export default function Archive() {
         )}
 
         <p className="text-gray-600 text-center mb-6">
-          Missed a puzzle? Fear not! Use tokens to replay puzzles and boost your category achievements!
+          Here you can delve into previous puzzles by using tokens, which you can earn by completing category achievements. Soon, tokens will also be available to buy - an announcement will be made soon, so watch this space! 
         </p>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
