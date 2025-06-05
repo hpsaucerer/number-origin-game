@@ -384,35 +384,42 @@ useEffect(() => {
 }, [puzzle, isArchive]);
 
 useEffect(() => {
-  if (isCorrect && !submitted) {
-    const timeNow = Date.now();
-    const timeTakenSec = puzzleStartTime
-      ? Math.floor((timeNow - puzzleStartTime) / 1000)
-      : null;
+  if (
+    typeof window === "undefined" || // 🛡️ Prevent SSR crash
+    !isCorrect ||
+    submitted
+  ) return;
 
-    const payload = {
-      device_id,
-      puzzle_id: puzzle.date,
-      attempts: guesses.length,
-      is_correct: true,
-      name: nickname,
-      time_taken_sec: timeTakenSec,
-    };
+  const device_id = localStorage.getItem("deviceId"); // 🧠 or however it's sourced
+  const nickname = localStorage.getItem("nickname") || "Anonymous"; // fallback
 
-    fetch("/api/leaderboard", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+  const timeNow = Date.now();
+  const timeTakenSec = puzzleStartTime
+    ? Math.floor((timeNow - puzzleStartTime) / 1000)
+    : null;
+
+  const payload = {
+    device_id,
+    puzzle_id: puzzle?.date,
+    attempts: guesses?.length || 0,
+    is_correct: true,
+    name: nickname,
+    time_taken_sec: timeTakenSec,
+  };
+
+  fetch("/api/leaderboard", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  })
+    .then((res) => res.json())
+    .then(() => {
+      setSubmitted(true);
+      console.log("🎉 Leaderboard submission sent");
     })
-      .then(res => res.json())
-      .then(() => {
-        setSubmitted(true);
-        console.log("🎉 Leaderboard submission sent");
-      })
-      .catch(err => {
-        console.error("Submission error:", err);
-      });
-  }
+    .catch((err) => {
+      console.error("Submission error:", err);
+    });
 }, [isCorrect, submitted, puzzleStartTime, guesses.length]);
 
 useEffect(() => {
