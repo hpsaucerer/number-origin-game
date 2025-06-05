@@ -1357,7 +1357,7 @@ setTimeout(() => {
   // ✅ Track usage in Supabase
   logCategoryReveal(puzzle.id);
 }, 1000);
-
+}; // CLOSE handleRevealCategory
 
 const shareTextHandler = () => {
   shareResult({
