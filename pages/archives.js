@@ -228,6 +228,19 @@ export default function Archive() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* 👇 Modals go here */}
+      {showStats && (
+        <StatsModal
+          open={showStats}
+          onClose={() => setShowStats(false)}
+          stats={stats}
+          data={data}
+          COLORS={COLORS}
+          combinedLabel={combinedLabel}
+          renderCenterLabel={renderCenterLabel}
+        />
+      )}
     </>
   );
 }
