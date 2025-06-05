@@ -371,11 +371,11 @@ const joyrideSteps = [
     
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
-
+const [puzzleStartTime, setPuzzleStartTime] = useState(null);
 const [puzzle, setPuzzle] = useState(null);
+
 const router = useRouter();
 const [routerReady, setRouterReady] = useState(false);
-const [puzzleStartTime, setPuzzleStartTime] = useState(null);
 
 useEffect(() => {
   if (puzzle && !isArchive) {
