@@ -1828,7 +1828,7 @@ return (
 <CookieConsentBanner />
 
 <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
-  {"© "}{new Date().getFullYear()}{" B Puzzled. All rights reserved."}
+  {`© ${new Date().getFullYear()} B Puzzled. All rights reserved.`}
 </footer>
 </div> {/* CLOSE main content wrapper div */}
 </> {/* CLOSE React fragment */}
