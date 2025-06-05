@@ -81,31 +81,32 @@ export default function PostGameModal({
       setEarnedTiles(storedIndexes);
     }
 
-    const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
-    const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
+const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
+const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+const isFirstTimePlayer = completed.length === 1;
 
-    if (!isArchive && !hasGranted) {
-      const deviceId = getOrCreateDeviceId();
-      fetch("/api/grant-token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          device_id: deviceId,
-          source: "first_token_after_game"
-        }),
-      })
-        .then(res => res.json())
-        .then((data) => {
-          if (data.success) {
-            localStorage.setItem("firstTokenGranted", "true");
-            localStorage.setItem("archiveToken", today);
-            setShowBonusButton(true);
-          }
-        })
-        .catch((err) => console.error("❌ Grant token API error:", err));
-    } else if (!isArchive && !archiveUsed) {
-      setShowBonusButton(true);
-    }
+if (!isArchive && !hasGranted && isFirstTimePlayer) {
+  const deviceId = getOrCreateDeviceId();
+  fetch("/api/grant-token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      device_id: deviceId,
+      source: "first_token_after_game"
+    }),
+  })
+    .then(res => res.json())
+    .then((data) => {
+      if (data.success) {
+        localStorage.setItem("firstTokenGranted", "true");
+        localStorage.setItem("archiveToken", today);
+        setShowBonusButton(true);
+      }
+    })
+    .catch((err) => console.error("❌ Grant token API error:", err));
+} else {
+  setShowBonusButton(false); // Explicitly hide it
+}
 
     if (isCorrect) {
       confetti({
