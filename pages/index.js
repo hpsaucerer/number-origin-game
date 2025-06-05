@@ -387,6 +387,13 @@ const [puzzle, setPuzzle] = useState(null);
 const router = useRouter();
 const [routerReady, setRouterReady] = useState(false);
 
+const hasFormatted = typeof puzzle.formatted === "string";
+const revealAt =
+  typeof puzzle.revealFormattedAt === "number"
+    ? puzzle.revealFormattedAt
+    : (puzzle.formatted ? 1 : Infinity);
+const shouldRevealFormatted = hasFormatted && (isCorrect || revealedClues.length >= revealAt);
+
 useEffect(() => {
   if (router.isReady) setRouterReady(true);
 }, [router.isReady]);
@@ -1559,21 +1566,10 @@ return (
             canPlayBonus={canPlayBonus}
           />
 
-          {/* Display Number */}
-          {(() => {
-            const hasFormatted = typeof puzzle.formatted === "string";
-            const revealAt =
-              typeof puzzle.revealFormattedAt === "number"
-                ? puzzle.revealFormattedAt
-                : (puzzle.formatted ? 1 : Infinity);
-            const shouldRevealFormatted = hasFormatted && (isCorrect || revealedClues.length >= revealAt);
-
-            return (
-              <p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
-                {shouldRevealFormatted ? puzzle.formatted : puzzle.number}
-              </p>
-            );
-          })()}
+         {/* Display Number */}
+         <p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
+           {shouldRevealFormatted ? puzzle.formatted : puzzle.number}
+         </p>
 
           {/* Guess Dots */}
           <div className="flex space-x-2 mt-2">
@@ -1812,4 +1808,6 @@ return (
     </div> {/* END main container */}
   </>
 ); // END return
-
+}
+}
+export default Home;
