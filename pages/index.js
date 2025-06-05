@@ -1809,4 +1809,3 @@ return (
   </>
 ); // END return
 }
-export default Home;
