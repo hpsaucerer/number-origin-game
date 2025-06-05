@@ -375,6 +375,45 @@ const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
 const router = useRouter();
 const [routerReady, setRouterReady] = useState(false);
+const [puzzleStartTime, setPuzzleStartTime] = useState(null);
+
+useEffect(() => {
+  if (puzzle && !isArchive) {
+    setPuzzleStartTime(Date.now());
+  }
+}, [puzzle, isArchive]);
+
+useEffect(() => {
+  if (isCorrect && !submitted) {
+    const timeNow = Date.now();
+    const timeTakenSec = puzzleStartTime
+      ? Math.floor((timeNow - puzzleStartTime) / 1000)
+      : null;
+
+    const payload = {
+      device_id,
+      puzzle_id: puzzle.date,
+      attempts: guesses.length,
+      is_correct: true,
+      name: nickname,
+      time_taken_sec: timeTakenSec,
+    };
+
+    fetch("/api/leaderboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then(res => res.json())
+      .then(() => {
+        setSubmitted(true);
+        console.log("🎉 Leaderboard submission sent");
+      })
+      .catch(err => {
+        console.error("Submission error:", err);
+      });
+  }
+}, [isCorrect, submitted, puzzleStartTime, guesses.length]);
 
 useEffect(() => {
   if (router.isReady) setRouterReady(true);
