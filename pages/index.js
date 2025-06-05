@@ -31,15 +31,6 @@ import { getCookiePreferences } from "@/utils/cookies";
 import { askLLMFallback } from '../lib/llm'; // adjust if needed
 import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
 
-// ⏱️ Track puzzle start time
-if (typeof window !== "undefined") {
-  if (!localStorage.getItem("puzzle_start_time")) {
-    const now = new Date().toISOString();
-    localStorage.setItem("puzzle_start_time", now);
-    console.log("⏱️ Puzzle start time recorded:", now);
-  }
-}
-
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
 
@@ -65,8 +56,6 @@ function debugLog(...args) {
 }
 
 async function logCategoryReveal(puzzleId) {
-  if (typeof window === "undefined") return;
-
   const deviceId = localStorage.getItem("deviceId") || "unknown";
 
   const { error } = await supabase.from("Player_responses").insert([
@@ -387,13 +376,6 @@ const [puzzle, setPuzzle] = useState(null);
 const router = useRouter();
 const [routerReady, setRouterReady] = useState(false);
 
-const hasFormatted = typeof puzzle.formatted === "string";
-const revealAt =
-  typeof puzzle.revealFormattedAt === "number"
-    ? puzzle.revealFormattedAt
-    : (puzzle.formatted ? 1 : Infinity);
-const shouldRevealFormatted = hasFormatted && (isCorrect || revealedClues.length >= revealAt);
-
 useEffect(() => {
   if (router.isReady) setRouterReady(true);
 }, [router.isReady]);
@@ -434,8 +416,6 @@ const [showTokenBubble, setShowTokenBubble] = useState(false);
 const [isSubmitting, setIsSubmitting] = useState(false);
 
 useEffect(() => {
-  if (typeof window === "undefined") return;
-
   const hasGivenStarterTokens = localStorage.getItem("starterTokensGiven");
   let currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
 
@@ -451,15 +431,14 @@ useEffect(() => {
   setTokenCount(currentTokens);
 }, []);
 
-useEffect(() => {
-  if (typeof window === "undefined") return;
 
+useEffect(() => {
   const hasSeenTour = localStorage.getItem("seenTour") === "true";
 
   if (!puzzle || !hasMounted) return;
 
-  if (!hasSeenTour) {
-    setWasFirstTimePlayer(true); // ✅ tracked in state now
+if (!hasSeenTour) {
+ setWasFirstTimePlayer(true); // ✅ tracked in state now
 
     let attempts = 0;
     const maxTries = 10;
@@ -496,7 +475,6 @@ useEffect(() => {
 }, [puzzle, hasMounted]);
 
 
-
 useEffect(() => {
   const now = new Date().toLocaleDateString("en-GB", {
     timeZone: "Europe/London",
@@ -509,8 +487,6 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (typeof window === "undefined") return;
-
   if (isArchive && puzzle?.id) {
     const archiveToken = localStorage.getItem("archiveToken");
     const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
@@ -528,9 +504,8 @@ useEffect(() => {
 
 const [canPlayBonus, setCanPlayBonus] = useState(false);
 
-useEffect(() => {
-  if (typeof window === "undefined") return;
 
+useEffect(() => {
   const resetAt = parseInt(localStorage.getItem("resetTilesAt") || "0", 10);
   const now = Date.now();
 
@@ -542,22 +517,18 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (typeof window === "undefined") return;
-
   if (pendingWhatsNew) {
     const delay = setTimeout(() => {
       setShowWhatsNew(true);
       localStorage.setItem("seenWhatsNew", "true");
       setPendingWhatsNew(false); // reset
-    }, 500);
+    }, 500); // slight delay
     return () => clearTimeout(delay); // clean up on unmount
   }
 }, [pendingWhatsNew]);
 
     
 useEffect(() => {
-  if (typeof window === "undefined") return;
-
   const existingId = localStorage.getItem("device_id");
   if (!existingId) {
     const newId = crypto.randomUUID();
@@ -566,8 +537,6 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (typeof window === "undefined") return;
-
   localStorage.removeItem("earnedTiles");
 }, []);
   
@@ -576,8 +545,6 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (typeof window === "undefined") return;
-
   if (!puzzle) return;
 
   const gameState = {
@@ -591,8 +558,6 @@ useEffect(() => {
 }, [puzzle, attempts, revealedClues, isCorrect, guess]);
 
 useEffect(() => {
-  if (typeof window === "undefined") return;
-
   if (isArchive && puzzle?.id) {
     const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
     if (!played.includes(puzzle.id)) {
@@ -607,10 +572,7 @@ useEffect(() => {
   async function loadPuzzles() {
     const all = await fetchAllPuzzles();
     setAllPuzzles(all);
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem("allPuzzles", JSON.stringify(all));
-    }
+    localStorage.setItem("allPuzzles", JSON.stringify(all));
 
     let selected = null;
 
@@ -618,37 +580,32 @@ useEffect(() => {
     console.log("📦 [loadPuzzles] isArchive:", isArchive);
     console.log("📦 [loadPuzzles] queryArchiveId:", queryArchiveId);
 
-    if (isArchive && overridePuzzle) {
-      selected = overridePuzzle;
-    } else if (isArchive && queryArchiveId) {
-      const archivePuzzleNumber = parseInt(queryArchiveId, 10);
-      selected = all.find((p) => p.puzzle_number === archivePuzzleNumber);
-      if (!selected) {
-        console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
-      }
-    } else {
-      const today = await fetchTodayPuzzle();
-      if (today) {
-        debugLog("✅ Today's puzzle loaded.");
-        selected = today;
-      } else {
-        console.warn("⚠️ No puzzle returned for today.");
-      }
-    }
 
-    if (typeof window !== "undefined" && selected) {
+if (isArchive && overridePuzzle) {
+  selected = overridePuzzle;
+} else if (isArchive && queryArchiveId) {
+  const archivePuzzleNumber = parseInt(queryArchiveId, 10);
+  selected = all.find(p => p.puzzle_number === archivePuzzleNumber);
+  if (!selected) {
+    console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
+  }
+} else {
+  const today = await fetchTodayPuzzle();
+  if (today) {
+    debugLog("✅ Today's puzzle loaded.");
+    selected = today;
+  } else {
+    console.warn("⚠️ No puzzle returned for today.");
+  }
+}
+
+    if (selected) {
       setPuzzle(selected);
       setPuzzleNumber(selected.puzzle_number ?? selected.id);
 
       // ✅ Completion tracking
-      let completed = [];
+      let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
       let isNewPlayer = false;
-
-      try {
-        completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
-      } catch {
-        completed = null;
-      }
 
       if (!Array.isArray(completed)) {
         completed = [];
@@ -673,7 +630,7 @@ useEffect(() => {
     }
   }
 
-  loadPuzzles(); // ✅ This must be *outside* the function body
+  loadPuzzles();
 }, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
 
 
@@ -706,8 +663,8 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
-useEffect(() => {
-  if (!puzzle || typeof window === "undefined") return;
+  useEffect(() => {
+  if (!puzzle) return;
 
   const alreadyCompleted = localStorage.getItem(`completed-${puzzle.date}`) === "true";
   if (alreadyCompleted) {
@@ -717,37 +674,30 @@ useEffect(() => {
   }
 }, [puzzle]);
 
-
-useEffect(() => {
+  useEffect(() => {
   if (!isCorrect || isArchive) return;
 
-  if (typeof window !== "undefined") {
-    const granted = localStorage.getItem("firstTokenGranted") === "true";
-    if (granted) {
-      setCanPlayBonus(true);
-    }
+  const granted = localStorage.getItem("firstTokenGranted") === "true";
+  if (granted) {
+    setCanPlayBonus(true);
   }
 }, [isCorrect, isArchive]);
-
 
 // ✅ NEW: Mark archive puzzle as completed
 useEffect(() => {
   if (!gameOver || !isCorrect || isArchive !== true) return;
 
-  if (typeof window !== "undefined") {
-    const tokenUsed = localStorage.getItem("archiveTokenUsed") === "true";
-    if (tokenUsed) {
-      localStorage.setItem("justCompletedArchive", "true");
-      localStorage.removeItem("archiveTokenUsed"); // clean it up
-    }
+  const tokenUsed = localStorage.getItem("archiveTokenUsed") === "true";
+  if (tokenUsed) {
+    localStorage.setItem("justCompletedArchive", "true");
+    localStorage.removeItem("archiveTokenUsed"); // clean it up
+  }
 
-    const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-    if (!completed.includes(puzzle.id)) {
-      localStorage.setItem("completedPuzzles", JSON.stringify([...completed, puzzle.id]));
-    }
+  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  if (!completed.includes(puzzle.id)) {
+    localStorage.setItem("completedPuzzles", JSON.stringify([...completed, puzzle.id]));
   }
 }, [gameOver, isCorrect, isArchive]);
-
 
     useEffect(() => {
   if (puzzle && DEV_MODE) {
@@ -769,8 +719,6 @@ function getYesterdayUK() {
 }
 
 function awardTile() {
-  if (typeof window === "undefined") return;
-
   const today = new Date().toLocaleDateString("en-GB", { timeZone: "Europe/London" });
   const lastPlayDate = localStorage.getItem("lastPlayDate");
 
@@ -788,13 +736,15 @@ function awardTile() {
   const puzzleDate = puzzle?.date;
   if (!puzzleDate || localStorage.getItem(`tile-earned-${puzzleDate}`) === "true") return;
 
-  const nextIndex = storedIndexes.length;
+  const nextIndex = storedIndexes.length; // 0 → N, 1 → U, etc.
   const newIndexes = [...storedIndexes, nextIndex];
 
+  // ✅ Save only earnedTileIndexes — not earnedTiles as letters
   localStorage.setItem("earnedTileIndexes", JSON.stringify(newIndexes));
   localStorage.setItem(`tile-earned-${puzzleDate}`, "true");
   setEarnedTileIndexes(newIndexes);
 
+  // ✅ Optional: if all tiles collected, give a token reward
   if (newIndexes.length === TILE_WORD.length) {
     const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
     localStorage.setItem("freeToken", (currentTokens + 1).toString());
@@ -809,8 +759,6 @@ function awardTile() {
 }
 
 function isNewPlayer() {
-  if (typeof window === "undefined") return false;
-
   const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
   return completed.length === 0;
 }
@@ -1232,83 +1180,96 @@ const { error } = await supabase.from("Player_responses").insert([
   },
 ]);
 
-try {
-  if (error) {
-    console.error("❌ Supabase insert error:", error);
-  } else {
-    console.log("✅ Guess successfully logged to Supabase!");
-  }
 
-  if (isCorrectGuess) {
-    setIsCorrect(true);
 
-    if (typeof window !== "undefined") {
+if (error) {
+  console.error("❌ Supabase insert error:", error);
+} else {
+  console.log("✅ Guess successfully logged to Supabase!");
+}
+
+
+    if (isCorrectGuess) {
+      setIsCorrect(true);
       localStorage.setItem(`completed-${puzzle.date}`, "true");
-
       const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
       if (!existingCompleted.includes(puzzle.id)) {
-        existingCompleted.push(puzzle.id);
-        localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
-      }
+       existingCompleted.push(puzzle.id);
+       localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
+   }
 
       // 🎁 Archive token reward — only for new players, first correct puzzle
-      const alreadyGranted = localStorage.getItem("archiveToken");
-      if (!alreadyGranted && existingCompleted.length === 1) {
-        const today = new Date().toISOString().split("T")[0];
-        localStorage.setItem("archiveToken", today);
-        console.log("🎁 Archive token granted after first win!");
+     const alreadyGranted = localStorage.getItem("archiveToken");
+     if (!alreadyGranted && existingCompleted.length === 1) {
+     const today = new Date().toISOString().split("T")[0];
+     localStorage.setItem("archiveToken", today);
+     console.log("🎁 Archive token granted after first win!");
+    }
+
+      setStats((prev) => updateStats(prev, true, attempts + 1));
+      setGuess("");
+
+      if (typeof track === "function" && getCookiePreferences().analytics) {
+        track("puzzle_completed", {
+          correct: true,
+          guessCount: attempts + 1,
+          puzzleId,
+        });
+        track("puzzle_guess_count", {
+          guessCount: attempts + 1,
+          puzzleId,
+        });
       }
-    }
+      awardTile();
+      setTimeout(() => setShowPostGame(true), 500);
+    } else if (nearMissEssential || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
 
-    setStats((prev) => updateStats(prev, true, attempts + 1));
-    setGuess("");
+const clueIndex = revealedClues.length;
+const nextClue = puzzle.clues?.[clueIndex];
 
-    if (typeof track === "function" && getCookiePreferences().analytics) {
-      track("puzzle_completed", {
-        correct: true,
-        guessCount: attempts + 1,
-        puzzleId,
-      });
-      track("puzzle_guess_count", {
-        guessCount: attempts + 1,
-        puzzleId,
-      });
-    }
+if (nextClue && !revealedClues.includes(nextClue)) {
+  setRevealedClues([...revealedClues, nextClue]);
+}
 
-    awardTile();
-    setTimeout(() => setShowPostGame(true), 500);
-  } else {
-    const newAttempts = attempts + 1;
-    setAttempts(newAttempts);
-
-    const clueIndex = revealedClues.length;
-    const nextClue = puzzle.clues?.[clueIndex];
-
-    if (nextClue && !revealedClues.includes(nextClue)) {
-      setRevealedClues([...revealedClues, nextClue]);
-    }
-
-    if (isNearMiss || hasWeakMatch || (hasStrongMatch && !requiredMatched)) {
       setInputError(
         nearMissEssential
           ? "You're close — try adding a more specific word!"
           : "You're on the right track!"
       );
-    } else if (newAttempts >= maxGuesses) {
-      awardTile();
-      handleGameOver(newAttempts);
-    } else {
-      setInputError("Hmm, not quite. Try again or reveal a clue!");
-    }
 
-    setGuess("");
+      if (newAttempts >= maxGuesses) {
+        awardTile(); // ✅ Only shown in first path
+        handleGameOver(newAttempts); // 👈 Wrapped tracking + stats
+      }
+
+    } else {
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+
+      const clueIndex = revealedClues.length;
+      const nextClue = puzzle.clues?.[clueIndex];
+
+      if (nextClue && !revealedClues.includes(nextClue)) {
+        setRevealedClues([...revealedClues, nextClue]);
+      }
+
+      if (newAttempts >= maxGuesses) {
+        handleGameOver(newAttempts); // 👈 Same logic reused here too
+      } else {
+        setInputError("Hmm, not quite. Try again or reveal a clue!");
+      }
+
+      setGuess(""); // ✅ Leave outside the if/else
+    }
+  } catch (error) {
+    console.error("❌ Error in handleGuess:", error);
+    setInputError("Something went wrong. Try again!");
+  } finally {
+    setIsSubmitting(false);
   }
-} catch (error) {
-  console.error("❌ Error in handleGuess:", error);
-  setInputError("Something went wrong. Try again!");
-} finally {
-  setIsSubmitting(false);
-}
+};
 
     
 const handleClueReveal = () => {
@@ -1340,24 +1301,21 @@ const handleRevealCategory = () => {
 
   setSpendingToken(true);
 
-setTimeout(() => {
-  setTokenCount((prev) => {
-    const newCount = prev - 1;
-
-    if (typeof window !== "undefined") {
+  setTimeout(() => {
+    setTokenCount((prev) => {
+      const newCount = prev - 1;
       localStorage.setItem("freeToken", newCount.toString());
-    }
+      return newCount;
+    });
 
-    return newCount;
-  });
+    setCategoryRevealed(true);
+    setSpendingToken(false);
 
-  setCategoryRevealed(true);
-  setSpendingToken(false);
+    // ✅ Track usage in Supabase
+    logCategoryReveal(puzzle.id);
 
-  // ✅ Track usage in Supabase
-  logCategoryReveal(puzzle.id);
-}, 1000);
-}; // CLOSE handleRevealCategory
+  }, 1000);
+};
 
 const shareTextHandler = () => {
   shareResult({
@@ -1416,17 +1374,16 @@ return !hasMounted ? (
 callback={(data) => {
   debugLog("🔄 Joyride event:", data);
 
-if (typeof window !== "undefined") {
   // When the tour ends (finished or skipped)
   if (data.status === "finished" || data.status === "skipped") {
     setShowTour(false);
     localStorage.setItem("seenTour", "true");
 
     // ✅ Trigger What's New only if this is the first-time player
-    const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
-    if (wasFirstTimePlayer && !hasSeenWhatsNew) {
-      setPendingWhatsNew(true); // 🔁 Let useEffect handle it
-    }
+const hasSeenWhatsNew = localStorage.getItem("seenWhatsNew") === "true";
+if (wasFirstTimePlayer && !hasSeenWhatsNew) {
+  setPendingWhatsNew(true); // 🔁 Let useEffect handle it
+}
 
     return;
   }
@@ -1464,348 +1421,380 @@ if (typeof window !== "undefined") {
     console.warn("🚫 Joyride target not found:", data.step.target);
     setShowTour(false);
   }
-};
+}}
 
-return (
-  <>
-    <Header
-      onStatsClick={() => setShowStats(true)}
-      onAchievementsClick={() => setShowAchievements(true)}
-    />
+/> 
+<Header
+  onStatsClick={() => setShowStats(true)}
+  onAchievementsClick={() => setShowAchievements(true)}
+/>
 
-    <div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
+<div className="max-w-screen-lg mx-auto px-4 md:px-8 flex flex-col items-center space-y-4 bg-white min-h-screen">
 
-      {DEV_MODE && (
-        <div className="mb-2 flex flex-col items-center">
-          <label htmlFor="puzzleSelector" className="text-sm font-medium mb-1 text-gray-700">
-            🛠 Dev: Select a Puzzle
-          </label>
-          <select
-            id="puzzleSelector"
-            value={selectedPuzzleIndex ?? ""}
-            onChange={(e) => {
-              const value = e.target.value;
-              setSelectedPuzzleIndex(value === "" ? null : parseInt(value));
-            }}
-            className="border px-2 py-1 rounded text-sm text-gray-700"
-          >
-            <option value="">Today’s puzzle</option>
-            {allPuzzles.map((p, i) => (
-              <option key={p.id} value={i}>
-                #{i + 1} — {p.date} — {p.number}
-              </option>
-            ))}
-          </select>
+
+{DEV_MODE && (
+  <div className="mb-2 flex flex-col items-center">
+    <label htmlFor="puzzleSelector" className="text-sm font-medium mb-1 text-gray-700">🛠 Dev: Select a Puzzle</label>
+    <select
+      id="puzzleSelector"
+      value={selectedPuzzleIndex ?? ""}
+      onChange={(e) => {
+        const value = e.target.value;
+        setSelectedPuzzleIndex(value === "" ? null : parseInt(value));
+      }}
+      className="border px-2 py-1 rounded text-sm text-gray-700"
+    >
+      <option value="">Today’s puzzle</option>
+{allPuzzles.map((p, i) => (
+  <option key={p.id} value={i}>
+    #{i + 1} — {p.date} — {p.number}
+  </option>
+))}
+
+    </select>
+  </div>
+)}
+
+{isArchive && (
+  <p className="text-sm text-gray-500 text-center italic">
+    One from the Archives...
+  </p>
+)}
+
+{isCommunityPuzzle ? (
+  <div className="flex flex-col items-center space-y-1 mb-3">
+    {/* Logo Line */}
+    <div className="flex items-center justify-center space-x-2">
+      <span className="text-base text-gray-800 font-medium">A</span>
+      <img
+        src="/icons/logo-numerus-community.png"
+        alt="NumerUS Community"
+        className="h-10 sm:h-11 object-contain"
+      />
+      <span className="text-base text-gray-800 font-medium">puzzle</span>
+    </div>
+
+    {/* Yellow Box */}
+    <div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
+      Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
+    </div>
+  </div>
+) : (
+  <h1 className="text-2xl font-bold mt-4">
+    {isArchive ? "This puzzle's number was:" : "Today's number is:"}
+  </h1>
+)}
+
+
+<Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
+  <CardContent className="relative">
+
+
+    {/* 🟡 Token Counter INSIDE Card */}
+    <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10 token-counter">
+     <div className={`bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md
+      ${justEarnedToken ? "token-pop token-glow" : ""} 
+      ${spendingToken ? "animate-token-spin" : ""}
+     `}>
+    {tokenCount}
+  </div>
+      {showTokenBubble && (
+  <div className="absolute -top-6 right-0 bg-white border border-green-400 text-green-600 px-2 py-1 text-xs rounded shadow">
+    +3 free tokens!
+  </div>
+)}
+
+      {/* Whoosh animation if just earned */}
+      {justEarnedToken && (
+        <div className="absolute top-2 right-2 z-10 md:z-10 lg:z-10">
+          <div className="bg-yellow-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-md token-whoosh">
+            🏅
+          </div>
         </div>
       )}
+    </div>
 
-      {isArchive && (
-        <p className="text-sm text-gray-500 text-center italic">
-          One from the Archives...
-        </p>
-      )}
+<PostGameModal
+  open={showPostGame}
+  onClose={() => setShowPostGame(false)}
+  isCorrect={isCorrect}
+  stats={stats}
+  puzzle={puzzle}
+  shareResult={shareTextHandler}
+  attempts={attempts}
+  puzzleNumber={puzzleNumber} // ✅ Add this
+  isArchive={isArchive}
+  canPlayBonus={canPlayBonus}
+/>
+   
+           
+{(() => {
+  const hasFormatted = typeof puzzle.formatted === "string";
+  const revealAt =
+  typeof puzzle.revealFormattedAt === "number"
+    ? puzzle.revealFormattedAt
+    : (puzzle.formatted ? 1 : Infinity);
+  const shouldRevealFormatted = hasFormatted && (isCorrect || revealedClues.length >= revealAt);
 
-      {isCommunityPuzzle ? (
-        <div className="flex flex-col items-center space-y-1 mb-3">
-          <div className="flex items-center justify-center space-x-2">
-            <span className="text-base text-gray-800 font-medium">A</span>
-            <img
-              src="/icons/logo-numerus-community.png"
-              alt="NumerUS Community"
-              className="h-10 sm:h-11 object-contain"
-            />
-            <span className="text-base text-gray-800 font-medium">puzzle</span>
-          </div>
-          <div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
-            Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
-          </div>
-        </div>
-      ) : (
-        <h1 className="text-2xl font-bold mt-4">
-          {isArchive ? "This puzzle's number was:" : "Today's number is:"}
-        </h1>
-      )}
+  return (
+    <p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
+      {shouldRevealFormatted ? puzzle.formatted : puzzle.number}
+    </p>
+  );
+})()}
 
-      <Card className="w-full max-w-md p-1 text-center border-2 border-[#3B82F6] bg-white shadow-lg relative">
-        <CardContent className="relative">
-
-          {/* Token Counter */}
-          <div className="absolute top-2 right-2 z-10 token-counter">
-            <div className={`bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-md
-              ${justEarnedToken ? "token-pop token-glow" : ""} 
-              ${spendingToken ? "animate-token-spin" : ""}
-            `}>
-              {tokenCount}
-            </div>
-
-            {showTokenBubble && (
-              <div className="absolute -top-6 right-0 bg-white border border-green-400 text-green-600 px-2 py-1 text-xs rounded shadow">
-                +3 free tokens!
-              </div>
-            )}
-
-            {justEarnedToken && (
-              <div className="absolute top-2 right-2 z-10">
-                <div className="bg-yellow-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-md token-whoosh">
-                  🏅
-                </div>
-              </div>
-            )}
-          </div>
-
-          <PostGameModal
-            open={showPostGame}
-            onClose={() => setShowPostGame(false)}
-            isCorrect={isCorrect}
-            stats={stats}
-            puzzle={puzzle}
-            shareResult={shareTextHandler}
-            attempts={attempts}
-            puzzleNumber={puzzleNumber}
-            isArchive={isArchive}
-            canPlayBonus={canPlayBonus}
-          />
-
-         {/* Display Number */}
-         <p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
-           {shouldRevealFormatted ? puzzle.formatted : puzzle.number}
-         </p>
-
-          {/* Guess Dots */}
           <div className="flex space-x-2 mt-2">
             {Array.from({ length: attempts }, (_, i) => (
-              <img key={i} src="/icons/guess-dot.png" alt="Guess Icon" className="w-5 h-5" />
+              <img
+                key={i}
+                src="/icons/guess-dot.png"
+                alt="Guess Icon"
+                className="w-5 h-5"
+              />
             ))}
           </div>
 
-          {/* Clues */}
-          {revealedClues.map((clue, index) => (
-            <p key={index} className="mt-2 text-gray-600">
-              <span className="font-semibold">Clue {index + 1}:</span>{" "}
-              {clue.replace("formatted", puzzle.formatted)}
-            </p>
-          ))}
+{revealedClues.map((clue, index) => (
+  <p key={index} className="mt-2 text-gray-600">
+    <span className="font-semibold">Clue {index + 1}:</span>{" "}
+    {clue.replace("formatted", puzzle.formatted)}
+  </p>
+))}
 
-          {/* Category Reveal */}
-          {categoryRevealed && puzzle.category && (
-            <div className="mt-4 text-center flex flex-col items-center">
-              <p className="text-sm font-semibold text-gray-700">Category:</p>
-              <div className="flex items-center gap-2 mt-1">
-                <img
-                  src={`/icons/${puzzle.category.toLowerCase()}.png`}
-                  alt={`${puzzle.category} icon`}
-                  className="w-10 h-10 inline-block"
-                />
-                <p
-                  className="text-xl font-bold"
-                  style={{ color: categoryColorMap[puzzle.category] || "#000" }}
-                >
-                  {puzzle.category}
-                </p>
-              </div>
-            </div>
-          )}
+{categoryRevealed && puzzle.category && (
+  <div className="mt-4 text-center flex flex-col items-center">
+    <p className="text-sm font-semibold text-gray-700">
+      Category:
+    </p>
+    <div className="flex items-center gap-2 mt-1">
+      {/* 📸 Category Icon */}
+      <img
+        src={`/icons/${puzzle.category.toLowerCase()}.png`}
+        alt={`${puzzle.category} icon`}
+        className="w-10 h-10 inline-block"
+      />
+      {/* Category Name */}
+      <p
+        className="text-xl font-bold"
+        style={{ color: categoryColorMap[puzzle.category] || "#000" }}
+      >
+        {puzzle.category}
+      </p>
+    </div>
+  </div>
+)}
 
-          {/* Active Game UI */}
-          {!isCorrect && attempts < maxGuesses && (
-            <div className="w-full max-w-md space-y-4 mt-6">
-              <p className="text-sm text-gray-600 text-center">
-                {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
-              </p>
 
-              <Input
-                value={guess}
-                onChange={(e) => {
-                  setGuess(e.target.value);
-                  if (inputError) setInputError("");
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    if (guess.trim()) handleGuess();
-                  }
-                }}
-                placeholder="Enter your guess..."
-                className="w-full guess-input"
-                disabled={!puzzle}
-              />
+{/* 🔄 Active Game UI */}
+{!isCorrect && attempts < maxGuesses && (
+  <div className="w-full max-w-md space-y-4 mt-6">
+    {/* Guess count */}
+    <p className="text-sm text-gray-600 text-center">
+      {maxGuesses - attempts} guess{maxGuesses - attempts !== 1 ? "es" : ""} remaining
+    </p>
 
-              {inputError && (
-                <p className="text-red-500 text-sm text-center">{inputError}</p>
-              )}
+{/* Guess input */}
+<Input
+  value={guess}
+  onChange={(e) => {
+    setGuess(e.target.value);
+    if (inputError) setInputError(""); // 🧽 Clear error on typing
+  }}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (guess.trim()) handleGuess();
+    }
+  }}
+  placeholder="Enter your guess..."
+  className="w-full guess-input"
+  disabled={!puzzle}
+/>
 
-              <div className="flex flex-col gap-3 w-full max-w-xs mx-auto mt-2">
-                <Button
-                  onClick={handleClueReveal}
-                  disabled={
-                    revealDisabled ||
-                    !puzzle ||
-                    gameOver ||
-                    revealedClues.length >= puzzle?.clues?.length
-                  }
-                  variant="outline"
-                  className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
-                    animateClueButton && revealedClues.length < puzzle.clues.length
-                      ? "animate-pulse-grow"
-                      : ""
-                  }`}
-                >
-                  {revealedClues.length >= puzzle?.clues?.length ? "No more clues" : "Reveal a Clue"}
-                </Button>
+    {/* Buttons */}
+    {inputError && (
+      <p className="text-red-500 text-sm text-center">{inputError}</p>
+    )}
 
-                {tokenCount > 0 && !categoryRevealed && (
-                  <Button
-                    onClick={handleRevealCategory}
-                    className="w-full text-white bg-[#f7c548] hover:opacity-90"
-                    disabled={spendingToken}
-                  >
-                    {spendingToken ? "Revealing..." : "Reveal Category (1 Token)"}
-                  </Button>
-                )}
+    <div className="flex flex-col gap-3 w-full max-w-xs mx-auto mt-2">
+<Button
+  onClick={handleClueReveal}
+  disabled={
+    revealDisabled ||
+    !puzzle ||
+    gameOver ||
+    revealedClues.length >= puzzle?.clues?.length
+  }
+  variant="outline"
+  className={`reveal-button w-full transition-transform duration-300 ease-in-out ${
+    animateClueButton && revealedClues.length < puzzle.clues.length
+      ? "animate-pulse-grow"
+      : ""
+  }`}
+>
+  {revealedClues.length >= puzzle?.clues?.length ? "No more clues" : "Reveal a Clue"}
+</Button>
+{tokenCount > 0 && !categoryRevealed && (
+<Button
+  onClick={handleRevealCategory}
+  className="w-full text-white bg-[#f7c548] hover:opacity-90"
+  disabled={spendingToken}
+>
+  {spendingToken ? "Revealing..." : "Reveal Category (1 Token)"}
+</Button>
 
-                <Button
-                  onClick={() => handleGuess()}
-                  className="w-full bg-[#3B82F6] text-white"
-                >
-                  Submit
-                </Button>
-              </div>
-            </div>
-          )}
+)}
 
-          {/* Correct Answer UI */}
-          {isCorrect && (
-            <div className="mt-6 text-center space-y-3">
-              <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
+<Button
+  onClick={() => handleGuess()} // ✅ Safe and explicit
+  className="w-full bg-[#3B82F6] text-white"
+>
+  Submit
+</Button>
 
-              {!isArchive && (
-                <>
-                  <p className="font-semibold text-gray-800 mt-2">
-                    Come back tomorrow for your next workout!
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Next puzzle in: {countdown}
-                  </p>
-                </>
-              )}
+    </div>
+  </div>
+)}
 
-              <CommunityBox />
+{/* ✅ Correct Answer UI */}
+{isCorrect && (
+  <div className="mt-6 text-center space-y-3">
+    <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
 
-              {isArchive && (
-                <div className="flex flex-col items-center space-y-2 mt-4">
-                  <button
-                    onClick={() => window.location.href = "/archives"}
-                    className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
-                    style={{ backgroundColor: "#b49137" }}
-                  >
-                    Back to Archive
-                  </button>
-                  <button
-                    onClick={() => window.location.href = "/"}
-                    className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
-                    style={{ backgroundColor: "#63c4a7" }}
-                  >
-                    Back to Daily Puzzle
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-        </CardContent>
-      </Card>
-
-      <div className="flex flex-col items-center mt-4">
-        <p className="text-lg font-semibold">
-          {isArchive && puzzle?.date
-            ? new Date(puzzle.date).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })
-            : localDate}
+    {!isArchive && (
+      <>
+        <p className="font-semibold text-gray-800 mt-2">
+          Come back tomorrow for your next workout!
         </p>
-        <p className="text-md font-medium">
-          Numerus #{isArchive ? archiveIndex : puzzleNumber}
+        <p className="text-sm text-gray-500">
+          Next puzzle in: {countdown}
         </p>
-      </div>
+      </>
+    )}
 
-      {gameOver && (
-        <Button
-          onClick={shareTextHandler}
-          className="flex items-center space-x-2"
+    <CommunityBox />
+
+    {isArchive && (
+      <div className="flex flex-col items-center space-y-2 mt-4">
+        <button
+          onClick={() => window.location.href = "/archives"}
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
+          style={{ backgroundColor: "#b49137" }}
         >
-          <Share2 size={16} />
-          <span>Share</span>
-        </Button>
-      )}
+          Back to Archive
+        </button>
+        <button
+          onClick={() => window.location.href = "/"}
+          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
+          style={{ backgroundColor: "#63c4a7" }}
+        >
+          Back to Daily Puzzle
+        </button>
+      </div>
+    )}
+  </div>
+)}
+  </CardContent>
+</Card>
 
-      <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
-        <DialogContent className="fixed inset-0 flex items-center justify-center z-50 px-4 relative max-h-[90vh] overflow-y-auto pt-3 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center font-vietnam">
-          <button
-            className="absolute top-1 right-1 p-2 text-blue-500 hover:text-blue-600 transition"
-            onClick={() => setShowInstructions(false)}
-            aria-label="Close"
-          >
-            <X size={28} />
-          </button>
+<div className="flex flex-col items-center mt-4">
+  <p className="text-lg font-semibold">
+    {isArchive && puzzle?.date
+      ? new Date(puzzle.date).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      : localDate}
+  </p>
+  <p className="text-md font-medium">
+    Numerus #{isArchive ? archiveIndex : puzzleNumber}
+  </p>
+</div>
 
-          <DialogHeader className="w-full">
-            <DialogTitle>
-              <h2 className="text-lg text-gray-800 text-left">How To Play</h2>
-            </DialogTitle>
-          </DialogHeader>
+{gameOver && (
+  <Button
+    onClick={shareTextHandler}
+    className="flex items-center space-x-2"
+  >
+    <Share2 size={16} />
+    <span>Share</span>
+  </Button>
+)}
 
-          <div className="mt-2 w-full">
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <img src="/icons/one.png" alt="Look Icon" className="w-6 h-6 mt-1" />
-                <div>
-                  <strong>Look at the number.</strong><br />
-                  What could it signify?
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <img src="/icons/two.png" alt="Type Icon" className="w-6 h-6 mt-1" />
-                <div>
-                  <strong>Make a guess. You have 4 in total.</strong><br />
-                  Type what you think the number relates to; e.g. 'keys on a piano', 'moon landing'.
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <img src="/icons/three.png" alt="Clue Icon" className="w-6 h-6 mt-1" />
-                <div>
-                  <strong>Stuck? Reveal a clue!</strong><br />
-                  Remember though, this uses up a guess.
-                </div>
-              </li>
-            </ul>
-          </div>
-        </DialogContent>
-      </Dialog>
 
-      <StatsModal
-        open={showStats}
-        onClose={() => setShowStats(false)}
-        stats={stats}
-        data={data}
-        COLORS={COLORS}
-        renderCenterLabel={renderCenterLabel}
-        combinedLabel={combinedLabel}
-      />
+      {/* Instructions Popup */}
+<Dialog open={showInstructions} onOpenChange={setShowInstructions}>
+   <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
+  <DialogContent className="relative max-h-[90vh] overflow-y-auto pt-3 px-4 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center">
+    {/* Dismiss Button */}
+    <button
+      className="absolute top-1 right-1 p-2 text-blue-500 hover:text-blue-600 transition"
+      onClick={() => setShowInstructions(false)}
+      aria-label="Close"
+    >
+      <X size={28} />
+    </button>
 
-      <AchievementsModal
-        open={showAchievements}
-        onClose={() => setShowAchievements(false)}
-      />
+<DialogHeader className="w-full">
+  <DialogTitle>
+    <h2 className="text-lg text-gray-800 text-left">How To Play</h2>
+  </DialogTitle>
+</DialogHeader>
 
-      <CookieConsentBanner />
+<div className="mt-2 font-vietnam">
+  <ul className="space-y-4">
+    <li className="flex items-start gap-3">
+      <img src="/icons/one.png" alt="Look Icon" className="w-6 h-6 mt-1" />
+      <div>
+        <strong>Look at the number.</strong><br />
+        What could it signify?
+      </div>
+    </li>
+    <li className="flex items-start gap-3">
+      <img src="/icons/two.png" alt="Type Icon" className="w-6 h-6 mt-1" />
+      <div>
+        <strong>Make a guess. You have 4 in total.</strong><br />
+        Type what you think the number relates to; e.g. 'keys on a piano', 'moon landing'.
+      </div>
+    </li>
+    <li className="flex items-start gap-3">
+      <img src="/icons/three.png" alt="Clue Icon" className="w-6 h-6 mt-1" />
+      <div>
+        <strong>Stuck? Reveal a clue!</strong><br />
+        Remember though, this uses up a guess.
+      </div>
+    </li>
+  </ul>
 
-      <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
-        {`© ${new Date().getFullYear()} B Puzzled. All rights reserved.`}
-      </footer>
+    </div>
 
-    </div> {/* END main container */}
-  </>
-); // END return
-}
+ </DialogContent>
+</div> {/* <-- This closes the <Dialog> content wrapper */}
+</Dialog>
+
+<StatsModal
+  open={showStats}
+  onClose={() => setShowStats(false)}
+  stats={stats}
+  data={data}
+  COLORS={COLORS}
+  renderCenterLabel={renderCenterLabel}
+  combinedLabel={combinedLabel}
+/>
+
+<AchievementsModal
+  open={showAchievements}
+  onClose={() => setShowAchievements(false)}
+/>
+
+
+<CookieConsentBanner />
+
+<footer className="text-center text-sm text-gray-500 mt-10 pb-4">
+  © {new Date().getFullYear()} B Puzzled. All rights reserved.
+</footer>
+</div> {/* CLOSE div properly here */}
+</>
+);
+} // Close Home function
