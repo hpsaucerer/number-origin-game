@@ -5,6 +5,11 @@ import { supabase } from "@/lib/supabase";
 import { getOrCreateDeviceId } from "@/lib/device";
 import { Dialog, DialogContent } from "@/components/ui/dialog"; // From shadcn/ui - ensure this component is available
 import Header from "@/components/ui/header";
+import { useModal } from "@/context/ModalContext"; // For Achievements modal
+import StatsModal from "@/components/modals/StatsModal"; // For Stats modal
+import InstructionsModal from "@/components/modals/InstructionsModal"; // Optional, if you want help modal
+import CategoryPills from "@/components/CategoryPills"; // Required if using InstructionsModal
+import useStats from "@/hooks/useStats"; // For donut chart
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
@@ -14,6 +19,11 @@ export default function Archive() {
   const [showModal, setShowModal] = useState(false);
   const [rewarded, setRewarded] = useState(false);
   const [tokenCount, setTokenCount] = useState(0);
+
+  const [showStats, setShowStats] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const { setShowAchievements } = useModal();
+  const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
 
   useEffect(() => {
     setMounted(true);
@@ -126,7 +136,12 @@ export default function Archive() {
 
   return (
     <>
-      <Header />
+      <Header
+  onStatsClick={() => setShowStats(true)}
+  onAchievementsClick={() => setShowAchievements(true)}
+  onHelpClick={() => setShowInstructions(true)}
+/>
+
       <div className="max-w-3xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-4 text-center">Welcome to the Archives</h1>
 
@@ -137,7 +152,7 @@ export default function Archive() {
         )}
 
         <p className="text-gray-600 text-center mb-6">
-          Missed a puzzle? Fear not! Use tokens to replay puzzles and boost your category achievements!
+          Here you can delve into previous puzzles by using tokens, which you can earn by completing category achievements. Soon, tokens will also be available to buy - an announcement will be made soon, so watch this space! 
         </p>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -213,6 +228,19 @@ export default function Archive() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* 👇 Modals go here */}
+      {showStats && (
+        <StatsModal
+          open={showStats}
+          onClose={() => setShowStats(false)}
+          stats={stats}
+          data={data}
+          COLORS={COLORS}
+          combinedLabel={combinedLabel}
+          renderCenterLabel={renderCenterLabel}
+        />
+      )}
     </>
   );
 }
