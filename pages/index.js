@@ -1758,75 +1758,74 @@ return (
   </Button>
 )}
 
+return (
+  <>
+    {/* Instructions Popup */}
+    <Dialog open={showInstructions} onOpenChange={setShowInstructions}>
+      <DialogContent className="fixed inset-0 flex items-center justify-center z-50 px-4 relative max-h-[90vh] overflow-y-auto pt-3 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center font-vietnam">
+        {/* Dismiss Button */}
+        <button
+          className="absolute top-1 right-1 p-2 text-blue-500 hover:text-blue-600 transition"
+          onClick={() => setShowInstructions(false)}
+          aria-label="Close"
+        >
+          <X size={28} />
+        </button>
 
-      {/* Instructions Popup */}
-<Dialog open={showInstructions} onOpenChange={setShowInstructions}>
-  <DialogContent className="fixed inset-0 flex items-center justify-center z-50 px-4 relative max-h-[90vh] overflow-y-auto pt-3 pb-4 sm:max-w-md w-full flex flex-col items-start justify-center font-vietnam">
-    {/* Dismiss Button */}
-    <button
-      className="absolute top-1 right-1 p-2 text-blue-500 hover:text-blue-600 transition"
-      onClick={() => setShowInstructions(false)}
-      aria-label="Close"
-    >
-      <X size={28} />
-    </button>
+        <DialogHeader className="w-full">
+          <DialogTitle>
+            <h2 className="text-lg text-gray-800 text-left">How To Play</h2>
+          </DialogTitle>
+        </DialogHeader>
 
-    <DialogHeader className="w-full">
-      <DialogTitle>
-        <h2 className="text-lg text-gray-800 text-left">How To Play</h2>
-      </DialogTitle>
-    </DialogHeader>
+        <div className="mt-2 w-full">
+          <ul className="space-y-4">
+            <li className="flex items-start gap-3">
+              <img src="/icons/one.png" alt="Look Icon" className="w-6 h-6 mt-1" />
+              <div>
+                <strong>Look at the number.</strong><br />
+                What could it signify?
+              </div>
+            </li>
+            <li className="flex items-start gap-3">
+              <img src="/icons/two.png" alt="Type Icon" className="w-6 h-6 mt-1" />
+              <div>
+                <strong>Make a guess. You have 4 in total.</strong><br />
+                Type what you think the number relates to; e.g. 'keys on a piano', 'moon landing'.
+              </div>
+            </li>
+            <li className="flex items-start gap-3">
+              <img src="/icons/three.png" alt="Clue Icon" className="w-6 h-6 mt-1" />
+              <div>
+                <strong>Stuck? Reveal a clue!</strong><br />
+                Remember though, this uses up a guess.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </DialogContent>
+    </Dialog>
 
-    <div className="mt-2 w-full">
-      <ul className="space-y-4">
-        <li className="flex items-start gap-3">
-          <img src="/icons/one.png" alt="Look Icon" className="w-6 h-6 mt-1" />
-          <div>
-            <strong>Look at the number.</strong><br />
-            What could it signify?
-          </div>
-        </li>
-        <li className="flex items-start gap-3">
-          <img src="/icons/two.png" alt="Type Icon" className="w-6 h-6 mt-1" />
-          <div>
-            <strong>Make a guess. You have 4 in total.</strong><br />
-            Type what you think the number relates to; e.g. 'keys on a piano', 'moon landing'.
-          </div>
-        </li>
-        <li className="flex items-start gap-3">
-          <img src="/icons/three.png" alt="Clue Icon" className="w-6 h-6 mt-1" />
-          <div>
-            <strong>Stuck? Reveal a clue!</strong><br />
-            Remember though, this uses up a guess.
-          </div>
-        </li>
-      </ul>
-    </div>
-  </DialogContent>
-</Dialog>
+    <StatsModal
+      open={showStats}
+      onClose={() => setShowStats(false)}
+      stats={stats}
+      data={data}
+      COLORS={COLORS}
+      renderCenterLabel={renderCenterLabel}
+      combinedLabel={combinedLabel}
+    />
 
-<StatsModal
-  open={showStats}
-  onClose={() => setShowStats(false)}
-  stats={stats}
-  data={data}
-  COLORS={COLORS}
-  renderCenterLabel={renderCenterLabel}
-  combinedLabel={combinedLabel}
-/>
+    <AchievementsModal
+      open={showAchievements}
+      onClose={() => setShowAchievements(false)}
+    />
 
-<AchievementsModal
-  open={showAchievements}
-  onClose={() => setShowAchievements(false)}
-/>
+    <CookieConsentBanner />
 
-<CookieConsentBanner />
-
-<footer className="text-center text-sm text-gray-500 mt-10 pb-4">
-  {`© ${new Date().getFullYear()} B Puzzled. All rights reserved.`}
-</footer>
-
-</div> {/* CLOSE main content wrapper div */}
-</> {/* CLOSE React fragment */}
-); // CLOSE return
+    <footer className="text-center text-sm text-gray-500 mt-10 pb-4">
+      {`© ${new Date().getFullYear()} B Puzzled. All rights reserved.`}
+    </footer>
+  </>
+);
 } // CLOSE Home function
