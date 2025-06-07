@@ -31,6 +31,8 @@ export default function Archive() {
   const handleBuyTokens = async () => {
     const stripe = await stripePromise;
 
+    console.log("🛒 Sending POST to /api/create-checkout-session");
+
   const response = await fetch("/api/create-checkout-session", {
     method: "POST",
   });
