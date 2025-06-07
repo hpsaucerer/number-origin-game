@@ -28,8 +28,8 @@ export default function Archive() {
   const { setShowAchievements } = useModal();
   const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
 
-    const handleBuyTokens = async () => {
-  const stripe = await stripePromise;
+  const handleBuyTokens = async () => {
+    const stripe = await stripePromise;
 
   const response = await fetch("/api/create-checkout-session", {
     method: "POST",
