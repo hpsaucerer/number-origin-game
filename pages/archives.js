@@ -28,24 +28,26 @@ export default function Archive() {
   const { setShowAchievements } = useModal();
   const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
 
-  const handleBuyTokens = async () => {
-    const stripe = await stripePromise;
+const handleBuyTokens = async () => {
+  const stripe = await stripePromise;
 
-    console.log("🛒 Sending POST to /api/create-checkout-session");
+  console.log("🛒 Sending POST to /api/create-checkout-session");
 
   const response = await fetch("/api/create-checkout-session", {
     method: "POST",
   });
 
-  const { id } = await response.json();
+  const data = await response.json();
+  console.log("✅ Stripe session created:", data);
 
-  const result = await stripe.redirectToCheckout({ sessionId: id });
+  const result = await stripe.redirectToCheckout({ sessionId: data.id });
 
   if (result.error) {
     console.error("❌ Stripe redirect error:", result.error.message);
     alert("There was a problem redirecting to checkout.");
   }
 };
+
   
   useEffect(() => {
     setMounted(true);
