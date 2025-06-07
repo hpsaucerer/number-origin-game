@@ -14,14 +14,11 @@ export default async function handler(req, res) {
     .eq("used", false);
 
   if (error) {
-    console.error("❌ Supabase token check error:", error.message);
-    return res.status(500).json({ valid: false });
+    console.error("❌ Supabase token fetch error:", error.message);
+    return res.status(500).json({ error: "Failed to fetch tokens" });
   }
 
-  const valid = tokens.some((token) => {
-    // Token is reusable OR not tied to a puzzle yet
-    return !token.puzzle_number || parseInt(token.puzzle_number) === parseInt(puzzle_number);
-  });
+  const valid = tokens.length > 0;
 
   res.status(200).json({ valid });
 }
