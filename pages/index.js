@@ -376,9 +376,13 @@ const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
 const router = useRouter();
 const [routerReady, setRouterReady] = useState(false);
+const [queryArchiveId, setQueryArchiveId] = useState(null);
 
 useEffect(() => {
-  if (router.isReady) setRouterReady(true);
+  if (router.isReady) {
+    setRouterReady(true);
+    setQueryArchiveId(router.query.archiveId ?? null);
+  }
 }, [router.isReady]);
 
 useEffect(() => {
@@ -578,24 +582,36 @@ useEffect(() => {
     console.log("📦 [loadPuzzles] isArchive:", isArchive);
     console.log("📦 [loadPuzzles] queryArchiveId:", queryArchiveId);
 
+useEffect(() => {
+  const loadPuzzle = async () => {
+    let selectedPuzzle = null;
 
-if (isArchive && overridePuzzle) {
-  selected = overridePuzzle;
-} else if (isArchive && queryArchiveId) {
-  const archivePuzzleNumber = parseInt(queryArchiveId, 10);
-  selected = all.find(p => p.puzzle_number === archivePuzzleNumber);
-  if (!selected) {
-    console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
+    if (isArchive && overridePuzzle) {
+      selectedPuzzle = overridePuzzle;
+    } else if (isArchive && queryArchiveId) {
+      const archivePuzzleNumber = parseInt(queryArchiveId, 10);
+      selectedPuzzle = allPuzzles.find(p => p.puzzle_number === archivePuzzleNumber);
+      if (!selectedPuzzle) {
+        console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
+      }
+    } else {
+      const today = await fetchTodayPuzzle();
+      if (today) {
+        debugLog("✅ Today's puzzle loaded.");
+        selectedPuzzle = today;
+      } else {
+        console.warn("⚠️ No puzzle returned for today.");
+      }
+    }
+
+    setPuzzle(selectedPuzzle);
+  };
+
+  if (routerReady && allPuzzles.length) {
+    loadPuzzle();
   }
-} else {
-  const today = await fetchTodayPuzzle();
-  if (today) {
-    debugLog("✅ Today's puzzle loaded.");
-    selected = today;
-  } else {
-    console.warn("⚠️ No puzzle returned for today.");
-  }
-}
+}, [routerReady, allPuzzles, queryArchiveId, isArchive, overridePuzzle]);
+
 
     if (selected) {
       setPuzzle(selected);
@@ -628,9 +644,9 @@ if (isArchive && overridePuzzle) {
     }
   }
 
+useEffect(() => {
   loadPuzzles();
-}, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
-
+}, [routerReady, isArchive, overridePuzzle, queryArchiveId, allPuzzles]);
 
   const maxGuesses = 4;
   const gameOver = isCorrect || attempts >= maxGuesses;
