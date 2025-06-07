@@ -4,6 +4,13 @@ import { getDeviceIdFromCookie } from "@/lib/device"; // or inline this logic
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+function getDeviceIdFromCookie(cookieHeader) {
+  const cookie = Object.fromEntries(
+    cookieHeader?.split(";").map((c) => c.trim().split("="))
+  );
+  return cookie.device_id || null;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
