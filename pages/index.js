@@ -376,7 +376,7 @@ const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
 const router = useRouter();
 const [routerReady, setRouterReady] = useState(false);
-const [queryArchiveId, setQueryArchiveId] = useState(null);
+const queryArchiveId = router.query.puzzle_number;
 
 useEffect(() => {
   if (router.isReady) {
