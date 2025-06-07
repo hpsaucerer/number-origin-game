@@ -1,4 +1,4 @@
-w2fc"use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { BarChart, Share2, HelpCircle, BookOpen, X } from "lucide-react";
