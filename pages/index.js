@@ -1,4 +1,4 @@
-"use client";
+w2fc"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { BarChart, Share2, HelpCircle, BookOpen, X } from "lucide-react";
@@ -1531,11 +1531,11 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {(() => {
   const hasFormatted = typeof puzzle.formatted === "string";
 
-  // Fallback logic for legacy puzzles with NULL reveal_formatted_at
+  // Use puzzle.revealFormattedAt if it's a number; otherwise default to clue 3
   const revealAt =
     typeof puzzle.revealFormattedAt === "number"
       ? puzzle.revealFormattedAt
-      : (hasFormatted ? 2 : Infinity); // 👈 default to clue 2 if formatted value exists
+      : (hasFormatted ? 3 : Infinity);
 
   const shouldRevealFormatted =
     hasFormatted && (isCorrect || revealedClues.length >= revealAt);
