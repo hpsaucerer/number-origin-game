@@ -7,16 +7,21 @@ export default async function handler(req, res) {
 
   const { device_id, puzzle_number } = req.body;
 
-  const { data: token, error } = await supabase
+  const { data: tokens, error } = await supabase
     .from("ArchiveTokens")
     .select("*")
     .eq("device_id", device_id.trim().toLowerCase())
-    .eq("used", false)
-    .maybeSingle();
+    .eq("used", false);
 
-  const valid =
-    token &&
-    (!token.puzzle_number || parseInt(token.puzzle_number) === parseInt(puzzle_number));
+  if (error) {
+    console.error("❌ Supabase token check error:", error.message);
+    return res.status(500).json({ valid: false });
+  }
+
+  const valid = tokens.some((token) => {
+    // Token is reusable OR not tied to a puzzle yet
+    return !token.puzzle_number || parseInt(token.puzzle_number) === parseInt(puzzle_number);
+  });
 
   res.status(200).json({ valid });
 }
