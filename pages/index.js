@@ -380,8 +380,7 @@ useEffect(() => {
   if (router.isReady) setRouterReady(true);
 }, [router.isReady]);
 
-const queryArchiveId = router?.query?.archive;
-const isArchive = initialIsArchive || !!queryArchiveId;
+const isArchive = initialIsArchive;
 
 useEffect(() => {
   if (puzzle && isArchive) {
