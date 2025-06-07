@@ -10,6 +10,9 @@ import StatsModal from "@/components/modals/StatsModal"; // For Stats modal
 import InstructionsModal from "@/components/modals/InstructionsModal"; // Optional, if you want help modal
 import CategoryPills from "@/components/CategoryPills"; // Required if using InstructionsModal
 import useStats from "@/hooks/useStats"; // For donut chart
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
@@ -31,6 +34,23 @@ export default function Archive() {
 
   useEffect(() => {
     if (!mounted) return;
+
+    const handleBuyTokens = async () => {
+  const stripe = await stripePromise;
+
+  const response = await fetch("/api/create-checkout-session", {
+    method: "POST",
+  });
+
+  const { id } = await response.json();
+
+  const result = await stripe.redirectToCheckout({ sessionId: id });
+
+  if (result.error) {
+    console.error("❌ Stripe redirect error:", result.error.message);
+    alert("There was a problem redirecting to checkout.");
+  }
+};
 
     const deviceId = getOrCreateDeviceId();
 
@@ -151,8 +171,17 @@ export default function Archive() {
           </div>
         )}
 
+<div className="text-center mb-6">
+  <button
+    onClick={handleBuyTokens}
+    className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+  >
+    Buy 5 Archive Tokens ($2.99)
+  </button>
+</div>
+
         <p className="text-gray-600 text-center mb-6">
-          Here you can delve into previous puzzles by using tokens, which you can earn by completing category achievements. Soon, tokens will also be available to buy - an announcement will be made soon, so watch this space! 
+          Here you can delve into previous puzzles by using tokens, which you can earn by completing category achievements or buy using the button below. 
         </p>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
