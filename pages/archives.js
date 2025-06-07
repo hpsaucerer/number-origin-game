@@ -28,13 +28,6 @@ export default function Archive() {
   const { setShowAchievements } = useModal();
   const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-
     const handleBuyTokens = async () => {
   const stripe = await stripePromise;
 
@@ -51,6 +44,13 @@ export default function Archive() {
     alert("There was a problem redirecting to checkout.");
   }
 };
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
 
     const deviceId = getOrCreateDeviceId();
 
