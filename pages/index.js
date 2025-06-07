@@ -380,7 +380,9 @@ useEffect(() => {
   if (router.isReady) setRouterReady(true);
 }, [router.isReady]);
 
+const initialIsArchive = props.isArchive || false;
 const isArchive = initialIsArchive;
+
 
 useEffect(() => {
   if (puzzle && isArchive) {
