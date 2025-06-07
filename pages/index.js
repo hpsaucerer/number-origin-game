@@ -1530,11 +1530,15 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
            
 {(() => {
   const hasFormatted = typeof puzzle.formatted === "string";
+
+  // Fallback logic for legacy puzzles with NULL reveal_formatted_at
   const revealAt =
-  typeof puzzle.revealFormattedAt === "number"
-    ? puzzle.revealFormattedAt
-    : (puzzle.formatted ? 1 : Infinity);
-  const shouldRevealFormatted = hasFormatted && (isCorrect || revealedClues.length >= revealAt);
+    typeof puzzle.revealFormattedAt === "number"
+      ? puzzle.revealFormattedAt
+      : (hasFormatted ? 2 : Infinity); // 👈 default to clue 2 if formatted value exists
+
+  const shouldRevealFormatted =
+    hasFormatted && (isCorrect || revealedClues.length >= revealAt);
 
   return (
     <p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
