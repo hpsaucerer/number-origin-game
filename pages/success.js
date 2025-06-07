@@ -48,7 +48,7 @@ export default function SuccessPage() {
       )}
       <button
         className="mt-6 bg-blue-600 text-white px-4 py-2 rounded"
-        onClick={() => router.push("/archive")}
+        onClick={() => router.push("/archives")}
       >
         Back to Archives
       </button>
