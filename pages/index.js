@@ -1530,11 +1530,15 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
            
 {(() => {
   const hasFormatted = typeof puzzle.formatted === "string";
+
+  // Use puzzle.revealFormattedAt if it's a number; otherwise default to clue 3
   const revealAt =
-  typeof puzzle.revealFormattedAt === "number"
-    ? puzzle.revealFormattedAt
-    : (puzzle.formatted ? 1 : Infinity);
-  const shouldRevealFormatted = hasFormatted && (isCorrect || revealedClues.length >= revealAt);
+    typeof puzzle.revealFormattedAt === "number"
+      ? puzzle.revealFormattedAt
+      : (hasFormatted ? 3 : Infinity);
+
+  const shouldRevealFormatted =
+    hasFormatted && (isCorrect || revealedClues.length >= revealAt);
 
   return (
     <p className="text-4xl font-bold text-[#3B82F6] font-daysone daily-number">
