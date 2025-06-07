@@ -259,7 +259,6 @@ function getPlayerTitle(stats) {
 }
 
 export default function Home({ overridePuzzle = null, isArchive: initialIsArchive = false, archiveIndex = null }) {
-  const isArchive = initialIsArchive;
 
 const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
 
@@ -376,14 +375,13 @@ const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
 const router = useRouter();
 const [routerReady, setRouterReady] = useState(false);
-const queryArchiveId = router.query.puzzle_number;
 
 useEffect(() => {
-  if (router.isReady) {
-    setRouterReady(true);
-    setQueryArchiveId(router.query.archiveId ?? null);
-  }
+  if (router.isReady) setRouterReady(true);
 }, [router.isReady]);
+
+const queryArchiveId = router?.query?.archive;
+const isArchive = initialIsArchive || !!queryArchiveId;
 
 useEffect(() => {
   if (puzzle && isArchive) {
@@ -582,36 +580,24 @@ useEffect(() => {
     console.log("📦 [loadPuzzles] isArchive:", isArchive);
     console.log("📦 [loadPuzzles] queryArchiveId:", queryArchiveId);
 
-useEffect(() => {
-  const loadPuzzle = async () => {
-    let selectedPuzzle = null;
 
-    if (isArchive && overridePuzzle) {
-      selectedPuzzle = overridePuzzle;
-    } else if (isArchive && queryArchiveId) {
-      const archivePuzzleNumber = parseInt(queryArchiveId, 10);
-      selectedPuzzle = allPuzzles.find(p => p.puzzle_number === archivePuzzleNumber);
-      if (!selectedPuzzle) {
-        console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
-      }
-    } else {
-      const today = await fetchTodayPuzzle();
-      if (today) {
-        debugLog("✅ Today's puzzle loaded.");
-        selectedPuzzle = today;
-      } else {
-        console.warn("⚠️ No puzzle returned for today.");
-      }
-    }
-
-    setPuzzle(selectedPuzzle);
-  };
-
-  if (routerReady && allPuzzles.length) {
-    loadPuzzle();
+if (isArchive && overridePuzzle) {
+  selected = overridePuzzle;
+} else if (isArchive && queryArchiveId) {
+  const archivePuzzleNumber = parseInt(queryArchiveId, 10);
+  selected = all.find(p => p.puzzle_number === archivePuzzleNumber);
+  if (!selected) {
+    console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
   }
-}, [routerReady, allPuzzles, queryArchiveId, isArchive, overridePuzzle]);
-
+} else {
+  const today = await fetchTodayPuzzle();
+  if (today) {
+    debugLog("✅ Today's puzzle loaded.");
+    selected = today;
+  } else {
+    console.warn("⚠️ No puzzle returned for today.");
+  }
+}
 
     if (selected) {
       setPuzzle(selected);
@@ -644,9 +630,9 @@ useEffect(() => {
     }
   }
 
-useEffect(() => {
   loadPuzzles();
-}, [routerReady, isArchive, overridePuzzle, queryArchiveId, allPuzzles]);
+}, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
+
 
   const maxGuesses = 4;
   const gameOver = isCorrect || attempts >= maxGuesses;
