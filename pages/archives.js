@@ -178,7 +178,11 @@ const handleBuyTokens = async () => {
           </div>
         )}
 
-<div className="text-center mb-6">
+        <p className="text-gray-600 text-center mb-6">
+          Here you can delve into previous puzzles by using tokens, which you can earn by completing category achievements or buy using the button below. 
+        </p>
+
+          <div className="text-center mb-6">
   <button
     onClick={handleBuyTokens}
     className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
@@ -186,10 +190,13 @@ const handleBuyTokens = async () => {
     Buy 5 Archive Tokens ($2.99)
   </button>
 </div>
-
-        <p className="text-gray-600 text-center mb-6">
-          Here you can delve into previous puzzles by using tokens, which you can earn by completing category achievements or buy using the button below. 
-        </p>
+        {/* Stripe badge below */}
+  <img
+    src="/icons/powered-by-stripe.png"
+    alt="Powered by Stripe"
+    className="mt-2 h-8 mx-auto"
+  />
+</div>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
           {available.map((puzzle) => {
