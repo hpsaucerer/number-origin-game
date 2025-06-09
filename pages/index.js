@@ -895,7 +895,7 @@ if (!isClueReveal && !cleanedGuess) {
 
       const result = await res.json();
       if (result.nextClue) {
-        setRevealedClues((prev) => [...prev, result.nextClue]);
+        setCluesRevealed((prev) => [...prev, result.nextClue]);
       }
       setAttempts((prev) => prev + 1);
       return;
@@ -1230,6 +1230,7 @@ if (error) {
   console.log("✅ Guess successfully logged to Supabase!");
 }
 
+setGuesses(prev => [...prev, cleanedGuess]);
 
     if (isCorrectGuess) {
       setIsCorrect(true);
@@ -1272,7 +1273,7 @@ const clueIndex = revealedClues.length;
 const nextClue = puzzle.clues?.[clueIndex];
 
 if (nextClue && !revealedClues.includes(nextClue)) {
-  setRevealedClues([...revealedClues, nextClue]);
+  setCluesRevealed(prev => [...prev, nextClue]);
 }
 
       setInputError(
@@ -1294,7 +1295,7 @@ if (nextClue && !revealedClues.includes(nextClue)) {
       const nextClue = puzzle.clues?.[clueIndex];
 
       if (nextClue && !revealedClues.includes(nextClue)) {
-        setRevealedClues([...revealedClues, nextClue]);
+        setCluesRevealed(prev => [...prev, nextClue]);
       }
 
       if (newAttempts >= maxGuesses) {
@@ -1328,7 +1329,7 @@ const handleClueReveal = () => {
   const nextClue = puzzle.clues?.[clueIndex];
 
   if (nextClue && !revealedClues.includes(nextClue)) {
-    setRevealedClues([...revealedClues, nextClue]);
+    setCluesRevealed(prev => [...prev, nextClue]);
     setAttempts((prev) => prev + 1); // Don't forget to increment attempts!
   }
 
