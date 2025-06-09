@@ -31,6 +31,9 @@ export default function Archive() {
 const handleBuyTokens = async () => {
   const stripe = await stripePromise;
 
+  // ✅ Ensure device_id cookie is set before checkout
+  document.cookie = `device_id=${getOrCreateDeviceId().toLowerCase()}; path=/; max-age=31536000`;
+
   console.log("🛒 Sending POST to /api/create-checkout-session");
 
   const response = await fetch("/api/create-checkout-session", {
