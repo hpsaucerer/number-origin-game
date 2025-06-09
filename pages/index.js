@@ -337,7 +337,6 @@ const joyrideSteps = [
   },
 ];
 
-
     
   const { stats, setStats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
     const incorrectGuessMessages = [
@@ -393,6 +392,24 @@ useEffect(() => {
     });
   }
 }, [puzzle, isArchive]);
+
+useEffect(() => {
+  if (!puzzle) return;
+
+  const saved = localStorage.getItem(`gameState-${puzzle.date}`);
+  if (!saved) return;
+
+  try {
+    const { attempts: savedAttempts, revealedClues: savedClues, isCorrect: savedIsCorrect, guess: savedGuess } = JSON.parse(saved);
+    setAttempts(savedAttempts || 0);
+    setRevealedClues(savedClues || []);
+    setIsCorrect(savedIsCorrect || false);
+    setGuess(savedGuess || "");
+    console.log("🔁 Restored saved game state.");
+  } catch (err) {
+    console.warn("⚠️ Failed to parse saved game state:", err);
+  }
+}, [puzzle]);
 
 const [puzzleNumber, setPuzzleNumber] = useState(null);
 
