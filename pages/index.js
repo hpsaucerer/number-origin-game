@@ -894,6 +894,7 @@ if (!isClueReveal && !cleanedGuess) {
       });
 
       const result = await res.json();
+      console.log("📨 Clue result from /api/validate-guess:", result);
       if (result.nextClue) {
         setCluesRevealed((prev) => [...prev, result.nextClue]);
       }
@@ -1273,7 +1274,12 @@ const clueIndex = revealedClues.length;
 const nextClue = puzzle.clues?.[clueIndex];
 
 if (nextClue && !revealedClues.includes(nextClue)) {
-  setCluesRevealed(prev => [...prev, nextClue]);
+  console.log("🔎 New clue to reveal:", nextClue);
+  setCluesRevealed(prev => {
+    const updated = [...prev, nextClue];
+    console.log("📌 Updated clues list:", updated);
+    return updated;
+  });
 }
 
       setInputError(
@@ -1294,9 +1300,14 @@ if (nextClue && !revealedClues.includes(nextClue)) {
       const clueIndex = revealedClues.length;
       const nextClue = puzzle.clues?.[clueIndex];
 
-      if (nextClue && !revealedClues.includes(nextClue)) {
-        setCluesRevealed(prev => [...prev, nextClue]);
-      }
+if (nextClue && !revealedClues.includes(nextClue)) {
+  console.log("🔎 New clue to reveal:", nextClue);
+  setCluesRevealed(prev => {
+    const updated = [...prev, nextClue];
+    console.log("📌 Updated clues list:", updated);
+    return updated;
+  });
+}
 
       if (newAttempts >= maxGuesses) {
         handleGameOver(newAttempts); // 👈 Same logic reused here too
@@ -1328,10 +1339,21 @@ const handleClueReveal = () => {
   const clueIndex = revealedClues.length;
   const nextClue = puzzle.clues?.[clueIndex];
 
-  if (nextClue && !revealedClues.includes(nextClue)) {
-    setCluesRevealed(prev => [...prev, nextClue]);
-    setAttempts((prev) => prev + 1); // Don't forget to increment attempts!
-  }
+if (nextClue && !revealedClues.includes(nextClue)) {
+  console.log("🔎 New clue to reveal:", nextClue);
+
+  setCluesRevealed(prev => {
+    const updated = [...prev, nextClue];
+    console.log("📌 Updated clues list:", updated);
+    return updated;
+  });
+
+  setAttempts(prev => {
+    const newAttempts = prev + 1;
+    console.log("➕ Incremented attempts:", newAttempts);
+    return newAttempts;
+  });
+}
 
   setTimeout(() => {
     setRevealDisabled(false);
