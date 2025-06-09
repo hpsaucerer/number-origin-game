@@ -405,6 +405,7 @@ useEffect(() => {
     const { attempts: savedAttempts, revealedClues: savedClues, isCorrect: savedIsCorrect, guess: savedGuess } = JSON.parse(saved);
     setAttempts(savedAttempts || 0);
     setRevealedClues(savedClues || []);
+    setCluesRevealed(savedClues || []); // 🪄 sync for UI rendering
     setIsCorrect(savedIsCorrect || false);
     setGuess(savedGuess || "");
     console.log("🔁 Restored saved game state.");
