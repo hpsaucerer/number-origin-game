@@ -167,11 +167,11 @@ export default function Archive() {
             onClick={handleBuyTokens}
             className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
           >
-            Buy 5 Archive Tokens ($2.99)
+            Buy 5 Archive Tokens ($1.99)
           </button>
 
           <img
-            src="/icons/powered-by-stripe.png"
+            src="/icons/powered-by-stripe.svg"
             alt="Powered by Stripe"
             className="mt-2 h-8 mx-auto"
           />
