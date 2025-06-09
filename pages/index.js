@@ -367,7 +367,9 @@ const joyrideSteps = [
   const [showAchievements, setShowAchievements] = useState(false);
   const [completedPuzzles, setCompletedPuzzles] = useState([]);
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
-    
+  const [guesses, setGuesses] = useState([]);
+  const [cluesRevealed, setCluesRevealed] = useState([]);
+
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
 
