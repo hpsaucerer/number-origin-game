@@ -1601,12 +1601,11 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
             ))}
           </div>
 
-useEffect(() => {
-  console.log("🧩 Rendering clues:", revealedClues);
-}, [revealedClues]);
-
 {revealedClues.map((clue, index) => {
   const clueText = typeof clue === "string" ? clue : clue?.text || "";
+
+  console.log(`🧩 Rendering clue ${index + 1}:`, clueText);
+
   return (
     <p key={index} className="mt-2 text-gray-600">
       <span className="font-semibold">Clue {index + 1}:</span>{" "}
@@ -1614,6 +1613,7 @@ useEffect(() => {
     </p>
   );
 })}
+
 
 {categoryRevealed && puzzle.category && (
   <div className="mt-4 text-center flex flex-col items-center">
