@@ -650,6 +650,27 @@ if (isArchive && overridePuzzle) {
   loadPuzzles();
 }, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
 
+useEffect(() => {
+  if (puzzle && puzzle.puzzle_number) {
+    const savedState = localStorage.getItem(`puzzleState-${puzzle.puzzle_number}`);
+    if (savedState) {
+      const { guesses: savedGuesses, cluesRevealed: savedClues } = JSON.parse(savedState);
+      if (Array.isArray(savedGuesses)) setGuesses(savedGuesses);
+      if (Array.isArray(savedClues)) setCluesRevealed(savedClues);
+    }
+  }
+}, [puzzle]);
+
+useEffect(() => {
+  if (puzzle && puzzle.puzzle_number) {
+    const state = {
+      guesses,
+      cluesRevealed,
+    };
+    localStorage.setItem(`puzzleState-${puzzle.puzzle_number}`, JSON.stringify(state));
+  }
+}, [guesses, cluesRevealed, puzzle]);
+
 
   const maxGuesses = 4;
   const gameOver = isCorrect || attempts >= maxGuesses;
