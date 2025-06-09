@@ -1601,7 +1601,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
             ))}
           </div>
 
-console.log("🧩 Rendering clues:", revealedClues);
+useEffect(() => {
+  console.log("🧩 Rendering clues:", revealedClues);
+}, [revealedClues]);
 
 {revealedClues.map((clue, index) => {
   const clueText = typeof clue === "string" ? clue : clue?.text || "";
