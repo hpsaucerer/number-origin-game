@@ -182,21 +182,22 @@ const handleBuyTokens = async () => {
           Here you can delve into previous puzzles by using tokens, which you can earn by completing category achievements or buy using the button below. 
         </p>
 
-          <div className="text-center mb-6">
-  <button
-    onClick={handleBuyTokens}
-    className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
-  >
-    Buy 5 Archive Tokens ($2.99)
-  </button>
-</div>
-        {/* Stripe badge below */}
-  <img
-    src="/icons/powered-by-stripe.png"
-    alt="Powered by Stripe"
-    className="mt-2 h-8 mx-auto"
-  />
-</div>
+        <div className="text-center mb-6">
+          <button
+            onClick={handleBuyTokens}
+            className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Buy 5 Archive Tokens ($2.99)
+          </button>
+
+          {/* Stripe badge below */}
+          <img
+            src="/icons/powered-by-stripe.png"
+            alt="Powered by Stripe"
+            className="mt-2 h-8 mx-auto"
+          />
+        </div>
+
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
           {available.map((puzzle) => {
@@ -251,26 +252,6 @@ const handleBuyTokens = async () => {
             );
           })}
         </div>
-
-        {/* ✅ Completion Modal */}
-        <Dialog open={showModal} onOpenChange={setShowModal}>
-          <DialogContent className="max-w-md mx-auto text-center">
-            <h2 className="text-xl font-bold mb-2">Thanks for playing!</h2>
-            <p className="text-sm text-gray-700 mb-4">
-              Some of you may have experienced a glitch yesterday in the game. Apologies! We've been working hard behind the scenes on an update and something broke in the game's logic. We really appreciate your support and patience!
-            </p>
-            <p className="text-green-600 font-semibold">
-              {rewarded ? "🎁 A bonus archive token has been added!" : "Loading bonus..."}
-            </p>
-            <button
-              onClick={() => setShowModal(false)}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Got it
-            </button>
-          </DialogContent>
-        </Dialog>
-      </div>
 
       {/* 👇 Modals go here */}
       {showStats && (
