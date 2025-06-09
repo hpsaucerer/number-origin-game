@@ -408,16 +408,9 @@ useEffect(() => {
   if (!saved) return;
 
   try {
-    const {
-      attempts: savedAttempts,
-      revealedClues: savedClues,
-      isCorrect: savedIsCorrect,
-      guess: savedGuess
-    } = JSON.parse(saved);
-
+    const { attempts: savedAttempts, revealedClues: savedClues, isCorrect: savedIsCorrect, guess: savedGuess } = JSON.parse(saved);
     setAttempts(savedAttempts || 0);
-    setCluesRevealed(savedClues || []);
-    setRevealedClues(savedClues || []); // ✅ ← this is key
+    setRevealedClues(savedClues || []);
     setIsCorrect(savedIsCorrect || false);
     setGuess(savedGuess || "");
     console.log("🔁 Restored saved game state.");
