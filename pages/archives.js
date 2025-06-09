@@ -7,7 +7,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"; // From shadcn/u
 import Header from "@/components/ui/header";
 import { useModal } from "@/context/ModalContext"; // For Achievements modal
 import StatsModal from "@/components/modals/StatsModal"; // For Stats modal
-import InstructionsModal from "@/components/modals/InstructionsModal"; // Optional, if you want help modal
 import CategoryPills from "@/components/CategoryPills"; // Required if using InstructionsModal
 import useStats from "@/hooks/useStats"; // For donut chart
 import { loadStripe } from '@stripe/stripe-js';
