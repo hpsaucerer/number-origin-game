@@ -616,50 +616,52 @@ if (isArchive && overridePuzzle) {
   }
 }
 
-    if (selected) {
-      setPuzzle(selected);
-      setPuzzleNumber(selected.puzzle_number ?? selected.id);
+if (selected) {
+  setPuzzle(selected);
+  setPuzzleNumber(selected.puzzle_number ?? selected.id);
 
-      // ✅ Completion tracking
-      let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
-      let isNewPlayer = false;
-
-      if (!Array.isArray(completed)) {
-        completed = [];
-        all.forEach((p) => {
-          if (localStorage.getItem(`completed-${p.date}`) === "true") {
-            completed.push(p.id);
-          }
-        });
-        localStorage.setItem("completedPuzzles", JSON.stringify(completed));
-        isNewPlayer = completed.length === 0;
-
-        console.log(
-          completed.length > 0
-            ? "✅ Migrated old completions to completedPuzzles."
-            : "🆕 No old completions found. Initialized empty completedPuzzles."
-        );
-      } else {
-        isNewPlayer = completed.length === 0;
-      }
-
-      setCompletedPuzzles(completed);
+  // ✅ Restore saved guesses/clues
+  const saved = localStorage.getItem(`puzzleState-${selected.puzzle_number}`);
+  if (saved) {
+    try {
+      const { guesses: g, cluesRevealed: c } = JSON.parse(saved);
+      if (Array.isArray(g)) setGuesses(g);
+      if (Array.isArray(c)) setCluesRevealed(c);
+    } catch (e) {
+      console.warn("🛑 Corrupted puzzle state in localStorage");
     }
   }
+
+  // ✅ Completion tracking
+  let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
+  let isNewPlayer = false;
+
+  if (!Array.isArray(completed)) {
+    completed = [];
+    all.forEach((p) => {
+      if (localStorage.getItem(`completed-${p.date}`) === "true") {
+        completed.push(p.id);
+      }
+    });
+    localStorage.setItem("completedPuzzles", JSON.stringify(completed));
+    isNewPlayer = completed.length === 0;
+
+    console.log(
+      completed.length > 0
+        ? "✅ Migrated old completions to completedPuzzles."
+        : "🆕 No old completions found. Initialized empty completedPuzzles."
+    );
+  } else {
+    isNewPlayer = completed.length === 0;
+  }
+
+  setCompletedPuzzles(completed);
+}
+
 
   loadPuzzles();
 }, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
 
-useEffect(() => {
-  if (puzzle && puzzle.puzzle_number) {
-    const savedState = localStorage.getItem(`puzzleState-${puzzle.puzzle_number}`);
-    if (savedState) {
-      const { guesses: savedGuesses, cluesRevealed: savedClues } = JSON.parse(savedState);
-      if (Array.isArray(savedGuesses)) setGuesses(savedGuesses);
-      if (Array.isArray(savedClues)) setCluesRevealed(savedClues);
-    }
-  }
-}, [puzzle]);
 
 useEffect(() => {
   if (puzzle && puzzle.puzzle_number) {
