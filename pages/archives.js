@@ -214,10 +214,10 @@ export default function Archive() {
                   isCompleted ? "bg-gray-200 opacity-60 cursor-default" : "bg-white hover:shadow-md"
                 }`}
               >
-                <p className="text-lg font-semibold">
-                  Numerus #{puzzle.puzzle_number}
-                  {isCompleted && <span className="ml-2 text-green-600">✓</span>}
-                </p>
+                <div className="flex items-center gap-1 text-lg font-semibold">
+                 <span>Numerus #{puzzle.puzzle_number}</span>
+                 {isCompleted && <span className="text-green-600 text-base">✓</span>}
+                </div>
                 <p className="text-gray-700">{puzzle.number}</p>
                 <p className="text-sm text-gray-500">
                   {format(new Date(puzzle.date), "MMMM d, yyyy")}
