@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         {
           price_data: {
             currency: 'usd',
-            unit_amount: 299, // $2.99
+            unit_amount: 199, // $1.99
             product_data: {
               name: '5 Archive Tokens',
               description: 'Unlock 5 additional archive puzzles',
