@@ -167,7 +167,7 @@ export default function Archive() {
             onClick={handleBuyTokens}
             className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
           >
-            Buy 5 Archive Tokens ($1)
+            Buy 5 Archive Tokens ($1.00)
           </button>
 
           <img
