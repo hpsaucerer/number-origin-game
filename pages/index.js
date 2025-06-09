@@ -401,11 +401,23 @@ useEffect(() => {
   const saved = localStorage.getItem(`gameState-${puzzle.date}`);
   if (!saved) return;
 
+useEffect(() => {
+  if (!puzzle) return;
+
+  const saved = localStorage.getItem(`gameState-${puzzle.date}`);
+  if (!saved) return;
+
   try {
-    const { attempts: savedAttempts, revealedClues: savedClues, isCorrect: savedIsCorrect, guess: savedGuess } = JSON.parse(saved);
+    const {
+      attempts: savedAttempts,
+      revealedClues: savedClues,
+      isCorrect: savedIsCorrect,
+      guess: savedGuess
+    } = JSON.parse(saved);
+
     setAttempts(savedAttempts || 0);
-    setRevealedClues(savedClues || []);
-    setCluesRevealed(savedClues || []); // 🪄 sync for UI rendering
+    setCluesRevealed(savedClues || []);
+    setRevealedClues(savedClues || []); // ✅ ← this is key
     setIsCorrect(savedIsCorrect || false);
     setGuess(savedGuess || "");
     console.log("🔁 Restored saved game state.");
@@ -413,6 +425,7 @@ useEffect(() => {
     console.warn("⚠️ Failed to parse saved game state:", err);
   }
 }, [puzzle]);
+
 
 const [puzzleNumber, setPuzzleNumber] = useState(null);
 
@@ -569,13 +582,14 @@ useEffect(() => {
 
   const gameState = {
     attempts,
-    revealedClues,
+    revealedClues: cluesRevealed, // ✅ <--- NOT 'revealedClues'
     isCorrect,
     guess,
   };
 
   localStorage.setItem(`gameState-${puzzle.date}`, JSON.stringify(gameState));
-}, [puzzle, attempts, revealedClues, isCorrect, guess]);
+}, [puzzle, attempts, cluesRevealed, isCorrect, guess]);
+
 
 useEffect(() => {
   if (isArchive && puzzle?.id) {
@@ -1326,41 +1340,34 @@ if (nextClue && !revealedClues.includes(nextClue)) {
   }
 };
 
-    
 const handleClueReveal = () => {
   if (
     revealDisabled ||
     attempts >= maxGuesses ||
-    revealedClues.length >= puzzle?.clues?.length
+    cluesRevealed.length >= puzzle?.clues?.length
   ) return;
 
   setRevealDisabled(true);
   setAnimateClueButton(false);
 
-  const clueIndex = revealedClues.length;
+  const clueIndex = cluesRevealed.length;
   const nextClue = puzzle.clues?.[clueIndex];
 
-if (nextClue && !revealedClues.includes(nextClue)) {
-  console.log("🔎 New clue to reveal:", nextClue);
-
-  setCluesRevealed(prev => {
-    const updated = [...prev, nextClue];
-    console.log("📌 Updated clues list:", updated);
-    return updated;
-  });
-
-  setAttempts(prev => {
-    const newAttempts = prev + 1;
-    console.log("➕ Incremented attempts:", newAttempts);
-    return newAttempts;
-  });
-}
+  if (nextClue && !cluesRevealed.includes(nextClue)) {
+    setCluesRevealed(prev => {
+      const updated = [...prev, nextClue];
+      setRevealedClues(updated); // ✅ KEEP THESE IN SYNC
+      return updated;
+    });
+    setAttempts((prev) => prev + 1); // ✅ Count as a guess
+  }
 
   setTimeout(() => {
     setRevealDisabled(false);
     setAnimateClueButton(true);
   }, 1000);
 };
+
 
 const handleRevealCategory = () => {
   if (tokenCount <= 0 || categoryRevealed || !puzzle) return;
