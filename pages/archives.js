@@ -3,13 +3,16 @@ import { useRouter } from "next/router";
 import { format } from "date-fns";
 import { supabase } from "@/lib/supabase";
 import { getOrCreateDeviceId } from "@/lib/device";
-import { Dialog, DialogContent } from "@/components/ui/dialog"; // From shadcn/ui - ensure this component is available
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import Header from "@/components/ui/header";
-import { useModal } from "@/context/ModalContext"; // For Achievements modal
-import StatsModal from "@/components/modals/StatsModal"; // For Stats modal
-import InstructionsModal from "@/components/modals/InstructionsModal"; // Optional, if you want help modal
-import CategoryPills from "@/components/CategoryPills"; // Required if using InstructionsModal
-import useStats from "@/hooks/useStats"; // For donut chart
+import { useModal } from "@/context/ModalContext";
+import StatsModal from "@/components/modals/StatsModal";
+import InstructionsModal from "@/components/modals/InstructionsModal";
+import CategoryPills from "@/components/CategoryPills";
+import useStats from "@/hooks/useStats";
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export default function Archive() {
   const [available, setAvailable] = useState([]);
@@ -25,13 +28,29 @@ export default function Archive() {
   const { setShowAchievements } = useModal();
   const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
 
+  const handleBuyTokens = async () => {
+    const stripe = await stripePromise;
+    document.cookie = `device_id=${getOrCreateDeviceId().toLowerCase()}; path=/; max-age=31536000`;
+
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+    });
+
+    const data = await response.json();
+    const result = await stripe.redirectToCheckout({ sessionId: data.id });
+
+    if (result.error) {
+      console.error("❌ Stripe redirect error:", result.error.message);
+      alert("There was a problem redirecting to checkout.");
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
-
     const deviceId = getOrCreateDeviceId();
 
     const justFinished = localStorage.getItem("justCompletedArchive") === "true";
@@ -47,15 +66,11 @@ export default function Archive() {
         fetch("/api/grant-token", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            device_id: deviceId,
-            source: "archive_completion_reward"
-          }),
+          body: JSON.stringify({ device_id: deviceId, source: "archive_completion_reward" }),
         })
           .then(res => res.json())
           .then(data => {
             if (data.success) {
-              console.log("🎉 Bonus archive token granted for returning!");
               localStorage.setItem("archiveCompletionRewarded", "true");
               setRewarded(true);
             }
@@ -76,15 +91,11 @@ export default function Archive() {
       fetch("/api/redeem-token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          device_id: deviceId,
-          source: "archive_visit_bonus"
-        }),
+        body: JSON.stringify({ device_id: deviceId, source: "archive_visit_bonus" }),
       })
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            console.log("✅ Archive token granted via archive visit");
             localStorage.setItem("firstTokenGranted", "true");
           }
         });
@@ -93,7 +104,6 @@ export default function Archive() {
 
   useEffect(() => {
     if (!mounted) return;
-
     const today = new Date().toISOString().split("T")[0];
     const deviceId = getOrCreateDeviceId();
 
@@ -104,7 +114,6 @@ export default function Archive() {
         .order("date", { ascending: false });
 
       if (error) {
-        console.error("❌ Error fetching puzzles:", error.message);
         router.replace("/");
         return;
       }
@@ -121,9 +130,7 @@ export default function Archive() {
         .eq("device_id", deviceId)
         .eq("used", false);
 
-      if (tokenError) {
-        console.error("❌ Error fetching tokens:", tokenError.message);
-      } else {
+      if (!tokenError) {
         setTokenCount(tokens.length);
       }
     };
@@ -137,10 +144,10 @@ export default function Archive() {
   return (
     <>
       <Header
-  onStatsClick={() => setShowStats(true)}
-  onAchievementsClick={() => setShowAchievements(true)}
-  onHelpClick={() => setShowInstructions(true)}
-/>
+        onStatsClick={() => setShowStats(true)}
+        onAchievementsClick={() => setShowAchievements(true)}
+        onHelpClick={() => setShowInstructions(true)}
+      />
 
       <div className="max-w-3xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-4 text-center">Welcome to the Archives</h1>
@@ -152,10 +159,25 @@ export default function Archive() {
         )}
 
         <p className="text-gray-600 text-center mb-6">
-          Here you can delve into previous puzzles by using tokens, which you can earn by completing category achievements. Soon, tokens will also be available to buy - an announcement will be made soon, so watch this space! 
+          Here you can delve into previous puzzles by using tokens, which you can earn by completing category achievements or buy using the button below.
         </p>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="text-center mb-6">
+          <button
+            onClick={handleBuyTokens}
+            className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Buy 5 Archive Tokens ($1.00)
+          </button>
+
+          <img
+            src="/icons/powered-by-stripe.svg"
+            alt="Powered by Stripe"
+            className="mt-2 h-8 mx-auto"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {available.map((puzzle) => {
             const completedIds = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
             const isCompleted = completedIds.includes(puzzle.id);
@@ -164,11 +186,7 @@ export default function Archive() {
               <button
                 key={puzzle.id}
                 onClick={async () => {
-                  if (!puzzle?.puzzle_number) {
-                    console.error("❌ Missing puzzle_number:", puzzle);
-                    return;
-                  }
-
+                  if (!puzzle?.puzzle_number) return;
                   const deviceId = getOrCreateDeviceId();
                   const domain = process.env.NODE_ENV === "production" ? "; domain=.vercel.app" : "";
                   document.cookie = `device_id=${deviceId.toLowerCase()}; path=/; max-age=31536000${domain}`;
@@ -185,7 +203,7 @@ export default function Archive() {
                   const result = await res.json();
 
                   if (result.valid) {
-                    localStorage.setItem("archiveTokenUsed", "true")
+                    localStorage.setItem("archiveTokenUsed", "true");
                     router.push(`/archive/${puzzle.puzzle_number}`);
                   } else {
                     alert("🪙 You're out of tokens — but don't worry, you can earn and buy more soon. Watch this space!");
@@ -209,7 +227,6 @@ export default function Archive() {
           })}
         </div>
 
-        {/* ✅ Completion Modal */}
         <Dialog open={showModal} onOpenChange={setShowModal}>
           <DialogContent className="max-w-md mx-auto text-center">
             <h2 className="text-xl font-bold mb-2">Thanks for playing!</h2>
@@ -229,7 +246,7 @@ export default function Archive() {
         </Dialog>
       </div>
 
-      {/* 👇 Modals go here */}
+      {/* Modals */}
       {showStats && (
         <StatsModal
           open={showStats}
@@ -239,6 +256,12 @@ export default function Archive() {
           COLORS={COLORS}
           combinedLabel={combinedLabel}
           renderCenterLabel={renderCenterLabel}
+        />
+      )}
+      {showInstructions && (
+        <InstructionsModal
+          open={showInstructions}
+          onClose={() => setShowInstructions(false)}
         />
       )}
     </>

@@ -337,7 +337,6 @@ const joyrideSteps = [
   },
 ];
 
-
     
   const { stats, setStats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
     const incorrectGuessMessages = [
@@ -368,7 +367,9 @@ const joyrideSteps = [
   const [showAchievements, setShowAchievements] = useState(false);
   const [completedPuzzles, setCompletedPuzzles] = useState([]);
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
-    
+  const [guesses, setGuesses] = useState([]);
+  const [cluesRevealed, setCluesRevealed] = useState([]);
+
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
 
@@ -393,6 +394,24 @@ useEffect(() => {
     });
   }
 }, [puzzle, isArchive]);
+
+useEffect(() => {
+  if (!puzzle) return;
+
+  const saved = localStorage.getItem(`gameState-${puzzle.date}`);
+  if (!saved) return;
+
+  try {
+    const { attempts: savedAttempts, revealedClues: savedClues, isCorrect: savedIsCorrect, guess: savedGuess } = JSON.parse(saved);
+    setAttempts(savedAttempts || 0);
+    setRevealedClues(savedClues || []);
+    setIsCorrect(savedIsCorrect || false);
+    setGuess(savedGuess || "");
+    console.log("🔁 Restored saved game state.");
+  } catch (err) {
+    console.warn("⚠️ Failed to parse saved game state:", err);
+  }
+}, [puzzle]);
 
 const [puzzleNumber, setPuzzleNumber] = useState(null);
 
@@ -580,28 +599,39 @@ useEffect(() => {
     console.log("📦 [loadPuzzles] isArchive:", isArchive);
     console.log("📦 [loadPuzzles] queryArchiveId:", queryArchiveId);
 
-
-if (isArchive && overridePuzzle) {
-  selected = overridePuzzle;
-} else if (isArchive && queryArchiveId) {
-  const archivePuzzleNumber = parseInt(queryArchiveId, 10);
-  selected = all.find(p => p.puzzle_number === archivePuzzleNumber);
-  if (!selected) {
-    console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
-  }
-} else {
-  const today = await fetchTodayPuzzle();
-  if (today) {
-    debugLog("✅ Today's puzzle loaded.");
-    selected = today;
-  } else {
-    console.warn("⚠️ No puzzle returned for today.");
-  }
-}
+    if (isArchive && overridePuzzle) {
+      selected = overridePuzzle;
+    } else if (isArchive && queryArchiveId) {
+      const archivePuzzleNumber = parseInt(queryArchiveId, 10);
+      selected = all.find(p => p.puzzle_number === archivePuzzleNumber);
+      if (!selected) {
+        console.warn("🚫 Archive puzzle not found by puzzle_number:", archivePuzzleNumber);
+      }
+    } else {
+      const today = await fetchTodayPuzzle();
+      if (today) {
+        debugLog("✅ Today's puzzle loaded.");
+        selected = today;
+      } else {
+        console.warn("⚠️ No puzzle returned for today.");
+      }
+    }
 
     if (selected) {
       setPuzzle(selected);
       setPuzzleNumber(selected.puzzle_number ?? selected.id);
+
+      // ✅ Restore saved guesses/clues
+      const saved = localStorage.getItem(`puzzleState-${selected.puzzle_number}`);
+      if (saved) {
+        try {
+          const { guesses: g, cluesRevealed: c } = JSON.parse(saved);
+          if (Array.isArray(g)) setGuesses(g);
+          if (Array.isArray(c)) setCluesRevealed(c);
+        } catch (e) {
+          console.warn("🛑 Corrupted puzzle state in localStorage");
+        }
+      }
 
       // ✅ Completion tracking
       let completed = JSON.parse(localStorage.getItem("completedPuzzles") || "null");
@@ -630,8 +660,20 @@ if (isArchive && overridePuzzle) {
     }
   }
 
+  // ✅ Call the function here, inside useEffect
   loadPuzzles();
+
 }, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
+
+useEffect(() => {
+  if (puzzle && puzzle.puzzle_number) {
+    const state = {
+      guesses,
+      cluesRevealed,
+    };
+    localStorage.setItem(`puzzleState-${puzzle.puzzle_number}`, JSON.stringify(state));
+  }
+}, [guesses, cluesRevealed, puzzle]);
 
 
   const maxGuesses = 4;
