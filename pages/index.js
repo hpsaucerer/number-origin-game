@@ -1705,7 +1705,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {/* ✅ Correct Answer UI */}
 {isCorrect && (
   <div className="mt-6 text-center space-y-3">
-    <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
+    <p className="text-green-600">
+      Correct! The answer is {puzzle.answer}.
+    </p>
 
     {!isArchive && (
       <>
@@ -1718,20 +1720,21 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
       </>
     )}
 
+    {/* Show CommunityBox on a win */}
     <CommunityBox />
 
     {isArchive && (
       <div className="flex flex-col items-center space-y-2 mt-4">
         <button
-          onClick={() => window.location.href = "/archives"}
-          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
+          onClick={() => (window.location.href = "/archives")}
+          className="px-4 py-2 rounded text-white font-semibold shadow hover:opacity-90 w-48"
           style={{ backgroundColor: "#b49137" }}
         >
           Back to Archive
         </button>
         <button
-          onClick={() => window.location.href = "/"}
-          className="px-4 py-2 rounded text-white font-semibold transition shadow hover:opacity-90 w-48"
+          onClick={() => (window.location.href = "/")}
+          className="px-4 py-2 rounded text-white font-semibold shadow hover:opacity-90 w-48"
           style={{ backgroundColor: "#63c4a7" }}
         >
           Back to Daily Puzzle
@@ -1740,6 +1743,49 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     )}
   </div>
 )}
+
+{/* ❌ Incorrect Answer UI */}
+{!isCorrect && attempts >= maxGuesses && (
+  <div className="mt-6 text-center space-y-3">
+    <p className="text-red-600">
+      Incorrect! The answer is <strong>{puzzle.answer}</strong>.
+    </p>
+
+    {!isArchive && (
+      <>
+        <p className="font-semibold text-gray-800 mt-2">
+          Come back tomorrow for your next workout!
+        </p>
+        <p className="text-sm text-gray-500">
+          Next puzzle in: {countdown}
+        </p>
+      </>
+    )}
+
+    {/* Show CommunityBox on a loss */}
+    <CommunityBox />
+
+    {isArchive && (
+      <div className="flex flex-col items-center space-y-2 mt-4">
+        <button
+          onClick={() => (window.location.href = "/archives")}
+          className="px-4 py-2 rounded text-white font-semibold shadow hover:opacity-90 w-48"
+          style={{ backgroundColor: "#b49137" }}
+        >
+          Back to Archive
+        </button>
+        <button
+          onClick={() => (window.location.href = "/")}
+          className="px-4 py-2 rounded text-white font-semibold shadow hover:opacity-90 w-48"
+          style={{ backgroundColor: "#63c4a7" }}
+        >
+          Back to Daily Puzzle
+        </button>
+      </div>
+    )}
+  </div>
+)}
+
   </CardContent>
 </Card>
 
