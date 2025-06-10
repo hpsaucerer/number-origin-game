@@ -510,20 +510,6 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  if (!playerName) {
-    // simple built-in prompt — you can replace with your own modal
-    let name = '';
-    while (!name) {
-      name = window.prompt("What should we call you on the leaderboard?")?.trim() || '';
-    }
-    // normalize whitespace, Title-Case it if you want
-    name = name.replace(/\s+/g,' ');
-    localStorage.setItem('playerName', name);
-    setPlayerName(name);
-  }
-}, [playerName]);
-
-useEffect(() => {
   if (isArchive && puzzle?.id) {
     const archiveToken = localStorage.getItem("archiveToken");
     const played = JSON.parse(localStorage.getItem("playedArchive") || "[]");
