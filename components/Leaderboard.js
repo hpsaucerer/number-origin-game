@@ -73,7 +73,7 @@ export default function Leaderboard({ onClose }) {
               >
                 <div className="flex items-center space-x-2">
 <span
-  className="text-xl bg-red-200"  
+  className="text-xl"  
   style={{
     // emoji fonts first, then fallback to your UI font
     fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, NotoColorEmoji, ui-sans-serif, system-ui, sans-serif'
