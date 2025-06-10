@@ -75,7 +75,7 @@ export default function Leaderboard({ onClose }) {
                   <span
   className="text-xl bg-red-200"            // you’ll see a red background
   style={{
-    fontFamily: `"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","NotoColorEmoji",sans-serif`
+    fontFamily: `Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","NotoColorEmoji,sans-serif`
   }}
 >
   {getFlagEmoji(entry.country_code)}
