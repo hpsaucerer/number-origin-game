@@ -194,6 +194,8 @@ if (typeof window !== "undefined") {
       localStorage.setItem("playerName", name);
     }
 
+  const countryCode = localStorage.getItem("user_country_code") || null;
+
     // 2) calculate time + points
     const deviceId  = getOrCreateDeviceId();
     const now       = Date.now();
@@ -212,6 +214,7 @@ if (typeof window !== "undefined") {
         name,
         time_taken_sec: timeTaken,
         points:         pts,
+        country_code:   countryCode,
       }),
     });
 
