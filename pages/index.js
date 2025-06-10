@@ -30,6 +30,7 @@ import CookieConsentBanner from "@/components/CookieConsentBanner";
 import { getCookiePreferences } from "@/utils/cookies";
 import { askLLMFallback } from '../lib/llm'; // adjust if needed
 import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
+import { calculatePoints } from "../utils/game"; // or wherever you put it
 
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
@@ -376,6 +377,9 @@ const [allPuzzles, setAllPuzzles] = useState([]);
 const [puzzle, setPuzzle] = useState(null);
 const router = useRouter();
 const [routerReady, setRouterReady] = useState(false);
+  
+// track when this puzzle was first loaded
+const [startTime, setStartTime] = useState(null);
 
 useEffect(() => {
   if (router.isReady) setRouterReady(true);
@@ -705,13 +709,25 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
-  useEffect(() => {
+useEffect(() => {
   if (!puzzle) return;
 
-  const alreadyCompleted = localStorage.getItem(`completed-${puzzle.date}`) === "true";
+  // —— Load or initialize startTime for this puzzle ——
+  const key = `startTime-${puzzle.date}`;
+  const saved = localStorage.getItem(key);
+  if (saved) {
+    setStartTime(parseInt(saved, 10));
+  } else {
+    const now = Date.now();
+    localStorage.setItem(key, now.toString());
+    setStartTime(now);
+  }
+
+  // —— Your existing completed check ——
+  const alreadyCompleted =
+    localStorage.getItem(`completed-${puzzle.date}`) === "true";
   if (alreadyCompleted) {
     setIsCorrect(true);
-    // Clean up any leftover game state for this puzzle
     localStorage.removeItem(`gameState-${puzzle.date}`);
   }
 }, [puzzle]);
@@ -1223,22 +1239,42 @@ const { error } = await supabase.from("Player_responses").insert([
 ]);
 
 
-
 if (error) {
   console.error("❌ Supabase insert error:", error);
 } else {
   console.log("✅ Guess successfully logged to Supabase!");
 }
 
+   if (isCorrectGuess) {
+   // —— Compute elapsed time in seconds —— 
+   const timeTakenMs = startTime ? Date.now() - startTime : 0;
+   const timeTakenSec = Math.floor(timeTakenMs / 1000);
 
-    if (isCorrectGuess) {
-      setIsCorrect(true);
-      localStorage.setItem(`completed-${puzzle.date}`, "true");
-      const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-      if (!existingCompleted.includes(puzzle.id)) {
+   // —— Calculate points (using your helper) ——
+    const points = calculatePoints(attempts + 1, timeTakenSec);
+
+     setIsCorrect(true);
+    localStorage.setItem(`completed-${puzzle.date}`, "true");
+     const existingCompleted = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+     if (!existingCompleted.includes(puzzle.id)) {
        existingCompleted.push(puzzle.id);
        localStorage.setItem("completedPuzzles", JSON.stringify(existingCompleted));
-   }
+     }
+
+    // —— Fire your leaderboard API with time & points ——
+    fetch("/api/leaderboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id: localStorage.getItem("device_id"),
+        puzzle_date: puzzle.date,
+        attempts: attempts + 1,
+        time_taken_sec: timeTakenSec,
+        points,
+        name: localStorage.getItem("playerName") || "Anonymous",
+      }),
+    }).catch(console.error);
+
 
       // 🎁 Archive token reward — only for new players, first correct puzzle
      const alreadyGranted = localStorage.getItem("archiveToken");
@@ -1558,17 +1594,28 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
 <PostGameModal
   open={showPostGame}
-  onClose={() => setShowPostGame(false)}
+  onClose={() => {
+    setShowPostGame(false);
+    // —— reset the startTime now that they've submitted/viewed their result ——
+    localStorage.removeItem(`startTime-${puzzle.date}`);
+  }}
   isCorrect={isCorrect}
   stats={stats}
   puzzle={puzzle}
   shareResult={shareTextHandler}
   attempts={attempts}
-  puzzleNumber={puzzleNumber} // ✅ Add this
+  timeTakenSec={
+    startTime ? Math.floor((Date.now() - startTime) / 1000) : null
+  }
+  points={calculatePoints(
+    attempts + 1,
+    startTime ? Math.floor((Date.now() - startTime) / 1000) : 0
+  )}
+  puzzleNumber={puzzleNumber}
   isArchive={isArchive}
   canPlayBonus={canPlayBonus}
 />
-   
+
            
 {(() => {
   const hasFormatted = typeof puzzle.formatted === "string";
