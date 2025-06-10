@@ -192,11 +192,14 @@ if (typeof window !== "undefined") {
 
   const countryCode = localStorage.getItem("user_country_code") || null;
 
-    // 2) calculate time + points
-    const deviceId  = getOrCreateDeviceId();
-    const now       = Date.now();
-    const timeTaken = startTime ? Math.floor((now - startTime) / 1000) : null;
-    const pts       = calculatePoints(attempts + 1, timeTaken);
+      // 2) calculate time + points (fallback to the original load time if startTime is missing)
+      const deviceId   = getOrCreateDeviceId();
+      const key        = `startTime-${puzzle.date}`;
+      const storedTime = parseInt(localStorage.getItem(key), 10);
+      const baseTime   = startTime ?? (Number.isNaN(storedTime) ? Date.now() : storedTime);
+      const now        = Date.now();
+      const timeTaken  = Math.floor((now - baseTime) / 1000);
+      const pts        = calculatePoints(attempts + 1, timeTaken);
 
     // 3) POST
     const res = await fetch("/api/leaderboard", {
