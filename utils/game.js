@@ -46,10 +46,25 @@ function isValidGuess(guess) {
   return guess.trim().length > 0;
 }
 
+/**
+ * Calculate leaderboard points based on guess number and solve time.
+ * @param {number} attemptCount — 1-indexed number of guesses used
+ * @param {number} timeTakenSec — total seconds elapsed solving the puzzle
+ * @returns {number} points earned
+ */
+function calculatePoints(attemptCount, timeTakenSec) {
+  // more reward for fewer guesses
+  const base = { 1: 100, 2: 80, 3: 60, 4: 40 }[attemptCount] || 0;
+  // small bonus: 1 point per minute under 10 minutes
+  const minutes = Math.floor(timeTakenSec / 60);
+  const timeBonus = Math.max(0, 10 - minutes);
+  return base + timeBonus;
+}
 module.exports = {
   isCorrectGuess,
   isCloseGuess,
   revealNextClue,
   updateStats,
   isValidGuess,
+  calculatePoints,
 };
