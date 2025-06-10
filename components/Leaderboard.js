@@ -15,8 +15,32 @@ function getFlagEmoji(countryCode) {
 }
 
 export default function Leaderboard({ onClose }) {
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries]         = useState([]);
+  const [resetCountdown, setResetCountdown] = useState("");
+  
   const [loading, setLoading] = useState(true);
+
+  // —— Countdown until next Sunday midnight ——
+  useEffect(() => {
+    const updateReset = () => {
+      const now = new Date();
+      const daysUntilSunday = (7 - now.getDay()) % 7;
+      const nextReset = new Date(now);
+      nextReset.setDate(now.getDate() + daysUntilSunday);
+      nextReset.setHours(24, 0, 0, 0);
+
+      const diff = nextReset - now;
+      const hrs  = Math.floor(diff / 36e5);
+      const mins = Math.floor((diff % 36e5) / 6e4);
+      const secs = Math.floor((diff % 6e4) / 1000);
+
+      setResetCountdown(`${hrs}h ${mins}m ${secs}s`);
+    };
+
+    updateReset();
+    const id = setInterval(updateReset, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     async function fetchLeaderboard() {
@@ -65,6 +89,8 @@ export default function Leaderboard({ onClose }) {
         ) : entries.length === 0 ? (
           <p className="text-sm text-gray-500">No scores submitted yet.</p>
         ) : (
+          <>
+           <p className="text-sm text-gray-500 mb-2">Resets in: {resetCountdown}</p>
           <ol className="pl-5 space-y-1 text-sm">
             {entries.map((entry, i) => (
               <li
