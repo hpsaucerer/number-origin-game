@@ -31,6 +31,7 @@ import { getCookiePreferences } from "@/utils/cookies";
 import { askLLMFallback } from '../lib/llm'; // adjust if needed
 import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
 import { calculatePoints } from "../utils/game"; // or wherever you put it
+import { useState, useEffect } from 'react';
 
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
@@ -508,6 +509,20 @@ useEffect(() => {
 useEffect(() => {
   setHasMounted(true);
 }, []);
+
+useEffect(() => {
+  if (!playerName) {
+    // simple built-in prompt — you can replace with your own modal
+    let name = '';
+    while (!name) {
+      name = window.prompt("What should we call you on the leaderboard?")?.trim() || '';
+    }
+    // normalize whitespace, Title-Case it if you want
+    name = name.replace(/\s+/g,' ');
+    localStorage.setItem('playerName', name);
+    setPlayerName(name);
+  }
+}, [playerName]);
 
 useEffect(() => {
   if (isArchive && puzzle?.id) {
@@ -1271,7 +1286,7 @@ if (error) {
         attempts: attempts + 1,
         time_taken_sec: timeTakenSec,
         points,
-        name: localStorage.getItem("playerName") || "Anonymous",
+        name: playerName,
       }),
     }).catch(console.error);
 
