@@ -72,7 +72,7 @@ export default function Leaderboard({ onClose }) {
                 className={`rounded px-3 py-1 flex items-center justify-between ${getRowClass(i)}`}
               >
                 <div className="flex items-center space-x-2">
-                  <span className="text-xl">{getFlagEmoji(entry.country_code)}</span>
+                  <span className="text-xl font-emoji">{getFlagEmoji(entry.country_code)}</span>
                   <span className="font-bold">{i + 1}.</span>
                   <span className="font-medium">{entry.nickname}</span>
                 </div>
