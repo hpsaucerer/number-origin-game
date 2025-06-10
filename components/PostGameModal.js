@@ -305,27 +305,24 @@ if (typeof window !== "undefined") {
               </div>
             </div>
           )}
-{!isArchive && (
-  <div className="mt-5 px-4 text-center">
-    <p className="text-sm text-gray-700 mb-2">Want to see how you stack up?</p>
-   <Button
-  onClick={handleSubmitScore}
-  className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded shadow"
->
-  Submit Score to Leaderboard
-</Button>
+{isCorrect && (
+  <>
+    {!isArchive && (
+      <div className="mt-5 px-4 text-center">
+        <p className="text-sm text-gray-700 mb-2">Want to see how you stack up?</p>
+        <Button onClick={handleSubmitScore} className="bg-purple-600 hover:bg-purple-700 …">
+          Submit Score to Leaderboard
+        </Button>
+      </div>
+    )}
 
-  </div>
+    <div className="flex justify-center mt-5">
+      <Button onClick={() => setShowLeaderboard(true)} className="bg-purple-600 hover:bg-purple-700 …">
+        View Leaderboard
+      </Button>
+    </div>
+  </>
 )}
-
-<div className="flex justify-center mt-5">
-  <Button
-    onClick={() => setShowLeaderboard(true)}
-    className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded shadow"
-  >
-    View Leaderboard
-  </Button>
-</div>
 
           <FunFactBox puzzle={puzzle} />
 
