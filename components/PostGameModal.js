@@ -88,6 +88,9 @@ export default function PostGameModal({
     
     document.body.style.overflow = "hidden";
 
+   // compute today’s date once
+   const today = new Date().toISOString().split("T")[0];
+
 let alreadyAwarded = false;
 let storedIndexes = [];
 
@@ -140,7 +143,6 @@ if (typeof window !== "undefined") {
       .then(res => res.json())
       .then((data) => {
   if (data.success) {
-    const today = new Date().toISOString().split("T")[0];
     localStorage.setItem("firstTokenGranted", "true");
     localStorage.setItem("archiveToken", today);
     setShowBonusButton(true);
