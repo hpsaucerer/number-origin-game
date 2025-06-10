@@ -263,23 +263,6 @@ export default function Home({ overridePuzzle = null, isArchive: initialIsArchiv
   const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
   const [playerName, setPlayerName] = useState("");
 
-  useEffect(() => {
-    // guard: this only runs in the browser
-    if (typeof window === "undefined") return;
-
-    let name = localStorage.getItem("playerName");
-    if (!name) {
-      // keep prompting until they enter something
-      while (!name) {
-        name = window.prompt("What should we call you on the leaderboard?")?.trim();
-      }
-      // normalize whitespace
-      name = name.replace(/\s+/g, " ");
-      localStorage.setItem("playerName", name);
-    }
-    setPlayerName(name);
-  }, []);
-
 // ✨ JSX lifted out to constants
 const guessStepContent = (
   <div>
@@ -1425,6 +1408,39 @@ const handleRevealCategory = () => {
 
   }, 1000);
 };
+
+// New: only ask when they actually hit "Submit Score"
+const handleSubmitScore = () => {
+  let name = localStorage.getItem("playerName");
+  if (!name) {
+    // prompt exactly once here
+    name = window.prompt("What should we call you on the leaderboard?")?.trim();
+    if (!name) return;              // if they cancel, bail
+    name = name.replace(/\s+/g, " ");
+    localStorage.setItem("playerName", name);
+  }
+
+  // compute timeTakenSec & points just like before
+  const timeTakenMs  = startTime ? Date.now() - startTime : 0;
+  const timeTakenSec = Math.floor(timeTakenMs / 1000);
+  const pts          = calculatePoints(attempts + 1, timeTakenSec);
+
+  fetch("/api/leaderboard", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      device_id:       localStorage.getItem("device_id"),
+      puzzle_date:     puzzle.date,
+      attempts:        attempts + 1,
+      time_taken_sec:  timeTakenSec,
+      points:          pts,
+      name,            // use the just-entered or saved name
+    }),
+  }).catch(console.error);
+};
+
+// Existing share handler
+const shareTextHandler = () => { /* … */ };
 
 const shareTextHandler = () => {
   shareResult({
