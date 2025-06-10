@@ -179,7 +179,43 @@ if (typeof window !== "undefined") {
     };
     return map[key];
   };
-  
+
+ // ——— Only ask when they click “Submit Score to Leaderboard” ———
+ const handleSubmitScore = async () => {
+   let name = localStorage.getItem("playerName");
+   if (!name) {
+     name = window.prompt("What should we call you on the leaderboard?")?.trim();
+     if (!name) return;
+     name = name.replace(/\s+/g, " ");
+     localStorage.setItem("playerName", name);
+   }
+
+   const deviceId  = getOrCreateDeviceId();
+   const now       = Date.now();
+   const timeTaken = startTime ? Math.floor((now - startTime) / 1000) : null;
+   const pts       = calculatePoints(attempts + 1, timeTaken);
+
+   const res = await fetch("/api/leaderboard", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({
+       device_id:      deviceId,
+       puzzle_date:    puzzle.date,
+       attempts:       isCorrect ? attempts + 1 : 4,
+       is_correct:     isCorrect,
+       name,
+       time_taken_sec: timeTaken,
+       points:         pts,
+     }),
+   });
+
+   if (res.ok) {
+     alert("You're on the leaderboard!");
+     setShowLeaderboard(true);
+   } else {
+     alert("Something went wrong submitting your score.");
+   }
+ };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -263,38 +299,12 @@ if (typeof window !== "undefined") {
   <div className="mt-5 px-4 text-center">
     <p className="text-sm text-gray-700 mb-2">Want to see how you stack up?</p>
    <Button
-  onClick={async () => {
-    const name = prompt("Enter your name or initials (max 20 chars):", "");
-    if (!name || name.length > 20) return;
-
-    const deviceId = getOrCreateDeviceId();
-    const now = Date.now();
-    const timeTaken = startTime ? Math.floor((now - startTime) / 1000) : null; // ⏱️ seconds
-
-    const res = await fetch("/api/leaderboard", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        device_id: deviceId,
-        puzzle_id: puzzle.date,
-        attempts: isCorrect ? attempts + 1 : 4,
-        is_correct: isCorrect,
-        name: name.trim(),
-        time_taken_sec: timeTaken, // 🆕 include this field
-      }),
-    });
-
-    if (res.ok) {
-      alert("You're on the leaderboard!");
-    } else {
-      alert("Something went wrong submitting your score.");
-    }
-  }}
+  onClick={handleSubmitScore}
   className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded shadow"
 >
   Submit Score to Leaderboard
 </Button>
- 
+
   </div>
 )}
 
