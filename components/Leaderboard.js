@@ -26,9 +26,10 @@ export default function Leaderboard({ puzzleDate, onClose }) {
 
       const { data, error } = await supabase
         .from("leaderboard_entries")
-        .select("nickname, guess_count, country_code")
+        .select("nickname, guess_count, country_code, score")
         .eq("puzzle_date", normalizedDate)
         .eq("is_correct", true)
+        .order("score", { ascending: false })
         .order("guess_count", { ascending: true })
         .limit(25);
 
@@ -80,8 +81,9 @@ export default function Leaderboard({ puzzleDate, onClose }) {
                   <span className="font-medium">{entry.nickname}</span>
                 </div>
                 <span className="text-gray-600">
-                  {entry.guess_count} {entry.guess_count === 1 ? "guess" : "guesses"}
-                </span>
+  {entry.score} pts · 
+  {entry.guess_count} {entry.guess_count === 1 ? "guess" : "guesses"}
+</span>
               </li>
             ))}
           </ol>
