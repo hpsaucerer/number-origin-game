@@ -310,7 +310,7 @@ if (typeof window !== "undefined") {
     {!isArchive && (
       <div className="mt-5 px-4 text-center">
         <p className="text-sm text-gray-700 mb-2">Want to see how you stack up?</p>
-        +  <Button
+          <Button
     onClick={handleSubmitScore}
     className="bg-[#8E44AD] hover:bg-[#8e44ad] text-white text-sm font-semibold px-4 py-2 rounded shadow"
   >
@@ -320,7 +320,7 @@ if (typeof window !== "undefined") {
     )}
 
     <div className="flex justify-center mt-5">
-      +  <Button
+        <Button
     onClick={() => setShowLeaderboard(true)}
     className="bg-[#8E44AD] hover:bg-[#8e44ad] text-white text-sm font-semibold px-4 py-2 rounded shadow"
   >
