@@ -31,13 +31,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { device_id, puzzle_id, attempts, is_correct, name, time_taken_sec } = req.body;
+  const { device_id, puzzle_date, attempts, is_correct, name, time_taken_sec } = req.body;
 
-  if (!device_id || !puzzle_id || !name || attempts === undefined || is_correct === undefined) {
+  if (!device_id || !puzzle_date || !name || attempts === undefined || is_correct === undefined) {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  const formattedDate = new Date(puzzle_id).toISOString().split("T")[0];
+  const formattedDate = new Date(puzzle_date).toISOString().split("T")[0];
   const weekStart = getWeekStart(formattedDate);
 
   // Check for duplicate
