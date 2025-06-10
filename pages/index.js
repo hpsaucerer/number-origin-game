@@ -1439,9 +1439,6 @@ const handleSubmitScore = () => {
   }).catch(console.error);
 };
 
-// Existing share handler
-const shareTextHandler = () => { /* … */ };
-
 const shareTextHandler = () => {
   shareResult({
     isCorrect,
