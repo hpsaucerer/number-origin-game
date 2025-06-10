@@ -260,8 +260,25 @@ function getPlayerTitle(stats) {
 }
 
 export default function Home({ overridePuzzle = null, isArchive: initialIsArchive = false, archiveIndex = null }) {
+  const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
+  const [playerName, setPlayerName] = useState("");
 
-const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
+  useEffect(() => {
+    // guard: this only runs in the browser
+    if (typeof window === "undefined") return;
+
+    let name = localStorage.getItem("playerName");
+    if (!name) {
+      // keep prompting until they enter something
+      while (!name) {
+        name = window.prompt("What should we call you on the leaderboard?")?.trim();
+      }
+      // normalize whitespace
+      name = name.replace(/\s+/g, " ");
+      localStorage.setItem("playerName", name);
+    }
+    setPlayerName(name);
+  }, []);
 
 // ✨ JSX lifted out to constants
 const guessStepContent = (
