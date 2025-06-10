@@ -6,6 +6,8 @@ import FunFactBox from "./FunFactBox";
 import { track } from '@vercel/analytics';
 import confetti from "canvas-confetti";
 import { getOrCreateDeviceId } from "@/lib/device";
+import Leaderboard from "@/components/Leaderboard"; // adjust path if needed
+import { fetchCountryCode } from "@/utils/geo";
 
 const TILE_WORD = "NUMERUS";
 
@@ -35,10 +37,12 @@ export default function PostGameModal({
 }) {
   if (!puzzle || !stats) return null;
 
+  const [startTime, setStartTime] = useState(null);
   const [countdown, setCountdown] = useState("");
   const [earnedTiles, setEarnedTiles] = useState([]);
   const [justEarnedTile, setJustEarnedTile] = useState(false);
   const [showBonusButton, setShowBonusButton] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -60,13 +64,54 @@ export default function PostGameModal({
   }, []);
 
   useEffect(() => {
+  console.log("🧩 puzzle.date:", puzzle.date, "Type:", typeof puzzle.date);
+}, [puzzle.date]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+  const maybeSetCountry = async () => {
+    const existing = localStorage.getItem("user_country_code");
+    if (!existing) {
+      const code = await fetchCountryCode();
+      if (code) {
+        localStorage.setItem("user_country_code", code);
+        console.log("🌍 Country code stored:", code);
+      }
+    }
+  };
+  maybeSetCountry();
+}, []);
+
+  useEffect(() => {
     if (!open) return;
+    
+if (!startTime) {
+  setStartTime(Date.now()); // mark the beginning of the session
+}
 
     document.body.style.overflow = "hidden";
 
-    const today = new Date().toISOString().split("T")[0];
-    const alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
-    const storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+let alreadyAwarded = false;
+let storedIndexes = [];
+
+if (typeof window !== "undefined") {
+  const today = new Date().toISOString().split("T")[0];
+  alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
+  storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+
+  if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length && !isArchive) {
+    const nextIndex = storedIndexes.length;
+    const updatedIndexes = [...storedIndexes, nextIndex];
+
+    localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
+    localStorage.setItem(`tile-earned-${today}`, "true");
+
+    setEarnedTiles(updatedIndexes);
+    setJustEarnedTile(true);
+  } else {
+    setEarnedTiles(storedIndexes);
+  }
+}
 
     if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length && !isArchive) {
       const nextIndex = storedIndexes.length;
@@ -80,33 +125,35 @@ export default function PostGameModal({
     } else {
       setEarnedTiles(storedIndexes);
     }
+ 
+if (typeof window !== "undefined") {
+  const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
+  const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
 
-const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
-const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-const isFirstTimePlayer = completed.length === 1;
-
-if (!isArchive && !hasGranted && isFirstTimePlayer) {
-  const deviceId = getOrCreateDeviceId();
-  fetch("/api/grant-token", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      device_id: deviceId,
-      source: "first_token_after_game"
-    }),
-  })
-    .then(res => res.json())
-    .then((data) => {
-      if (data.success) {
-        localStorage.setItem("firstTokenGranted", "true");
-        localStorage.setItem("archiveToken", today);
-        setShowBonusButton(true);
-      }
+  if (!isArchive && !hasGranted) {
+    const deviceId = getOrCreateDeviceId();
+    fetch("/api/grant-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id: deviceId,
+        source: "first_token_after_game"
+      }),
     })
-    .catch((err) => console.error("❌ Grant token API error:", err));
-} else {
-  setShowBonusButton(false); // Explicitly hide it
+      .then(res => res.json())
+      .then((data) => {
+        if (data.success) {
+          localStorage.setItem("firstTokenGranted", "true");
+          localStorage.setItem("archiveToken", today);
+          setShowBonusButton(true);
+        }
+      })
+      .catch((err) => console.error("❌ Grant token API error:", err));
+  } else if (!isArchive && !archiveUsed) {
+    setShowBonusButton(true);
+  }
 }
+
 
     if (isCorrect) {
       confetti({
@@ -132,6 +179,7 @@ if (!isArchive && !hasGranted && isFirstTimePlayer) {
     };
     return map[key];
   };
+  
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -211,6 +259,53 @@ if (!isArchive && !hasGranted && isFirstTimePlayer) {
               </div>
             </div>
           )}
+{!isArchive && (
+  <div className="mt-5 px-4 text-center">
+    <p className="text-sm text-gray-700 mb-2">Want to see how you stack up?</p>
+   <Button
+  onClick={async () => {
+    const name = prompt("Enter your name or initials (max 20 chars):", "");
+    if (!name || name.length > 20) return;
+
+    const deviceId = getOrCreateDeviceId();
+    const now = Date.now();
+    const timeTaken = startTime ? Math.floor((now - startTime) / 1000) : null; // ⏱️ seconds
+
+    const res = await fetch("/api/leaderboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id: deviceId,
+        puzzle_id: puzzle.date,
+        attempts: isCorrect ? attempts + 1 : 4,
+        is_correct: isCorrect,
+        name: name.trim(),
+        time_taken_sec: timeTaken, // 🆕 include this field
+      }),
+    });
+
+    if (res.ok) {
+      alert("You're on the leaderboard!");
+    } else {
+      alert("Something went wrong submitting your score.");
+    }
+  }}
+  className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded shadow"
+>
+  Submit Score to Leaderboard
+</Button>
+ 
+  </div>
+)}
+
+<div className="flex justify-center mt-5">
+  <Button
+    onClick={() => setShowLeaderboard(true)}
+    className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded shadow"
+  >
+    View Leaderboard
+  </Button>
+</div>
 
           <FunFactBox puzzle={puzzle} />
 
@@ -234,6 +329,12 @@ if (!isArchive && !hasGranted && isFirstTimePlayer) {
             </Button>
           </div>
         </div>
+      {showLeaderboard && (
+      <Leaderboard
+  onClose={() => setShowLeaderboard(false)}
+  puzzleDate={puzzle.date}
+/>
+)}
       </DialogContent>
     </Dialog>
   );
