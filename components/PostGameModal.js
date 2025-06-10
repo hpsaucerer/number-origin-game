@@ -183,45 +183,45 @@ if (typeof window !== "undefined") {
     return map[key];
   };
 
-+  // ——— Only ask when they click “Submit Score to Leaderboard” ———
-+  const handleSubmitScore = async () => {
-+    // 1) nickname
-+    let name = localStorage.getItem("playerName");
-+    if (!name) {
-+      name = window.prompt("What should we call you on the leaderboard?")?.trim();
-+      if (!name) return;
-+      name = name.replace(/\s+/g, " ");
-+      localStorage.setItem("playerName", name);
-+    }
-+
-+    // 2) calculate time + points
-+    const deviceId  = getOrCreateDeviceId();
-+    const now       = Date.now();
-+    const timeTaken = startTime ? Math.floor((now - startTime) / 1000) : null;
-+    const pts       = calculatePoints(attempts + 1, timeTaken);
-+
-+    // 3) POST
-+    const res = await fetch("/api/leaderboard", {
-+      method: "POST",
-+      headers: { "Content-Type": "application/json" },
-+      body: JSON.stringify({
-+        device_id:      deviceId,
-+        puzzle_date:    puzzle.date,
-+        attempts:       isCorrect ? attempts + 1 : 4,
-+        is_correct:     isCorrect,
-+        name,
-+        time_taken_sec: timeTaken,
-+        points:         pts,
-+      }),
-+    });
-+
-+    if (res.ok) {
-+      alert("You're on the leaderboard!");
-+      setShowLeaderboard(true);
-+    } else {
-+      alert("Something went wrong submitting your score.");
-+    }
-+  };
+  // ——— Only ask when they click “Submit Score to Leaderboard” ———
+  const handleSubmitScore = async () => {
+    // 1) nickname
+    let name = localStorage.getItem("playerName");
+    if (!name) {
+      name = window.prompt("What should we call you on the leaderboard?")?.trim();
+      if (!name) return;
+      name = name.replace(/\s+/g, " ");
+      localStorage.setItem("playerName", name);
+    }
+
+    // 2) calculate time + points
+    const deviceId  = getOrCreateDeviceId();
+    const now       = Date.now();
+    const timeTaken = startTime ? Math.floor((now - startTime) / 1000) : null;
+    const pts       = calculatePoints(attempts + 1, timeTaken);
+
+    // 3) POST
+    const res = await fetch("/api/leaderboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id:      deviceId,
+        puzzle_date:    puzzle.date,
+        attempts:       isCorrect ? attempts + 1 : 4,
+        is_correct:     isCorrect,
+        name,
+        time_taken_sec: timeTaken,
+        points:         pts,
+      }),
+    });
+
+    if (res.ok) {
+      alert("You're on the leaderboard!");
+      setShowLeaderboard(true);
+    } else {
+      alert("Something went wrong submitting your score.");
+    }
+  };
   
   return (
     <Dialog open={open} onOpenChange={onClose}>
