@@ -90,13 +90,15 @@ export default function Leaderboard({ onClose }) {
           <p className="text-sm text-gray-500">No scores submitted yet.</p>
         ) : (
           <>
-           <p className="text-sm text-gray-500 mb-2">Resets in: {resetCountdown}</p>
-          <ol className="pl-5 space-y-1 text-sm">
-            {entries.map((entry, i) => (
-              <li
-                key={i}
-                className={`rounded px-3 py-1 flex items-center justify-between ${getRowClass(i)}`}
-              >
+            <p className="text-sm text-gray-500 mb-2">
+              Resets in: {resetCountdown}
+            </p>
+            <ol className="pl-5 space-y-1 text-sm">
+              {entries.map((entry, i) => (
+                <li
+                  key={i}
+                  className={`rounded px-3 py-1 flex items-center justify-between ${getRowClass(i)}`}
+                >
                 <div className="flex items-center space-x-2">
 <span
   className="text-xl"  
@@ -117,6 +119,7 @@ export default function Leaderboard({ onClose }) {
               </li>
             ))}
           </ol>
+          </>
         )}
       </DialogContent>
     </Dialog>
