@@ -815,7 +815,7 @@ function awardTile() {
   // ✅ Optional: if all tiles collected, give a token reward
   if (newIndexes.length === TILE_WORD.length) {
     const currentTokens = parseInt(localStorage.getItem("freeToken") || "0", 10);
-    localStorage.setItem("freeToken", (currentTokens + 1).toString());
+    localStorage.setItem("freeToken", (currentTokens + 3).toString());
     setTokenCount(currentTokens + 3);
     setJustEarnedToken(true);
 
