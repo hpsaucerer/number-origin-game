@@ -72,15 +72,15 @@ export default function Leaderboard({ onClose }) {
                 className={`rounded px-3 py-1 flex items-center justify-between ${getRowClass(i)}`}
               >
                 <div className="flex items-center space-x-2">
-                  <span
-  className="text-xl bg-red-200"
+<span
+  className="text-xl bg-red-200"  
   style={{
-    fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, NotoColorEmoji, sans-serif'
+    // emoji fonts first, then fallback to your UI font
+    fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, NotoColorEmoji, ui-sans-serif, system-ui, sans-serif'
   }}
 >
   {getFlagEmoji(entry.country_code)}
 </span>
-
                   <span className="font-bold">{i + 1}.</span>
                   <span className="font-medium">{entry.nickname}</span>
                 </div>
