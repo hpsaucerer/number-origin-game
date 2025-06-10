@@ -35,10 +35,10 @@ export default function PostGameModal({
   shareResult,
   attempts,
   isArchive,
+  startTime,
 }) {
   if (!puzzle || !stats) return null;
 
-  const [startTime, setStartTime] = useState(null);
   const [countdown, setCountdown] = useState("");
   const [earnedTiles, setEarnedTiles] = useState([]);
   const [justEarnedTile, setJustEarnedTile] = useState(false);
@@ -86,10 +86,6 @@ export default function PostGameModal({
   useEffect(() => {
     if (!open) return;
     
-if (!startTime) {
-  setStartTime(Date.now()); // mark the beginning of the session
-}
-
     document.body.style.overflow = "hidden";
 
 let alreadyAwarded = false;
