@@ -1705,7 +1705,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {/* ✅ Correct Answer UI */}
 {isCorrect && (
   <div className="mt-6 text-center space-y-3">
-    <p className="text-green-600">Correct! The answer is {puzzle.answer}.</p>
+    <p className="text-green-600">
+      Correct! The answer is {puzzle.answer}.
+    </p>
 
     {!isArchive && (
       <>
@@ -1717,10 +1719,30 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
         </p>
       </>
     )}
+
+    {/* Show CommunityBox on a win */}
+    <CommunityBox />
+
+    {isArchive && (
+      <div className="flex flex-col items-center space-y-2 mt-4">
+        <button
+          onClick={() => (window.location.href = "/archives")}
+          className="px-4 py-2 rounded text-white font-semibold shadow hover:opacity-90 w-48"
+          style={{ backgroundColor: "#b49137" }}
+        >
+          Back to Archive
+        </button>
+        <button
+          onClick={() => (window.location.href = "/")}
+          className="px-4 py-2 rounded text-white font-semibold shadow hover:opacity-90 w-48"
+          style={{ backgroundColor: "#63c4a7" }}
+        >
+          Back to Daily Puzzle
+        </button>
+      </div>
+    )}
   </div>
 )}
-
-<CommunityBox />
 
 {/* ❌ Incorrect Answer UI */}
 {!isCorrect && attempts >= maxGuesses && (
@@ -1740,6 +1762,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
       </>
     )}
 
+    {/* Show CommunityBox on a loss */}
     <CommunityBox />
 
     {isArchive && (
