@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { device_id, puzzle_date, attempts, is_correct, name, time_taken_sec } = req.body;
+  const { device_id, puzzle_date, attempts, is_correct, name, time_taken_sec, country_code } = req.body;
 
   if (!device_id || !puzzle_date || !name || attempts === undefined || is_correct === undefined) {
     return res.status(400).json({ message: "Missing required fields" });
@@ -69,6 +69,7 @@ export default async function handler(req, res) {
       nickname: name,
       time_taken_sec: time_taken_sec ?? null,
       score,
+      country_code: country_code || null,
     },
   ]);
 
