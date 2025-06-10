@@ -669,6 +669,16 @@ useEffect(() => {
 
 }, [routerReady, selectedPuzzleIndex, isArchive, overridePuzzle, queryArchiveId]);
 
+// —— Start the timer as soon as this puzzle loads —— 
+useEffect(() => {
+  if (!puzzle) return;
+  const key = `startTime-${puzzle.date}`;
+  // only initialize once per puzzle
+  if (!localStorage.getItem(key)) {
+    localStorage.setItem(key, Date.now().toString());
+  }
+}, [puzzle]);
+
 useEffect(() => {
   if (puzzle && puzzle.puzzle_number) {
     const state = {
