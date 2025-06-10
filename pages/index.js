@@ -1720,6 +1720,8 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
   </div>
 )}
 
+<CommunityBox />
+
 {/* ❌ Incorrect Answer UI */}
 {!isCorrect && attempts >= maxGuesses && (
   <div className="mt-6 text-center space-y-3">
