@@ -73,7 +73,7 @@ export default function Leaderboard({ onClose }) {
               >
                 <div className="flex items-center space-x-2">
                   <span
-  className="text-xl bg-red-200"            // you’ll see a red background
+  className="text-xl bg-red-200"
   style={{
     fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, NotoColorEmoji, sans-serif'
   }}
