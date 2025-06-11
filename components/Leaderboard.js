@@ -24,7 +24,7 @@ export default function Leaderboard({ onClose }) {
   const [loading, setLoading] = useState(true);
   const [scoringOpen, setScoringOpen] = useState(false);
 
-  // countdown to next Sunday midnight (days/h/m/s)
+  // Countdown until next Sunday midnight (days/h/m/s)
   useEffect(() => {
     const updateReset = () => {
       const now = Date.now();
@@ -50,7 +50,7 @@ export default function Leaderboard({ onClose }) {
     return () => clearInterval(id);
   }, []);
 
-  // fetch this week’s entries
+  // Fetch this week’s entries
   useEffect(() => {
     async function fetchLeaderboard() {
       const today = new Date();
@@ -76,59 +76,58 @@ export default function Leaderboard({ onClose }) {
     return "";
   };
 
-  // top 10 plus your rank if outside
+  // Top 10 plus your rank if outside
   const topEntries = entries.slice(0, 10);
   const myIndex = entries.findIndex((e) => e.device_id === deviceId);
   const myRank = myIndex >= 0 ? myIndex + 1 : null;
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-white rounded-xl p-5">
+      <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
         {/* header with tooltip */}
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center space-x-2">
             <h2 className="text-lg font-bold text-blue-600">
               🏆 This Week’s Top Players
             </h2>
-            {/* controlled Tooltip */}
-    <Tooltip
-      open={scoringOpen}
-      onOpenChange={setScoringOpen}
-      delayDuration={0}        // show immediately
-      skipDelayDuration={0}
-    >
-      <TooltipTrigger asChild>
-        <button
-          aria-label="Scoring Explained"
-          className="p-1 rounded hover:bg-gray-100"
-          onClick={() => setScoringOpen(true)}
-        >
-          <Info className="w-5 h-5 text-gray-400"/>
-        </button>
-      </TooltipTrigger>
-
-      <TooltipContent
-        side="right"
-        align="start"
-        className="max-w-xs space-y-2 p-2"
-      >
-        <h3 className="font-semibold text-sm">Scoring Explained</h3>
-        <p className="text-xs leading-snug">
-          <strong>Guess pts:</strong><br/>
-          1st = 50&nbsp; • 2nd = 30 • 3rd = 20 • 4th = 10
-        </p>
-        <p className="text-xs leading-snug">
-          <strong>Time bonus:</strong><br/>
-          ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
-        </p>
-      </TooltipContent>
-    </Tooltip>
-  </div>
-
-  <button onClick={onClose} aria-label="Close leaderboard">
-    <X size={20} className="text-gray-500 hover:text-gray-700" />
-  </button>
-</div>
+            <Tooltip
+              open={scoringOpen}
+              onOpenChange={setScoringOpen}
+              delayDuration={0}
+              skipDelayDuration={0}
+            >
+              <TooltipTrigger asChild>
+                <button
+                  aria-label="Scoring Explained"
+                  className="p-1 rounded hover:bg-gray-100"
+                  onClick={() => setScoringOpen(true)}
+                >
+                  <Info className="w-5 h-5 text-gray-400" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="bottom"
+                align="center"
+                sideOffset={6}
+                collisionPadding={{ left: 8, right: 8 }}
+                className="z-50 max-w-xs space-y-2 p-2"
+              >
+                <h3 className="font-semibold text-sm">Scoring Explained</h3>
+                <p className="text-xs leading-snug">
+                  <strong>Guess pts:</strong><br />
+                  1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
+                </p>
+                <p className="text-xs leading-snug">
+                  <strong>Time bonus:</strong><br />
+                  ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <button onClick={onClose} aria-label="Close leaderboard">
+            <X size={20} className="text-gray-500 hover:text-gray-700" />
+          </button>
+        </div>
 
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
@@ -167,7 +166,6 @@ export default function Leaderboard({ onClose }) {
                 </li>
               ))}
             </ol>
-
             {myRank > 10 && (
               <p className="mt-3 text-sm text-gray-600">
                 Your rank: #{myRank} — {entries[myIndex].total_score} pts ·{" "}
