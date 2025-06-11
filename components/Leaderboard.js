@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X, Info } from "lucide-react";
-import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 function getFlagEmoji(countryCode) {
   if (!countryCode) return "";
@@ -16,7 +16,6 @@ function getFlagEmoji(countryCode) {
 }
 
 export default function Leaderboard({ onClose }) {
-  // 1) Read stored device ID (avoid SSR issues)
   const deviceId =
     typeof window !== "undefined" ? localStorage.getItem("device_id") : null;
 
@@ -24,7 +23,7 @@ export default function Leaderboard({ onClose }) {
   const [resetCountdown, setResetCountdown] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // —— Countdown until next Sunday midnight, showing days/hours/min/sec ——
+  // countdown to next Sunday midnight (days/h/m/s)
   useEffect(() => {
     const updateReset = () => {
       const now = Date.now();
@@ -50,11 +49,11 @@ export default function Leaderboard({ onClose }) {
     return () => clearInterval(id);
   }, []);
 
-  // Fetch weekly leaderboard entries
+  // fetch this week’s entries
   useEffect(() => {
     async function fetchLeaderboard() {
       const today = new Date();
-      const dow = today.getDay(); // 0 = Sunday
+      const dow = today.getDay();
       today.setDate(today.getDate() - dow);
       const startOfWeek = today.toISOString().slice(0, 10);
 
@@ -62,30 +61,21 @@ export default function Leaderboard({ onClose }) {
         start_date: startOfWeek,
       });
 
-      if (error) {
-        console.error("❌ Error fetching leaderboard:", error);
-      } else {
-        setEntries(data);
-      }
+      if (error) console.error("❌ Error fetching leaderboard:", error);
+      else setEntries(data);
       setLoading(false);
     }
     fetchLeaderboard();
   }, []);
 
   const getRowClass = (rank) => {
-    switch (rank) {
-      case 0:
-        return "bg-yellow-100";
-      case 1:
-        return "bg-gray-100";
-      case 2:
-        return "bg-orange-100";
-      default:
-        return "";
-    }
+    if (rank === 0) return "bg-yellow-100";
+    if (rank === 1) return "bg-gray-100";
+    if (rank === 2) return "bg-orange-100";
+    return "";
   };
 
-  // Prepare top 10 and compute this player's rank
+  // top 10 plus your rank if outside
   const topEntries = entries.slice(0, 10);
   const myIndex = entries.findIndex((e) => e.device_id === deviceId);
   const myRank = myIndex >= 0 ? myIndex + 1 : null;
@@ -93,6 +83,7 @@ export default function Leaderboard({ onClose }) {
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-white rounded-xl p-5">
+        {/* header with tooltip */}
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center space-x-2">
             <h2 className="text-lg font-bold text-blue-600">
@@ -100,12 +91,26 @@ export default function Leaderboard({ onClose }) {
             </h2>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
+                <button
+                  aria-label="Scoring Explained"
+                  className="p-1 rounded hover:bg-gray-100"
+                >
+                  <Info className="w-5 h-5 text-gray-400" />
+                </button>
               </TooltipTrigger>
-              <TooltipContent side="right">
+              <TooltipContent
+                side="right"
+                align="start"
+                className="max-w-xs space-y-2 p-2"
+              >
+                <h3 className="font-semibold text-sm">Scoring Explained</h3>
                 <p className="text-xs leading-snug">
-                  <strong>Guess pts:</strong> 1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10<br />
-                  <strong>Time bonus:</strong> ≤ 100s = 100 • ≤ 200s = 70 • ≤ 300s = 50 • ≤ 600s = 30 • else = 10
+                  <strong>Guess points:</strong><br />
+                  1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
+                </p>
+                <p className="text-xs leading-snug">
+                  <strong>Time bonus:</strong><br />
+                  ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -128,7 +133,9 @@ export default function Leaderboard({ onClose }) {
               {topEntries.map((entry, i) => (
                 <li
                   key={entry.device_id}
-                  className={`rounded px-3 py-1 flex items-center justify-between ${getRowClass(i)}`}
+                  className={`rounded px-3 py-1 flex items-center justify-between ${getRowClass(
+                    i
+                  )}`}
                 >
                   <div className="flex items-center space-x-2">
                     <span
@@ -153,7 +160,8 @@ export default function Leaderboard({ onClose }) {
 
             {myRank > 10 && (
               <p className="mt-3 text-sm text-gray-600">
-                Your rank: #{myRank} — {entries[myIndex].total_score} pts · {entries[myIndex].solves}{" "}
+                Your rank: #{myRank} — {entries[myIndex].total_score} pts ·{" "}
+                {entries[myIndex].solves}{" "}
                 {entries[myIndex].solves === 1 ? "solve" : "solves"}
               </p>
             )}
