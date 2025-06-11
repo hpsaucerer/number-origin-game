@@ -1,9 +1,9 @@
+// components/Leaderboard.js
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X } from "lucide-react";
-import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip"
-import { Info } from "lucide-react"
+import { X, Info } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 
 function getFlagEmoji(countryCode) {
   if (!countryCode) return "";
@@ -24,7 +24,7 @@ export default function Leaderboard({ onClose }) {
   const [resetCountdown, setResetCountdown] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Compute countdown to next weekly reset (Sunday midnight)
+  // —— Countdown until next Sunday midnight, showing days/hours/min/sec ——
   useEffect(() => {
     const updateReset = () => {
       const now = Date.now();
@@ -54,7 +54,7 @@ export default function Leaderboard({ onClose }) {
   useEffect(() => {
     async function fetchLeaderboard() {
       const today = new Date();
-      const dow = today.getDay();
+      const dow = today.getDay(); // 0 = Sunday
       today.setDate(today.getDate() - dow);
       const startOfWeek = today.toISOString().slice(0, 10);
 
@@ -93,27 +93,27 @@ export default function Leaderboard({ onClose }) {
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-white rounded-xl p-5">
-       <div className="flex justify-between items-center mb-3">
-  <div className="flex items-center space-x-2">
-    <h2 className="text-lg font-bold text-blue-600">
-      🏆 This Week’s Top Players
-    </h2>
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
-      </TooltipTrigger>
-      <TooltipContent side="right">
-        <p className="text-xs leading-snug">
-          <strong>Guess pts:</strong> 1st=50, 2nd=30, 3rd=20, 4th=10<br/>
-          <strong>Time bonus:</strong> ≤100s=100, ≤200s=70, ≤300s=50, ≤600s=30, else=10
-        </p>
-      </TooltipContent>
-    </Tooltip>
-  </div>
-  <button onClick={onClose} aria-label="Close leaderboard">
-    <X size={20} className="text-gray-500 hover:text-gray-700" />
-  </button>
-</div>
+        <div className="flex justify-between items-center mb-3">
+          <div className="flex items-center space-x-2">
+            <h2 className="text-lg font-bold text-blue-600">
+              🏆 This Week’s Top Players
+            </h2>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p className="text-xs leading-snug">
+                  <strong>Guess pts:</strong> 1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10<br />
+                  <strong>Time bonus:</strong> ≤ 100s = 100 • ≤ 200s = 70 • ≤ 300s = 50 • ≤ 600s = 30 • else = 10
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <button onClick={onClose} aria-label="Close leaderboard">
+            <X size={20} className="text-gray-500 hover:text-gray-700" />
+          </button>
+        </div>
 
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
@@ -135,7 +135,7 @@ export default function Leaderboard({ onClose }) {
                       className="text-xl"
                       style={{
                         fontFamily:
-                          'Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, NotoColorEmoji, ui-sans-serif, system-ui, sans-serif',
+                          "Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, NotoColorEmoji, ui-sans-serif, system-ui, sans-serif",
                       }}
                     >
                       {getFlagEmoji(entry.country_code)}
@@ -144,7 +144,7 @@ export default function Leaderboard({ onClose }) {
                     <span className="font-medium">{entry.nickname}</span>
                   </div>
                   <span className="text-gray-600">
-                    {entry.total_score} pts · {entry.solves}{" "}
+                    {entry.total_score} pts · {entry.solves}{" "}
                     {entry.solves === 1 ? "solve" : "solves"}
                   </span>
                 </li>
@@ -153,7 +153,7 @@ export default function Leaderboard({ onClose }) {
 
             {myRank > 10 && (
               <p className="mt-3 text-sm text-gray-600">
-                Your rank: #{myRank} — {entries[myIndex].total_score} pts · {entries[myIndex].solves}{" "}
+                Your rank: #{myRank} — {entries[myIndex].total_score} pts · {entries[myIndex].solves}{" "}
                 {entries[myIndex].solves === 1 ? "solve" : "solves"}
               </p>
             )}
