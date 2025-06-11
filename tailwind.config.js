@@ -10,6 +10,13 @@ module.exports = {
     extend: {
       fontFamily: {
         bevietnam: ['Be Vietnam Pro', 'sans-serif'],
+        emoji: [
+          '"Apple Color Emoji"',
+          '"Segoe UI Emoji"',
+          '"Segoe UI Symbol"',
+          'NotoColorEmoji',
+          'sans-serif'
+        ],
       },
     },
   },
