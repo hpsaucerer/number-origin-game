@@ -22,6 +22,7 @@ export default function Leaderboard({ onClose }) {
   const [entries, setEntries] = useState([]);
   const [resetCountdown, setResetCountdown] = useState("");
   const [loading, setLoading] = useState(true);
+  const [scoringOpen, setScoringOpen] = useState(false);
 
   // countdown to next Sunday midnight (days/h/m/s)
   useEffect(() => {
@@ -89,36 +90,45 @@ export default function Leaderboard({ onClose }) {
             <h2 className="text-lg font-bold text-blue-600">
               🏆 This Week’s Top Players
             </h2>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  aria-label="Scoring Explained"
-                  className="p-1 rounded hover:bg-gray-100"
-                >
-                  <Info className="w-5 h-5 text-gray-400" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                side="right"
-                align="start"
-                className="max-w-xs space-y-2 p-2"
-              >
-                <h3 className="font-semibold text-sm">Scoring Explained</h3>
-                <p className="text-xs leading-snug">
-                  <strong>Guess points:</strong><br />
-                  1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
-                </p>
-                <p className="text-xs leading-snug">
-                  <strong>Time bonus:</strong><br />
-                  ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-          <button onClick={onClose} aria-label="Close leaderboard">
-            <X size={20} className="text-gray-500 hover:text-gray-700" />
-          </button>
-        </div>
+            {/* controlled Tooltip */}
+    <Tooltip
+      open={scoringOpen}
+      onOpenChange={setScoringOpen}
+      delayDuration={0}        // show immediately
+      skipDelayDuration={0}
+    >
+      <TooltipTrigger asChild>
+        <button
+          aria-label="Scoring Explained"
+          className="p-1 rounded hover:bg-gray-100"
+          onClick={() => setScoringOpen(true)}
+        >
+          <Info className="w-5 h-5 text-gray-400"/>
+        </button>
+      </TooltipTrigger>
+
+      <TooltipContent
+        side="right"
+        align="start"
+        className="max-w-xs space-y-2 p-2"
+      >
+        <h3 className="font-semibold text-sm">Scoring Explained</h3>
+        <p className="text-xs leading-snug">
+          <strong>Guess pts:</strong><br/>
+          1st = 50&nbsp; • 2nd = 30 • 3rd = 20 • 4th = 10
+        </p>
+        <p className="text-xs leading-snug">
+          <strong>Time bonus:</strong><br/>
+          ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
+        </p>
+      </TooltipContent>
+    </Tooltip>
+  </div>
+
+  <button onClick={onClose} aria-label="Close leaderboard">
+    <X size={20} className="text-gray-500 hover:text-gray-700" />
+  </button>
+</div>
 
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
