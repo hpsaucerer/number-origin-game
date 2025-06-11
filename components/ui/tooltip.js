@@ -1,17 +1,17 @@
-// components/ui/tooltip.js
 "use client";
 
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cn } from "@/lib/utils";
 
-export const Tooltip = ({ children, ...props }: TooltipPrimitive.TooltipProps) => (
+export const Tooltip = ({ children, ...props }) => (
   <TooltipPrimitive.Provider>
     <TooltipPrimitive.Root {...props}>{children}</TooltipPrimitive.Root>
   </TooltipPrimitive.Provider>
 );
 
 export const TooltipTrigger = TooltipPrimitive.Trigger;
+
 export const TooltipContent = ({ className, side = "top", ...props }) => (
   <TooltipPrimitive.Portal>
     <TooltipPrimitive.Content
