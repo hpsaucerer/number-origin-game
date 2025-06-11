@@ -138,6 +138,9 @@ export default function Leaderboard({ onClose }) {
             <p className="text-sm text-gray-500 mb-2">
               Resets in: {resetCountdown}
             </p>
+          <p className="text-xs text-yellow-700 mb-4">
+           Leaderboard is currently in beta – thanks for testing!
+          </p>
             <ol className="pl-5 space-y-1 text-sm">
               {topEntries.map((entry, i) => (
                 <li
