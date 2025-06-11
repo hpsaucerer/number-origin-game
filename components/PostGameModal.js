@@ -100,7 +100,7 @@ useEffect(() => {
       const nextIndex = storedIndexes.length;
       const updated   = [...storedIndexes, nextIndex];
       localStorage.setItem("earnedTileIndexes", JSON.stringify(updated));
-      localStorage.setItem(`tile-earned-${today}`, "true`);
+      localStorage.setItem(`tile-earned-${today}`, "true");
       setEarnedTiles(updated);
       setJustEarnedTile(true);
     } else {
