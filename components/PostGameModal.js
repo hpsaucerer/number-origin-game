@@ -144,15 +144,10 @@ if (typeof window !== "undefined") {
       .then((data) => {
   if (data.success) {
     localStorage.setItem("firstTokenGranted", "true");
-    localStorage.setItem("archiveToken", today);
     setShowBonusButton(true);
   }
 })
-
       .catch((err) => console.error("❌ Grant token API error:", err));
-  } else if (!isArchive && !archiveUsed) {
-    setShowBonusButton(true);
-  }
 }
 
 
