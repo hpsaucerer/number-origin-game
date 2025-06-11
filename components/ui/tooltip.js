@@ -16,8 +16,10 @@ export const TooltipContent = ({ className = "", side = "top", ...props }) => (
     <TooltipPrimitive.Content
       side={side}
       align="center"
+      sideOffset={4}
       className={
-        `z-50 rounded-md border border-gray-100 bg-white px-2 py-1 text-xs text-gray-800 shadow-md ` +
+        // bump z-index above the Dialog!
+        `z-[100000] rounded-md border border-gray-100 bg-white px-2 py-1 text-xs text-gray-800 shadow-md ` +
         className
       }
       {...props}
