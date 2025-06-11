@@ -83,86 +83,64 @@ export default function PostGameModal({
   maybeSetCountry();
 }, []);
 
-  useEffect(() => {
-    if (!open) return;
-    
-    document.body.style.overflow = "hidden";
+useEffect(() => {
+  if (!open) return;
 
-   // compute today’s date once
-   const today = new Date().toISOString().split("T")[0];
+  document.body.style.overflow = "hidden";
 
-let alreadyAwarded = false;
-let storedIndexes = [];
-
-if (typeof window !== "undefined") {
+  // compute today’s date once
   const today = new Date().toISOString().split("T")[0];
-  alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
-  storedIndexes = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
-  if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length && !isArchive) {
-    const nextIndex = storedIndexes.length;
-    const updatedIndexes = [...storedIndexes, nextIndex];
-
-    localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
-    localStorage.setItem(`tile-earned-${today}`, "true");
-
-    setEarnedTiles(updatedIndexes);
-    setJustEarnedTile(true);
-  } else {
-    setEarnedTiles(storedIndexes);
-  }
-}
+  // ❏ First window‐guarded block (tile earning)
+  if (typeof window !== "undefined") {
+    let alreadyAwarded = localStorage.getItem(`tile-earned-${today}`) === "true";
+    let storedIndexes  = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
 
     if (!alreadyAwarded && storedIndexes.length < TILE_WORD.length && !isArchive) {
       const nextIndex = storedIndexes.length;
-      const updatedIndexes = [...storedIndexes, nextIndex];
-
-      localStorage.setItem("earnedTileIndexes", JSON.stringify(updatedIndexes));
-      localStorage.setItem(`tile-earned-${today}`, "true");
-
-      setEarnedTiles(updatedIndexes);
+      const updated   = [...storedIndexes, nextIndex];
+      localStorage.setItem("earnedTileIndexes", JSON.stringify(updated));
+      localStorage.setItem(`tile-earned-${today}`, "true`);
+      setEarnedTiles(updated);
       setJustEarnedTile(true);
     } else {
       setEarnedTiles(storedIndexes);
     }
- 
-if (typeof window !== "undefined") {
-  const hasGranted = localStorage.getItem("firstTokenGranted") === "true";
-  const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
+  }  // ← close first window‐guard
 
-  if (!isArchive && !hasGranted) {
-    const deviceId = getOrCreateDeviceId();
-    fetch("/api/grant-token", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        device_id: deviceId,
-        source: "first_token_after_game"
-      }),
-    })
-      .then(res => res.json())
-      .then((data) => {
-  if (data.success) {
-    localStorage.setItem("firstTokenGranted", "true");
-    setShowBonusButton(true);
-  }
-})
-      .catch((err) => console.error("❌ Grant token API error:", err));
-}
+  // ❏ Second window‐guarded block (archive token)
+  if (typeof window !== "undefined") {
+    const hasGranted  = localStorage.getItem("firstTokenGranted") === "true";
+    const archiveUsed = localStorage.getItem("archiveTokenUsed") === "true";
 
-
-    if (isCorrect) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
+    if (!isArchive && !hasGranted) {
+      const deviceId = getOrCreateDeviceId();
+      fetch("/api/grant-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ device_id: deviceId, source: "first_token_after_game" }),
+      })
+        .then(res => res.json())
+        .then((data) => {
+          if (data.success) {
+            localStorage.setItem("firstTokenGranted", "true");
+            setShowBonusButton(true);
+          }
+        })
+        .catch((err) => console.error("❌ Grant token API error:", err));
     }
+  }  // ← close second window‐guard
 
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open, isCorrect]);
+  // ❏ Confetti for correct answers
+  if (isCorrect) {
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+  }
+
+  // ❏ Cleanup when modal closes
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [open, isCorrect]);
 
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
