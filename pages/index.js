@@ -423,7 +423,7 @@ const [localDate, setLocalDate] = useState("");
 const [showWhatsNew, setShowWhatsNew] = useState(false);
 
 const COMMUNITY_PUZZLES = {
-  "2025-06-02": { name: "Holiday", city: "Ohio", country: "USA", flag: "USA" },
+  "2025-06-13": { name: "Jack", city: "Bethesda", country: "USA", flag: "USA" },
 };
 
 const contributor = COMMUNITY_PUZZLES[puzzle?.date];
@@ -1594,7 +1594,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
     {/* Yellow Box */}
     <div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
-      Today’s number comes from <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
+      Today’s number was suggested by <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
     </div>
   </div>
 ) : (
