@@ -1594,7 +1594,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 
     {/* Yellow Box */}
     <div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
-      Today’s number was suggested by <strong>{contributor.name} in {contributor.city}, {contributor.country}</strong>.
+      Today’s number was suggested by <strong>{contributor.name} from {contributor.city}, {contributor.country}</strong>.
     </div>
   </div>
 ) : (
