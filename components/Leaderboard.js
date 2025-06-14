@@ -4,8 +4,6 @@ import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X, Info } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-// ───── NEW ─────
-import twemoji from "twemoji";
 
 function getFlagEmoji(countryCode) {
   if (!countryCode) return "";
@@ -26,7 +24,7 @@ export default function Leaderboard({ onClose }) {
   const [loading, setLoading] = useState(true);
   const [scoringOpen, setScoringOpen] = useState(false);
 
-  // Countdown until next Sunday midnight (days/h/m/s)
+  // Countdown until next Sunday midnight
   useEffect(() => {
     const updateReset = () => {
       const now = Date.now();
@@ -35,24 +33,21 @@ export default function Leaderboard({ onClose }) {
       d.setDate(d.getDate() + daysUntilSunday);
       d.setHours(24, 0, 0, 0);
       const diff = d.getTime() - now;
-
       const days = Math.floor(diff / 86400000);
       const hours = Math.floor((diff % 86400000) / 3600000);
       const mins = Math.floor((diff % 3600000) / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
-
       let str = "";
       if (days) str += `${days}d `;
       str += `${hours}h ${mins}m ${secs}s`;
       setResetCountdown(str);
     };
-
     updateReset();
     const id = setInterval(updateReset, 1000);
     return () => clearInterval(id);
   }, []);
 
-  // Fetch this week’s entries
+  // Fetch this week’s entries via RPC
   useEffect(() => {
     async function fetchLeaderboard() {
       const today = new Date();
@@ -63,7 +58,6 @@ export default function Leaderboard({ onClose }) {
       const { data, error } = await supabase.rpc("weekly_leaderboard", {
         start_date: startOfWeek,
       });
-
       if (error) console.error("❌ Error fetching leaderboard:", error);
       else setEntries(data);
       setLoading(false);
@@ -78,7 +72,6 @@ export default function Leaderboard({ onClose }) {
     return "";
   };
 
-  // Top 10 plus your rank if outside
   const topEntries = entries.slice(0, 10);
   const myIndex = entries.findIndex((e) => e.device_id === deviceId);
   const myRank = myIndex >= 0 ? myIndex + 1 : null;
@@ -86,7 +79,7 @@ export default function Leaderboard({ onClose }) {
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
-        {/* header with tooltip */}
+        {/* Header with tooltip */}
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center space-x-2">
             <h2 className="text-lg font-bold text-blue-600">
@@ -152,16 +145,16 @@ export default function Leaderboard({ onClose }) {
                   )}`}
                 >
                   <div className="flex items-center space-x-2">
-                    {/* ───── Twemoji flag ───── */}
+                    {/* Native flag emoji */}
                     <span
-                      className="inline-block align-middle"
-                      dangerouslySetInnerHTML={{
-                        __html: twemoji.parse(getFlagEmoji(entry.country_code), {
-                          folder: "svg",
-                          ext: ".svg",
-                        }),
+                      className="text-xl"
+                      style={{
+                        fontFamily:
+                          "Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, NotoColorEmoji, ui-sans-serif, system-ui, sans-serif",
                       }}
-                    />
+                    >
+                      {getFlagEmoji(entry.country_code)}
+                    </span>
                     <span className="font-bold">{i + 1}.</span>
                     <span className="font-medium">{entry.nickname}</span>
                   </div>
