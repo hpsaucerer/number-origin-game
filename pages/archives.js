@@ -206,7 +206,7 @@ export default function Archive() {
                     localStorage.setItem("archiveTokenUsed", "true");
                     router.push(`/archive/${puzzle.puzzle_number}`);
                   } else {
-                    alert("🪙 You're out of tokens — but don't worry, you can earn and buy more soon. Watch this space!");
+                    alert("🪙 You're out of tokens — but don't worry, you can earn or buy more.");
                   }
                 }}
                 disabled={isCompleted}
