@@ -15,6 +15,9 @@ function getFlagEmoji(countryCode) {
   );
 }
 
+if (typeof window !== "undefined") {
+  window.getFlagEmoji = getFlagEmoji
+}
 export default function Leaderboard({ onClose }) {
   const deviceId =
     typeof window !== "undefined" ? localStorage.getItem("device_id") : null;
