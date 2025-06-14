@@ -4,6 +4,8 @@ import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X, Info } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+// ───── NEW ─────
+import twemoji from "twemoji";
 
 function getFlagEmoji(countryCode) {
   if (!countryCode) return "";
@@ -15,9 +17,6 @@ function getFlagEmoji(countryCode) {
   );
 }
 
-if (typeof window !== "undefined") {
-  window.getFlagEmoji = getFlagEmoji
-}
 export default function Leaderboard({ onClose }) {
   const deviceId =
     typeof window !== "undefined" ? localStorage.getItem("device_id") : null;
@@ -153,18 +152,16 @@ export default function Leaderboard({ onClose }) {
                   )}`}
                 >
                   <div className="flex items-center space-x-2">
-                    {/* 🇺🇸 Emoji flag */}
+                    {/* ───── Twemoji flag ───── */}
                     <span
-                      role="img"
-                      aria-label={entry.country_code}
-                      className="text-xl"
-                      style={{
-                        fontFamily:
-                          "Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, NotoColorEmoji, ui-sans-serif, system-ui, sans-serif",
+                      className="inline-block align-middle"
+                      dangerouslySetInnerHTML={{
+                        __html: twemoji.parse(getFlagEmoji(entry.country_code), {
+                          folder: "svg",
+                          ext: ".svg",
+                        }),
                       }}
-                    >
-                      {getFlagEmoji(entry.country_code)}
-                    </span>
+                    />
                     <span className="font-bold">{i + 1}.</span>
                     <span className="font-medium">{entry.nickname}</span>
                   </div>
