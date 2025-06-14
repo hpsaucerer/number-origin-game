@@ -152,6 +152,8 @@ export default function Leaderboard({ onClose }) {
                   <div className="flex items-center space-x-2">
                     {/* 🇺🇸 Emoji flag */}
                     <span
+                      role="img"
+                      aria-label={entry.country_code}
                       className="text-xl"
                       style={{
                         fontFamily:
