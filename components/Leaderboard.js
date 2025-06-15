@@ -78,7 +78,8 @@ export default function Leaderboard({ onClose }) {
   const myRank = myIndex >= 0 ? myIndex + 1 : null;
 
   return (
-    <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
   {/* ─── centered logo & subtitle, with tooltip + X in top right ─── */}
   <div className="relative mb-4">
     {/* centered stack */}
