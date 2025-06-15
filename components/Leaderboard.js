@@ -95,7 +95,7 @@ export default function Leaderboard({ onClose }) {
     </div>
 
     {/* controls in top-right */}
-    <div className="absolute top-2 right-2 flex items-center space-x-2">
+    <div className="absolute top-2 left-2 flex items-center space-x-2">
       <Tooltip
         open={scoringOpen}
         onOpenChange={setScoringOpen}
