@@ -105,28 +105,54 @@ export default function Leaderboard({ onClose }) {
       <button
         aria-label="Scoring Explained"
         className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
-        onClick={() => setScoringOpen(prev => !prev)}
+           onPointerDown={e => {
+     e.preventDefault()
+     setScoringOpen(prev => !prev)
+   }}
       >
         <Info className="w-6 h-6 text-blue-600" />
       </button>
     </TooltipTrigger>
-    <TooltipContent
-      side="bottom"
-      align="center"
-      sideOffset={6}
-      collisionPadding={{ left: 8, right: 8 }}
-      className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
-    >
-      <h3 className="font-semibold text-sm">Scoring Explained</h3>
-      <p className="text-xs leading-snug">
-        <strong>Guess pts:</strong><br />
-        1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
-      </p>
-      <p className="text-xs leading-snug">
-        <strong>Time bonus:</strong><br />
-        ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
-      </p>
-    </TooltipContent>
+<TooltipContent
+  side="bottom"
+  align="center"
+  sideOffset={6}
+  collisionPadding={{ left: 8, right: 8 }}
+  className="z-50 max-w-xs p-3 bg-white text-black rounded-lg shadow"
+>
+  <div className="space-y-2">
+    <h3 className="font-semibold text-sm">Scoring Explained</h3>
+
+    {/* Guess points */}
+    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+      <div className="font-semibold col-span-2">Guess pts:</div>
+      <div>1st</div>
+      <div className="font-medium">50</div>
+      <div>2nd</div>
+      <div className="font-medium">30</div>
+      <div>3rd</div>
+      <div className="font-medium">20</div>
+      <div>4th</div>
+      <div className="font-medium">10</div>
+    </div>
+
+    {/* Time bonus */}
+    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs mt-2">
+      <div className="font-semibold col-span-2">Time bonus:</div>
+      <div>≤ 100 s</div>
+      <div className="font-medium">100</div>
+      <div>≤ 200 s</div>
+      <div className="font-medium">70</div>
+      <div>≤ 300 s</div>
+      <div className="font-medium">50</div>
+      <div>≤ 600 s</div>
+      <div className="font-medium">30</div>
+      <div>else</div>
+      <div className="font-medium">10</div>
+    </div>
+  </div>
+</TooltipContent>
+
   </Tooltip>
 </div>
 
