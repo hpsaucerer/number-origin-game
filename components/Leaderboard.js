@@ -95,7 +95,12 @@ export default function Leaderboard({ onClose }) {
 
 {/* tooltip in top-left */}
 <div className="absolute top-2 left-2">
-  <Tooltip>
+    <Tooltip
+    open={scoringOpen}
+    onOpenChange={setScoringOpen}
+    delayDuration={0}
+    skipDelayDuration={0}
+  >
  <TooltipTrigger asChild>
    <button
      aria-label="Scoring Explained"
