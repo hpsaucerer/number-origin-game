@@ -80,22 +80,10 @@ export default function Leaderboard({ onClose }) {
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
-  {/* ─── centered logo & subtitle, with tooltip + X in top right ─── */}
+    {/* ─── centered logo & subtitle, with tooltip in TL and X in TR ─── */}
   <div className="relative mb-4">
-    {/* centered stack */}
-    <div className="flex flex-col items-center">
-      <img
-        src="/leaderboard.png"
-        alt="Numerus Leaderboard"
-        className="h-12 w-auto mb-1"
-      />
-      <h2 className="text-sm font-semibold text-blue-600">
-        This Week’s Top Players
-      </h2>
-    </div>
-
-    {/* absolutely positioned controls */}
-    <div className="absolute top-2 right-2 flex items-center space-x-2">
+    {/* tooltip moved to top-left */}
+    <div className="absolute top-2 left-2">
       <Tooltip
         open={scoringOpen}
         onOpenChange={setScoringOpen}
@@ -117,17 +105,30 @@ export default function Leaderboard({ onClose }) {
           collisionPadding={{ left: 8, right: 8 }}
           className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
         >
-          {/* … your tooltip content … */}
+          {/* …your tooltip content here… */}
         </TooltipContent>
       </Tooltip>
+    </div>
 
-      <button
-        onClick={onClose}
-        aria-label="Close leaderboard"
-        className="text-blue-600 hover:text-blue-800 -mt-1"
-      >
-        <X size={20} />
-      </button>
+    {/* dismiss “X” stays top-right */}
+    <button
+      onClick={onClose}
+      aria-label="Close leaderboard"
+      className="absolute top-2 right-2 text-blue-600 hover:text-blue-800"
+    >
+      <X size={20} />
+    </button>
+
+    {/* logo + subtitle centered */}
+    <div className="flex flex-col items-center">
+      <img
+        src="/leaderboard.png"
+        alt="Numerus Leaderboard"
+        className="h-12 w-auto mb-1"
+      />
+      <h2 className="text-sm font-semibold text-blue-600">
+        This Week’s Top Players
+      </h2>
     </div>
   </div>
         {loading ? (
