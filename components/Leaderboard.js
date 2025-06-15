@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X, Info } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import Logo from "@/public/leaderboard.png";
 
 function getFlagEmoji(countryCode) {
   if (!countryCode) return "";
@@ -79,57 +80,60 @@ export default function Leaderboard({ onClose }) {
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
-        {/* Header with tooltip */}
-                <div className="flex justify-between items-center mb-3">
-          {/* logo above, subheading beneath */}
-          <div className="flex flex-col items-start">
-            <img
-              src="/leaderboard.png"
-              alt="Numerus Leaderboard"
-              className="h-8 w-auto mb-1"
-            />
-            <h2 className="text-sm font-semibold text-blue-600">
-              This Week’s Top Players
-            </h2>
-          </div>
-          <Tooltip
-              open={scoringOpen}
-              onOpenChange={setScoringOpen}
-              delayDuration={0}
-              skipDelayDuration={0}
-            >
-              <TooltipTrigger asChild>
-                <button
-                  aria-label="Scoring Explained"
-                  className="p-1 rounded hover:bg-gray-100"
-                  onClick={() => setScoringOpen(true)}
-                >
-                  <Info className="w-5 h-5 text-gray-400" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                align="center"
-                sideOffset={6}
-                collisionPadding={{ left: 8, right: 8 }}
-                className="z-50 max-w-xs space-y-2 p-2"
-              >
-                <h3 className="font-semibold text-sm">Scoring Explained</h3>
-                <p className="text-xs leading-snug">
-                  <strong>Guess pts:</strong><br />
-                  1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
-                </p>
-                <p className="text-xs leading-snug">
-                  <strong>Time bonus:</strong><br />
-                  ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-          <button onClick={onClose} aria-label="Close leaderboard">
-            <X size={20} className="text-gray-500 hover:text-gray-700" />
+  {/* Header: logo + subtitle + tooltip + close button */}
+  <div className="flex justify-between items-center mb-4">
+    {/* Left: logo & sub-heading */}
+    <div className="flex flex-col">
+      <img
+        src={Logo}
+        alt="Numerus Leaderboard"
+        className="h-8 w-auto mb-1"
+      />
+      <h2 className="text-sm font-semibold text-blue-600">
+        This Week’s Top Players
+      </h2>
+    </div>
+
+    {/* Right: tooltip + close button */}
+    <div className="flex items-center space-x-2">
+      <Tooltip
+        open={scoringOpen}
+        onOpenChange={setScoringOpen}
+        delayDuration={0}
+        skipDelayDuration={0}
+      >
+        <TooltipTrigger asChild>
+          <button
+            aria-label="Scoring Explained"
+            className="p-1 rounded hover:bg-gray-100"
+          >
+            <Info className="w-5 h-5 text-gray-400" />
           </button>
-        </div>
+        </TooltipTrigger>
+        <TooltipContent
+          side="bottom"
+          align="center"
+          sideOffset={6}
+          collisionPadding={{ left: 8, right: 8 }}
+          className="z-50 max-w-xs space-y-2 p-2"
+        >
+          <h3 className="font-semibold text-sm">Scoring Explained</h3>
+          <p className="text-xs leading-snug">
+            <strong>Guess pts:</strong><br />
+            1st = 50 · 2nd = 30 · 3rd = 20 · 4th = 10
+          </p>
+          <p className="text-xs leading-snug">
+            <strong>Time bonus:</strong><br />
+            ≤100s = 100 · ≤200s = 70 · ≤300s = 50 · ≤600s = 30 · else = 10
+          </p>
+        </TooltipContent>
+      </Tooltip>
+
+      <button onClick={onClose} aria-label="Close leaderboard">
+        <X size={20} className="text-gray-500 hover:text-gray-700" />
+      </button>
+    </div>
+  </div>
 
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
