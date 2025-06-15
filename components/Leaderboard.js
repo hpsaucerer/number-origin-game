@@ -71,9 +71,9 @@ export default function Leaderboard({ onClose }) {
   }, []);
 
   const getRowClass = (rank) => {
-    if (rank === 0) return "bg-yellow-100";
-    if (rank === 1) return "bg-gray-100";
-    if (rank === 2) return "bg-orange-100";
+    if (rank === 0) return "bg-white-30";
+    if (rank === 1) return "bg-white-20";
+    if (rank === 2) return "bg-white-10";
     return "";
   };
 
@@ -87,7 +87,7 @@ export default function Leaderboard({ onClose }) {
         ▷ Changed bg-white → bg-[#8E44AD] 
         ▷ Added text-white so content is legible 
       */}
-      <DialogContent className="max-w-md bg-[#8E44AD] text-white rounded-xl p-5 overflow-visible">
+      <DialogContent className="max-w-md bg-purple-600 text-white rounded-xl p-5 overflow-visible">
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center space-x-2">
             {/* we’re using white text now */}
