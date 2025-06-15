@@ -91,7 +91,7 @@ export default function Leaderboard({ onClose }) {
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center space-x-2">
             {/* we’re using white text now */}
-            <h2 className="text-lg font-bold">🏆 This Week’s Top Players</h2>
+            <h2 className="text-lg font-bold text-white"> LEADERBOARD</h2>
             <Tooltip
               open={scoringOpen}
               onOpenChange={setScoringOpen}
