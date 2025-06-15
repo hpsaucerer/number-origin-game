@@ -93,36 +93,41 @@ export default function Leaderboard({ onClose }) {
             </h2>
           </div>
 
-          {/* tooltip in top-left */}
-          <div className="absolute top-2 left-2">
-             <Popover open={scoringOpen} onOpenChange={setScoringOpen}>
-   <PopoverTrigger asChild>
-     <button
-       aria-label="Scoring Explained"
-       className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
-     >
-       <Info className="w-6 h-6 text-blue-600" />
-     </button>
-   </PopoverTrigger>
-   <PopoverContent
-     side="bottom"
-     align="center"
-     sideOffset={6}
-     collisionPadding={{ left: 8, right: 8 }}
-     className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
-   >
-     <h3 className="font-semibold text-sm">Scoring Explained</h3>
-     <p className="text-xs leading-snug">
-       <strong>Guess pts:</strong><br />
-       1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
-     </p>
-     <p className="text-xs leading-snug">
-       <strong>Time bonus:</strong><br />
-       ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
-     </p>
-   </PopoverContent>
- </Popover>
-          </div>
+{/* tooltip in top-left */}
+<div className="absolute top-2 left-2">
+  <Tooltip
+    open={scoringOpen}
+    onOpenChange={setScoringOpen}
+    delayDuration={0}
+    skipDelayDuration={0}
+  >
+    <TooltipTrigger asChild>
+      <button
+        aria-label="Scoring Explained"
+        className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
+      >
+        <Info className="w-6 h-6 text-blue-600" />
+      </button>
+    </TooltipTrigger>
+    <TooltipContent
+      side="bottom"
+      align="center"
+      sideOffset={6}
+      collisionPadding={{ left: 8, right: 8 }}
+      className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
+    >
+      <h3 className="font-semibold text-sm">Scoring Explained</h3>
+      <p className="text-xs leading-snug">
+        <strong>Guess pts:</strong><br />
+        1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
+      </p>
+      <p className="text-xs leading-snug">
+        <strong>Time bonus:</strong><br />
+        ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
+      </p>
+    </TooltipContent>
+  </Tooltip>
+</div>
 
           {/* dismiss 'X' in top-right */}
           <div className="absolute top-2 right-2">
