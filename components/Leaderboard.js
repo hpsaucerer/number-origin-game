@@ -26,14 +26,19 @@ export default function Leaderboard({ onClose }) {
   const [scoringOpen, setScoringOpen] = useState(false);
 
   // Countdown until next Sunday midnight
-  useEffect(() => {
++useEffect(() => {
     const updateReset = () => {
-      const now = Date.now();
-      const d = new Date(now);
-      const daysUntilSunday = (7 - d.getUTCDay()) % 7;
-      d.setDate(d.getDate() + daysUntilSunday);
-      d.setHours(24, 0, 0, 0);
-      const diff = d.getTime() - now;
+     const now = new Date();
+     // clone
+     const d = new Date(now.valueOf());
+     // figure out how many days until next Monday (UTC)
+     const dow = d.getUTCDay();               // 0=Sun…6=Sat
+     // days until Monday (1), but if today is Monday we want next Monday => 7
+     const daysUntilMon = ((1 + 7 - dow) % 7) || 7;
+     d.setUTCDate(d.getUTCDate() + daysUntilMon);
+     // zero-out to midnight UTC
+     d.setUTCHours(0, 0, 0, 0);
+     const diff = d.getTime() - now.getTime();
       const days = Math.floor(diff / 86400000);
       const hours = Math.floor((diff % 86400000) / 3600000);
       const mins = Math.floor((diff % 3600000) / 60000);
@@ -49,12 +54,18 @@ export default function Leaderboard({ onClose }) {
   }, []);
 
   // Fetch this week’s entries via RPC
-  useEffect(() => {
-    async function fetchLeaderboard() {
-      const today = new Date();
-      const dow = today.getDay();
-      today.setDate(today.getDate() - dow);
-      const startOfWeek = today.toISOString().slice(0, 10);
+  +useEffect(() => {
+  async function fetchLeaderboard() {
+    const now = new Date();
+    const d   = new Date(now.valueOf());
+    const dow = d.getUTCDay();                 // 0=Sun…6=Sat
+    const daysUntilMon = ((1 + 7 - dow) % 7) || 7;
+    d.setUTCDate(d.getUTCDate() - (dow === 0 ? 6 : dow - 1)); 
+    // alternatively to get *this* week's UTC-Monday:
+    // d.setUTCDate(d.getUTCDate() - dow + 1);
+    // then zero it out
+    d.setUTCHours(0,0,0,0);
+    const startOfWeek = d.toISOString().slice(0,10);
 
       const { data, error } = await supabase.rpc("weekly_leaderboard", {
         start_date: startOfWeek,
