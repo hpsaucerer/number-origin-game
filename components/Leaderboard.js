@@ -82,19 +82,19 @@ export default function Leaderboard({ onClose }) {
       <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
   {/* Header: logo + subtitle + tooltip + close button */}
   <div className="flex justify-between items-center mb-4">
-    {/* Left: logo & sub-heading */}
+    {/* Left side: bigger logo + subheading */}
     <div className="flex flex-col">
       <img
         src="/leaderboard.png"
         alt="Numerus Leaderboard"
-        className="h-8 w-auto mb-1"
+        className="h-12 w-auto mb-1"        // ← bumped from h-8 to h-12
       />
       <h2 className="text-sm font-semibold text-blue-600">
         This Week’s Top Players
       </h2>
     </div>
 
-    {/* Right: tooltip + close button */}
+    {/* Right side: info button + close X */}
     <div className="flex items-center space-x-2">
       <Tooltip
         open={scoringOpen}
@@ -105,9 +105,9 @@ export default function Leaderboard({ onClose }) {
         <TooltipTrigger asChild>
           <button
             aria-label="Scoring Explained"
-            className="p-1 rounded hover:bg-gray-100"
+            className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
           >
-            <Info className="w-5 h-5 text-gray-400" />
+            <Info className="w-6 h-6 text-blue-600" />  {/* larger, blue */}
           </button>
         </TooltipTrigger>
         <TooltipContent
@@ -115,7 +115,7 @@ export default function Leaderboard({ onClose }) {
           align="center"
           sideOffset={6}
           collisionPadding={{ left: 8, right: 8 }}
-          className="z-50 max-w-xs space-y-2 p-2"
+          className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
         >
           <h3 className="font-semibold text-sm">Scoring Explained</h3>
           <p className="text-xs leading-snug">
@@ -130,11 +130,10 @@ export default function Leaderboard({ onClose }) {
       </Tooltip>
 
       <button onClick={onClose} aria-label="Close leaderboard">
-        <X size={20} className="text-gray-500 hover:text-gray-700" />
+        <X size={20} className="text-blue-600 hover:text-blue-800" />  
       </button>
     </div>
   </div>
-
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
         ) : entries.length === 0 ? (
