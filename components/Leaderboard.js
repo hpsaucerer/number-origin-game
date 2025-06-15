@@ -85,7 +85,7 @@ export default function Leaderboard({ onClose }) {
     {/* Left: logo & sub-heading */}
     <div className="flex flex-col">
       <img
-        src={Logo}
+        src="/leaderboard.png"
         alt="Numerus Leaderboard"
         className="h-8 w-auto mb-1"
       />
