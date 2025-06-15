@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Share2, X } from "lucide-react";
@@ -45,6 +45,52 @@ export default function PostGameModal({
   const [showBonusButton, setShowBonusButton] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
+   // ——— Only ask when they click “Submit Score to Leaderboard” ———
+  const handleSubmitScore = useCallback(async () => {
+    // 1) nickname
+    let name = localStorage.getItem("playerName");
+    if (!name) {
+      name = window.prompt("What should we call you on the leaderboard?")?.trim();
+      if (!name) return;
+      name = name.replace(/\s+/g, " ");
+      localStorage.setItem("playerName", name);
+    }
+
+  const countryCode = localStorage.getItem("user_country_code") || null;
+
+      // 2) calculate time + points (fallback to the original load time if startTime is missing)
+      const deviceId   = getOrCreateDeviceId();
+      const key        = `startTime-${puzzle.date}`;
+      const storedTime = parseInt(localStorage.getItem(key), 10);
+      const baseTime   = startTime ?? (Number.isNaN(storedTime) ? Date.now() : storedTime);
+      const now        = Date.now();
+      const timeTaken  = Math.floor((now - baseTime) / 1000);
+      const pts        = calculatePoints(attempts + 1, timeTaken);
+
+    // 3) POST
+    const res = await fetch("/api/leaderboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id:      deviceId,
+        puzzle_date:    puzzle.date,
+        attempts:       isCorrect ? attempts + 1 : 4,
+        is_correct:     isCorrect,
+        name,
+        time_taken_sec: timeTaken,
+        points:         pts,
+        country_code:   countryCode,
+      }),
+    });
+
+    if (res.ok) {
+      alert("You're on the leaderboard!");
+      setShowLeaderboard(true);
+    } else {
+      alert("Something went wrong submitting your score.");
+    }
+  }, [puzzle.date, attempts, isCorrect, startTime]);
+  
   useEffect(() => {
     const updateCountdown = () => {
       const now = new Date();
@@ -82,6 +128,10 @@ export default function PostGameModal({
   };
   maybeSetCountry();
 }, []);
+
+ const todayKey = puzzle
+   ? `submitted-${puzzle.date}` 
+   : null;
 
 useEffect(() => {
   if (!open) return;
@@ -136,11 +186,25 @@ useEffect(() => {
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
   }
 
+// only auto-submit once per day, AND only if we already have a name
+if (
+  typeof window !== "undefined" &&
+  isCorrect &&
+  !isArchive &&
+  todayKey &&
+  !localStorage.getItem(todayKey) &&
++  localStorage.getItem("playerName")
+) {
+  handleSubmitScore()
+    .then(() => localStorage.setItem(todayKey, "true"))
+    .catch((err) => console.error("Auto-submit failed:", err));
+}
+
   // ❏ Cleanup when modal closes
   return () => {
     document.body.style.overflow = "";
   };
-}, [open, isCorrect]);
+}, [open, isCorrect, handleSubmitScore]);
 
   const imagePathFor = (attempts, isCorrect) => {
     const key = isCorrect ? attempts + 1 : "failed";
@@ -152,52 +216,6 @@ useEffect(() => {
       failed: "/tomorrow.png",
     };
     return map[key];
-  };
-
-  // ——— Only ask when they click “Submit Score to Leaderboard” ———
-  const handleSubmitScore = async () => {
-    // 1) nickname
-    let name = localStorage.getItem("playerName");
-    if (!name) {
-      name = window.prompt("What should we call you on the leaderboard?")?.trim();
-      if (!name) return;
-      name = name.replace(/\s+/g, " ");
-      localStorage.setItem("playerName", name);
-    }
-
-  const countryCode = localStorage.getItem("user_country_code") || null;
-
-      // 2) calculate time + points (fallback to the original load time if startTime is missing)
-      const deviceId   = getOrCreateDeviceId();
-      const key        = `startTime-${puzzle.date}`;
-      const storedTime = parseInt(localStorage.getItem(key), 10);
-      const baseTime   = startTime ?? (Number.isNaN(storedTime) ? Date.now() : storedTime);
-      const now        = Date.now();
-      const timeTaken  = Math.floor((now - baseTime) / 1000);
-      const pts        = calculatePoints(attempts + 1, timeTaken);
-
-    // 3) POST
-    const res = await fetch("/api/leaderboard", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        device_id:      deviceId,
-        puzzle_date:    puzzle.date,
-        attempts:       isCorrect ? attempts + 1 : 4,
-        is_correct:     isCorrect,
-        name,
-        time_taken_sec: timeTaken,
-        points:         pts,
-        country_code:   countryCode,
-      }),
-    });
-
-    if (res.ok) {
-      alert("You're on the leaderboard!");
-      setShowLeaderboard(true);
-    } else {
-      alert("Something went wrong submitting your score.");
-    }
   };
   
   return (
@@ -278,28 +296,35 @@ useEffect(() => {
               </div>
             </div>
           )}
- {isCorrect && !isArchive && (
-   <>
-     <div className="mt-5 px-4 text-center">
-       <p className="text-sm text-gray-700 mb-2">Want to see how you stack up?</p>
-       <Button
-         onClick={handleSubmitScore}
-         className="bg-[#8E44AD] hover:bg-[#8e44ad] text-white text-sm font-semibold px-4 py-2 rounded shadow"
-       >
-         Submit Score to Leaderboard
-       </Button>
-     </div>
 
-     <div className="flex justify-center mt-5">
-       <Button
-         onClick={() => setShowLeaderboard(true)}
-         className="bg-[#8E44AD] hover:bg-[#8e44ad] text-white text-sm font-semibold px-4 py-2 rounded shadow"
-       >
-         View Leaderboard
-       </Button>
-     </div>
-   </>
- )}
+{isCorrect && !isArchive && (
+  <>
+    {/* only show the “Submit” button if they haven’t submitted today */}
+    {!localStorage.getItem(todayKey) && (
+      <div className="mt-5 px-4 text-center">
+        <p className="text-sm text-gray-700 mb-2">
+          Want to see how you stack up?
+        </p>
+        <Button
+          onClick={handleSubmitScore}
+          className="bg-[#8E44AD] hover:bg-[#8e44ad] text-white text-sm font-semibold px-4 py-2 rounded shadow"
+        >
+          Submit Score to Leaderboard
+        </Button>
+      </div>
+    )}
+
+    {/* always show “View Leaderboard” once they've solved correctly */}
+    <div className="flex justify-center mt-5">
+      <Button
+        onClick={() => setShowLeaderboard(true)}
+        className="bg-[#8E44AD] hover:bg-[#8e44ad] text-white text-sm font-semibold px-4 py-2 rounded shadow"
+      >
+        View Leaderboard
+      </Button>
+    </div>
+  </>
+)}
 
           <FunFactBox puzzle={puzzle} />
 

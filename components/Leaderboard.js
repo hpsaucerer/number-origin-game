@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X, Info } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import Logo from "@/public/leaderboard.png";
 
 function getFlagEmoji(countryCode) {
   if (!countryCode) return "";
@@ -24,44 +25,51 @@ export default function Leaderboard({ onClose }) {
   const [loading, setLoading] = useState(true);
   const [scoringOpen, setScoringOpen] = useState(false);
 
-  // Countdown until next Sunday midnight (days/h/m/s)
-  useEffect(() => {
+  // Countdown until next Sunday midnight
++useEffect(() => {
     const updateReset = () => {
-      const now = Date.now();
-      const d = new Date(now);
-      const daysUntilSunday = (7 - d.getUTCDay()) % 7;
-      d.setDate(d.getDate() + daysUntilSunday);
-      d.setHours(24, 0, 0, 0);
-      const diff = d.getTime() - now;
-
+     const now = new Date();
+     // clone
+     const d = new Date(now.valueOf());
+     // figure out how many days until next Monday (UTC)
+     const dow = d.getUTCDay();               // 0=Sun…6=Sat
+     // days until Monday (1), but if today is Monday we want next Monday => 7
+     const daysUntilMon = ((1 + 7 - dow) % 7) || 7;
+     d.setUTCDate(d.getUTCDate() + daysUntilMon);
+     // zero-out to midnight UTC
+     d.setUTCHours(0, 0, 0, 0);
+     const diff = d.getTime() - now.getTime();
       const days = Math.floor(diff / 86400000);
       const hours = Math.floor((diff % 86400000) / 3600000);
       const mins = Math.floor((diff % 3600000) / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
-
       let str = "";
       if (days) str += `${days}d `;
       str += `${hours}h ${mins}m ${secs}s`;
       setResetCountdown(str);
     };
-
     updateReset();
     const id = setInterval(updateReset, 1000);
     return () => clearInterval(id);
   }, []);
 
-  // Fetch this week’s entries
-  useEffect(() => {
-    async function fetchLeaderboard() {
-      const today = new Date();
-      const dow = today.getDay();
-      today.setDate(today.getDate() - dow);
-      const startOfWeek = today.toISOString().slice(0, 10);
+  // Fetch this week’s entries via RPC
+  +useEffect(() => {
+  async function fetchLeaderboard() {
+    const now = new Date();
+    const d   = new Date(now.valueOf());
+    const dow = d.getUTCDay();                 // 0=Sun…6=Sat
+    const daysUntilMon = ((1 + 7 - dow) % 7) || 7;
+    d.setUTCDate(d.getUTCDate() - (dow === 0 ? 6 : dow - 1)); 
+    // alternatively to get *this* week's UTC-Monday:
+    // d.setUTCDate(d.getUTCDate() - dow + 1);
+    // then zero it out
+    d.setUTCHours(0,0,0,0);
+    const startOfWeek = d.toISOString().slice(0,10);
 
       const { data, error } = await supabase.rpc("weekly_leaderboard", {
         start_date: startOfWeek,
       });
-
       if (error) console.error("❌ Error fetching leaderboard:", error);
       else setEntries(data);
       setLoading(false);
@@ -76,7 +84,6 @@ export default function Leaderboard({ onClose }) {
     return "";
   };
 
-  // Top 10 plus your rank if outside
   const topEntries = entries.slice(0, 10);
   const myIndex = entries.findIndex((e) => e.device_id === deviceId);
   const myRank = myIndex >= 0 ? myIndex + 1 : null;
@@ -84,49 +91,90 @@ export default function Leaderboard({ onClose }) {
   return (
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
-        {/* header with tooltip */}
-        <div className="flex justify-between items-center mb-3">
-          <div className="flex items-center space-x-2">
-            <h2 className="text-lg font-bold text-blue-600">
-              🏆 This Week’s Top Players
+        {/* ─── centered logo & subtitle with tooltip 'i' top-left and dismiss 'X' top-right ─── */}
+        <div className="relative mb-4">
+          <div className="flex flex-col items-center space-y-0.5">
+            <img
+              src="/leaderboard.png"
+              alt="Numerus Leaderboard"
+              className="h-16 w-auto mb-1"
+            />
+            <h2 className="text-sm font-semibold text-blue-600">
+              This Week’s Top Players
             </h2>
-            <Tooltip
-              open={scoringOpen}
-              onOpenChange={setScoringOpen}
-              delayDuration={0}
-              skipDelayDuration={0}
-            >
-              <TooltipTrigger asChild>
-                <button
-                  aria-label="Scoring Explained"
-                  className="p-1 rounded hover:bg-gray-100"
-                  onClick={() => setScoringOpen(true)}
-                >
-                  <Info className="w-5 h-5 text-gray-400" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                align="center"
-                sideOffset={6}
-                collisionPadding={{ left: 8, right: 8 }}
-                className="z-50 max-w-xs space-y-2 p-2"
-              >
-                <h3 className="font-semibold text-sm">Scoring Explained</h3>
-                <p className="text-xs leading-snug">
-                  <strong>Guess pts:</strong><br />
-                  1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
-                </p>
-                <p className="text-xs leading-snug">
-                  <strong>Time bonus:</strong><br />
-                  ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
-                </p>
-              </TooltipContent>
-            </Tooltip>
           </div>
-          <button onClick={onClose} aria-label="Close leaderboard">
-            <X size={20} className="text-gray-500 hover:text-gray-700" />
-          </button>
+
+{/* tooltip in top-left */}
+<div className="absolute top-2 left-2">
+    <Tooltip
+    open={scoringOpen}
+    onOpenChange={setScoringOpen}
+    delayDuration={0}
+    skipDelayDuration={0}
+  >
+ <TooltipTrigger asChild>
+   <button
+     aria-label="Scoring Explained"
+     className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
+     onClick={() => setScoringOpen((prev) => !prev)}  // toggle tooltip on tap
+     onBlur={() => setScoringOpen(false)}             // close when focus leaves
+   >
+     <Info className="w-6 h-6 text-blue-600" />
+   </button>
+ </TooltipTrigger>
+    <TooltipContent
+      side="bottom"
+      align="center"
+      sideOffset={6}
+      collisionPadding={{ left: 8, right: 8 }}
+      className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
+    >
+  <div className="space-y-2">
+    <h3 className="font-semibold text-sm">Scoring Explained</h3>
+
+    {/* Guess points */}
+    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+      <div className="font-semibold col-span-2">Guess pts:</div>
+      <div>1st</div>
+      <div className="font-medium">50</div>
+      <div>2nd</div>
+      <div className="font-medium">30</div>
+      <div>3rd</div>
+      <div className="font-medium">20</div>
+      <div>4th</div>
+      <div className="font-medium">10</div>
+    </div>
+
+    {/* Time bonus */}
+    <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs mt-2">
+      <div className="font-semibold col-span-2">Time bonus:</div>
+      <div>≤ 100 s</div>
+      <div className="font-medium">100</div>
+      <div>≤ 200 s</div>
+      <div className="font-medium">70</div>
+      <div>≤ 300 s</div>
+      <div className="font-medium">50</div>
+      <div>≤ 600 s</div>
+      <div className="font-medium">30</div>
+      <div>All other times</div>
+      <div className="font-medium">10</div>
+    </div>
+  </div>
+</TooltipContent>
+
+  </Tooltip>
+</div>
+
+          {/* dismiss 'X' in top-right */}
+          <div className="absolute top-2 right-2">
+            <button
+              onClick={onClose}
+              aria-label="Close leaderboard"
+              className="text-blue-600 hover:text-blue-800"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {loading ? (
@@ -138,9 +186,9 @@ export default function Leaderboard({ onClose }) {
             <p className="text-sm text-gray-500 mb-2">
               Resets in: {resetCountdown}
             </p>
-          <p className="text-xs text-yellow-700 mb-4">
-           Leaderboard is currently in beta – thanks for testing!
-          </p>
+            <p className="text-xs text-yellow-700 mb-4">
+              Leaderboard is currently in beta – thanks for testing!
+            </p>
             <ol className="pl-5 space-y-1 text-sm">
               {topEntries.map((entry, i) => (
                 <li
@@ -150,6 +198,7 @@ export default function Leaderboard({ onClose }) {
                   )}`}
                 >
                   <div className="flex items-center space-x-2">
+                    {/* Native flag emoji */}
                     <span
                       className="text-xl"
                       style={{
