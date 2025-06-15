@@ -95,31 +95,22 @@ export default function Leaderboard({ onClose }) {
 
 {/* tooltip in top-left */}
 <div className="absolute top-2 left-2">
-  <Tooltip
-    open={scoringOpen}
-    onOpenChange={setScoringOpen}
-    delayDuration={0}
-    skipDelayDuration={0}
+ <Tooltip>
+   <TooltipTrigger asChild>
+    <button
+      aria-label="Scoring Explained"
+      className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
+    >
+      <Info className="w-6 h-6 text-blue-600" />
+    </button>
+  </TooltipTrigger>
+  <TooltipContent
+    side="bottom"
+    align="center"
+    sideOffset={6}
+    collisionPadding={{ left: 8, right: 8 }}
+    className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
   >
-    <TooltipTrigger asChild>
-      <button
-        aria-label="Scoring Explained"
-        className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
-           onPointerDown={e => {
-     e.preventDefault()
-     setScoringOpen(prev => !prev)
-   }}
-      >
-        <Info className="w-6 h-6 text-blue-600" />
-      </button>
-    </TooltipTrigger>
-<TooltipContent
-  side="bottom"
-  align="center"
-  sideOffset={6}
-  collisionPadding={{ left: 8, right: 8 }}
-  className="z-50 max-w-xs p-3 bg-white text-black rounded-lg shadow"
->
   <div className="space-y-2">
     <h3 className="font-semibold text-sm">Scoring Explained</h3>
 
@@ -147,7 +138,7 @@ export default function Leaderboard({ onClose }) {
       <div className="font-medium">50</div>
       <div>≤ 600 s</div>
       <div className="font-medium">30</div>
-      <div>else</div>
+      <div>all other times</div>
       <div className="font-medium">10</div>
     </div>
   </div>
