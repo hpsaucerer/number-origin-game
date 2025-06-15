@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X, Info } from "lucide-react";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import Logo from "@/public/leaderboard.png";
 
 function getFlagEmoji(countryCode) {
