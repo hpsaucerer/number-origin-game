@@ -80,12 +80,19 @@ export default function Leaderboard({ onClose }) {
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
         {/* Header with tooltip */}
-        <div className="flex justify-between items-center mb-3">
-          <div className="flex items-center space-x-2">
-            <h2 className="text-lg font-bold text-blue-600">
-              🏆 This Week’s Top Players
+                <div className="flex justify-between items-center mb-3">
+          {/* logo above, subheading beneath */}
+          <div className="flex flex-col items-start">
+            <img
+              src="/leaderboard.png"
+              alt="Numerus Leaderboard"
+              className="h-8 w-auto mb-1"
+            />
+            <h2 className="text-sm font-semibold text-blue-600">
+              This Week’s Top Players
             </h2>
-            <Tooltip
+          </div>
+          <Tooltip
               open={scoringOpen}
               onOpenChange={setScoringOpen}
               delayDuration={0}
