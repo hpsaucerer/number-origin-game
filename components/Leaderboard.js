@@ -81,56 +81,65 @@ export default function Leaderboard({ onClose }) {
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
     {/* ─── centered logo & subtitle, with tooltip in TL and X in TR ─── */}
-  <div className="relative mb-4">
-    {/* tooltip moved to top-left */}
-    <div className="absolute top-2 left-2">
-      <Tooltip
-        open={scoringOpen}
-        onOpenChange={setScoringOpen}
-        delayDuration={0}
-        skipDelayDuration={0}
-      >
-        <TooltipTrigger asChild>
-          <button
-            aria-label="Scoring Explained"
-            className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
-          >
-            <Info className="w-6 h-6 text-blue-600" />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent
-          side="bottom"
-          align="center"
-          sideOffset={6}
-          collisionPadding={{ left: 8, right: 8 }}
-          className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
-        >
-          {/* …your tooltip content here… */}
-        </TooltipContent>
-      </Tooltip>
-    </div>
-
-    {/* dismiss “X” stays top-right */}
-    <button
-      onClick={onClose}
-      aria-label="Close leaderboard"
-      className="absolute top-2 right-2 text-blue-600 hover:text-blue-800"
+<div className="relative mb-4">
+  {/* tooltip in top-left */}
+  <div className="absolute top-2 left-2">
+    <Tooltip
+      open={scoringOpen}
+      onOpenChange={setScoringOpen}
+      delayDuration={0}
+      skipDelayDuration={0}
     >
-      <X size={20} />
-    </button>
-
-    {/* logo + subtitle centered */}
-    <div className="flex flex-col items-center">
-      <img
-        src="/leaderboard.png"
-        alt="Numerus Leaderboard"
-        className="h-12 w-auto mb-1"
-      />
-      <h2 className="text-sm font-semibold text-blue-600">
-        This Week’s Top Players
-      </h2>
-    </div>
+      <TooltipTrigger asChild>
+        <button
+          aria-label="Scoring Explained"
+          className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
+        >
+          <Info className="w-6 h-6 text-blue-600" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent
+        side="bottom"
+        align="center"
+        sideOffset={6}
+        collisionPadding={{ left: 8, right: 8 }}
+        className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
+      >
+        <h3 className="font-semibold text-sm">Scoring Explained</h3>
+        <p className="text-xs leading-snug">
+          <strong>Guess pts:</strong><br />
+          1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
+        </p>
+        <p className="text-xs leading-snug">
+          <strong>Time bonus:</strong><br />
+          ≤ 100 s = 100 • ≤ 200 s = 70 • ≤ 300 s = 50 • ≤ 600 s = 30 • else = 10
+        </p>
+      </TooltipContent>
+    </Tooltip>
   </div>
+
+  {/* dismiss “X” in top-right */}
+  <button
+    onClick={onClose}
+    aria-label="Close leaderboard"
+    className="absolute top-2 right-2 text-blue-600 hover:text-blue-800"
+  >
+    <X size={20} />
+  </button>
+
+  {/* logo + subtitle centered */}
+  <div className="flex flex-col items-center">
+    <img
+      src="/leaderboard.png"
+      alt="Numerus Leaderboard"
+      className="h-15 w-auto mb-1"
+    />
+    <h2 className="text-sm font-semibold text-blue-600">
+      This Week’s Top Players
+    </h2>
+  </div>
+</div>
+
         {loading ? (
           <p className="text-sm text-gray-500">Loading leaderboard…</p>
         ) : entries.length === 0 ? (
