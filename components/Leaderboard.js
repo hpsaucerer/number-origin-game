@@ -105,6 +105,7 @@ export default function Leaderboard({ onClose }) {
       <button
         aria-label="Scoring Explained"
         className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
+        onClick={() => setScoringOpen(prev => !prev)}
       >
         <Info className="w-6 h-6 text-blue-600" />
       </button>
