@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X, Info } from "lucide-react";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import Logo from "@/public/leaderboard.png";
 
 function getFlagEmoji(countryCode) {
@@ -82,11 +82,11 @@ export default function Leaderboard({ onClose }) {
       <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
         {/* ─── centered logo & subtitle with tooltip 'i' top-left and dismiss 'X' top-right ─── */}
         <div className="relative mb-4">
-          <div className="flex flex-col items-center space-y-1">
+          <div className="flex flex-col items-center space-y-0.5">
             <img
               src="/leaderboard.png"
               alt="Numerus Leaderboard"
-              className="h-16 w-auto"
+              className="h-16 w-auto mb-1"
             />
             <h2 className="text-sm font-semibold text-blue-600">
               This Week’s Top Players
@@ -95,38 +95,33 @@ export default function Leaderboard({ onClose }) {
 
           {/* tooltip in top-left */}
           <div className="absolute top-2 left-2">
-            <Tooltip
-              open={scoringOpen}
-              onOpenChange={setScoringOpen}
-              delayDuration={0}
-              skipDelayDuration={0}
-            >
-              <TooltipTrigger asChild>
-                <button
-                  aria-label="Scoring Explained"
-                  className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
-                >
-                  <Info className="w-6 h-6 text-blue-600" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                align="center"
-                sideOffset={6}
-                collisionPadding={{ left: 8, right: 8 }}
-                className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
-              >
-                <h3 className="font-semibold text-sm">Scoring Explained</h3>
-                <p className="text-xs leading-snug">
-                  <strong>Guess pts:</strong><br />
-                  1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
-                </p>
-                <p className="text-xs leading-snug">
-                  <strong>Time bonus:</strong><br />
-                  ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
-                </p>
-              </TooltipContent>
-            </Tooltip>
+             <Popover open={scoringOpen} onOpenChange={setScoringOpen}>
+   <PopoverTrigger asChild>
+     <button
+       aria-label="Scoring Explained"
+       className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
+     >
+       <Info className="w-6 h-6 text-blue-600" />
+     </button>
+   </PopoverTrigger>
+   <PopoverContent
+     side="bottom"
+     align="center"
+     sideOffset={6}
+     collisionPadding={{ left: 8, right: 8 }}
+     className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
+   >
+     <h3 className="font-semibold text-sm">Scoring Explained</h3>
+     <p className="text-xs leading-snug">
+       <strong>Guess pts:</strong><br />
+       1st = 50 • 2nd = 30 • 3rd = 20 • 4th = 10
+     </p>
+     <p className="text-xs leading-snug">
+       <strong>Time bonus:</strong><br />
+       ≤100 s = 100 • ≤200 s = 70 • ≤300 s = 50 • ≤600 s = 30 • else = 10
+     </p>
+   </PopoverContent>
+ </Popover>
           </div>
 
           {/* dismiss 'X' in top-right */}
