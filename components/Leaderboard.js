@@ -132,7 +132,7 @@ export default function Leaderboard({ onClose }) {
     <img
       src="/leaderboard.png"
       alt="Numerus Leaderboard"
-      className="h-15 w-auto mb-1"
+      className="h-16 w-auto mb-1"
     />
     <h2 className="text-sm font-semibold text-blue-600">
       This Week’s Top Players
