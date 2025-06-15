@@ -16,6 +16,7 @@ function getFlagEmoji(countryCode) {
 }
 
 export default function Leaderboard({ onClose }) {
+  // grab your device id
   const deviceId =
     typeof window !== "undefined" ? localStorage.getItem("device_id") : null;
 
@@ -33,21 +34,24 @@ export default function Leaderboard({ onClose }) {
       d.setDate(d.getDate() + daysUntilSunday);
       d.setHours(24, 0, 0, 0);
       const diff = d.getTime() - now;
+
       const days = Math.floor(diff / 86400000);
       const hours = Math.floor((diff % 86400000) / 3600000);
       const mins = Math.floor((diff % 3600000) / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
+
       let str = "";
       if (days) str += `${days}d `;
       str += `${hours}h ${mins}m ${secs}s`;
       setResetCountdown(str);
     };
+
     updateReset();
     const id = setInterval(updateReset, 1000);
     return () => clearInterval(id);
   }, []);
 
-  // Fetch this week’s entries via RPC
+  // Fetch this week’s entries
   useEffect(() => {
     async function fetchLeaderboard() {
       const today = new Date();
@@ -58,6 +62,7 @@ export default function Leaderboard({ onClose }) {
       const { data, error } = await supabase.rpc("weekly_leaderboard", {
         start_date: startOfWeek,
       });
+
       if (error) console.error("❌ Error fetching leaderboard:", error);
       else setEntries(data);
       setLoading(false);
@@ -78,13 +83,15 @@ export default function Leaderboard({ onClose }) {
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
-        {/* Header with tooltip */}
+      {/* 
+        ▷ Changed bg-white → bg-[#8E44AD] 
+        ▷ Added text-white so content is legible 
+      */}
+      <DialogContent className="max-w-md bg-[#8E44AD] text-white rounded-xl p-5 overflow-visible">
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center space-x-2">
-            <h2 className="text-lg font-bold text-blue-600">
-              🏆 This Week’s Top Players
-            </h2>
+            {/* we’re using white text now */}
+            <h2 className="text-lg font-bold">🏆 This Week’s Top Players</h2>
             <Tooltip
               open={scoringOpen}
               onOpenChange={setScoringOpen}
@@ -94,18 +101,16 @@ export default function Leaderboard({ onClose }) {
               <TooltipTrigger asChild>
                 <button
                   aria-label="Scoring Explained"
-                  className="p-1 rounded hover:bg-gray-100"
-                  onClick={() => setScoringOpen(true)}
+                  className="p-1 rounded hover:bg-purple-600"
                 >
-                  <Info className="w-5 h-5 text-gray-400" />
+                  <Info className="w-5 h-5 text-white" />
                 </button>
               </TooltipTrigger>
               <TooltipContent
                 side="bottom"
                 align="center"
                 sideOffset={6}
-                collisionPadding={{ left: 8, right: 8 }}
-                className="z-50 max-w-xs space-y-2 p-2"
+                className="z-50 max-w-xs space-y-2 p-2 bg-white text-black rounded"
               >
                 <h3 className="font-semibold text-sm">Scoring Explained</h3>
                 <p className="text-xs leading-snug">
@@ -120,32 +125,28 @@ export default function Leaderboard({ onClose }) {
             </Tooltip>
           </div>
           <button onClick={onClose} aria-label="Close leaderboard">
-            <X size={20} className="text-gray-500 hover:text-gray-700" />
+            <X size={20} className="text-white hover:text-gray-200" />
           </button>
         </div>
 
         {loading ? (
-          <p className="text-sm text-gray-500">Loading leaderboard…</p>
+          <p className="text-sm">Loading leaderboard…</p>
         ) : entries.length === 0 ? (
-          <p className="text-sm text-gray-500">No scores submitted yet.</p>
+          <p className="text-sm">No scores submitted yet.</p>
         ) : (
           <>
-            <p className="text-sm text-gray-500 mb-2">
-              Resets in: {resetCountdown}
-            </p>
-            <p className="text-xs text-yellow-700 mb-4">
-              Leaderboard is currently in beta – thanks for testing!
-            </p>
-            <ol className="pl-5 space-y-1 text-sm">
+            <p className="text-sm mb-2">Resets in: {resetCountdown}</p>
+            <ol className="pl-5 space-y-1 text-sm text-white">
               {topEntries.map((entry, i) => (
                 <li
                   key={entry.device_id}
-                  className={`rounded px-3 py-1 flex items-center justify-between ${getRowClass(
-                    i
-                  )}`}
+                  className={`
+                    rounded px-3 py-1 flex items-center justify-between
+                    ${getRowClass(i)} 
+                    ${entry.device_id === deviceId ? "ring-2 ring-purple-300 ring-opacity-75" : ""}
+                  `}
                 >
                   <div className="flex items-center space-x-2">
-                    {/* Native flag emoji */}
                     <span
                       className="text-xl"
                       style={{
@@ -158,15 +159,16 @@ export default function Leaderboard({ onClose }) {
                     <span className="font-bold">{i + 1}.</span>
                     <span className="font-medium">{entry.nickname}</span>
                   </div>
-                  <span className="text-gray-600">
+                  <span className="text-white/80">
                     {entry.total_score} pts · {entry.solves}{" "}
                     {entry.solves === 1 ? "solve" : "solves"}
                   </span>
                 </li>
               ))}
             </ol>
+
             {myRank > 10 && (
-              <p className="mt-3 text-sm text-gray-600">
+              <p className="mt-3 text-sm text-white/80">
                 Your rank: #{myRank} — {entries[myIndex].total_score} pts ·{" "}
                 {entries[myIndex].solves}{" "}
                 {entries[myIndex].solves === 1 ? "solve" : "solves"}
