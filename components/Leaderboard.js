@@ -96,14 +96,16 @@ export default function Leaderboard({ onClose }) {
 {/* tooltip in top-left */}
 <div className="absolute top-2 left-2">
   <Tooltip>
-    <TooltipTrigger asChild>
-      <button
-        aria-label="Scoring Explained"
-        className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
-      >
-        <Info className="w-6 h-6 text-blue-600" />
-      </button>
-    </TooltipTrigger>
+ <TooltipTrigger asChild>
+   <button
+     aria-label="Scoring Explained"
+     className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
+     onClick={() => setScoringOpen((prev) => !prev)}  // toggle tooltip on tap
+     onBlur={() => setScoringOpen(false)}             // close when focus leaves
+   >
+     <Info className="w-6 h-6 text-blue-600" />
+   </button>
+ </TooltipTrigger>
     <TooltipContent
       side="bottom"
       align="center"
@@ -138,7 +140,7 @@ export default function Leaderboard({ onClose }) {
       <div className="font-medium">50</div>
       <div>≤ 600 s</div>
       <div className="font-medium">30</div>
-      <div>all other times</div>
+      <div>All other times</div>
       <div className="font-medium">10</div>
     </div>
   </div>
