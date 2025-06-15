@@ -82,12 +82,7 @@ export default function Leaderboard({ onClose }) {
   const myRank = myIndex >= 0 ? myIndex + 1 : null;
 
   return (
-      {/*
-        ▷ Entire panel is now purple 
-        ▷ All text turned white for contrast 
-        ▷ Added subtle drop-shadow
-      */}
-      <DialogContent className="max-w-md bg-purple-600 text-white rounded-xl p-5 overflow-visible shadow-lg">
+        <DialogContent className="max-w-md bg-purple-600 text-white rounded-xl p-5 overflow-visible shadow-lg">
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center space-x-2">
             {/* we’re using white text now */}
