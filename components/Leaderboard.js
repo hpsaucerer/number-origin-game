@@ -82,12 +82,21 @@ export default function Leaderboard({ onClose }) {
   const myRank = myIndex >= 0 ? myIndex + 1 : null;
 
   return (
-    <Dialog open onOpenChange={onClose}>
       {/* 
-        ▷ Changed bg-white → bg-[#8E44AD] 
-        ▷ Added text-white so content is legible 
+        ▷ Entire panel is now purple 
+        ▷ All text turned white for contrast 
       */}
-      <DialogContent className="max-w-md bg-purple-600 text-white rounded-xl p-5 overflow-visible">
+      <DialogContent
+        className="
+          max-w-md
+          bg-purple-600    /* purple background for the whole box */
+          text-white       /* white text everywhere */
+          rounded-xl
+          p-5
+          overflow-visible
+          shadow-lg       /* optional drop-shadow to lift it off the page */
+        "
+      >
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center space-x-2">
             {/* we’re using white text now */}
