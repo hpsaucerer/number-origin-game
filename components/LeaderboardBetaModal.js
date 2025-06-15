@@ -15,15 +15,14 @@ export default function LeaderboardBetaModal({ open, onClose }) {
           Our brand-new weekly leaderboard is now live! Here’s how it works:
         </p>
         <ul className="list-disc list-inside text-sm space-y-1">
-          <li>Submit your score once per day to enter the Top 10.</li>
+          <li>Submit your score just once, subsequent scores are then automatically submitted. </li>
           <li>Leaderboard resets every Monday at 00:00 UTC (midnight).</li>
           <li>Top 10 players are shown; everyone else sees their own rank below.</li>
-          <li>Country flags use native emoji — desktop support may vary.</li>
-          <li>Tap the “i” icon anywhere in the app to view scoring rules.</li>
+          <li>Tap the “i” icon inside the Leaderboard pop-up to see how the scoring works.</li>
         </ul>
         <p className="text-xs text-gray-500">
           <strong>Known issues:</strong><br />
-          • Flags may render as two‐letter codes on some desktops.<br />
+          • Country flags may render as two‐letter codes on some desktops.<br />
           • Tooltip “i” sometimes needs a double-tap on older mobiles.<br />
           • Found another bug? Please let us know!
         </p>
