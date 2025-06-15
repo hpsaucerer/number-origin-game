@@ -78,24 +78,23 @@ export default function Leaderboard({ onClose }) {
   const myRank = myIndex >= 0 ? myIndex + 1 : null;
 
   return (
-    <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
-  {/* Header: logo + subtitle + tooltip + close button */}
-  <div className="flex justify-between items-center mb-4">
-    {/* Left side: bigger logo + subheading */}
-    <div className="flex flex-col">
+    <DialogContent className="max-w-md bg-white rounded-xl p-5 overflow-visible">
+  {/* ─── centered logo & subtitle, with tooltip + X in top right ─── */}
+  <div className="relative mb-4">
+    {/* centered stack */}
+    <div className="flex flex-col items-center">
       <img
         src="/leaderboard.png"
         alt="Numerus Leaderboard"
-        className="h-12 w-auto mb-1"        // ← bumped from h-8 to h-12
+        className="h-12 w-auto mb-1"
       />
       <h2 className="text-sm font-semibold text-blue-600">
         This Week’s Top Players
       </h2>
     </div>
 
-    {/* Right side: info button + close X */}
-    <div className="flex items-center space-x-2">
+    {/* absolutely positioned controls */}
+    <div className="absolute top-2 right-2 flex items-center space-x-2">
       <Tooltip
         open={scoringOpen}
         onOpenChange={setScoringOpen}
@@ -107,7 +106,7 @@ export default function Leaderboard({ onClose }) {
             aria-label="Scoring Explained"
             className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 transition"
           >
-            <Info className="w-6 h-6 text-blue-600" />  {/* larger, blue */}
+            <Info className="w-6 h-6 text-blue-600" />
           </button>
         </TooltipTrigger>
         <TooltipContent
@@ -117,20 +116,16 @@ export default function Leaderboard({ onClose }) {
           collisionPadding={{ left: 8, right: 8 }}
           className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
         >
-          <h3 className="font-semibold text-sm">Scoring Explained</h3>
-          <p className="text-xs leading-snug">
-            <strong>Guess pts:</strong><br />
-            1st = 50 · 2nd = 30 · 3rd = 20 · 4th = 10
-          </p>
-          <p className="text-xs leading-snug">
-            <strong>Time bonus:</strong><br />
-            ≤100s = 100 · ≤200s = 70 · ≤300s = 50 · ≤600s = 30 · else = 10
-          </p>
+          {/* … your tooltip content … */}
         </TooltipContent>
       </Tooltip>
 
-      <button onClick={onClose} aria-label="Close leaderboard">
-        <X size={20} className="text-blue-600 hover:text-blue-800" />  
+      <button
+        onClick={onClose}
+        aria-label="Close leaderboard"
+        className="text-blue-600 hover:text-blue-800 -mt-1"
+      >
+        <X size={20} />
       </button>
     </div>
   </div>
