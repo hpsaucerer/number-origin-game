@@ -93,7 +93,7 @@ export default function LeaderboardPage() {
           </div>
 
           {/* tooltip */}
-           <div className="absolute top-0 left-0">
+           <div className="absolute top-4 left-4">
             <Tooltip
               open={scoringOpen}
               onOpenChange={setScoringOpen}
@@ -118,7 +118,23 @@ export default function LeaderboardPage() {
                 sideOffset={6}
                 className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
               >
-                {/* … your scoring grids … */}
+          /* ← scoring grid */}
+       <h3 className="font-semibold text-sm">Scoring Explained</h3>
+       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+         <div className="col-span-2 font-semibold">Guess points</div>
+         <div>1st</div><div>50</div>
+         <div>2nd</div><div>30</div>
+         <div>3rd</div><div>20</div>
+         <div>4th</div><div>10</div>
+       </div>
+       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs pt-2">
+         <div className="col-span-2 font-semibold">Time bonus</div>
+         <div>≤100 s</div><div>100</div>
+         <div>≤200 s</div><div>70</div>
+         <div>≤300 s</div><div>50</div>
+         <div>≤600 s</div><div>30</div>
+         <div>all other times </div><div>10</div>
+       </div>
               </TooltipContent>
             </Tooltip>
           </div>
