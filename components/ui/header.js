@@ -16,6 +16,11 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
   }, []);
 
   const handleMenuToggle = () => {
+    // if we're currently open and they clicked to close, mark badge seen
+    if (menuOpen && showBadge) {
+      localStorage.setItem("seenLeaderboardBadge", "true");
+      setShowBadge(false);
+    }
     setMenuOpen(prev => !prev);
   };
 
