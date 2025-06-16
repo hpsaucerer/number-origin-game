@@ -8,6 +8,8 @@ import Footer from '@/components/ui/Footer';
 import { supabase } from '@/lib/supabase';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Info } from 'lucide-react';
+import StatsModal from '@/components/modals/StatsModal';
+import AchievementsModal from '@/components/AchievementsModal';
 
 function getFlagEmoji(countryCode) {
   if (!countryCode) return '';
@@ -54,6 +56,8 @@ export default function LeaderboardPage() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(getResetCountdownUTC());
+  const [showStats, setShowStats] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
 
   useEffect(() => {
     async function fetchLeaderboard() {
@@ -75,8 +79,12 @@ export default function LeaderboardPage() {
 
   return (
     <>
-      <Header />
-
+    
+      {/* wire in the click handlers */}
+      <Header
+        onStatsClick={() => setShowStats(true)}
+        onAchievementsClick={() => setShowAchievements(true)}
+      />
       <div className="bg-gray-50 min-h-screen flex flex-col items-center py-8 px-4">
         <div className="relative bg-white w-full max-w-2xl rounded-xl shadow-lg p-6">
           
@@ -190,7 +198,18 @@ export default function LeaderboardPage() {
         </div>
       </div>
 
-      <Footer />
+       <Footer />
+
+      {/* render the modals */}
+      <StatsModal
+        open={showStats}
+        onClose={() => setShowStats(false)}
+        /* if StatsModal needs props (stats, data, COLORS, etc.), pass them here */
+      />
+      <AchievementsModal
+        open={showAchievements}
+        onClose={() => setShowAchievements(false)}
+      />
     </>
   );
 }
