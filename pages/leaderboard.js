@@ -93,13 +93,13 @@ export default function LeaderboardPage() {
         <div className="relative bg-white w-full max-w-2xl rounded-xl shadow-lg p-6">
           
           {/* logo + heading */}
-          <div className="flex flex-col items-center mb-4">
+          <div className="flex flex-col items-center mb-3">
             <img
               src="/leaderboard.png"
               alt="Numerus Leaderboard"
-              className="h-24 w-auto mb-2"
+              className="h-16 sm:h-24 w-auto mb-0"
             />
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-lg sm:text-2xl font-bold text-gray-800">
               This Week’s Top Players
             </h1>
           </div>
