@@ -84,7 +84,7 @@ export default function LeaderboardPage() {
             <img
               src="/leaderboard.png"
               alt="Numerus Leaderboard"
-              className="h-12 w-auto mb-2"
+              className="h-24 w-auto mb-2"
             />
             <h1 className="text-2xl font-bold text-gray-800">
               This Week’s Top Players
