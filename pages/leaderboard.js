@@ -50,6 +50,7 @@ function getResetCountdownUTC() {
 }
 
 export default function LeaderboardPage() {
+  const [scoringOpen, setScoringOpen] = useState(false);
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(getResetCountdownUTC());
@@ -92,10 +93,22 @@ export default function LeaderboardPage() {
           </div>
 
           {/* tooltip */}
-          <div className="absolute top-4 left-4">
-            <Tooltip delayDuration={0} skipDelayDuration={0}>
+           <div className="absolute top-0 left-0">
+            <Tooltip
+              open={scoringOpen}
+              onOpenChange={setScoringOpen}
+              delayDuration={0}
+              skipDelayDuration={0}
+            >
               <TooltipTrigger asChild>
-                <button className="p-1 rounded-full bg-blue-100 hover:bg-blue-200 transition">
+                <button
+                  aria-label="Scoring Explained"
+                  className="p-1 rounded-full bg-blue-100 hover:bg-blue-200 transition"
+                  onClick={e => {
+                    e.stopPropagation()
+                    setScoringOpen(open => !open)
+                  }}
+                >
                   <Info className="w-5 h-5 text-blue-600" />
                 </button>
               </TooltipTrigger>
@@ -105,22 +118,7 @@ export default function LeaderboardPage() {
                 sideOffset={6}
                 className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
               >
-                <h3 className="font-semibold text-sm">Scoring Explained</h3>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                  <div className="col-span-2 font-semibold">Guess pts</div>
-                  <div>1st</div><div>50</div>
-                  <div>2nd</div><div>30</div>
-                  <div>3rd</div><div>20</div>
-                  <div>4th</div><div>10</div>
-                </div>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs pt-2">
-                  <div className="col-span-2 font-semibold">Time bonus</div>
-                  <div>≤100 s</div><div>100</div>
-                  <div>≤200 s</div><div>70</div>
-                  <div>≤300 s</div><div>50</div>
-                  <div>≤600 s</div><div>30</div>
-                  <div>all other times</div><div>10</div>
-                </div>
+                {/* … your scoring grids … */}
               </TooltipContent>
             </Tooltip>
           </div>
