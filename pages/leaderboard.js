@@ -10,6 +10,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { Info } from 'lucide-react';
 import StatsModal from '@/components/modals/StatsModal';
 import AchievementsModal from '@/components/AchievementsModal';
+import useStats from '@/hooks/useStats';
 
 function getFlagEmoji(countryCode) {
   if (!countryCode) return '';
