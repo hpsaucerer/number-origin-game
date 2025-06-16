@@ -119,7 +119,7 @@ export default function LeaderboardPage() {
                   <div>≤200 s</div><div>70</div>
                   <div>≤300 s</div><div>50</div>
                   <div>≤600 s</div><div>30</div>
-                  <div>all other</div><div>10</div>
+                  <div>all other times</div><div>10</div>
                 </div>
               </TooltipContent>
             </Tooltip>
