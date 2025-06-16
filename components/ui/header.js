@@ -16,13 +16,16 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
   }, []);
 
   const handleMenuToggle = () => {
-    // If opening the menu for the first time and badge is visible, mark it as seen
+    setMenuOpen(prev => !prev);
+  };
+
+  // Once the menu is *closed* and badge was still showing, mark it as seen
+  useEffect(() => {
     if (!menuOpen && showBadge) {
       localStorage.setItem("seenLeaderboardBadge", "true");
       setShowBadge(false);
     }
-    setMenuOpen(!menuOpen);
-  };
+  }, [menuOpen, showBadge]);
 
   return (
     <header>
@@ -69,10 +72,10 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
                 >
                   Leaderboard
                   {showBadge && (
-                    <span className="ml-2 text-xs font-semibold text-red-600">
-                      New
-                    </span>
-                  )}
+                  <span className="ml-2 inline-block bg-red-500 text-white text-xs font-semibold px-1 rounded">
+                    New
+                  </span>
+                )}
                 </Link>
                 <Link
                   href="/archives"
