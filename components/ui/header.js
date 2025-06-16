@@ -126,7 +126,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
           </button>
           <button
             onClick={onAchievementsClick}
-            className="p-2 text-white hover:text-blue-200"
+            className="achievements-button p-2 text-white hover:text-blue-200"
             title="Achievements"
             aria-label="Achievements"
           >
