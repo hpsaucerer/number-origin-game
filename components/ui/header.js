@@ -118,7 +118,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
         <div className="flex items-center space-x-3">
           <button
             onClick={onStatsClick}
-            className="p-2 text-white hover:text-blue-200"
+            className="stats-button p-2 text-white hover:text-blue-200"
             title="Your Stats"
             aria-label="Your Stats"
           >
