@@ -1,14 +1,14 @@
+// components/ui/header.js
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Trophy } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import PieChartIcon from "@/components/icons/PieChartIcon";
 
 export default function Header({ onStatsClick, onAchievementsClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showBadge, setShowBadge] = useState(false);
 
-  // On mount, check if the user has seen the leaderboard badge yet
+  // On mount, if they've never seen it, show the badge
   useEffect(() => {
     if (!localStorage.getItem("seenLeaderboardBadge")) {
       setShowBadge(true);
@@ -16,28 +16,14 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
   }, []);
 
   const handleMenuToggle = () => {
-    // if we're currently open and they clicked to close, mark badge seen
-    if (menuOpen && showBadge) {
-      localStorage.setItem("seenLeaderboardBadge", "true");
-      setShowBadge(false);
-    }
-    setMenuOpen(prev => !prev);
+    setMenuOpen((o) => !o);
   };
-
-  // Once the menu is *closed* and badge was still showing, mark it as seen
-  useEffect(() => {
-    if (!menuOpen && showBadge) {
-      localStorage.setItem("seenLeaderboardBadge", "true");
-      setShowBadge(false);
-    }
-  }, [menuOpen, showBadge]);
 
   return (
     <header>
       <div className="bg-[#3B82F6] px-4 py-2 flex items-center justify-between h-16 max-w-screen-lg w-full mx-auto">
         {/* Left Side: Hamburger + Logo */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Hamburger + Dropdown */}
           <div className="relative flex items-start">
             <button
               onClick={handleMenuToggle}
@@ -45,7 +31,6 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
               aria-label="Toggle menu"
             >
               ☰
-              {/* little red dot badge */}
               {showBadge && (
                 <span
                   className="absolute top-0 right-0 block w-2 h-2 rounded-full bg-red-500"
@@ -53,93 +38,95 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
                 />
               )}
             </button>
-
             {menuOpen && (
-              <div className="absolute left-0 top-full mt-2 w-44 bg-white rounded-xl shadow-lg z-50 transition-all duration-200 ease-out">
+              <div className="absolute left-0 top-full mt-2 w-44 bg-white rounded-xl shadow-lg z-50">
                 <Link
                   href="/"
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
                   Daily Puzzle
                 </Link>
                 <Link
                   href="/how-to-play"
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
                   How to Play
                 </Link>
+
+                {/* ← HERE is your Leaderboard link; we write the flag only on click */}
                 <Link
                   href="/leaderboard"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-between px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+                  onClick={() => {
+                    localStorage.setItem("seenLeaderboardBadge", "true");
+                    setShowBadge(false);
+                    setMenuOpen(false);
+                  }}
+                  className="flex items-center justify-between px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
                   Leaderboard
                   {showBadge && (
-                  <span className="ml-2 inline-block bg-red-500 text-white text-xs font-semibold px-1 rounded">
-                    New
-                  </span>
-                )}
+                    <span className="ml-2 text-xs font-semibold text-red-600">
+                      NEW
+                    </span>
+                  )}
                 </Link>
+
                 <Link
                   href="/archives"
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
                   Archive Puzzles
                 </Link>
                 <Link
                   href="/about"
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
                   About
                 </Link>
                 <Link
                   href="/community"
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
                   Community
                 </Link>
                 <Link
                   href="/contact"
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800 transition-colors duration-150"
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
                   Contact
                 </Link>
               </div>
             )}
           </div>
-
           {/* Logo */}
           <Link href="/" className="flex items-center ml-1 sm:ml-0">
             <img
               src="/logo.svg"
               alt="Game Logo"
-              className="h-[164px] sm:h-[144px] md:h-20 lg:h-28 xl:h-52 w-auto translate-y-3"
+              className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto"
             />
           </Link>
         </div>
 
         {/* Right-side icon buttons */}
         <div className="flex items-center space-x-3">
-          {/* Stats Icon */}
           <button
             onClick={onStatsClick}
-            className="stats-button p-2 text-white hover:text-blue-200 transition"
+            className="p-2 text-white hover:text-blue-200"
             title="Your Stats"
             aria-label="Your Stats"
           >
             <PieChartIcon className="w-6 h-6" />
           </button>
-
-          {/* Achievements Icon */}
           <button
             onClick={onAchievementsClick}
-            className="achievements-button p-2 text-white hover:text-blue-200 transition"
+            className="p-2 text-white hover:text-blue-200"
             title="Achievements"
             aria-label="Achievements"
           >
