@@ -1,61 +1,164 @@
+// pages/leaderboard.js
 'use client';
 
 import { useEffect, useState } from 'react';
-import Header from '@/components/ui/header';
-import Footer from '@/components/ui/Footer';
 import Link from 'next/link';
+import Header from '@/components/ui/header';
+import Footer from '@/components/ui/footer';
 import { supabase } from '@/lib/supabase';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { Info } from 'lucide-react';
+
+function getFlagEmoji(countryCode) {
+  if (!countryCode) return '';
+  return String.fromCodePoint(
+    ...countryCode
+      .toUpperCase()
+      .split('')
+      .map((char) => 0x1f1e6 + char.charCodeAt(0) - 65)
+  );
+}
+
+// Returns the ISO yyyy-MM-dd of the last Monday at 00:00 UTC
+function getThisWeekStartUTC() {
+  const now = new Date();
+  const day = now.getUTCDay();            // 0 = Sunday, 1 = Monday, …
+  const daysSinceMonday = (day + 6) % 7;  // 0 if Monday, 1 if Tuesday, … 6 if Sunday
+  const monday = new Date(now.getTime() - daysSinceMonday * 86400000);
+  // floor to 00:00 UTC
+  return new Date(Date.UTC(
+    monday.getUTCFullYear(),
+    monday.getUTCMonth(),
+    monday.getUTCDate()
+  )).toISOString().slice(0, 10);
+}
+
+// Returns “Xd Yh Zm Ws” until next Monday 00:00 UTC
+function getResetCountdownUTC() {
+  const now = new Date();
+  const day = now.getUTCDay();
+  const daysUntilNextMonday = (8 - day) % 7 || 7; // if Monday, 7 days ahead
+  const nextMonday = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate() + daysUntilNextMonday
+  ));
+  const diff = nextMonday.getTime() - now.getTime();
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  return `${h}h ${m}m ${s}s`;
+}
 
 export default function LeaderboardPage() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [countdown, setCountdown] = useState(getResetCountdownUTC());
 
-  // Fetch this week’s entries
   useEffect(() => {
     async function fetchLeaderboard() {
-      const today = new Date();
-      const dow = today.getDay();
-      today.setDate(today.getDate() - dow);
-      const startOfWeek = today.toISOString().slice(0, 10);
-
-      const { data, error } = await supabase.rpc('weekly_leaderboard', {
-        start_date: startOfWeek,
-      });
-      if (error) console.error(error);
+      const start_date = getThisWeekStartUTC();
+      const { data, error } = await supabase
+        .rpc('weekly_leaderboard', { start_date });
+      if (error) console.error('Error loading leaderboard:', error);
       else setEntries(data);
       setLoading(false);
     }
     fetchLeaderboard();
   }, []);
 
+  // tick the UTC-Monday countdown every second
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCountdown(getResetCountdownUTC());
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const top10 = entries.slice(0, 10);
+
   return (
     <>
-      {/* 1) Menu bar */}
       <Header />
 
-      {/* 2) Outer grey background & centering */}
-      <div className="flex flex-col items-center pt-8 md:pt-12 px-4 pb-8 bg-gray-50 min-h-screen">
-        {/* 3) White card */}
-        <div className="bg-white border border-gray-200 rounded-xl shadow-md p-6 w-full max-w-2xl">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-            This Week’s Top Players
-          </h1>
+      <div className="bg-gray-50 min-h-screen flex flex-col items-center py-8 px-4">
+        <div className="bg-white w-full max-w-2xl rounded-xl shadow-lg p-6">
+          
+          {/* header + tooltip */}
+          <div className="relative text-center mb-4">
+            <h1 className="text-2xl font-bold text-gray-800">
+              This Week’s Top Players
+            </h1>
 
+            <div className="absolute top-0 left-0">
+              <Tooltip delayDuration={0} skipDelayDuration={0}>
+                <TooltipTrigger asChild>
+                  <button className="p-1 rounded-full bg-blue-100 hover:bg-blue-200 transition">
+                    <Info className="w-5 h-5 text-blue-600" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="bottom"
+                  align="center"
+                  sideOffset={6}
+                  className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
+                >
+                  <h3 className="font-semibold text-sm">Scoring Explained</h3>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                    <div className="col-span-2 font-semibold">Guess pts</div>
+                    <div>1st</div><div>50</div>
+                    <div>2nd</div><div>30</div>
+                    <div>3rd</div><div>20</div>
+                    <div>4th</div><div>10</div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs pt-2">
+                    <div className="col-span-2 font-semibold">Time bonus</div>
+                    <div>≤100 s</div><div>100</div>
+                    <div>≤200 s</div><div>70</div>
+                    <div>≤300 s</div><div>50</div>
+                    <div>≤600 s</div><div>30</div>
+                    <div>all other</div><div>10</div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </div>
+
+          {/* reset timer & beta note */}
+          <p className="text-center text-sm text-gray-600 mb-1">
+            Resets in: {countdown}
+          </p>
+          <p className="text-center text-xs text-yellow-700 mb-4">
+            Leaderboard is currently in beta – thanks for testing!
+          </p>
+
+          {/* list */}
           {loading ? (
             <p className="text-center text-gray-500">Loading…</p>
-          ) : entries.length === 0 ? (
-            <p className="text-center text-gray-500">No scores yet.</p>
+          ) : top10.length === 0 ? (
+            <p className="text-center text-gray-500">
+              No scores submitted yet.
+            </p>
           ) : (
-            <ol className="space-y-2 text-sm">
-              {entries.slice(0, 10).map((e, i) => (
+            <ol className="space-y-2">
+              {top10.map((e, i) => (
                 <li
                   key={e.device_id}
-                  className="flex justify-between px-4 py-2 bg-gray-100 rounded"
+                  className={[
+                    'flex items-center justify-between px-4 py-2 rounded',
+                    i === 0 ? 'bg-yellow-100' :
+                    i === 1 ? 'bg-gray-100' :
+                    i === 2 ? 'bg-orange-100' : ''
+                  ].join(' ')}
                 >
-                  <span>
-                    {i + 1}. {e.nickname}
-                  </span>
-                  <span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xl">
+                      {getFlagEmoji(e.country_code)}
+                    </span>
+                    <span className="font-bold">{i + 1}.</span>
+                    <span className="font-medium">{e.nickname}</span>
+                  </div>
+                  <span className="text-gray-600">
                     {e.total_score} pts · {e.solves}{' '}
                     {e.solves === 1 ? 'solve' : 'solves'}
                   </span>
@@ -64,7 +167,7 @@ export default function LeaderboardPage() {
             </ol>
           )}
 
-          {/* 4) Back home link */}
+          {/* back link */}
           <div className="mt-6 text-center">
             <Link
               href="/"
@@ -76,7 +179,6 @@ export default function LeaderboardPage() {
         </div>
       </div>
 
-      {/* 5) Footer */}
       <Footer />
     </>
   );
