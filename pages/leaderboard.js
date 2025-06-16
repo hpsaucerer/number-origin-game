@@ -37,17 +37,24 @@ function getThisWeekStartUTC() {
 function getResetCountdownUTC() {
   const now = new Date();
   const day = now.getUTCDay();
-  const daysUntilNextMonday = (8 - day) % 7 || 7; // if Monday, 7 days ahead
+  // figure out how many days until next Monday
+  const daysUntilNextMonday = (8 - day) % 7 || 7;
+  // next Monday at 00:00 UTC
   const nextMonday = new Date(Date.UTC(
     now.getUTCFullYear(),
     now.getUTCMonth(),
-    now.getUTCDate() + daysUntilNextMonday
+    now.getUTCDate() + daysUntilNextMonday,
+    0, 0, 0
   ));
   const diff = nextMonday.getTime() - now.getTime();
-  const h = Math.floor(diff / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-  return `${h}h ${m}m ${s}s`;
+
+  // compute days, then remainder hours, mins, secs
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins  = Math.floor((diff % (1000 * 60 * 60))    / (1000 * 60));
+  const secs  = Math.floor((diff % (1000 * 60))         / 1000);
+
+  return `${days}d ${hours}h ${mins}m ${secs}s`;
 }
 
 export default function LeaderboardPage() {
@@ -84,11 +91,17 @@ export default function LeaderboardPage() {
       <div className="bg-gray-50 min-h-screen flex flex-col items-center py-8 px-4">
         <div className="bg-white w-full max-w-2xl rounded-xl shadow-lg p-6">
           
-          {/* header + tooltip */}
-          <div className="relative text-center mb-4">
-            <h1 className="text-2xl font-bold text-gray-800">
-              This Week’s Top Players
-            </h1>
+          {/* logo + heading */}
+<div className="flex flex-col items-center mb-4">
+  <img
+    src="/leaderboard.png"
+    alt="Numerus Leaderboard"
+    className="h-12 w-auto mb-2"
+  />
+  <h1 className="text-2xl font-bold text-gray-800">
+    This Week’s Top Players
+  </h1>
+</div>
 
             <div className="absolute top-0 left-0">
               <Tooltip delayDuration={0} skipDelayDuration={0}>
