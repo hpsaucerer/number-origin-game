@@ -164,7 +164,7 @@ export default function LeaderboardPage() {
           ) : top10.length === 0 ? (
             <p className="text-center text-gray-500">No scores submitted yet.</p>
           ) : (
-            <ol className="space-y-2">
+            <ol className="space-y-2 text-sm sm:text-base">
               {top10.map((e, i) => (
                 <li
                   key={e.device_id}
@@ -181,7 +181,7 @@ export default function LeaderboardPage() {
                     <span className="font-bold">{i + 1}.</span>
                     <span className="font-medium">{e.nickname}</span>
                   </div>
-                  <span className="text-gray-600">
+                  <span className="text-gray-600 text-sm sm:text-base">
                     {e.total_score} pts · {e.solves} {e.solves === 1 ? 'solve' : 'solves'}
                   </span>
                 </li>
