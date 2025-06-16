@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Header from '@/components/ui/header';
-import Footer from '@/components/ui/footer';
+import Footer from '@/components/ui/Footer';
 import { supabase } from '@/lib/supabase';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Info } from 'lucide-react';
@@ -179,7 +179,7 @@ export default function LeaderboardPage() {
         </div>
       </div>
 
-      <Footer />
+      < />
     </>
   );
 }
