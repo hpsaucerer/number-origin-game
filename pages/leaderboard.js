@@ -53,6 +53,9 @@ function getResetCountdownUTC() {
 }
 
 export default function LeaderboardPage() {
+  // ─── stats hook ─────────────────────────────────────
+  const { stats, data, COLORS, renderCenterLabel, combinedLabel } = useStats();
+
   const [scoringOpen, setScoringOpen] = useState(false);
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -64,7 +67,7 @@ export default function LeaderboardPage() {
     async function fetchLeaderboard() {
       const start_date = getThisWeekStartUTC();
       const { data, error } = await supabase.rpc('weekly_leaderboard', { start_date });
-      if (error) console.error('Error loading leaderboard:', error);
+      if (error) console.error('❌ Error loading leaderboard:', error);
       else setEntries(data);
       setLoading(false);
     }
@@ -80,29 +83,29 @@ export default function LeaderboardPage() {
 
   return (
     <>
-    
-      {/* wire in the click handlers */}
+      {/* Single Header with handlers */}
       <Header
         onStatsClick={() => setShowStats(true)}
         onAchievementsClick={() => setShowAchievements(true)}
       />
+
       <div className="bg-gray-50 min-h-screen flex flex-col items-center py-8 px-4">
         <div className="relative bg-white w-full max-w-2xl rounded-xl shadow-lg p-6">
           
           {/* logo + heading */}
-          <div className="flex flex-col items-center mb-3">
+          <div className="flex flex-col items-center mb-4">
             <img
               src="/leaderboard.png"
               alt="Numerus Leaderboard"
-              className="h-16 sm:h-24 w-auto mb-0"
+              className="h-24 w-auto mb-2"
             />
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold text-gray-800">
               This Week’s Top Players
             </h1>
           </div>
 
           {/* tooltip */}
-           <div className="absolute top-4 left-4">
+          <div className="absolute top-4 left-4">
             <Tooltip
               open={scoringOpen}
               onOpenChange={setScoringOpen}
@@ -114,8 +117,8 @@ export default function LeaderboardPage() {
                   aria-label="Scoring Explained"
                   className="p-1 rounded-full bg-blue-100 hover:bg-blue-200 transition"
                   onClick={e => {
-                    e.stopPropagation()
-                    setScoringOpen(open => !open)
+                    e.stopPropagation();
+                    setScoringOpen(open => !open);
                   }}
                 >
                   <Info className="w-5 h-5 text-blue-600" />
@@ -124,26 +127,25 @@ export default function LeaderboardPage() {
               <TooltipContent
                 side="bottom"
                 align="center"
-                sideOffset={6}
+                sideOffset={8}
                 className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
               >
-          {/* ← scoring grid */}
-       <h3 className="font-semibold text-sm">Scoring Explained</h3>
-       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-         <div className="col-span-2 font-semibold">Guess points</div>
-         <div>1st</div><div>50</div>
-         <div>2nd</div><div>30</div>
-         <div>3rd</div><div>20</div>
-         <div>4th</div><div>10</div>
-       </div>
-       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs pt-2">
-         <div className="col-span-2 font-semibold">Time bonus</div>
-         <div>≤100 s</div><div>100</div>
-         <div>≤200 s</div><div>70</div>
-         <div>≤300 s</div><div>50</div>
-         <div>≤600 s</div><div>30</div>
-         <div>All other times </div><div>10</div>
-       </div>
+                <h3 className="font-semibold text-sm">Scoring Explained</h3>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                  <div className="col-span-2 font-semibold">Guess points</div>
+                  <div>1st</div><div>50</div>
+                  <div>2nd</div><div>30</div>
+                  <div>3rd</div><div>20</div>
+                  <div>4th</div><div>10</div>
+                </div>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs pt-2">
+                  <div className="col-span-2 font-semibold">Time bonus</div>
+                  <div>≤100 s</div><div>100</div>
+                  <div>≤200 s</div><div>70</div>
+                  <div>≤300 s</div><div>50</div>
+                  <div>≤600 s</div><div>30</div>
+                  <div>All other times</div><div>10</div>
+                </div>
               </TooltipContent>
             </Tooltip>
           </div>
@@ -168,9 +170,10 @@ export default function LeaderboardPage() {
                   key={e.device_id}
                   className={[
                     'flex items-center justify-between px-4 py-2 rounded',
-                    i === 0 ? 'bg-yellow-100' :
-                    i === 1 ? 'bg-gray-100'  :
-                    i === 2 ? 'bg-orange-100': ''
+                    i === 0 ? 'bg-yellow-100'
+                      : i === 1 ? 'bg-gray-100'
+                      : i === 2 ? 'bg-orange-100'
+                      : ''
                   ].join(' ')}
                 >
                   <div className="flex items-center space-x-2">
@@ -179,8 +182,7 @@ export default function LeaderboardPage() {
                     <span className="font-medium">{e.nickname}</span>
                   </div>
                   <span className="text-gray-600">
-                    {e.total_score} pts · {e.solves}{' '}
-                    {e.solves === 1 ? 'solve' : 'solves'}
+                    {e.total_score} pts · {e.solves} {e.solves === 1 ? 'solve' : 'solves'}
                   </span>
                 </li>
               ))}
@@ -199,18 +201,22 @@ export default function LeaderboardPage() {
         </div>
       </div>
 
-       <Footer />
-
-      {/* render the modals */}
+      {/* Stats & Achievements modals */}
       <StatsModal
         open={showStats}
         onClose={() => setShowStats(false)}
-        /* if StatsModal needs props (stats, data, COLORS, etc.), pass them here */
+        stats={stats}
+        data={data}
+        COLORS={COLORS}
+        renderCenterLabel={renderCenterLabel}
+        combinedLabel={combinedLabel}
       />
       <AchievementsModal
         open={showAchievements}
         onClose={() => setShowAchievements(false)}
       />
+
+      <Footer />
     </>
   );
 }
