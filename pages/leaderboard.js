@@ -118,7 +118,7 @@ export default function LeaderboardPage() {
                 sideOffset={6}
                 className="z-50 max-w-xs space-y-2 p-3 bg-white text-black rounded-lg shadow"
               >
-          /* ← scoring grid */}
+          {/* ← scoring grid */}
        <h3 className="font-semibold text-sm">Scoring Explained</h3>
        <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
          <div className="col-span-2 font-semibold">Guess points</div>
