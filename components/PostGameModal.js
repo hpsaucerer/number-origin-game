@@ -83,12 +83,14 @@ export default function PostGameModal({
       }),
     });
 
-    if (res.ok) {
-      alert("You're on the leaderboard!");
-      setShowLeaderboard(true);
-    } else {
-      alert("Something went wrong submitting your score.");
-    }
+   if (res.ok) {
+     // mark that we’ve submitted today, so the button hides
+     localStorage.setItem(todayKey, "true");
+     alert("You're on the leaderboard!");
+     setShowLeaderboard(true);
+   } else {
+     alert("Something went wrong submitting your score.");
+   }
   }, [puzzle.date, attempts, isCorrect, startTime]);
   
   useEffect(() => {
