@@ -432,6 +432,7 @@ const [showWhatsNew, setShowWhatsNew] = useState(false);
 
 const COMMUNITY_PUZZLES = {
   "2025-06-13": { name: "Jack", city: "Bethesda", country: "USA", flag: "USA" },
+  "2025-06-20": { name: "Mizar", city: "", country: "Italy", flag: "Italy" },
 };
 
 const contributor = COMMUNITY_PUZZLES[puzzle?.date];
@@ -1623,9 +1624,9 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
     </div>
 
     {/* Yellow Box */}
-    <div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
-      Today’s number was suggested by <strong>{contributor.name} from {contributor.city}, {contributor.country}</strong>.
-    </div>
+<div className="shimmer-box text-center text-lg sm:text-xl max-w-md px-4 py-2 rounded shadow-sm bg-yellow-100 border border-yellow-300">
+  Today’s number was suggested by <strong>{contributor.name} from {contributor.city ? `${contributor.city}, ` : ''}{contributor.country}</strong>.
+</div>
   </div>
 ) : (
   <h1 className="text-2xl font-bold mt-4">
