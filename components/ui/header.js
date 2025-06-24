@@ -95,7 +95,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
                   Community
                 </Link>
                 <Link
-                  href="/contact"
+                  href="/achievements"
                   onClick={() => setMenuOpen(false)}
                   className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
