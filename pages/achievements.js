@@ -1,16 +1,15 @@
 // src/pages/AchievementsPage.js
 import React from "react";
-import NumberHistoryWheel from "../components/NumberHistoryWheel";
+import PuzzleRibbon from '@/components/PuzzleRibbon';
 
 export default function AchievementsPage() {
   return (
     <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Your Achievements & Puzzle History</h1>
 
-      {/* Section 1: Number Wheel */}
+      {/* Ribbon scroll section */}
       <section className="mb-12">
-        <h2 className="text-xl font-semibold mb-3">Explore Past Numbers</h2>
-        <NumberHistoryWheel />
+        <PuzzleRibbon />
       </section>
 
       {/* Section 2: Player Medals/Trophies (Placeholder) */}
