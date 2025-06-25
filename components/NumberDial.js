@@ -1,16 +1,38 @@
-import { useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import puzzles from '@/data/puzzleData';
 
 export default function NumberDial() {
   const puzzleKeys = Object.keys(puzzles).sort((a, b) => parseFloat(a) - parseFloat(b));
   const [selectedIndex, setSelectedIndex] = useState(puzzleKeys.length - 1);
   const selected = puzzleKeys[selectedIndex];
+  const dialRef = useRef(null);
+
+  // Add scroll wheel navigation
+  useEffect(() => {
+    const handleWheel = (e) => {
+      if (e.deltaY > 0) {
+        setSelectedIndex((i) => Math.min(puzzleKeys.length - 1, i + 1));
+      } else if (e.deltaY < 0) {
+        setSelectedIndex((i) => Math.max(0, i - 1));
+      }
+    };
+
+    const dial = dialRef.current;
+    if (dial) {
+      dial.addEventListener('wheel', handleWheel, { passive: true });
+    }
+    return () => {
+      if (dial) {
+        dial.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, [puzzleKeys.length]);
 
   return (
     <div className="flex flex-col items-center gap-6">
       <h2 className="text-xl font-semibold">Your Number Dial</h2>
 
-      <div className="relative h-48 w-40 overflow-hidden">
+      <div ref={dialRef} className="relative h-48 w-40 overflow-hidden">
         <ul className="absolute top-1/2 transform -translate-y-1/2 w-full text-center">
           {puzzleKeys.map((num, i) => {
             const offset = i - selectedIndex;
@@ -21,8 +43,7 @@ export default function NumberDial() {
             return (
               <li
                 key={num}
-                onClick={() => setSelectedIndex(i)}
-                className={`cursor-pointer py-2 transition-all duration-200 transform ${scale}`}
+                className={`py-2 transition-all duration-200 transform ${scale} ${isSelected ? 'font-bold' : ''}`}
                 style={{ opacity }}
               >
                 {puzzles[num].formatted || num}
