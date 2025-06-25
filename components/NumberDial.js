@@ -12,7 +12,8 @@ useEffect(() => {
   const dial = dialRef.current;
   if (!dial) return;
 
-  // Handle mouse wheel
+  let startY = null;
+
   const handleWheel = (e) => {
     if (e.deltaY > 0) {
       setSelectedIndex((i) => Math.min(puzzleKeys.length - 1, i + 1));
@@ -21,24 +22,20 @@ useEffect(() => {
     }
   };
 
-  // Handle touch swipe
-  let startY = null;
   const handleTouchStart = (e) => {
     startY = e.touches[0].clientY;
   };
 
   const handleTouchMove = (e) => {
     if (startY === null) return;
-    const currentY = e.touches[0].clientY;
-    const diffY = startY - currentY;
-
+    const diffY = startY - e.touches[0].clientY;
     if (Math.abs(diffY) > 30) {
       if (diffY > 0) {
         setSelectedIndex((i) => Math.min(puzzleKeys.length - 1, i + 1));
       } else {
         setSelectedIndex((i) => Math.max(0, i - 1));
       }
-      startY = null; // prevent repeated triggers
+      startY = null;
     }
   };
 
@@ -53,16 +50,6 @@ useEffect(() => {
   };
 }, [puzzleKeys.length]);
 
-    const dial = dialRef.current;
-    if (dial) {
-      dial.addEventListener('wheel', handleWheel, { passive: true });
-    }
-    return () => {
-      if (dial) {
-        dial.removeEventListener('wheel', handleWheel);
-      }
-    };
-  }, [puzzleKeys.length]);
 
   return (
     <div className="flex flex-col items-center gap-6">
