@@ -37,7 +37,7 @@ export default function NumberHistoryWheel() {
 
       {selected && (
         <div className="max-w-sm text-center mt-2 p-4 border bg-yellow-50 rounded shadow">
-          <p className="text-lg font-medium">#{selected}</p>
+          <p className="text-lg font-medium">{formattedNumber || selected}</p>
           <p className="text-sm mt-1">{PUZZLE_HISTORY[selected]}</p>
         </div>
       )}
