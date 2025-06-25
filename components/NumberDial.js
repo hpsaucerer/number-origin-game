@@ -8,14 +8,50 @@ export default function NumberDial() {
   const dialRef = useRef(null);
 
   // Add scroll wheel navigation
-  useEffect(() => {
-    const handleWheel = (e) => {
-      if (e.deltaY > 0) {
+useEffect(() => {
+  const dial = dialRef.current;
+  if (!dial) return;
+
+  // Handle mouse wheel
+  const handleWheel = (e) => {
+    if (e.deltaY > 0) {
+      setSelectedIndex((i) => Math.min(puzzleKeys.length - 1, i + 1));
+    } else if (e.deltaY < 0) {
+      setSelectedIndex((i) => Math.max(0, i - 1));
+    }
+  };
+
+  // Handle touch swipe
+  let startY = null;
+  const handleTouchStart = (e) => {
+    startY = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e) => {
+    if (startY === null) return;
+    const currentY = e.touches[0].clientY;
+    const diffY = startY - currentY;
+
+    if (Math.abs(diffY) > 30) {
+      if (diffY > 0) {
         setSelectedIndex((i) => Math.min(puzzleKeys.length - 1, i + 1));
-      } else if (e.deltaY < 0) {
+      } else {
         setSelectedIndex((i) => Math.max(0, i - 1));
       }
-    };
+      startY = null; // prevent repeated triggers
+    }
+  };
+
+  dial.addEventListener('wheel', handleWheel, { passive: true });
+  dial.addEventListener('touchstart', handleTouchStart, { passive: true });
+  dial.addEventListener('touchmove', handleTouchMove, { passive: true });
+
+  return () => {
+    dial.removeEventListener('wheel', handleWheel);
+    dial.removeEventListener('touchstart', handleTouchStart);
+    dial.removeEventListener('touchmove', handleTouchMove);
+  };
+}, [puzzleKeys.length]);
 
     const dial = dialRef.current;
     if (dial) {
