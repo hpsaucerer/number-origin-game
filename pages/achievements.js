@@ -61,7 +61,7 @@ export default function NumberVaultPage() {
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">Number Vault</h1>
           <p className="text-gray-600">
-            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, filter by tapping a category below, and revisit any fun fact at will.
+            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
           </p>
           <p className="text-lg font-semibold">
             Total puzzles solved:{" "}
@@ -92,9 +92,17 @@ export default function NumberVaultPage() {
           ))}
         </div>
 
-        {/* ── Number Wheel ── */}
+        {/* ── Number Wheel + Watermark ── */}
         <section>
-          <NumberHistoryWheel history={filtered} />
+          <div className="relative">
+            <NumberHistoryWheel history={filtered} />
+            {/*  the extra <img> here will sit on top of the blue detail card */}
+            <img
+              src="/logo.svg"
+              alt=""
+              className="pointer-events-none absolute top-4 right-4 w-24 opacity-10"
+            />
+          </div>
         </section>
       </main>
 
