@@ -53,22 +53,26 @@ export default function NumberVaultPage() {
     <>
       <Header />
 
-      <main className="max-w-3xl mx-auto px-6 pt-16 sm:pt-6 pb-8 space-y-8">
-        {/* ─── Mobile‐only foldable header/blurb ─── */}
-        <details className="mb-6 block sm:hidden">
-          <summary className="flex flex-col cursor-pointer">
-            <h1 className="text-3xl font-bold">Number Vault</h1>
-            <p className="text-lg font-semibold mt-1">
-              Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
-            </p>
-          </summary>
-          <p className="mt-2 text-gray-600">
-            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
+      <main className="max-w-3xl mx-auto px-6 pt-6 pb-8 space-y-8">
+        {/* ─── Mobile‐only: title + total + foldable first‐sentence ─── */}
+        <div className="block sm:hidden mb-6">
+          <h1 className="text-3xl font-bold">Number Vault</h1>
+          <p className="text-lg font-semibold">
+            Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
           </p>
-        </details>
+          <details className="mt-2">
+            <summary className="flex justify-between items-center cursor-pointer text-gray-600">
+              <span>Welcome to your vault of solved puzzles.</span>
+              <span className="text-sm text-blue-600">Show more</span>
+            </summary>
+            <p className="mt-2 text-gray-600">
+              Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
+            </p>
+          </details>
+        </div>
 
-        {/* ─── Desktop/sm‐and‐up static header/blurb ─── */}
-        <div className="mb-6 hidden sm:space-y-2 sm:block">
+        {/* ─── Desktop (& sm-and-up): static header/blurb ─── */}
+        <div className="hidden sm:block mb-6 space-y-2">
           <h1 className="text-3xl font-bold">Number Vault</h1>
           <p className="text-gray-600">
             Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
@@ -85,9 +89,7 @@ export default function NumberVaultPage() {
               key={cat}
               role="button"
               onClick={() =>
-                setFilterCategory((current) =>
-                  current === cat ? "All" : cat
-                )
+                setFilterCategory((curr) => (curr === cat ? "All" : cat))
               }
               className={`
                 cursor-pointer 
