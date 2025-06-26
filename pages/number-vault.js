@@ -22,20 +22,17 @@ export default function NumberVaultPage() {
 
   useEffect(() => {
     async function loadHistory() {
-      // ─── 1) try the old array (if you ever used it) ───
-      const oldRaw = localStorage.getItem("completedPuzzles");
-      let dates;
-      if (oldRaw) {
-        dates = JSON.parse(oldRaw);
-      } else {
-        // ─── 2) scan for completed-YYYY-MM-DD keys ───
-        dates = Object.keys(localStorage)
-          .filter(
-            (key) =>
-              key.startsWith("completed-") &&
-              localStorage.getItem(key) === "true"
-          )
-          .map((key) => key.replace(/^completed-/, ""));
+      // 1) grab every key="completed-<date>" that’s set to "true"
+      const dates = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (
+          key &&
+          key.startsWith("completed-") &&
+          localStorage.getItem(key) === "true"
+        ) {
+          dates.push(key.substring("completed-".length));
+        }
       }
 
       if (dates.length === 0) {
@@ -43,7 +40,7 @@ export default function NumberVaultPage() {
         return;
       }
 
-      // ─── 3) fetch only those dates from Supabase ───
+      // 2) fetch those rows by date
       const { data, error } = await supabase
         .from("puzzles")
         .select("number, formatted, answer, fun_fact, category, date")
@@ -55,7 +52,7 @@ export default function NumberVaultPage() {
         return;
       }
 
-      // ─── 4) shape it for the wheel ───
+      // 3) shape it for the wheel
       setHistory(
         data.map((p) => ({
           number:    p.number,
@@ -80,7 +77,7 @@ export default function NumberVaultPage() {
     return acc;
   }, [history]);
 
-  // apply category filter
+  // filter the wheel
   const filtered = useMemo(() => {
     return filterCategory === "All"
       ? history
@@ -90,7 +87,6 @@ export default function NumberVaultPage() {
   return (
     <>
       <Header />
-
       <main className="max-w-3xl mx-auto px-6 pt-8 pb-12 space-y-8">
         {/* Heading + Blurb + Total */}
         <div className="space-y-2">
@@ -127,7 +123,7 @@ export default function NumberVaultPage() {
           ))}
         </div>
 
-        {/* Wheel or Empty State */}
+        {/* Wheel or Empty */}
         {history.length === 0 ? (
           <p className="text-center text-gray-500">
             You haven’t solved any puzzles yet. Complete one to see it here!
@@ -136,7 +132,6 @@ export default function NumberVaultPage() {
           <NumberHistoryWheel history={filtered} />
         )}
       </main>
-
       <Footer />
     </>
   );
