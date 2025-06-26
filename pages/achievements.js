@@ -58,9 +58,6 @@ export default function NumberVaultPage() {
         {/* ─── Mobile‐only: title + total + foldable descriptor ─── */}
         <div className="block sm:hidden mb-6">
           <h1 className="text-3xl font-bold">Number Vault</h1>
-          <p className="text-lg font-semibold">
-            Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
-          </p>
           <details
             open={mobileOpen}
             onToggle={(e) => setMobileOpen(e.target.open)}
@@ -76,6 +73,10 @@ export default function NumberVaultPage() {
               Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
             </p>
           </details>
+          {/* move “Total puzzles solved” below the description */}
+          <p className="text-lg font-semibold mt-4">
+           Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
+          </p>
         </div>
 
         {/* ─── Desktop (& sm-and-up): static header/blurb ─── */}
