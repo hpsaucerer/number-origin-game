@@ -42,7 +42,7 @@ export default function NumberHistoryWheel({ history }) {
               alt=""
               className="
                 pointer-events-none
-                absolute -top-1 -right-1
+                absolute -top-3 -right-3
                 w-20
                 filter brightness-0 saturate-100 opacity-15
               "
