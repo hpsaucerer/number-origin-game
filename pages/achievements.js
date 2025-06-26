@@ -34,7 +34,7 @@ export default function NumberVaultPage() {
       // 2) fetch those rows from your "puzzles" table
       const { data, error } = await supabase
         .from("puzzles")
-        .select("number, answer, fun_fact, category")
+        .select("number, formatted, answer, fun_fact, category")
         .in("number", completed); // or .in("id", completed) if you store IDs
 
       if (error) {
@@ -47,6 +47,7 @@ export default function NumberVaultPage() {
       setHistory(
         data.map((p) => ({
           number: p.number,
+          formatted: p.formatted,
           answer: p.answer,
           funFact: p.fun_fact,
           category: p.category,
