@@ -4,6 +4,9 @@ import React, { useState } from "react";
 export default function NumberHistoryWheel({ history }) {
   const [selected, setSelected] = useState(null);
 
+  // If the puzzle has a `formatted` value, use that; otherwise fall back to raw `number`
+  const displayNumber = selected?.formatted ?? selected?.number ?? "";
+
   return (
     <div className="flex flex-col items-center gap-4 p-4">
       <div className="flex flex-col md:flex-row items-start gap-4 w-full max-w-4xl">
@@ -34,20 +37,24 @@ export default function NumberHistoryWheel({ history }) {
             <img
               src="/logo.svg"
               alt=""
-              className="pointer-events-none absolute -top-2 -right-2 w-24 opacity-15"
+              className="pointer-events-none absolute -top-2 -right-2 w-24 opacity-10"
             />
 
-            {/* blue card: number + answer */}
+            {/* blue card: formatted number + answer */}
             <div className="bg-blue-100 p-4 rounded-lg mb-2">
               <p className="text-lg font-medium text-gray-900">
-                {selected.number}
+                {displayNumber}
               </p>
-              <p className="text-sm text-gray-800">{selected.answer}</p>
+              <p className="text-sm text-gray-800">
+                {selected.answer}
+              </p>
             </div>
 
             {/* white card: fun fact */}
             <div className="bg-white p-4 rounded-lg shadow">
-              <p className="text-sm text-gray-700">{selected.funFact}</p>
+              <p className="text-sm text-gray-700">
+                {selected.fun_fact}
+              </p>
             </div>
           </div>
         )}
