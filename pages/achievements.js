@@ -26,7 +26,6 @@ const ALL_CATEGORIES = [
 ];
 
 export default function NumberVaultPage() {
-  // “All” means no filter
   const [filterCategory, setFilterCategory] = useState("All");
 
   // precompute counts per category
@@ -69,7 +68,7 @@ export default function NumberVaultPage() {
           </p>
         </div>
 
-        {/* ── Clickable Category Bar ── */}
+        {/* Clickable Category Tiles */}
         <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
           {ALL_CATEGORIES.map((cat) => (
             <div
@@ -92,23 +91,11 @@ export default function NumberVaultPage() {
           ))}
         </div>
 
-        {/* ── Number Wheel + Watermark ── */}
-        +  <div className="relative max-w-3xl mx-auto p-4 bg-blue-50 rounded-lg shadow">
-    {/* watermark in the corner */}
-    <img
-     src="/logo.svg"
-      alt=""
-      className="pointer-events-none absolute top-0 right-0 w-24 opacity-10"
-    />
-            <NumberHistoryWheel history={filtered} />
-            {/*  the extra <img> here will sit on top of the blue detail card */}
-            <img
-              src="/logo.svg"
-              alt=""
-              className="pointer-events-none absolute top-0 right-0 w-24 opacity-10"
-            />
-          </div>
+        {/* Puzzle History Wheel */}
+        <section>
+          <NumberHistoryWheel history={filtered} />
         </section>
+
       </main>
 
       <Footer />
