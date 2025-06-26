@@ -53,8 +53,7 @@ export default function NumberVaultPage() {
     <>
       <Header />
 
-      <main className="max-w-3xl mx-auto px-6 pt-16 pb-8 space-y-8">
-
+      <main className="max-w-3xl mx-auto px-6 pt-16 sm:pt-6 pb-8 space-y-8">
         {/* ─── Mobile‐only foldable header/blurb ─── */}
         <details className="mb-6 block sm:hidden">
           <summary className="flex flex-col cursor-pointer">
