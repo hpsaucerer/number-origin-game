@@ -1,4 +1,3 @@
-// pages/achievements.js
 "use client";
 
 import { useState, useMemo } from "react";
@@ -6,8 +5,7 @@ import Header from "@/components/ui/header";
 import Footer from "@/components/ui/Footer";
 import NumberHistoryWheel from "@/components/NumberHistoryWheel";
 
-// — your demo/sample fallback data — 
-// (you can swap this out for real, fetched user-history later)
+// replace this with your real solved-history source
 const PUZZLE_HISTORY = [
   { number: "480", fact: "Battle of Thermopylae", category: "History" },
   { number: "357", fact: "Mirrors in the Galerie de Glaces", category: "Culture" },
@@ -28,23 +26,28 @@ const ALL_CATEGORIES = [
 
 export default function NumberVaultPage() {
   const [filterCategory, setFilterCategory] = useState("All");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  // compute counts
+  // precompute counts per category
   const categoryCounts = useMemo(() => {
-    const counts = ALL_CATEGORIES.reduce((acc, cat) => ({ ...acc, [cat]: 0 }), {});
+    const counts = ALL_CATEGORIES.reduce((acc, cat) => {
+      acc[cat] = 0;
+      return acc;
+    }, {});
     PUZZLE_HISTORY.forEach((p) => {
-      if (counts[p.category] !== undefined) counts[p.category]++;
+      if (counts[p.category] !== undefined) {
+        counts[p.category]++;
+      }
     });
     return counts;
   }, []);
 
   const totalSolved = PUZZLE_HISTORY.length;
 
-  // apply filter
+  // apply filter (if “All”, show everything)
   const filtered = useMemo(() => {
-    return filterCategory === "All"
-      ? PUZZLE_HISTORY
-      : PUZZLE_HISTORY.filter((p) => p.category === filterCategory);
+    if (filterCategory === "All") return PUZZLE_HISTORY;
+    return PUZZLE_HISTORY.filter((p) => p.category === filterCategory);
   }, [filterCategory]);
 
   return (
@@ -52,41 +55,53 @@ export default function NumberVaultPage() {
       <Header />
 
       <main className="max-w-3xl mx-auto px-6 pt-6 pb-8 space-y-8">
-        {/* ─── Desktop & tablet: always visible header/blurb ─── */}
+        {/* ─── Mobile‐only: title + total + foldable descriptor ─── */}
+        <div className="block sm:hidden mb-6">
+          <h1 className="text-3xl font-bold">Number Vault</h1>
+          <details
+            open={mobileOpen}
+            onToggle={(e) => setMobileOpen(e.target.open)}
+            className="mt-2"
+          >
+            <summary className="flex justify-between items-center cursor-pointer text-gray-600">
+              <span>Welcome to your vault of solved puzzles.</span>
+              <span className="text-sm text-blue-600">
+                {mobileOpen ? "Collapse" : "Expand"}
+              </span>
+            </summary>
+            <p className="mt-2 text-gray-600">
+              Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
+            </p>
+          </details>
+          {/* move “Total puzzles solved” below the description */}
+          <p className="text-lg font-semibold mt-4">
+           Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
+          </p>
+        </div>
+
+        {/* ─── Desktop (& sm-and-up): static header/blurb ─── */}
         <div className="hidden sm:block mb-6 space-y-2">
           <h1 className="text-3xl font-bold">Number Vault</h1>
           <p className="text-gray-600">
-            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
+            Welcome to your collection of solved puzzles. Scroll through every number you’ve unlocked and revisit any fun fact at will. You can tap the tiles below to filter the numbers by category. 
           </p>
           <p className="text-lg font-semibold">
             Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
           </p>
         </div>
 
-        {/* ─── Mobile: foldable header/blurb ─── */}
-        <details className="sm:hidden mb-6 border rounded-lg p-4">
-          <summary className="flex items-center justify-between cursor-pointer">
-            <span className="text-2xl font-bold">Number Vault</span>
-            <span className="text-sm font-semibold">
-              Solved: <span className="text-blue-600">{totalSolved}</span>
-            </span>
-          </summary>
-          <p className="mt-2 text-gray-600 text-sm">
-            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
-          </p>
-        </details>
-
-        {/* ─── Category tiles ─── */}
+        {/* ─── Clickable Category Tiles ─── */}
         <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mb-8">
           {ALL_CATEGORIES.map((cat) => (
             <div
               key={cat}
               role="button"
               onClick={() =>
-                setFilterCategory((cur) => (cur === cat ? "All" : cat))
+                setFilterCategory((curr) => (curr === cat ? "All" : cat))
               }
               className={`
-                cursor-pointer bg-white p-4 rounded-lg shadow text-center
+                cursor-pointer 
+                bg-white p-4 rounded-lg shadow text-center
                 ${filterCategory === cat ? "ring-2 ring-blue-500" : ""}
               `}
             >
@@ -96,7 +111,7 @@ export default function NumberVaultPage() {
           ))}
         </div>
 
-        {/* ─── Puzzle history wheel ─── */}
+        {/* ─── Puzzle History Wheel ─── */}
         <section>
           <NumberHistoryWheel history={filtered} />
         </section>
