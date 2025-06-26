@@ -47,17 +47,16 @@ export default function NumberHistoryWheel({ history }) {
         {selected && (
           <div className="relative w-full md:w-1/2 p-4 border rounded-lg bg-blue-50 shadow-md overflow-visible">
             {/* watermark (inverted to black) */}
-            <img
-              src="/logo.svg"
-              alt=""
-              className="
-                pointer-events-none
-                absolute top-2 right-2
-                w-24
-                filter brightness-0 saturate-100 opacity-15
-              "
-            />
-
+           <img
+             src="/logo.svg"
+             alt=""
+             className="
+             pointer-events-none
+             absolute top-1 right-1
+             w-24
+             filter brightness-0 saturate-100 opacity-15
+             "
+             />
             <p className="text-lg font-medium text-gray-900">
               {formattedNumber}
             </p>
