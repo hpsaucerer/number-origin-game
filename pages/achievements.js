@@ -93,8 +93,13 @@ export default function NumberVaultPage() {
         </div>
 
         {/* ── Number Wheel + Watermark ── */}
-        <section>
-          <div className="relative">
+        +  <div className="relative max-w-3xl mx-auto p-4 bg-blue-50 rounded-lg shadow">
+    {/* watermark in the corner */}
+    <img
+     src="/logo.svg"
+      alt=""
+      className="pointer-events-none absolute top-0 right-0 w-24 opacity-10"
+    />
             <NumberHistoryWheel history={filtered} />
             {/*  the extra <img> here will sit on top of the blue detail card */}
             <img
