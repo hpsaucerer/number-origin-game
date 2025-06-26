@@ -30,13 +30,17 @@ export default function NumberHistoryWheel({ history }) {
       </div>
 
       {selected && (
-        <div className="max-w-sm text-center mt-2 p-4 border bg-yellow-50 rounded shadow">
-          <p className="text-lg font-medium">{selected}</p>
-          <p className="text-sm mt-1">
-            {history.find(p => p.number === selected)?.fact}
-          </p>
-        </div>
-      )}
+  <div className="relative max-w-sm text-center mt-2 p-4 border bg-blue-50 rounded shadow overflow-hidden">
+    {/* watermark in the corner */}
+    <img
+      src="/logo.svg"
+      alt=""
+      className="absolute bottom-2 right-2 w-24 h-24 opacity-10 pointer-events-none"
+    />
+    <p className="text-lg font-medium">{formattedNumber || selected}</p>
+    <p className="text-sm mt-1">{PUZZLE_HISTORY[selected]}</p>
+  </div>
+)}
     </div>
   );
 }
