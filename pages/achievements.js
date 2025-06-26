@@ -6,7 +6,7 @@ import Header from "@/components/ui/header";
 import Footer from "@/components/ui/Footer";
 import NumberHistoryWheel from "@/components/NumberHistoryWheel";
 
-// your solved‐history data (replace with your actual source)
+// replace this with your real solved-history source
 const PUZZLE_HISTORY = [
   { number: "480", fact: "Battle of Thermopylae", category: "History" },
   { number: "357", fact: "Mirrors in the Galerie de Glaces", category: "Culture" },
@@ -14,10 +14,8 @@ const PUZZLE_HISTORY = [
   { number: "73",  fact: "Sheldon Cooper’s favourite number", category: "Culture" },
   { number: "23",  fact: "Stab wounds on Julius Caesar", category: "History" },
   { number: "9.58",fact: "Usain Bolt’s 100m record", category: "Sport" },
-  // …etc
 ];
 
-// the full list of game categories
 const ALL_CATEGORIES = [
   "Maths",
   "Science",
@@ -28,9 +26,10 @@ const ALL_CATEGORIES = [
 ];
 
 export default function NumberVaultPage() {
+  // “All” means no filter
   const [filterCategory, setFilterCategory] = useState("All");
 
-  // build a map { category: count }
+  // precompute counts per category
   const categoryCounts = useMemo(() => {
     const counts = ALL_CATEGORIES.reduce((acc, cat) => {
       acc[cat] = 0;
@@ -44,10 +43,9 @@ export default function NumberVaultPage() {
     return counts;
   }, []);
 
-  // total solved
   const totalSolved = PUZZLE_HISTORY.length;
 
-  // filter list
+  // apply filter (if “All”, show everything)
   const filtered = useMemo(() => {
     if (filterCategory === "All") return PUZZLE_HISTORY;
     return PUZZLE_HISTORY.filter((p) => p.category === filterCategory);
@@ -57,27 +55,36 @@ export default function NumberVaultPage() {
     <>
       <Header />
 
-      <main className="max-w-3xl mx-auto p-6 space-y-6">
+      <main className="max-w-3xl mx-auto p-6 space-y-8">
 
-        {/* Title + Description */}
+        {/* Title + Blurb + Total */}
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">Number Vault</h1>
           <p className="text-gray-600">
-            Welcome to your vault of solved puzzles.  Scroll through every number
-            you’ve unlocked, filter by category, and revisit any fun fact at will.
+            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, filter by tapping a category below, and revisit any fun fact at will.
           </p>
           <p className="text-lg font-semibold">
             Total puzzles solved:{" "}
-            <span className="text-2xl text-blue-600">{totalSolved}</span>
+            <span className="text-blue-600">{totalSolved}</span>
           </p>
         </div>
 
-        {/* ── Category Count Bar ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        {/* ── Clickable Category Bar ── */}
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
           {ALL_CATEGORIES.map((cat) => (
             <div
               key={cat}
-              className="bg-white p-4 rounded-lg shadow text-center"
+              role="button"
+              onClick={() =>
+                setFilterCategory((current) =>
+                  current === cat ? "All" : cat
+                )
+              }
+              className={`
+                cursor-pointer 
+                bg-white p-4 rounded-lg shadow text-center
+                ${filterCategory === cat ? "ring-2 ring-blue-500" : ""}
+              `}
             >
               <p className="text-2xl font-bold">{categoryCounts[cat]}</p>
               <p className="text-sm text-gray-500">{cat}</p>
@@ -85,36 +92,10 @@ export default function NumberVaultPage() {
           ))}
         </div>
 
-        {/* ── Filter + Solved Count ── */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <label htmlFor="category-filter" className="text-sm font-medium">
-              Category:
-            </label>
-            <select
-              id="category-filter"
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="border px-2 py-1 rounded text-sm"
-            >
-              <option value="All">All</option>
-              {ALL_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-          <p className="text-sm text-gray-600">
-            {filtered.length} puzzle{filtered.length !== 1 && "s"} shown
-          </p>
-        </div>
-
         {/* ── Number Wheel ── */}
         <section>
           <NumberHistoryWheel history={filtered} />
         </section>
-
       </main>
 
       <Footer />
