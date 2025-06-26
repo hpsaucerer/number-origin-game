@@ -83,7 +83,7 @@ export default function NumberVaultPage() {
         <div className="hidden sm:block mb-6 space-y-2">
           <h1 className="text-3xl font-bold">Number Vault</h1>
           <p className="text-gray-600">
-            Welcome to your collection of solved puzzles. Scroll through every number you’ve unlocked and revisit any fun fact at will. Tap the tiles below to filter the numbers by category. 
+            Welcome to your collection of solved puzzles. Scroll through every number you’ve unlocked and revisit any fun fact at will. You can tap the tiles below to filter the numbers by category. 
           </p>
           <p className="text-lg font-semibold">
             Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
