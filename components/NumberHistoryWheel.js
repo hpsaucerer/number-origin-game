@@ -7,14 +7,14 @@ const PUZZLE_HISTORY = {
   "9.58": "Men’s 100m sprint record set by Usain Bolt",
   206: "Number of bones in the human body",
   480: "Battle of Thermopylae",
-  73: "Sheldon Cooper’s ‘best number’"
-  // Add more as needed
+  73: "Sheldon Cooper’s ‘best number’",
+  // …etc.
 };
 
 export default function NumberHistoryWheel() {
   const [selected, setSelected] = useState(null);
 
-  // <-- define formattedNumber, fallback to raw string if NaN
+  // format numeric strings, fallback to raw if NaN
   const formattedNumber =
     selected && !isNaN(Number(selected))
       ? Number(selected).toLocaleString()
@@ -22,7 +22,11 @@ export default function NumberHistoryWheel() {
 
   return (
     <div className="flex flex-col items-center gap-4 p-4">
-      <h2 className="text-xl font-semibold">Your Puzzle History</h2>
+      <h2 className="text-xl font-semibold">Number Vault</h2>
+      <p className="text-center text-gray-600 max-w-md">
+        Welcome to your vault of solved puzzles. Scroll through every number
+        you’ve unlocked, tap a category above, and revisit any fun fact at will.
+      </p>
 
       <div className="h-48 w-full max-w-sm overflow-y-scroll border rounded shadow-inner bg-white">
         <ul className="divide-y">
@@ -43,10 +47,18 @@ export default function NumberHistoryWheel() {
       </div>
 
       {selected && (
-        <div className="max-w-sm text-center mt-2 p-4 border bg-yellow-50 rounded shadow">
-          {/* use formattedNumber instead of the undefined variable */}
-          <p className="text-lg font-medium">{formattedNumber}</p>
-          <p className="text-sm mt-1">
+        <div className="relative max-w-sm w-full p-4 border rounded-lg bg-blue-50 shadow-md">
+          {/* watermark logo */}
+          <img
+            src="/logo.svg"
+            alt=""
+            className="pointer-events-none absolute top-2 right-2 w-24 opacity-10"
+          />
+
+          <p className="text-lg font-medium text-gray-900">
+            {formattedNumber}
+          </p>
+          <p className="text-sm mt-1 text-gray-700">
             {PUZZLE_HISTORY[selected]}
           </p>
         </div>
