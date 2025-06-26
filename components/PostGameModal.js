@@ -184,7 +184,7 @@ export default function PostGameModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-md mt-16 px-0 pt-4 pb-3 relative bg-white rounded-xl shadow-xl overflow-auto">
+      <DialogContent className="w-full max-w-md mt-16 px-0 pt-4 pb-3 relative bg-white rounded-xl shadow-xl">
         <button
           className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
           onClick={onClose}
