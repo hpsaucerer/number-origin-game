@@ -50,7 +50,7 @@ export default function NumberHistoryWheel() {
         <div className="relative max-w-sm w-full p-4 border rounded-lg bg-blue-50 shadow-md">
           {/* watermark logo */}
           <img
-            src="/logo.svg"
+            src="/logo.png"
             alt=""
             className="pointer-events-none absolute top-2 right-2 w-24 opacity-10"
           />
