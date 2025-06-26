@@ -26,6 +26,7 @@ const ALL_CATEGORIES = [
 
 export default function NumberVaultPage() {
   const [filterCategory, setFilterCategory] = useState("All");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   // precompute counts per category
   const categoryCounts = useMemo(() => {
@@ -54,16 +55,22 @@ export default function NumberVaultPage() {
       <Header />
 
       <main className="max-w-3xl mx-auto px-6 pt-6 pb-8 space-y-8">
-        {/* ─── Mobile‐only: title + total + foldable first‐sentence ─── */}
+        {/* ─── Mobile‐only: title + total + foldable descriptor ─── */}
         <div className="block sm:hidden mb-6">
           <h1 className="text-3xl font-bold">Number Vault</h1>
           <p className="text-lg font-semibold">
             Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
           </p>
-          <details className="mt-2">
+          <details
+            open={mobileOpen}
+            onToggle={(e) => setMobileOpen(e.target.open)}
+            className="mt-2"
+          >
             <summary className="flex justify-between items-center cursor-pointer text-gray-600">
               <span>Welcome to your vault of solved puzzles.</span>
-              <span className="text-sm text-blue-600">Show more</span>
+              <span className="text-sm text-blue-600">
+                {mobileOpen ? "Collapse" : "Expand"}
+              </span>
             </summary>
             <p className="mt-2 text-gray-600">
               Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
