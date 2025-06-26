@@ -1,4 +1,3 @@
-// pages/achievements.js
 "use client";
 
 import { useState, useMemo } from "react";
@@ -54,23 +53,34 @@ export default function NumberVaultPage() {
     <>
       <Header />
 
-      <main className="max-w-3xl mx-auto p-6 space-y-8">
+      <main className="max-w-3xl mx-auto p-6">
 
-       {/* Title + Blurb + Total, now foldable */}
-<details className="mb-6">
-  <summary className="flex flex-col sm:flex-row sm:items-center sm:justify-between cursor-pointer">
-    <h1 className="text-3xl font-bold">Number Vault</h1>
-    <p className="text-lg font-semibold mt-1 sm:mt-0">
-      Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
-    </p>
-  </summary>
-  <p className="mt-2 text-gray-600">
-    Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
-  </p>
-</details>
+        {/* ─── Mobile‐only foldable header/blurb ─── */}
+        <details className="mb-6 block sm:hidden">
+          <summary className="flex flex-col cursor-pointer">
+            <h1 className="text-3xl font-bold">Number Vault</h1>
+            <p className="text-lg font-semibold mt-1">
+              Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
+            </p>
+          </summary>
+          <p className="mt-2 text-gray-600">
+            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
+          </p>
+        </details>
 
-        {/* Clickable Category Tiles */}
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+        {/* ─── Desktop/sm‐and‐up static header/blurb ─── */}
+        <div className="mb-6 hidden sm:space-y-2 sm:block">
+          <h1 className="text-3xl font-bold">Number Vault</h1>
+          <p className="text-gray-600">
+            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
+          </p>
+          <p className="text-lg font-semibold">
+            Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
+          </p>
+        </div>
+
+        {/* ─── Clickable Category Tiles ─── */}
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mb-8">
           {ALL_CATEGORIES.map((cat) => (
             <div
               key={cat}
@@ -92,11 +102,10 @@ export default function NumberVaultPage() {
           ))}
         </div>
 
-        {/* Puzzle History Wheel */}
+        {/* ─── Puzzle History Wheel ─── */}
         <section>
           <NumberHistoryWheel history={filtered} />
         </section>
-
       </main>
 
       <Footer />
