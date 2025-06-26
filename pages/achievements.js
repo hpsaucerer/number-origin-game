@@ -100,7 +100,7 @@ export default function NumberVaultPage() {
             <img
               src="/logo.svg"
               alt=""
-              className="pointer-events-none absolute top-4 right-4 w-24 opacity-10"
+              className="pointer-events-none absolute top-1 right-1 w-24 opacity-10"
             />
           </div>
         </section>
