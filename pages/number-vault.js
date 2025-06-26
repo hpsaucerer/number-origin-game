@@ -85,7 +85,7 @@ export default function NumberVaultPage() {
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">Number Vault</h1>
           <p className="text-gray-600">
-            Scroll through every number you’ve unlocked and revisit any Nugget of Knowledge™ at will. Tap the tiles below to filter the numbers by category.
+            Scroll through the numbers you’ve unlocked and revisit any Nugget of Knowledge™ at will. Tap the tiles below to filter the numbers by category.
           </p>
           <p className="text-lg font-semibold">
             Total puzzles solved:{" "}
