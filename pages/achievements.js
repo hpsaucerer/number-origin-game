@@ -1,72 +1,82 @@
 // pages/achievements.js
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/Footer";
 import NumberHistoryWheel from "@/components/NumberHistoryWheel";
-import { supabase } from "@/lib/supabase";    // ← make sure you export your supabase client
+
+// — your demo/sample fallback data — 
+// (you can swap this out for real, fetched user-history later)
+const PUZZLE_HISTORY = [
+  { number: "480", fact: "Battle of Thermopylae", category: "History" },
+  { number: "357", fact: "Mirrors in the Galerie de Glaces", category: "Culture" },
+  { number: "206", fact: "Number of bones in the human body", category: "Science" },
+  { number: "73",  fact: "Sheldon Cooper’s favourite number", category: "Culture" },
+  { number: "23",  fact: "Stab wounds on Julius Caesar", category: "History" },
+  { number: "9.58",fact: "Usain Bolt’s 100m record", category: "Sport" },
+];
 
 const ALL_CATEGORIES = [
-  "Maths","Science","Culture","Geography","Sport","History",
+  "Maths",
+  "Science",
+  "Culture",
+  "Geography",
+  "Sport",
+  "History",
 ];
 
 export default function NumberVaultPage() {
   const [filterCategory, setFilterCategory] = useState("All");
-  const [history, setHistory] = useState([]);             // ← will hold { number, answer, fun_fact, category }
-  const [loading, setLoading] = useState(true);
 
-  // get the list of puzzle‐numbers the user has solved
-  // (you might already be storing this in localStorage or in a separate table)
-  // for demo, let’s assume `completedPuzzleNumbers` is in localStorage as an array of strings:
-  useEffect(() => {
-    const completed = JSON.parse(
-      localStorage.getItem("completedPuzzles") || "[]"
-    );
-    if (completed.length === 0) {
-      setLoading(false);
-      return;
-    }
-
-    supabase
-      .from("puzzles")
-      .select("number, answer, fun_fact, category")
-      .in("number", completed)
-      .then(({ data, error }) => {
-        if (error) console.error(error);
-        else setHistory(data);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  // build your categoryCounts from `history`
+  // compute counts
   const categoryCounts = useMemo(() => {
-    const counts = ALL_CATEGORIES.reduce((acc, cat) => {
-      acc[cat] = 0;
-      return acc;
-    }, {});
-    history.forEach((p) => {
-      if (counts[p.category] != null) counts[p.category]++;
+    const counts = ALL_CATEGORIES.reduce((acc, cat) => ({ ...acc, [cat]: 0 }), {});
+    PUZZLE_HISTORY.forEach((p) => {
+      if (counts[p.category] !== undefined) counts[p.category]++;
     });
     return counts;
-  }, [history]);
+  }, []);
 
-  const totalSolved = history.length;
+  const totalSolved = PUZZLE_HISTORY.length;
 
-  // filter for the wheel
+  // apply filter
   const filtered = useMemo(() => {
-    if (filterCategory === "All") return history;
-    return history.filter((p) => p.category === filterCategory);
-  }, [filterCategory, history]);
+    return filterCategory === "All"
+      ? PUZZLE_HISTORY
+      : PUZZLE_HISTORY.filter((p) => p.category === filterCategory);
+  }, [filterCategory]);
 
   return (
     <>
       <Header />
 
-      <main className="max-w-3xl mx-auto p-6 space-y-8">
-        {/* … your responsive header/blurb here … */}
+      <main className="max-w-3xl mx-auto px-6 pt-6 pb-8 space-y-8">
+        {/* ─── Desktop & tablet: always visible header/blurb ─── */}
+        <div className="hidden sm:block mb-6 space-y-2">
+          <h1 className="text-3xl font-bold">Number Vault</h1>
+          <p className="text-gray-600">
+            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
+          </p>
+          <p className="text-lg font-semibold">
+            Total puzzles solved: <span className="text-blue-600">{totalSolved}</span>
+          </p>
+        </div>
 
-        {/* ─── Clickable Category Tiles ─── */}
+        {/* ─── Mobile: foldable header/blurb ─── */}
+        <details className="sm:hidden mb-6 border rounded-lg p-4">
+          <summary className="flex items-center justify-between cursor-pointer">
+            <span className="text-2xl font-bold">Number Vault</span>
+            <span className="text-sm font-semibold">
+              Solved: <span className="text-blue-600">{totalSolved}</span>
+            </span>
+          </summary>
+          <p className="mt-2 text-gray-600 text-sm">
+            Welcome to your vault of solved puzzles. Scroll through every number you’ve unlocked, tap a category below, and revisit any fun fact at will.
+          </p>
+        </details>
+
+        {/* ─── Category tiles ─── */}
         <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mb-8">
           {ALL_CATEGORIES.map((cat) => (
             <div
@@ -77,7 +87,7 @@ export default function NumberVaultPage() {
               }
               className={`
                 cursor-pointer bg-white p-4 rounded-lg shadow text-center
-                ${filterCategory === cat && "ring-2 ring-blue-500"}
+                ${filterCategory === cat ? "ring-2 ring-blue-500" : ""}
               `}
             >
               <p className="text-2xl font-bold">{categoryCounts[cat]}</p>
@@ -86,12 +96,10 @@ export default function NumberVaultPage() {
           ))}
         </div>
 
-        {/* ─── Puzzle History Wheel ─── */}
-        {loading ? (
-          <p className="text-center">Loading your vault…</p>
-        ) : (
+        {/* ─── Puzzle history wheel ─── */}
+        <section>
           <NumberHistoryWheel history={filtered} />
-        )}
+        </section>
       </main>
 
       <Footer />
