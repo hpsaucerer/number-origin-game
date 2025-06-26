@@ -40,21 +40,36 @@ export default function NumberVaultPage() {
         return;
       }
 
-      // 2) fetch those rows by date
-      const { data, error } = await supabase
-        .from("puzzles")
-        .select("number, formatted, answer, fun_fact, category, date")
-        .in("date", dates);
+      // 2) try to fetch only those rows by date
+      let rows = [];
+      try {
+        const { data, error } = await supabase
+          .from("puzzles")
+          .select("number, formatted, answer, fun_fact, category, date")
+          .in("date", dates);
 
-      if (error) {
-        console.error("Error loading vault:", error);
-        setHistory([]);
-        return;
+        if (error) throw error;
+        rows = data;
+      } catch (err) {
+        console.warn(
+          "Supabase .in('date',…) failed (Edge?), falling back to full fetch:",
+          err
+        );
+        // fallback: fetch all and filter client-side
+        const { data: all, error: allErr } = await supabase
+          .from("puzzles")
+          .select("number, formatted, answer, fun_fact, category, date");
+        if (allErr) {
+          console.error("Full‐table fetch also failed:", allErr);
+          setHistory([]);
+          return;
+        }
+        rows = all.filter((p) => dates.includes(p.date));
       }
 
       // 3) shape it for the wheel
       setHistory(
-        data.map((p) => ({
+        rows.map((p) => ({
           number:    p.number,
           formatted: p.formatted,
           answer:    p.answer,
