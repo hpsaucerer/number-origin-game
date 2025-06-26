@@ -11,7 +11,7 @@ const PUZZLE_HISTORY = {
   // …etc.
 };
 
-export default function NumberHistoryWheel() {
+export default function NumberHistoryWheel({ history }) {
   const [selected, setSelected] = useState(null);
 
   // format numeric strings, fallback to raw if NaN
@@ -22,10 +22,11 @@ export default function NumberHistoryWheel() {
 
   return (
     <div className="flex flex-col items-center gap-4 p-4">
-      {/* scrollable list of solved numbers */}
+      {/* scrollable list */}
       <div className="h-48 w-full max-w-sm overflow-y-scroll border rounded shadow-inner bg-white">
         <ul className="divide-y">
-          {Object.keys(PUZZLE_HISTORY)
+          {history
+            .map((p) => p.number)
             .sort((a, b) => parseFloat(b) - parseFloat(a))
             .map((num) => (
               <li
@@ -41,7 +42,7 @@ export default function NumberHistoryWheel() {
         </ul>
       </div>
 
-      {/* detail card with watermark */}
+      {/* detail card */}
       {selected && (
         <div className="relative max-w-sm w-full p-4 border rounded-lg bg-blue-50 shadow-md">
           {/* watermark logo */}
@@ -55,7 +56,7 @@ export default function NumberHistoryWheel() {
             {formattedNumber}
           </p>
           <p className="text-sm mt-1 text-gray-700">
-            {PUZZLE_HISTORY[selected]}
+            {history.find((p) => p.number === selected)?.fact}
           </p>
         </div>
       )}
