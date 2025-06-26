@@ -22,17 +22,28 @@ export default function NumberVaultPage() {
 
   useEffect(() => {
     async function loadHistory() {
-      // 1) grab every key="completed-<date>" that’s set to "true"
-      const dates = Object.keys(localStorage)
-        .filter((key) => key.startsWith("completed-") && localStorage.getItem(key) === "true")
-        .map((key) => key.replace("completed-", ""));
+      // ─── 1) try the old array (if you ever used it) ───
+      const oldRaw = localStorage.getItem("completedPuzzles");
+      let dates;
+      if (oldRaw) {
+        dates = JSON.parse(oldRaw);
+      } else {
+        // ─── 2) scan for completed-YYYY-MM-DD keys ───
+        dates = Object.keys(localStorage)
+          .filter(
+            (key) =>
+              key.startsWith("completed-") &&
+              localStorage.getItem(key) === "true"
+          )
+          .map((key) => key.replace(/^completed-/, ""));
+      }
 
       if (dates.length === 0) {
         setHistory([]);
         return;
       }
 
-      // 2) fetch those rows from your "puzzles" table by date
+      // ─── 3) fetch only those dates from Supabase ───
       const { data, error } = await supabase
         .from("puzzles")
         .select("number, formatted, answer, fun_fact, category, date")
@@ -44,7 +55,7 @@ export default function NumberVaultPage() {
         return;
       }
 
-      // 3) shape into the form the wheel wants
+      // ─── 4) shape it for the wheel ───
       setHistory(
         data.map((p) => ({
           number:    p.number,
@@ -69,7 +80,7 @@ export default function NumberVaultPage() {
     return acc;
   }, [history]);
 
-  // filter the wheel
+  // apply category filter
   const filtered = useMemo(() => {
     return filterCategory === "All"
       ? history
@@ -85,7 +96,9 @@ export default function NumberVaultPage() {
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">Number Vault</h1>
           <p className="text-gray-600">
-            Scroll through the numbers you’ve unlocked and revisit any Nugget of Knowledge™ at will. Tap the tiles below to filter the numbers by category.
+            Scroll through the numbers you’ve unlocked and revisit any Nugget of
+            Knowledge™ at will. Tap the tiles below to filter the numbers by
+            category.
           </p>
           <p className="text-lg font-semibold">
             Total puzzles solved:{" "}
@@ -102,12 +115,11 @@ export default function NumberVaultPage() {
               onClick={() =>
                 setFilterCategory((cur) => (cur === cat ? "All" : cat))
               }
-              className={`cursor-pointer bg-white p-4 rounded-lg shadow text-center transition
-                ${
-                  filterCategory === cat
-                    ? "ring-2 ring-blue-500"
-                    : "hover:shadow-md"
-                }`}
+              className={`cursor-pointer bg-white p-4 rounded-lg shadow text-center transition ${
+                filterCategory === cat
+                  ? "ring-2 ring-blue-500"
+                  : "hover:shadow-md"
+              }`}
             >
               <p className="text-2xl font-bold">{categoryCounts[cat] || 0}</p>
               <p className="text-sm text-gray-500">{cat}</p>
@@ -115,7 +127,7 @@ export default function NumberVaultPage() {
           ))}
         </div>
 
-        {/* Wheel */}
+        {/* Wheel or Empty State */}
         {history.length === 0 ? (
           <p className="text-center text-gray-500">
             You haven’t solved any puzzles yet. Complete one to see it here!
