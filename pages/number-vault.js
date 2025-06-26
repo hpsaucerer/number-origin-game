@@ -22,20 +22,21 @@ export default function NumberVaultPage() {
 
   useEffect(() => {
     async function loadHistory() {
-      // 1) read completed puzzle dates (or IDs) from localStorage
-      const completed = JSON.parse(
-        localStorage.getItem("completedPuzzles") || "[]"
-      );
-      if (completed.length === 0) {
+      // 1) grab every key="completed-<date>" that’s set to "true"
+      const dates = Object.keys(localStorage)
+        .filter((key) => key.startsWith("completed-") && localStorage.getItem(key) === "true")
+        .map((key) => key.replace("completed-", ""));
+
+      if (dates.length === 0) {
         setHistory([]);
         return;
       }
 
-      // 2) fetch those rows from your "puzzles" table
+      // 2) fetch those rows from your "puzzles" table by date
       const { data, error } = await supabase
         .from("puzzles")
-        .select("number, formatted, answer, fun_fact, category")
-        .in("number", completed); // or .in("id", completed) if you store IDs
+        .select("number, formatted, answer, fun_fact, category, date")
+        .in("date", dates);
 
       if (error) {
         console.error("Error loading vault:", error);
@@ -46,11 +47,12 @@ export default function NumberVaultPage() {
       // 3) shape into the form the wheel wants
       setHistory(
         data.map((p) => ({
-          number: p.number,
+          number:    p.number,
           formatted: p.formatted,
-          answer: p.answer,
-          funFact: p.fun_fact,
-          category: p.category,
+          answer:    p.answer,
+          funFact:   p.fun_fact,
+          category:  p.category,
+          date:      p.date,
         }))
       );
     }
