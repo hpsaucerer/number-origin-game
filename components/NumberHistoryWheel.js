@@ -11,7 +11,7 @@ export default function NumberHistoryWheel({ history }) {
 
   return (
     <div className="flex flex-col items-center gap-4 p-4">
-      <div className="flex flex-col md:flex-row items-start gap-4 w-full max-w-4xl">
+      <div className="flex flex-row flex-wrap sm:flex-nowrap items-start gap-4 w-full max-w-4xl overflow-x-auto">
         {/* ——— number list */}
         <div className="h-24 sm:h-32 md:h-48 w-full md:w-1/2 overflow-y-auto border rounded shadow-inner bg-white">
           <ul className="divide-y">
