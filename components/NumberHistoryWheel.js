@@ -1,16 +1,6 @@
 // components/NumberHistoryWheel.js
 import React, { useState } from "react";
 
-const PUZZLE_HISTORY = {
-  357: "Mirrors inside the Galerie de Glaces at Versailles",
-  23: "Stab wounds inflicted upon Julius Caesar",
-  "9.58": "Men’s 100m sprint record set by Usain Bolt",
-  206: "Number of bones in the human body",
-  480: "Battle of Thermopylae",
-  73: "Sheldon Cooper’s ‘best number’",
-  // …etc.
-};
-
 export default function NumberHistoryWheel({ history }) {
   const [selected, setSelected] = useState(null);
 
@@ -46,17 +36,18 @@ export default function NumberHistoryWheel({ history }) {
         {/* ——— detail card */}
         {selected && (
           <div className="relative w-full md:w-1/2 p-4 border rounded-lg bg-blue-50 shadow-md overflow-visible">
-            {/* watermark (inverted to black) */}
-           <img
-             src="/logo.svg"
-             alt=""
-             className="
-             pointer-events-none
-             absolute top-0 right-0
-             w-24
-             filter brightness-0 saturate-100 opacity-15
-             "
-             />
+            {/* watermark */}
+            <img
+              src="/logo.svg"
+              alt=""
+              className="
+                pointer-events-none
+                absolute -top-1 -right-1
+                w-20
+                filter brightness-0 saturate-100 opacity-15
+              "
+            />
+
             <p className="text-lg font-medium text-gray-900">
               {formattedNumber}
             </p>
