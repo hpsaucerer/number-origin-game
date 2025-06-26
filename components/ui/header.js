@@ -55,7 +55,7 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
                   How to Play
                 </Link>
 
-                {/* ← HERE is your Leaderboard link; we write the flag only on click */}
+                {/* Leaderboard link */}
                 <Link
                   href="/leaderboard"
                   onClick={() => {
@@ -95,6 +95,13 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
                   Community
                 </Link>
                 <Link
+                  href="/number-vault"
+                  onClick={() => setMenuOpen(false)}
+                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
+                >
+                  Number Vault
+                </Link>
+                <Link
                   href="/contact"
                   onClick={() => setMenuOpen(false)}
                   className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
@@ -104,14 +111,15 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
               </div>
             )}
           </div>
-          {/* Logo */}
-          <Link href="/" className="flex items-center ml-1 sm:ml-0">
+
+          {/* Logo (no longer a <Link>) */}
+          <div className="flex items-center ml-1 sm:ml-0">
             <img
               src="/logo.svg"
               alt="Game Logo"
               className="h-[164px] sm:h-[144px] md:h-20 lg:h-28 xl:h-52 w-auto translate-y-3"
             />
-          </Link>
+          </div>
         </div>
 
         {/* Right-side icon buttons */}
