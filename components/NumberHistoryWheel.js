@@ -1,44 +1,40 @@
+// components/NumberHistoryWheel.js
 import React, { useState } from "react";
 
-const PUZZLE_HISTORY = {
-  357: "Mirrors inside the Galerie de Glaces at Versailles",
-  23: "Stab wounds inflicted upon Julius Caesar",
-  "9.58": "Men’s 100m sprint record set by Usain Bolt",
-  206: "Number of bones in the human body",
-  480: "Battle of Thermopylae",
-  73: "Sheldon Cooper’s ‘best number’"
-  // Add more as needed
-};
-
-export default function NumberHistoryWheel() {
+export default function NumberHistoryWheel({ history }) {
   const [selected, setSelected] = useState(null);
+
+  // sort descending numerically
+  const list = [...history].sort(
+    (a, b) => parseFloat(b.number) - parseFloat(a.number)
+  );
 
   return (
     <div className="flex flex-col items-center gap-4 p-4">
-      <h2 className="text-xl font-semibold">Your Puzzle History</h2>
+      <h2 className="sr-only">Your Puzzle History</h2>
 
-      <div className="h-48 w-full max-w-sm overflow-y-scroll border rounded shadow-inner bg-white">
+      <div className="h-48 w-full max-w-sm overflow-y-auto border rounded shadow-inner bg-white">
         <ul className="divide-y">
-          {Object.keys(PUZZLE_HISTORY)
-            .sort((a, b) => parseFloat(b) - parseFloat(a))
-            .map((num) => (
-              <li
-                key={num}
-                onClick={() => setSelected(num)}
-                className={`p-3 cursor-pointer hover:bg-yellow-100 ${
-                  selected === num ? "bg-yellow-200 font-bold" : ""
-                }`}
-              >
-                {num}
-              </li>
-            ))}
+          {list.map(({ number }) => (
+            <li
+              key={number}
+              onClick={() => setSelected(number)}
+              className={`p-3 cursor-pointer hover:bg-yellow-100 ${
+                selected === number ? "bg-yellow-200 font-bold" : ""
+              }`}
+            >
+              {number}
+            </li>
+          ))}
         </ul>
       </div>
 
       {selected && (
         <div className="max-w-sm text-center mt-2 p-4 border bg-yellow-50 rounded shadow">
-          <p className="text-lg font-medium">{formattedNumber || selected}</p>
-          <p className="text-sm mt-1">{PUZZLE_HISTORY[selected]}</p>
+          <p className="text-lg font-medium">{selected}</p>
+          <p className="text-sm mt-1">
+            {history.find(p => p.number === selected)?.fact}
+          </p>
         </div>
       )}
     </div>
