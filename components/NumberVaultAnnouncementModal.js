@@ -23,7 +23,7 @@ export default function NumberVaultAnnouncementModal({ open, onClose }) {
 
         {/* Body */}
         <p className="text-sm">
-          We’ve just launched <strong>Number Vault</strong>, your vault of solved puzzles. Scroll through every number you’ve unlocked and revisit any fun fact at will.
+          A new feature has just launched: the <strong>Number Vault</strong>. Now you can scroll through the numbers you’ve unlocked and revisit any Nugget of Knowledge™ at will!
         </p>
         <img
           src="/number-vault-preview.png"
@@ -31,7 +31,7 @@ export default function NumberVaultAnnouncementModal({ open, onClose }) {
           className="mt-4 mb-4 w-full rounded-lg shadow"
         />
         <p className="text-sm">
-          We’ve also rolled out a bunch of bug fixes and performance improvements to keep everything running smoothly.
+          We’ve also rolled out a bunch of bug fixes and performance improvements - leaderboard scores should now automatically submit each day. More features will be added to the Leaderboard soon, so watch this space!
         </p>
 
         {/* Footer buttons */}
