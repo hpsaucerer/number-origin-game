@@ -23,7 +23,7 @@ export default function NumberVaultAnnouncementModal({ open, onClose }) {
 
         {/* Body */}
         <p className="text-sm">
-          A new feature has just launched: the <strong>Number Vault</strong>. Now you can scroll through the numbers you’ve unlocked and revisit any Nugget of Knowledge™ at will!
+          A new feature has just launched: the <strong>Number Vault</strong>. Now you can scroll through the numbers you’ve unlocked and revisit any Nugget of Knowledge™ at will! A link to it has been added to the hamburger menu. We hope you enjoy this new feature!
         </p>
         <img
           src="/number-vault-preview.png"
