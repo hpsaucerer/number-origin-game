@@ -31,7 +31,7 @@ import { getCookiePreferences } from "@/utils/cookies";
 import { askLLMFallback } from '../lib/llm'; // adjust if needed
 import { useRouter } from "next/router"; // 🔼 Place this at the top with other imports if not already there
 import { calculatePoints } from "../utils/game"; // or wherever you put it
-import LeaderboardBetaModal from "@/components/LeaderboardBetaModal";
+import NumberVaultAnnouncementModal from "@/components/NumberVaultAnnouncementModal";
 
 // 🧪 Debug mode flag — uses environment variable
 const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true";
@@ -371,13 +371,24 @@ const joyrideSteps = [
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
   const [guesses, setGuesses] = useState([]);
   const [cluesRevealed, setCluesRevealed] = useState([]);
-  const [showLeaderboardBeta, setShowLeaderboardBeta] = useState(false);
+  const [showVaultAnnouncement, setShowVaultAnnouncement] = useState(false);
 
-    // ─── Close the “Leaderboard Beta” notice and remember that we've seen it
-  const handleCloseLeaderboardBeta = () => {
-    setShowLeaderboardBeta(false);
-    localStorage.setItem("hasSeenLeaderboardBeta", "true");
-  };
+ useEffect(() => {
+   // only fire on the client
+   if (typeof window === "undefined") return;
+
+   // grab your completedPuzzles array
+   const completed = JSON.parse(
+     localStorage.getItem("completedPuzzles") || "[]"
+   );
+   const seen = localStorage.getItem("seenVaultAnnouncement");
+
+   // only show if they’ve solved at least one puzzle
+   if (completed.length > 0 && !seen) {
+     setShowVaultAnnouncement(true);
+     localStorage.setItem("seenVaultAnnouncement", "true");
+   }
+ }, []);
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
@@ -760,18 +771,6 @@ useEffect(() => {
   }
 }, [isCorrect, isArchive]);
 
-    useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    // 1) Have they ever finished a puzzle? (example: firstTokenGranted is set on first complete)
-    const playedBefore = localStorage.getItem("firstTokenGranted") === "true";
-    // 2) Have they already dismissed this beta modal?
-    const alreadySeen = localStorage.getItem("hasSeenLeaderboardBeta") === "true";
-
-    if (playedBefore && !alreadySeen) {
-      setShowLeaderboardBeta(true);
-    }
-  }, []);
 
 // ✅ NEW: Mark archive puzzle as completed
 useEffect(() => {
@@ -1480,14 +1479,11 @@ return !hasMounted ? (
 ) : (
 <>
 
-  {/* ─── Leaderboard Beta notice ─── */}
-  {showLeaderboardBeta && (
-    <LeaderboardBetaModal
-      open={showLeaderboardBeta}
-      onClose={handleCloseLeaderboardBeta}
-      /* …other props… */
-    />
-  )}
+  {/* ─── New: Number Vault announcement ─── */}
+  <NumberVaultAnnouncementModal
+    open={showVaultAnnouncement}
+    onClose={() => setShowVaultAnnouncement(false)}
+  />
           
  <Joyride
   key={tourKey}
