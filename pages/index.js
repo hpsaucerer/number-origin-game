@@ -371,7 +371,18 @@ const joyrideSteps = [
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
   const [guesses, setGuesses] = useState([]);
   const [cluesRevealed, setCluesRevealed] = useState([]);
+  const [showVaultAnnouncement, setShowVaultAnnouncement] = useState(false);
 
+  useEffect(() => {
+  // only show the vault announcement once per user
+  if (typeof window !== "undefined") {
+    const seen = localStorage.getItem("seenVaultAnnouncement");
+    if (!seen) {
+      setShowVaultAnnouncement(true);
+      localStorage.setItem("seenVaultAnnouncement", "true");
+    }
+  }
+}, []);
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
@@ -1462,6 +1473,11 @@ return !hasMounted ? (
 ) : (
 <>
 
+  {/* ─── New: Number Vault announcement ─── */}
+  <NumberVaultAnnouncementModal
+    open={showVaultAnnouncement}
+    onClose={() => setShowVaultAnnouncement(false)}
+  />
           
  <Joyride
   key={tourKey}
