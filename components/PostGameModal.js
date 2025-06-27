@@ -186,13 +186,13 @@ export default function PostGameModal({
     <Dialog open={open} onOpenChange={onClose}>
    <DialogContent
    className="
-     w-full max-w-md
-     mt-16            /* you can bring it down a little if you want */
-     px-0 pt-4 pb-8    /* extra bottom padding so your Share button isn’t flush to the bottom */
-     relative bg-white rounded-xl shadow-xl
-     max-h-[calc(100vh-4rem)]  /* cap content height to viewport minus your header */
-     overflow-y-auto  /* make only the vertical axis scrollable */
-   "
+   w-full max-w-md
+   mt-8                         /* only 2 rem down instead of 4 */
+   px-0 pt-4 pb-8               /* keep the extra bottom padding */
+   relative bg-white rounded-xl shadow-xl
+   max-h-[85vh]                 /* cap height at 85% of viewport */
+   overflow-y-auto              /* only vertical scroll */
+ "
   >
         <button
           className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
