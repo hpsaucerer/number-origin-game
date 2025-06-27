@@ -373,16 +373,22 @@ const joyrideSteps = [
   const [cluesRevealed, setCluesRevealed] = useState([]);
   const [showVaultAnnouncement, setShowVaultAnnouncement] = useState(false);
 
-  useEffect(() => {
-  // only show the vault announcement once per user
-  if (typeof window !== "undefined") {
-    const seen = localStorage.getItem("seenVaultAnnouncement");
-    if (!seen) {
-      setShowVaultAnnouncement(true);
-      localStorage.setItem("seenVaultAnnouncement", "true");
-    }
-  }
-}, []);
+ useEffect(() => {
+   // only fire on the client
+   if (typeof window === "undefined") return;
+
+   // grab your completedPuzzles array
+   const completed = JSON.parse(
+     localStorage.getItem("completedPuzzles") || "[]"
+   );
+   const seen = localStorage.getItem("seenVaultAnnouncement");
+
+   // only show if they’ve solved at least one puzzle
+   if (completed.length > 0 && !seen) {
+     setShowVaultAnnouncement(true);
+     localStorage.setItem("seenVaultAnnouncement", "true");
+   }
+ }, []);
 
 const [hasMounted, setHasMounted] = useState(false);
 const [allPuzzles, setAllPuzzles] = useState([]);
