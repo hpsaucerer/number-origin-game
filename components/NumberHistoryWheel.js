@@ -35,7 +35,7 @@ export default function NumberHistoryWheel({ history }) {
             <img
               src="/logo.svg"
               alt=""
-              className="pointer-events-none absolute top-1 right-1 w-24 opacity-15"
+              className="pointer-events-none absolute top-0 right-5 w-24 opacity-50"
             />
 
             {/* blue card: formatted number + answer */}
