@@ -444,6 +444,7 @@ const [showWhatsNew, setShowWhatsNew] = useState(false);
 const COMMUNITY_PUZZLES = {
   "2025-06-13": { name: "Jack", city: "Bethesda", country: "USA", flag: "USA" },
   "2025-06-20": { name: "Mizar", city: "", country: "Italy", flag: "Italy" },
+  "2025-06-29": { name: "Svedfis", city: "Toronto", country: "Canada", flag: "Canada" },
 };
 
 const contributor = COMMUNITY_PUZZLES[puzzle?.date];
