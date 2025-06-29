@@ -78,27 +78,28 @@ if (!localStorage.getItem("seenNumberVaultBadge")) {
                   About
                 </Link>
                 <Link
-                  href="/community"
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
+                 href="/community"
+                 onClick={() => setMenuOpen(false)}
+                 className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
-                  Community
+                 Community
+                </Link>
                 <Link
                   href="/number-vault"
                   onClick={() => {
                   localStorage.setItem("seenNumberVaultBadge", "true");
                   setShowBadge(false);
                   setMenuOpen(false);
-                }}
+               }}
                 className="flex items-center justify-between px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
-              >
+                >
                 Number Vault
-               {showBadge && (
-                 <span className="ml-2 text-xs font-semibold text-red-600">
-                   NEW
-                  </span>
-               )}
-               </Link>
+                {showBadge && (
+                <span className="ml-2 text-xs font-semibold text-red-600">
+                  NEW
+                </span>
+                )}
+                </Link>
                 <Link
                   href="/contact"
                   onClick={() => setMenuOpen(false)}
