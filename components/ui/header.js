@@ -10,9 +10,9 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
 
   // On mount, if they've never seen it, show the badge
   useEffect(() => {
-    if (!localStorage.getItem("seenLeaderboardBadge")) {
-      setShowBadge(true);
-    }
+if (!localStorage.getItem("seenNumberVaultBadge")) {
+  setShowBadge(true);
+}
   }, []);
 
   const handleMenuToggle = () => {
@@ -55,22 +55,12 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
                   How to Play
                 </Link>
 
-                {/* Leaderboard link */}
-                <Link
-                  href="/leaderboard"
-                  onClick={() => {
-                    localStorage.setItem("seenLeaderboardBadge", "true");
-                    setShowBadge(false);
-                    setMenuOpen(false);
-                  }}
-                  className="flex items-center justify-between px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
+               <Link
+                 href="/leaderboard"
+                 onClick={() => setMenuOpen(false)}
+                 className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
                   Leaderboard
-                  {showBadge && (
-                    <span className="ml-2 text-xs font-semibold text-red-600">
-                      NEW
-                    </span>
-                  )}
                 </Link>
 
                 <Link
@@ -93,14 +83,22 @@ export default function Header({ onStatsClick, onAchievementsClick }) {
                   className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
                 >
                   Community
-                </Link>
                 <Link
                   href="/number-vault"
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
-                >
-                  Number Vault
-                </Link>
+                  onClick={() => {
+                  localStorage.setItem("seenNumberVaultBadge", "true");
+                  setShowBadge(false);
+                  setMenuOpen(false);
+                }}
+                className="flex items-center justify-between px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-800"
+              >
+                Number Vault
+               {showBadge && (
+                 <span className="ml-2 text-xs font-semibold text-red-600">
+                   NEW
+                  </span>
+               )}
+               </Link>
                 <Link
                   href="/contact"
                   onClick={() => setMenuOpen(false)}
