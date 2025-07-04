@@ -445,6 +445,7 @@ const COMMUNITY_PUZZLES = {
   "2025-06-13": { name: "Jack", city: "Bethesda", country: "USA", flag: "USA" },
   "2025-06-20": { name: "Mizar", city: "", country: "Italy", flag: "Italy" },
   "2025-06-29": { name: "Svedfis", city: "Toronto", country: "Canada", flag: "Canada" },
+  "2025-07-05": { name: "Sam", city: "Rugby", country: "England", flag: "UK" },
 };
 
 const contributor = COMMUNITY_PUZZLES[puzzle?.date];
