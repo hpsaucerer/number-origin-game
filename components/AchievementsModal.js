@@ -7,54 +7,51 @@ export default function AchievementsModal({ open, onClose }) {
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
   const [categoryAchievements, setCategoryAchievements] = useState({});
 
-  useEffect(() => {
-    if (!open) return;
+ useEffect(() => {
+  if (!open) return;
 
-    try {
-      const tiles = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
-      setEarnedTileIndexes(Array.isArray(tiles) ? tiles : []);
-    } catch (err) {
-      console.error("Invalid earnedTileIndexes JSON:", err);
-      setEarnedTileIndexes([]);
-    }
+  // Load earned tiles
+  try {
+    const tiles = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+    setEarnedTileIndexes(Array.isArray(tiles) ? tiles : []);
+  } catch (err) {
+    console.error("Invalid earnedTileIndexes JSON:", err);
+    setEarnedTileIndexes([]);
+  }
 
-try {
-  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-  const all = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
+  // Count per-category puzzle completions
+  try {
+    const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+    const all = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
 
-  const validCategories = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
-  const seen = {}; // Track unique puzzle numbers per category
+    const validCategories = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
+    const seen = {};
 
-  validCategories.forEach(cat => {
-    seen[cat] = new Set();
-  });
+    validCategories.forEach(cat => {
+      seen[cat] = new Set();
+    });
 
-  all.forEach((p) => {
-    if (
-      completed.includes(p.id) &&
-      p.puzzle_number !== null &&
-      validCategories.includes(p.category)
-    ) {
-      seen[p.category].add(p.puzzle_number);
-    }
-  });
+    all.forEach((p) => {
+      if (
+        completed.includes(p.id) &&
+        p.puzzle_number !== null &&
+        validCategories.includes(p.category)
+      ) {
+        seen[p.category].add(p.puzzle_number);
+      }
+    });
 
-  const counts = Object.fromEntries(
-    validCategories.map(cat => [cat, seen[cat].size])
-  );
+    const counts = Object.fromEntries(
+      validCategories.map(cat => [cat, seen[cat].size])
+    );
 
-  setCategoryAchievements(counts); // ✅ make sure this ends the try block
-} catch (err) {
-  console.error("Error loading achievements data:", err);
-  setCategoryAchievements({});
-}
+    setCategoryAchievements(counts);
+  } catch (err) {
+    console.error("Error loading achievements data:", err);
+    setCategoryAchievements({});
+  }
+}, [open]);
 
-      setCategoryAchievements(counts);
-    } catch (err) {
-      console.error("Error loading achievements data:", err);
-      setCategoryAchievements({});
-    }
-  }, [open]);
 
   const previewTiles = TILE_WORD.split("").map((letter, index) => {
     const isEarned = earnedTileIndexes.includes(index);
