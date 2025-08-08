@@ -6,6 +6,7 @@ import Header from "@/components/ui/header";
 import Footer from "@/components/ui/Footer";
 import NumberHistoryWheel from "@/components/NumberHistoryWheel";
 import { supabase } from "@/lib/supabase";
+import { getCompletedDatesFromLocalStorage } from "@/lib/progress";
 
 const ALL_CATEGORIES = [
   "Maths",
@@ -22,23 +23,13 @@ export default function NumberVaultPage() {
 
   useEffect(() => {
     async function loadHistory() {
-      // 1) grab every key="completed-<date>" that’s set to "true"
-      const dates = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (
-          key &&
-          key.startsWith("completed-") &&
-          localStorage.getItem(key) === "true"
-        ) {
-          dates.push(key.substring("completed-".length));
-        }
-      }
+      // 1) read sanitized completion dates (removes bad completed-* keys)
+const dates = getCompletedDatesFromLocalStorage();
 
-      if (dates.length === 0) {
-        setHistory([]);
-        return;
-      }
+if (dates.length === 0) {
+  setHistory([]);
+  return;
+}
 
       // 2) try to fetch only those rows by date
       let rows = [];
