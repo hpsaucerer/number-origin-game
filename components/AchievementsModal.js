@@ -57,7 +57,7 @@ try {
       puzzleNumber <= maxAvailablePuzzleNumber &&
       validCategories.includes(category) // ✅ use normalized category
     ) {
-      seen[category].add(puzzleNumber); // ✅ use normalized category
+      seen[category].add(id); // ✅ use unique ID instead of puzzle number
     }
   });
 
