@@ -18,26 +18,36 @@ export default function AchievementsModal({ open, onClose }) {
       setEarnedTileIndexes([]);
     }
 
-    try {
-      const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-      const all = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
+try {
+  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  const all = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
 
-      const counts = {
-        Maths: 0,
-        Geography: 0,
-        Science: 0,
-        History: 0,
-        Culture: 0,
-        Sport: 0,
-      };
+  const validCategories = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
+  const seen = {}; // Track unique puzzle numbers per category
 
-      all.forEach((p) => {
-        if (completed.includes(p.id)) {
-          if (counts[p.category] !== undefined) {
-            counts[p.category]++;
-          }
-        }
-      });
+  validCategories.forEach(cat => {
+    seen[cat] = new Set();
+  });
+
+  all.forEach((p) => {
+    if (
+      completed.includes(p.id) &&
+      p.puzzle_number !== null &&
+      validCategories.includes(p.category)
+    ) {
+      seen[p.category].add(p.puzzle_number);
+    }
+  });
+
+  const counts = Object.fromEntries(
+    validCategories.map(cat => [cat, seen[cat].size])
+  );
+
+  setCategoryAchievements(counts);
+} catch (err) {
+  console.error("Error loading achievements data:", err);
+  setCategoryAchievements({});
+}
 
       setCategoryAchievements(counts);
     } catch (err) {
