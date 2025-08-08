@@ -58,7 +58,7 @@ try {
   console.error("Error loading achievements data:", err);
   setCategoryAchievements({});
 }
-
+}, [open]); // ✅ this line closes the useEffect hook
 
   const previewTiles = TILE_WORD.split("").map((letter, index) => {
     const isEarned = earnedTileIndexes.includes(index);
