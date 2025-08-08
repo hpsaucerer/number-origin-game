@@ -20,40 +20,44 @@ export default function AchievementsModal({ open, onClose }) {
   }
 
   // Count per-category puzzle completions
-  try {
-    const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-    const all = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
+try {
+  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
+  const all = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
 
-    const validCategories = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
-    const seen = {};
+  console.log("Completed IDs:", completed);
+  console.log("All puzzles:", all);
 
-    validCategories.forEach(cat => {
-      seen[cat] = new Set();
-    });
+  const validCategories = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
+  const seen = {};
 
-const maxAvailablePuzzleNumber = 105;
+  validCategories.forEach(cat => {
+    seen[cat] = new Set();
+  });
 
-all.forEach((p) => {
-  if (
-    completed.includes(Number(p.id)) &&
-    typeof p.puzzle_number === "number" &&
-    p.puzzle_number <= maxAvailablePuzzleNumber &&
-    validCategories.includes(p.category)
-  ) {
-    seen[p.category].add(p.puzzle_number);
-  }
-});
+  const maxAvailablePuzzleNumber = 105;
 
-    const counts = Object.fromEntries(
-      validCategories.map(cat => [cat, seen[cat].size])
-    );
+  all.forEach((p) => {
+    const id = Number(p.id); // ensures type match with completed list
+    if (
+      completed.includes(id) &&
+      typeof p.puzzle_number === "number" &&
+      p.puzzle_number <= maxAvailablePuzzleNumber &&
+      validCategories.includes(p.category)
+    ) {
+      seen[p.category].add(p.puzzle_number);
+    }
+  });
 
-    setCategoryAchievements(counts);
-  } catch (err) {
-    console.error("Error loading achievements data:", err);
-    setCategoryAchievements({});
-  }
-}, [open]);
+  const counts = Object.fromEntries(
+    validCategories.map(cat => [cat, seen[cat].size])
+  );
+
+  console.log("Category counts:", counts);
+  setCategoryAchievements(counts);
+} catch (err) {
+  console.error("Error loading achievements data:", err);
+  setCategoryAchievements({});
+}
 
 
   const previewTiles = TILE_WORD.split("").map((letter, index) => {
