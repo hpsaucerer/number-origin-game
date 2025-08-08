@@ -1,77 +1,86 @@
+// components/AchievementsModal.js
+"use client";
+
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function AchievementsModal({ open, onClose }) {
   const TILE_WORD = "NUMERUS";
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
   const [categoryAchievements, setCategoryAchievements] = useState({});
 
- useEffect(() => {
-  if (!open) return;
+  // Keep the category list in one place so UI + counting stay aligned
+  const CATEGORIES = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
 
-  // Load earned tiles
-  try {
-    const tiles = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
-    setEarnedTileIndexes(Array.isArray(tiles) ? tiles : []);
-  } catch (err) {
-    console.error("Invalid earnedTileIndexes JSON:", err);
-    setEarnedTileIndexes([]);
-  }
+  useEffect(() => {
+    if (!open) return;
 
-  // Count per-category puzzle completions
-try {
-  const completed = JSON.parse(localStorage.getItem("completedPuzzles") || "[]");
-  const all = JSON.parse(localStorage.getItem("allPuzzles") || "[]");
-
-  console.log("Completed IDs:", completed);
-  console.log("All puzzles:", all);
-  console.log("Example puzzle:", all[0]);
-
-  const validCategories = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
-  const seen = {};
-
-  validCategories.forEach(cat => {
-    seen[cat] = new Set();
-  });
-
-  const maxAvailablePuzzleNumber = 105;
-
-  all.forEach((p) => {
-    const id = Number(p.id); // ensure type match
-    const rawCategory = p.category || "";
-    const category = rawCategory.trim(); // normalize whitespace
-
-    console.log("→ Checking puzzle:", {
-      id,
-      puzzle_number: p.puzzle_number,
-      rawCategory,
-      normalizedCategory: category
-    });
-
-    if (
-      completed.includes(id) &&
-      !isNaN(puzzleNumber) &&
-      puzzleNumber <= maxAvailablePuzzleNumber &&
-      validCategories.includes(category) // ✅ use normalized category
-    ) {
-      seen[category].add(id); // ✅ use unique ID instead of puzzle number
+    // -- Load earned tiles (safe JSON parse) ------------------------------
+    try {
+      const tiles = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
+      setEarnedTileIndexes(Array.isArray(tiles) ? tiles : []);
+    } catch (err) {
+      console.error("Invalid earnedTileIndexes JSON:", err);
+      setEarnedTileIndexes([]);
     }
-  });
 
-  const counts = Object.fromEntries(
-    validCategories.map(cat => [cat, seen[cat].size])
-  );
+    // -- Compute category counts using the same approach as Number Vault --
+    (async () => {
+      try {
+        // 1) Collect solved dates from localStorage: completed-YYYY-MM-DD = "true"
+        const dates = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith("completed-") && localStorage.getItem(key) === "true") {
+            dates.push(key.substring("completed-".length));
+          }
+        }
 
-  console.log("Category counts:", counts);
-  setCategoryAchievements(counts);
-} catch (err) {
-  console.error("Error loading achievements data:", err);
-  setCategoryAchievements({});
-}
-}, [open]); // ← this is missing
+        // If no completions yet, zero out the counts and bail.
+        if (dates.length === 0) {
+          const zeros = CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
+          setCategoryAchievements(zeros);
+          return;
+        }
 
+        // 2) Fetch the puzzles that match those dates
+        let rows = [];
+        const { data, error } = await supabase
+          .from("puzzles")
+          .select("category,date")
+          .in("date", dates);
 
+        if (error) {
+          // Some Supabase setups are picky about .in on dates — fall back to full fetch + filter
+          console.warn("Supabase .in('date', …) failed, falling back to full scan:", error);
+          const { data: all, error: allErr } = await supabase
+            .from("puzzles")
+            .select("category,date");
+          if (allErr) throw allErr;
+          rows = all.filter((p) => dates.includes(p.date));
+        } else {
+          rows = data || [];
+        }
+
+        // 3) Count per category (normalize to our label set)
+        const counts = CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
+        rows.forEach((p) => {
+          const cat = (p?.category || "").trim();
+          if (counts[cat] != null) counts[cat] += 1;
+        });
+
+        setCategoryAchievements(counts);
+      } catch (err) {
+        console.error("Error loading achievements data:", err);
+        const zeros = CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
+        setCategoryAchievements(zeros);
+      }
+    })();
+  }, [open]);
+
+  // Render the 7-letter tile preview
   const previewTiles = TILE_WORD.split("").map((letter, index) => {
     const isEarned = earnedTileIndexes.includes(index);
     return (
@@ -94,6 +103,8 @@ try {
     { label: "Culture", color: "#8e44ad", total: 20 },
     { label: "Sport", color: "#e53935", total: 20 },
   ];
+
+  const totalSolved = Object.values(categoryAchievements).reduce((a, b) => a + b, 0);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -119,13 +130,11 @@ try {
 
           {/* 🧩 Category Progress */}
           <div className="w-full">
-             <h3 className="text-md font-semibold text-gray-800 mb-1 text-center">Category Achievements</h3>
-             <h4 className="text-sm text-center text-gray-500 mb-2">
-               Total solved: {Object.values(categoryAchievements).reduce((a, b) => a + b, 0)}
-             </h4>
-             <div className="flex flex-col gap-2 sm:gap-2">
-                {categories.map(({ label, color, total }) => {
+            <h3 className="text-md font-semibold text-gray-800 mb-1 text-center">Category Achievements</h3>
+            <h4 className="text-sm text-center text-gray-500 mb-2">Total solved: {totalSolved}</h4>
 
+            <div className="flex flex-col gap-2 sm:gap-2">
+              {categories.map(({ label, color, total }) => {
                 const completed = categoryAchievements[label] || 0;
                 const percentage = total ? (completed / total) * 100 : 0;
                 const lowerLabel = label.toLowerCase();
