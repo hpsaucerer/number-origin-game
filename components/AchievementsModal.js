@@ -26,6 +26,8 @@ try {
 
   console.log("Completed IDs:", completed);
   console.log("All puzzles:", all);
+  console.log("Example puzzle:", all[0]);
+
 
   const validCategories = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
   const seen = {};
