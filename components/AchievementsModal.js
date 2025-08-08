@@ -5,12 +5,26 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { ALL_CATEGORIES, getCompletedDatesFromLocalStorage } from "@/lib/progress";
+import {
+  ALL_CATEGORIES,
+  getCompletedDatesFromLocalStorage,
+  nextTarget, // 🆕 dynamic target: 20 -> 50 -> 100
+} from "@/lib/progress";
 
 export default function AchievementsModal({ open, onClose }) {
   const TILE_WORD = "NUMERUS";
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
   const [categoryAchievements, setCategoryAchievements] = useState({});
+
+  // simple color map (unchanged from your design)
+  const COLOR_MAP = {
+    Maths: "#3b82f6",
+    Geography: "#63c4a7",
+    Science: "#f57d45",
+    History: "#f7c548",
+    Culture: "#8e44ad",
+    Sport: "#e53935",
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -69,6 +83,7 @@ export default function AchievementsModal({ open, onClose }) {
     })();
   }, [open]);
 
+  // Render the 7-letter tile preview
   const previewTiles = TILE_WORD.split("").map((letter, index) => {
     const isEarned = earnedTileIndexes.includes(index);
     return (
@@ -82,15 +97,6 @@ export default function AchievementsModal({ open, onClose }) {
       </div>
     );
   });
-
-  const categories = [
-    { label: "Maths", color: "#3b82f6", total: 20 },
-    { label: "Geography", color: "#63c4a7", total: 20 },
-    { label: "Science", color: "#f57d45", total: 20 },
-    { label: "History", color: "#f7c548", total: 20 },
-    { label: "Culture", color: "#8e44ad", total: 20 },
-    { label: "Sport", color: "#e53935", total: 20 },
-  ];
 
   const totalSolved = Object.values(categoryAchievements).reduce((a, b) => a + b, 0);
 
@@ -116,16 +122,18 @@ export default function AchievementsModal({ open, onClose }) {
             <div className="flex justify-center gap-2">{previewTiles}</div>
           </div>
 
-          {/* 🧩 Category Progress */}
+          {/* 🧩 Category Progress (with dynamic targets) */}
           <div className="w-full">
             <h3 className="text-md font-semibold text-gray-800 mb-1 text-center">Category Achievements</h3>
             <h4 className="text-sm text-center text-gray-500 mb-2">Total solved: {totalSolved}</h4>
 
             <div className="flex flex-col gap-2 sm:gap-2">
-              {categories.map(({ label, color, total }) => {
+              {ALL_CATEGORIES.map((label) => {
                 const completed = categoryAchievements[label] || 0;
-                const percentage = total ? (completed / total) * 100 : 0;
+                const target = nextTarget(completed); // ← 20 → 50 → 100
+                const percentage = target ? Math.min(100, (completed / target) * 100) : 0;
                 const lowerLabel = label.toLowerCase();
+                const color = COLOR_MAP[label] ?? "#3b82f6";
 
                 return (
                   <div key={label} className="flex flex-col gap-1">
@@ -141,7 +149,7 @@ export default function AchievementsModal({ open, onClose }) {
                             style={{ width: `${percentage}%`, backgroundColor: color }}
                           />
                         </div>
-                        <div className="text-xs text-gray-500 text-right mt-1">{`${completed}/${total}`}</div>
+                        <div className="text-xs text-gray-500 text-right mt-1">{`${completed}/${target}`}</div>
                       </div>
                     </div>
                   </div>
