@@ -15,11 +15,11 @@ export default function NumberHistoryWheel({ history }) {
               .sort((a, b) => parseFloat(b.number) - parseFloat(a.number))
               .map((p) => (
                 <li
-                  key={p.number}
+                  key={p.date}
                   onClick={() => setSelected(p)}
                   className={`
                     p-3 cursor-pointer hover:bg-yellow-100
-                    ${selected?.number === p.number ? "bg-yellow-200 font-bold" : ""}
+                    ${selected?.date === p.date ? "bg-yellow-200 font-bold" : ""}
                   `}
                 >
                   {p.number}
