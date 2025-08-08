@@ -28,7 +28,6 @@ try {
   console.log("All puzzles:", all);
   console.log("Example puzzle:", all[0]);
 
-
   const validCategories = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
   const seen = {};
 
@@ -38,27 +37,29 @@ try {
 
   const maxAvailablePuzzleNumber = 105;
 
-all.forEach((p) => {
-  const id = Number(p.id); // ensure type match
-  const rawCategory = p.category || "";
-  const category = rawCategory.trim(); // normalize whitespace
+  all.forEach((p) => {
+    const id = Number(p.id); // ensure type match
+    const rawCategory = p.category || "";
+    const category = rawCategory.trim(); // normalize whitespace
 
-  console.log("→ Checking puzzle:", {
-    id,
-    puzzle_number: p.puzzle_number,
-    rawCategory,
-    normalizedCategory: category
+    console.log("→ Checking puzzle:", {
+      id,
+      puzzle_number: p.puzzle_number,
+      rawCategory,
+      normalizedCategory: category
+    });
+
+    const puzzleNumber = Number(p.number);
+
+    if (
+      completed.includes(id) &&
+      !isNaN(puzzleNumber) &&
+      puzzleNumber <= maxAvailablePuzzleNumber &&
+      validCategories.includes(category) // ✅ use normalized category
+    ) {
+      seen[category].add(puzzleNumber); // ✅ use normalized category
+    }
   });
-
-  if (
-    completed.includes(id) &&
-    typeof p.puzzle_number === "number" &&
-    p.puzzle_number <= maxAvailablePuzzleNumber &&
-    validCategories.includes(category)
-  ) {
-    seen[category].add(p.puzzle_number);
-  }
-});
 
   const counts = Object.fromEntries(
     validCategories.map(cat => [cat, seen[cat].size])
@@ -70,7 +71,8 @@ all.forEach((p) => {
   console.error("Error loading achievements data:", err);
   setCategoryAchievements({});
 }
-}, [open]); // ✅ this line closes the useEffect hook
+}, [open]); // ← this is missing
+
 
   const previewTiles = TILE_WORD.split("").map((letter, index) => {
     const isEarned = earnedTileIndexes.includes(index);
@@ -108,9 +110,7 @@ all.forEach((p) => {
           </button>
 
           <DialogHeader className="w-full">
-            <DialogTitle>
-              <h2 className="text-lg text-gray-800 text-left">Your Achievements</h2>
-            </DialogTitle>
+            <DialogTitle className="text-lg text-gray-800 text-left">Your Achievements</DialogTitle>
           </DialogHeader>
 
           {/* 🎯 Tiles Section */}
