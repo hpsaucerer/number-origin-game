@@ -31,15 +31,18 @@ export default function AchievementsModal({ open, onClose }) {
       seen[cat] = new Set();
     });
 
-    all.forEach((p) => {
-      if (
-        completed.includes(p.id) &&
-        p.puzzle_number !== null &&
-        validCategories.includes(p.category)
-      ) {
-        seen[p.category].add(p.puzzle_number);
-      }
-    });
+const maxAvailablePuzzleNumber = 105; // ← adjust as needed
+
+all.forEach((p) => {
+  if (
+    completed.includes(p.id) &&
+    typeof p.puzzle_number === "number" &&
+    p.puzzle_number <= maxAvailablePuzzleNumber &&
+    validCategories.includes(p.category)
+  ) {
+    seen[p.category].add(p.puzzle_number);
+  }
+});
 
     const counts = Object.fromEntries(
       validCategories.map(cat => [cat, seen[cat].size])
