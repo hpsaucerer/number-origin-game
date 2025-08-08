@@ -43,7 +43,7 @@ try {
     validCategories.map(cat => [cat, seen[cat].size])
   );
 
-  setCategoryAchievements(counts);
+  setCategoryAchievements(counts); // ✅ make sure this ends the try block
 } catch (err) {
   console.error("Error loading achievements data:", err);
   setCategoryAchievements({});
