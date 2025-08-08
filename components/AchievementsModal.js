@@ -44,7 +44,6 @@ all.forEach((p) => {
   }
 });
 
-
     const counts = Object.fromEntries(
       validCategories.map(cat => [cat, seen[cat].size])
     );
