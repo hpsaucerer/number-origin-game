@@ -49,8 +49,6 @@ try {
       normalizedCategory: category
     });
 
-    const puzzleNumber = Number(p.number);
-
     if (
       completed.includes(id) &&
       !isNaN(puzzleNumber) &&
@@ -121,9 +119,13 @@ try {
 
           {/* 🧩 Category Progress */}
           <div className="w-full">
-            <h3 className="text-md font-semibold text-gray-800 mb-2 text-center">Category Achievements</h3>
-            <div className="flex flex-col gap-2 sm:gap-2">
-              {categories.map(({ label, color, total }) => {
+             <h3 className="text-md font-semibold text-gray-800 mb-1 text-center">Category Achievements</h3>
+             <h4 className="text-sm text-center text-gray-500 mb-2">
+               Total solved: {Object.values(categoryAchievements).reduce((a, b) => a + b, 0)}
+             </h4>
+             <div className="flex flex-col gap-2 sm:gap-2">
+                {categories.map(({ label, color, total }) => {
+
                 const completed = categoryAchievements[label] || 0;
                 const percentage = total ? (completed / total) * 100 : 0;
                 const lowerLabel = label.toLowerCase();
