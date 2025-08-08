@@ -36,17 +36,27 @@ try {
 
   const maxAvailablePuzzleNumber = 105;
 
-  all.forEach((p) => {
-    const id = Number(p.id); // ensures type match with completed list
-    if (
-      completed.includes(id) &&
-      typeof p.puzzle_number === "number" &&
-      p.puzzle_number <= maxAvailablePuzzleNumber &&
-      validCategories.includes(p.category)
-    ) {
-      seen[p.category].add(p.puzzle_number);
-    }
+all.forEach((p) => {
+  const id = Number(p.id); // ensure type match
+  const rawCategory = p.category || "";
+  const category = rawCategory.trim(); // normalize whitespace
+
+  console.log("→ Checking puzzle:", {
+    id,
+    puzzle_number: p.puzzle_number,
+    rawCategory,
+    normalizedCategory: category
   });
+
+  if (
+    completed.includes(id) &&
+    typeof p.puzzle_number === "number" &&
+    p.puzzle_number <= maxAvailablePuzzleNumber &&
+    validCategories.includes(category)
+  ) {
+    seen[category].add(p.puzzle_number);
+  }
+});
 
   const counts = Object.fromEntries(
     validCategories.map(cat => [cat, seen[cat].size])
