@@ -1,4 +1,6 @@
 // components/PostGameModal.js
+"use client";
+
 import { useEffect, useState, useCallback } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -10,6 +12,17 @@ import { getOrCreateDeviceId } from "@/lib/device";
 import Leaderboard from "@/components/Leaderboard";
 import { fetchCountryCode } from "@/utils/geo";
 import { calculatePoints } from "@/utils/game";
+import { supabase } from "@/lib/supabase";
+
+// 🆕 trophy helpers + modal
+import TrophyEarnedModal from "@/components/TrophyEarnedModal";
+import {
+  getCompletedDatesFromLocalStorage,
+  achievedTier,
+  getLastAwardedTier,
+  setLastAwardedTier,
+  TROPHY_TIERS,
+} from "@/lib/progress";
 
 const TILE_WORD = "NUMERUS";
 
@@ -45,6 +58,9 @@ export default function PostGameModal({
   const [justEarnedTile, setJustEarnedTile] = useState(false);
   const [showBonusButton, setShowBonusButton] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+
+  // 🆕 trophy popup state
+  const [trophy, setTrophy] = useState(null); // { category, tier, badgeUrl, tokenGranted }
 
   // ─── one-time name + per-day submission guard ───
   const todayKey = puzzle ? `submitted-${puzzle.date}` : null;
@@ -96,7 +112,7 @@ export default function PostGameModal({
     } else {
       alert("Something went wrong submitting your score.");
     }
-  }, [puzzle.date, attempts, isCorrect, startTime, todayKey]);
+  }, [puzzle?.date, attempts, isCorrect, startTime, todayKey]);
 
   // ─── Countdown until midnight ───
   useEffect(() => {
@@ -127,6 +143,74 @@ export default function PostGameModal({
     })();
   }, []);
 
+  // 🆕 Award trophy if a tier is newly hit
+  const maybeAwardCategoryTrophy = useCallback(async () => {
+    if (!isCorrect || isArchive) return;
+    if (!puzzle?.category || !puzzle?.date) return;
+
+    // ensure the completion flag is set for today (idempotent)
+    const completedKey = `completed-${puzzle.date}`;
+    if (localStorage.getItem(completedKey) !== "true") {
+      localStorage.setItem(completedKey, "true");
+    }
+
+    const dates = getCompletedDatesFromLocalStorage();
+    if (dates.length === 0) return;
+
+    // count this category's solved dates
+    let count = 0;
+    try {
+      const { data, error } = await supabase
+        .from("puzzles")
+        .select("date")
+        .eq("category", puzzle.category)
+        .in("date", dates);
+
+      if (error) {
+        // fall back to full fetch and filter
+        const { data: all, error: allErr } = await supabase.from("puzzles").select("category,date");
+        if (allErr) throw allErr;
+        count = (all || []).filter((p) => p.category === puzzle.category && dates.includes(p.date)).length;
+      } else {
+        count = (data || []).length;
+      }
+    } catch (e) {
+      console.warn("Trophy count fetch failed:", e);
+      return;
+    }
+
+    // did they newly reach a tier? (20, 50, 100)
+    const tier = achievedTier(count, TROPHY_TIERS);
+    const last = getLastAwardedTier(puzzle.category);
+    if (!tier || tier <= last) return;
+
+    // try to grant a token (optional; uses your existing API)
+    const deviceId = getOrCreateDeviceId();
+    let tokenGranted = false;
+    try {
+      const res = await fetch("/api/grant-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          device_id: deviceId,
+          source: `trophy:${puzzle.category}:${tier}`,
+          note: `Awarded for completing ${tier} ${puzzle.category} puzzles`,
+        }),
+      });
+      tokenGranted = res.ok;
+    } catch (e) {
+      console.warn("Token grant failed:", e);
+    }
+
+    setLastAwardedTier(puzzle.category, tier);
+    setTrophy({
+      category: puzzle.category,
+      tier,
+      tokenGranted,
+      badgeUrl: `/badges/${puzzle.category.toLowerCase()}-${tier}.png`,
+    });
+  }, [isCorrect, isArchive, puzzle?.category, puzzle?.date]);
+
   // ─── Tiles, token grant, confetti ───
   useEffect(() => {
     if (!open) return;
@@ -154,8 +238,8 @@ export default function PostGameModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ device_id: devId, source: "first_token_after_game" }),
       })
-        .then(r => r.json())
-        .then(data => {
+        .then((r) => r.json())
+        .then((data) => {
           if (data.success) {
             localStorage.setItem("firstTokenGranted", "true");
             setShowBonusButton(true);
@@ -168,10 +252,13 @@ export default function PostGameModal({
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     }
 
+    // 🆕 check for trophy after solve
+    maybeAwardCategoryTrophy();
+
     return () => {
       document.body.style.overflow = "";
     };
-  }, [open, isCorrect, puzzle.date, isArchive]);
+  }, [open, isCorrect, puzzle?.date, isArchive, maybeAwardCategoryTrophy]);
 
   // ─── Auto-submit once per day if they have a name ───
   useEffect(() => {
@@ -184,16 +271,16 @@ export default function PostGameModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-   <DialogContent
-   className="
-   w-full max-w-md
-   mt-8                         /* only 2 rem down instead of 4 */
-   px-0 pt-4 pb-8               /* keep the extra bottom padding */
-   relative bg-white rounded-xl shadow-xl
-   max-h-[85vh]                 /* cap height at 85% of viewport */
-   overflow-y-auto              /* only vertical scroll */
- "
-  >
+      <DialogContent
+        className="
+          w-full max-w-md
+          mt-8
+          px-0 pt-4 pb-8
+          relative bg-white rounded-xl shadow-xl
+          max-h-[85vh]
+          overflow-y-auto
+        "
+      >
         <button
           className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
           onClick={onClose}
@@ -320,6 +407,16 @@ export default function PostGameModal({
           puzzleDate={puzzle.date}
         />
       )}
+
+      {/* 🆕 Trophy popup */}
+      <TrophyEarnedModal
+        open={!!trophy}
+        onClose={() => setTrophy(null)}
+        category={trophy?.category}
+        tier={trophy?.tier}
+        badgeUrl={trophy?.badgeUrl}
+        tokenGranted={trophy?.tokenGranted}
+      />
     </Dialog>
   );
 }
