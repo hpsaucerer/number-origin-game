@@ -5,19 +5,17 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { ALL_CATEGORIES, getCompletedDatesFromLocalStorage } from "@/lib/progress";
 
 export default function AchievementsModal({ open, onClose }) {
   const TILE_WORD = "NUMERUS";
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
   const [categoryAchievements, setCategoryAchievements] = useState({});
 
-  // Keep the category list in one place so UI + counting stay aligned
-  const CATEGORIES = ["Maths", "Geography", "Science", "History", "Culture", "Sport"];
-
   useEffect(() => {
     if (!open) return;
 
-    // -- Load earned tiles (safe JSON parse) ------------------------------
+    // -- Load earned tiles (safe parse) ----------------------------------
     try {
       const tiles = JSON.parse(localStorage.getItem("earnedTileIndexes") || "[]");
       setEarnedTileIndexes(Array.isArray(tiles) ? tiles : []);
@@ -26,26 +24,17 @@ export default function AchievementsModal({ open, onClose }) {
       setEarnedTileIndexes([]);
     }
 
-    // -- Compute category counts using the same approach as Number Vault --
+    // -- Compute category counts (sanitized dates → Supabase) ------------
     (async () => {
       try {
-        // 1) Collect solved dates from localStorage: completed-YYYY-MM-DD = "true"
-        const dates = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith("completed-") && localStorage.getItem(key) === "true") {
-            dates.push(key.substring("completed-".length));
-          }
-        }
+        const dates = getCompletedDatesFromLocalStorage();
 
-        // If no completions yet, zero out the counts and bail.
         if (dates.length === 0) {
-          const zeros = CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
+          const zeros = ALL_CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
           setCategoryAchievements(zeros);
           return;
         }
 
-        // 2) Fetch the puzzles that match those dates
         let rows = [];
         const { data, error } = await supabase
           .from("puzzles")
@@ -53,19 +42,19 @@ export default function AchievementsModal({ open, onClose }) {
           .in("date", dates);
 
         if (error) {
-          // Some Supabase setups are picky about .in on dates — fall back to full fetch + filter
-          console.warn("Supabase .in('date', …) failed, falling back to full scan:", error);
+          if (process.env.NODE_ENV === "development") {
+            console.warn("Supabase .in('date', …) failed; falling back:", error);
+          }
           const { data: all, error: allErr } = await supabase
             .from("puzzles")
             .select("category,date");
           if (allErr) throw allErr;
-          rows = all.filter((p) => dates.includes(p.date));
+          rows = (all || []).filter((p) => dates.includes(p.date));
         } else {
           rows = data || [];
         }
 
-        // 3) Count per category (normalize to our label set)
-        const counts = CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
+        const counts = ALL_CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
         rows.forEach((p) => {
           const cat = (p?.category || "").trim();
           if (counts[cat] != null) counts[cat] += 1;
@@ -74,13 +63,12 @@ export default function AchievementsModal({ open, onClose }) {
         setCategoryAchievements(counts);
       } catch (err) {
         console.error("Error loading achievements data:", err);
-        const zeros = CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
+        const zeros = ALL_CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
         setCategoryAchievements(zeros);
       }
     })();
   }, [open]);
 
-  // Render the 7-letter tile preview
   const previewTiles = TILE_WORD.split("").map((letter, index) => {
     const isEarned = earnedTileIndexes.includes(index);
     return (
