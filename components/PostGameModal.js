@@ -22,6 +22,8 @@ import {
   getLastAwardedTier,
   setLastAwardedTier,
   TROPHY_TIERS,
+  normaliseCategory,   // 🆕 normalize labels
+  getSimulatedOffset,  // 🆕 preview-only local offset
 } from "@/lib/progress";
 
 const TILE_WORD = "NUMERUS";
@@ -157,31 +159,45 @@ export default function PostGameModal({
     const dates = getCompletedDatesFromLocalStorage();
     if (dates.length === 0) return;
 
-    // count this category's solved dates
+    // canonical label for robust matching + storage
+    const canonicalCategory = normaliseCategory(puzzle.category) || puzzle.category;
+
+    // count this category's solved dates (normalize labels from DB)
     let count = 0;
     try {
+      // fetch rows for the user's completed dates only
       const { data, error } = await supabase
         .from("puzzles")
-        .select("date")
-        .eq("category", puzzle.category)
+        .select("category,date")
         .in("date", dates);
 
+      let rows;
       if (error) {
         // fall back to full fetch and filter
-        const { data: all, error: allErr } = await supabase.from("puzzles").select("category,date");
+        const { data: all, error: allErr } = await supabase
+          .from("puzzles")
+          .select("category,date");
         if (allErr) throw allErr;
-        count = (all || []).filter((p) => p.category === puzzle.category && dates.includes(p.date)).length;
+        rows = (all || []).filter((p) => dates.includes(p.date));
       } else {
-        count = (data || []).length;
+        rows = data || [];
       }
+
+      count = rows.reduce((acc, r) => {
+        const cat = normaliseCategory(r.category) || r.category;
+        return acc + (cat === canonicalCategory ? 1 : 0);
+      }, 0);
     } catch (e) {
       console.warn("Trophy count fetch failed:", e);
       return;
     }
 
+    // 🆕 preview-only: add local simulation offset
+    const countEffective = count + getSimulatedOffset(canonicalCategory);
+
     // did they newly reach a tier? (20, 50, 100)
-    const tier = achievedTier(count, TROPHY_TIERS);
-    const last = getLastAwardedTier(puzzle.category);
+    const tier = achievedTier(countEffective, TROPHY_TIERS);
+    const last = getLastAwardedTier(canonicalCategory);
     if (!tier || tier <= last) return;
 
     // try to grant a token (optional; uses your existing API)
@@ -193,8 +209,8 @@ export default function PostGameModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           device_id: deviceId,
-          source: `trophy:${puzzle.category}:${tier}`,
-          note: `Awarded for completing ${tier} ${puzzle.category} puzzles`,
+          source: `trophy:${canonicalCategory}:${tier}`,
+          note: `Awarded for completing ${tier} ${canonicalCategory} puzzles`,
         }),
       });
       tokenGranted = res.ok;
@@ -202,12 +218,12 @@ export default function PostGameModal({
       console.warn("Token grant failed:", e);
     }
 
-    setLastAwardedTier(puzzle.category, tier);
+    setLastAwardedTier(canonicalCategory, tier);
     setTrophy({
-      category: puzzle.category,
+      category: canonicalCategory,
       tier,
       tokenGranted,
-      badgeUrl: `/badges/${puzzle.category.toLowerCase()}-${tier}.png`,
+      badgeUrl: `/badges/${canonicalCategory.toLowerCase()}-${tier}.png`,
     });
   }, [isCorrect, isArchive, puzzle?.category, puzzle?.date]);
 
