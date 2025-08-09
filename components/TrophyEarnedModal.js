@@ -1,13 +1,13 @@
 // components/TrophyEarnedModal.js
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X, Trophy, Sparkles } from "lucide-react";
 
-// Match the palette used elsewhere (Achievements)
-const CATEGORY_COLOR = {
+// Optional: centralise the category→color mapping here too
+const CAT_COLORS = {
   Maths: "#3b82f6",
   Geography: "#63c4a7",
   Science: "#f57d45",
@@ -16,54 +16,28 @@ const CATEGORY_COLOR = {
   Sport: "#e53935",
 };
 
-function hexToRgba(hex, a = 0.35) {
-  let c = hex.replace("#", "");
-  if (c.length === 3) c = c.split("").map((x) => x + x).join("");
-  const r = parseInt(c.slice(0, 2), 16);
-  const g = parseInt(c.slice(2, 4), 16);
-  const b = parseInt(c.slice(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${a})`;
-}
-
 export default function TrophyEarnedModal({
   open,
   onClose,
   category,
-  tier,                 // 20 | 50 | 100
-  badgeUrl,             // e.g. /badges/geography-20.png
-  tokensGranted,        // number (preferred)
-  tokenGranted,         // boolean (legacy; if true we'll show +3)
+  tier,            // 20 | 50 | 100
+  tokensGranted,   // number
+  badgeUrl,        // /badges/<category>-<tier>.png
 }) {
   if (!category || !tier) return null;
 
-  // Back-compat: if old boolean prop is used, treat it as +3 tokens
-  const awarded =
-    Number.isFinite(tokensGranted) ? Number(tokensGranted) : (tokenGranted ? 3 : 0);
-
-  const [src, setSrc] = useState(badgeUrl);
-  useEffect(() => setSrc(badgeUrl), [badgeUrl]);
-
   const nextTier = tier === 20 ? 50 : tier === 50 ? 100 : null;
+  const ringColor = CAT_COLORS[category] ?? "#10b981"; // fallback emerald
 
-  const accent = CATEGORY_COLOR[category] || "#3b82f6";
-  const glow = hexToRgba(accent, 0.35);
-  const tokenLabel = awarded === 1 ? "Token" : "Tokens";
-
-  // (Optional) entrance fx hook point
-  useEffect(() => {
-    if (!open) return;
-    // could fire confetti here if desired
-  }, [open]);
+  const tokenText = useMemo(() => {
+    const n = Number(tokensGranted) || 0;
+    if (n <= 0) return "No Archive Tokens this time — keep playing!";
+    return `${n} Archive ${n === 1 ? "Token" : "Tokens"} added to your balance`;
+  }, [tokensGranted]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent
-        className="
-          relative w-full max-w-md px-4 pb-6 pt-5
-          bg-white rounded-2xl shadow-xl
-          border border-gray-100
-        "
-      >
+      <DialogContent className="relative w-full max-w-md px-4 pb-6 pt-5 bg-white rounded-2xl shadow-xl border border-gray-100">
         <button
           className="absolute top-2 right-2 p-1 text-blue-500 hover:text-blue-600"
           onClick={onClose}
@@ -80,23 +54,21 @@ export default function TrophyEarnedModal({
         </DialogHeader>
 
         <div className="mt-2 flex flex-col items-center text-center">
-          {/* Badge with category-colored frame + glow */}
+          {/* Badge with category-colored ring */}
           <div className="relative">
             <div
-              className="absolute inset-0 rounded-[28px] blur-2xl opacity-40"
-              style={{ background: glow }}
+              className="absolute inset-0 rounded-full blur-xl opacity-30 bg-gradient-to-tr from-emerald-300 via-fuchsia-300 to-sky-300 animate-pulse"
               aria-hidden
             />
             <div
-              className="relative rounded-2xl p-2 bg-white border-4"
-              style={{ borderColor: accent, boxShadow: `0 0 54px ${glow}` }}
+              className="relative rounded-2xl p-2 bg-white"
+              style={{ boxShadow: `0 0 0 6px ${ringColor}22` }} // light ring
             >
               <img
-                src={src}
+                src={badgeUrl}
                 alt={`${category} tier ${tier} badge`}
                 className="w-40 h-40 object-contain"
                 loading="eager"
-                onError={() => setSrc(`/badges/default-${tier}.png`)}
               />
             </div>
           </div>
@@ -109,24 +81,19 @@ export default function TrophyEarnedModal({
             <span className="font-semibold"> {category}</span>.
           </p>
 
-          {/* Token chip */}
-          {awarded > 0 ? (
+          {/* Archive token chip */}
+          <div className="mt-3">
             <div
-              className="
-                mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1
-                bg-amber-100 text-amber-800 text-sm font-semibold
-                ring-1 ring-amber-200
-              "
+              className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold ring-1 ${
+                (tokensGranted ?? 0) > 0
+                  ? "bg-amber-100 text-amber-800 ring-amber-200 animate-[pulse_1.8s_ease-in-out_infinite]"
+                  : "bg-gray-100 text-gray-700 ring-gray-200"
+              }`}
             >
               <Sparkles size={16} />
-              +{awarded} {tokenLabel} added to your balance
+              {tokenText}
             </div>
-          ) : (
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1 bg-gray-100 text-gray-700 text-sm">
-              <Sparkles size={16} className="opacity-60" />
-              No tokens this time — keep playing!
-            </div>
-          )}
+          </div>
 
           {/* Next tier hint */}
           {nextTier && (
@@ -139,16 +106,14 @@ export default function TrophyEarnedModal({
           {/* Actions */}
           <div className="mt-5 grid grid-cols-2 gap-3 w-full">
             <Button
-              onClick={() => (window.location.href = "/number-vault")}
+              onClick={() => {
+                window.location.href = "/number-vault";
+              }}
               className="bg-[#3B82F6] hover:bg-[#2563EB] text-white"
             >
               View Number Vault
             </Button>
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="border-gray-300 hover:bg-gray-50"
-            >
+            <Button variant="outline" onClick={onClose} className="border-gray-300 hover:bg-gray-50">
               Keep Playing
             </Button>
           </div>
