@@ -8,8 +8,9 @@ import { supabase } from "@/lib/supabase";
 import {
   ALL_CATEGORIES,
   getCompletedDatesFromLocalStorage,
-  nextTarget, // 20 -> 50 -> 100
-  normaliseCategory,          // 🆕 import
+  nextTarget,                // 20 -> 50 -> 100
+  normaliseCategory,         // normalise labels (handles spaces/variants)
+  getSimulatedOffset,        // 🆕 preview-only local offset
 } from "@/lib/progress";
 
 export default function AchievementsModal({ open, onClose }) {
@@ -73,7 +74,7 @@ export default function AchievementsModal({ open, onClose }) {
         const unknown = {}; // dev aid: see unexpected labels
 
         rows.forEach((p) => {
-          const cat = normaliseCategory(p?.category); // 🆕 normalise
+          const cat = normaliseCategory(p?.category);
           if (cat && counts[cat] != null) {
             counts[cat] += 1;
           } else {
@@ -85,6 +86,12 @@ export default function AchievementsModal({ open, onClose }) {
         if (Object.keys(unknown).length && process.env.NODE_ENV === "development") {
           console.warn("Unknown categories while counting:", unknown);
         }
+
+        // 🆕 Preview-only: apply any local simulation offsets per category
+        ALL_CATEGORIES.forEach((c) => {
+          const offset = getSimulatedOffset(c);
+          if (offset) counts[c] = Math.max(0, counts[c] + offset);
+        });
 
         setCategoryAchievements(counts);
       } catch (err) {
