@@ -371,34 +371,24 @@ export default function PostGameModal({
           </p>
         </div>
 
-        <div className="mt-4 w-full flex justify-center">
-  <div className="w-full max-w-sm">
-    {/* Top label bar (like “Today’s theme”) */}
-    <div
-      className="
-        bg-blue-100 text-blue-800
-        text-center text-xs font-semibold tracking-wide uppercase
-        border border-blue-200 rounded-t-xl
-        px-3 py-1
-      "
-      aria-hidden
-    >
-      The answer was
-    </div>
-
-    {/* Big answer row */}
-    <div
-      className="
-        border border-blue-200 border-t-0
-        rounded-b-xl bg-white shadow-sm
-      "
-    >
-      <p className="text-center text-2xl font-bold text-blue-600 py-3 px-4">
-        {puzzle.answer}
-      </p>
+{/* Answer panel — green “theme” style */}
+<div className="mt-4 w-full flex justify-center">
+  <div className="w-full max-w-sm">{/* change to max-w-xl if you want it wider */}
+    <div className="overflow-hidden rounded-xl ring-1 ring-green-200 bg-green-50">
+      {/* Header strip */}
+      <div className="bg-green-100 px-3 py-1 text-center text-[11px] sm:text-xs font-semibold tracking-wide text-green-800 uppercase">
+        The answer was
+      </div>
+      {/* The answer text (smaller + black) */}
+      <div className="px-4 py-3 text-center">
+        <p className="text-gray-900 text-base sm:text-lg font-semibold leading-snug">
+          {puzzle.answer}
+        </p>
+      </div>
     </div>
   </div>
 </div>
+
 
 
         {showBonusButton && (
@@ -510,4 +500,5 @@ export default function PostGameModal({
     </Dialog>
   );
 }
+
 
