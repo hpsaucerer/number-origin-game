@@ -6,27 +6,48 @@ import { supabase } from "@/lib/supabase";
 import { ALL_CATEGORIES } from "@/lib/progress";
 
 const SECRET = process.env.NEXT_PUBLIC_DEV_SEED_SECRET || "";
+const ENV = process.env.VERCEL_ENV || process.env.NODE_ENV; // "production" | "preview" | "development"
 
 export default function DevSeed() {
   const [allowed, setAllowed] = useState(false);
   const [category, setCategory] = useState(ALL_CATEGORIES[0]);
-  const [count, setCount] = useState(19); // seed 19 so playing today hits 20
-  const [log, setLog] = useState<string[]>([]);
+  const [count, setCount] = useState(19);
+  const [log, setLog] = useState([]);
 
   useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    setAllowed(!!SECRET && p.get("secret") === SECRET);
+    // Block in production, always.
+    if (ENV === "production") {
+      setAllowed(false);
+      return;
+    }
+    // In preview/dev:
+    // - if a secret is set, require it in the URL
+    // - if no secret is set, allow automatically (preview/dev only)
+    const qp = new URLSearchParams(window.location.search);
+    const okWhenSecret = SECRET && qp.get("secret") === SECRET;
+    const okWhenNoSecret = !SECRET;
+    setAllowed(okWhenSecret || okWhenNoSecret);
   }, []);
 
-  const addLog = (msg: string) => setLog((L) => [`${new Date().toLocaleTimeString()} ${msg}`, ...L]);
+  const addLog = (msg) =>
+    setLog((L) => [`${new Date().toLocaleTimeString()} ${msg}`, ...L]);
+
+  if (ENV === "production") {
+    return (
+      <div style={{ padding: 24 }}>
+        <h2>Dev Seed</h2>
+        <p>Disabled in production.</p>
+      </div>
+    );
+  }
 
   if (!allowed) {
     return (
-      <div style={{ padding: 24, fontFamily: "system-ui, sans-serif" }}>
+      <div style={{ padding: 24 }}>
         <h2>Dev Seed</h2>
         <p>
-          Not allowed. Add a Preview env var <code>NEXT_PUBLIC_DEV_SEED_SECRET</code> and open this
-          page with <code>?secret=YOUR_SECRET</code>.
+          A secret is required. Open with{" "}
+          <code>?secret=YOUR_SECRET</code>.
         </p>
       </div>
     );
@@ -43,18 +64,17 @@ export default function DevSeed() {
         .limit(count);
 
       if (error) throw error;
-      const rows = data || [];
-      rows.forEach((r) => {
-        localStorage.setItem(`completed-${r.date}`, "true");
-      });
-      addLog(`✅ Wrote ${rows.length} completed-* keys for ${category}.`);
-    } catch (e: any) {
-      addLog(`❌ Seed failed: ${e?.message || e}`);
+      (data || []).forEach((r) =>
+        localStorage.setItem(`completed-${r.date}`, "true")
+      );
+      addLog(`✅ Wrote ${(data || []).length} completed-* keys.`);
+    } catch (e) {
+      addLog(`❌ ${e?.message || e}`);
     }
   }
 
   function clearCompleted() {
-    const toRemove: string[] = [];
+    const toRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (k && k.startsWith("completed-")) toRemove.push(k);
@@ -64,11 +84,12 @@ export default function DevSeed() {
   }
 
   function resetTrophiesAndTiles() {
-    const toRemove: string[] = [];
+    const toRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (!k) continue;
-      if (k.startsWith("trophyTier:") || k.startsWith("tile-earned-")) toRemove.push(k);
+      if (k.startsWith("trophyTier:") || k.startsWith("tile-earned-"))
+        toRemove.push(k);
     }
     toRemove.forEach((k) => localStorage.removeItem(k));
     localStorage.removeItem("earnedTileIndexes");
@@ -83,7 +104,10 @@ export default function DevSeed() {
   }
 
   function setPlayerName() {
-    const name = prompt("Enter a test leaderboard name:", localStorage.getItem("playerName") || "Tester");
+    const name = prompt(
+      "Enter a test leaderboard name:",
+      localStorage.getItem("playerName") || "Tester"
+    );
     if (name) {
       localStorage.setItem("playerName", name.trim());
       addLog(`👤 Set playerName = ${name.trim()}`);
@@ -97,20 +121,20 @@ export default function DevSeed() {
 
   return (
     <div style={{ padding: 24, fontFamily: "system-ui, sans-serif", maxWidth: 720, margin: "0 auto" }}>
-      <h2>Dev Seed (Preview)</h2>
-      <p style={{ marginTop: 8, color: "#555" }}>
-        Seed fake progress on this preview domain so you can test achievements, trophies, and the
-        leaderboard flow.
-      </p>
+      <h2>Dev Seed (Preview/Dev)</h2>
+      {!SECRET && (
+        <p style={{ color: "#a15" }}>
+          Running <b>without</b> a secret. Anyone with this preview URL can access this page.
+          (Safe for you, since it only writes localStorage.)
+        </p>
+      )}
 
       <div style={{ marginTop: 16, display: "flex", gap: 12, alignItems: "center" }}>
         <label>
           Category:&nbsp;
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
             {ALL_CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
+              <option key={c} value={c}>{c}</option>
             ))}
           </select>
         </label>
@@ -128,7 +152,9 @@ export default function DevSeed() {
         </label>
 
         <button onClick={seedCategory}>Seed completions</button>
-        <button onClick={() => { setCount(19); seedCategory(); }}>Seed 19 for today’s badge</button>
+        <button onClick={() => { setCount(19); seedCategory(); }}>
+          Seed 19 for today’s badge
+        </button>
       </div>
 
       <div style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -141,16 +167,7 @@ export default function DevSeed() {
 
       <div style={{ marginTop: 18 }}>
         <h4>Log</h4>
-        <pre
-          style={{
-            background: "#f7f7f7",
-            padding: 12,
-            maxHeight: 300,
-            overflow: "auto",
-            border: "1px solid #eee",
-            borderRadius: 8,
-          }}
-        >
+        <pre style={{ background: "#f7f7f7", padding: 12, maxHeight: 300, overflow: "auto", border: "1px solid #eee", borderRadius: 8 }}>
 {log.join("\n")}
         </pre>
       </div>
