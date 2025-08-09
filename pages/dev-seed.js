@@ -3,7 +3,12 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { ALL_CATEGORIES } from "@/lib/progress";
+import {
+  ALL_CATEGORIES,
+  normaliseCategory,
+  setSimulatedOffset,
+  clearSimulatedOffsets,
+} from "@/lib/progress";
 
 const SECRET = process.env.NEXT_PUBLIC_DEV_SEED_SECRET || "";
 const ENV = process.env.NEXT_PUBLIC_VERCEL_ENV || "production"; // "development" | "preview" | "production"
@@ -98,6 +103,58 @@ export default function DevSeed() {
     }
   }
 
+  async function showUniqueCounts() {
+    try {
+      const { data, error } = await supabase
+        .from("puzzles")
+        .select("category,date");
+
+      if (error) throw error;
+
+      const byCat = {};
+      (data || []).forEach((r) => {
+        const cat = normaliseCategory(r.category) || r.category;
+        if (!byCat[cat]) byCat[cat] = new Set();
+        if (r.date) byCat[cat].add(r.date);
+      });
+
+      const summary = {};
+      ALL_CATEGORIES.forEach((c) => (summary[c] = byCat[c] ? byCat[c].size : 0));
+      addLog(`📊 Unique dates per category: ${JSON.stringify(summary)}`);
+    } catch (e) {
+      addLog(`❌ Count failed: ${e?.message || e}`);
+    }
+  }
+
+  function todayStr() {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  async function showTodaysCategory() {
+    try {
+      const today = todayStr();
+      const { data, error } = await supabase
+        .from("puzzles")
+        .select("category,date")
+        .eq("date", today)
+        .limit(1);
+
+      if (error) throw error;
+      const row = (data || [])[0];
+      addLog(
+        row
+          ? `📅 Today ${today} is category: ${row.category}`
+          : `📅 Today ${today}: no puzzle found`
+      );
+    } catch (e) {
+      addLog(`❌ Lookup failed: ${e?.message || e}`);
+    }
+  }
+
   function clearCompleted() {
     const toRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -153,7 +210,7 @@ export default function DevSeed() {
         </p>
       )}
 
-      <div style={{ marginTop: 16, display: "flex", gap: 12, alignItems: "center" }}>
+      <div style={{ marginTop: 16, display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
         <label>
           Category:&nbsp;
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
@@ -178,6 +235,28 @@ export default function DevSeed() {
         <button onClick={seedCategory}>Seed completions</button>
         <button onClick={() => { setCount(19); seedCategory(); }}>
           Seed 19 for today’s badge
+        </button>
+        <button onClick={showUniqueCounts}>Show unique date counts</button>
+        <button onClick={showTodaysCategory}>Show today’s category</button>
+        <button
+          onClick={() => {
+            const n = parseInt(
+              prompt(`Simulate extra completions for ${category} (e.g. 1):`, "1") || "0",
+              10
+            ) || 0;
+            setSimulatedOffset(category, n);
+            addLog(`🧪 Set simulate-extra-${category}=${n}`);
+          }}
+        >
+          Simulate +N for this category
+        </button>
+        <button
+          onClick={() => {
+            clearSimulatedOffsets();
+            addLog("🧪 Cleared simulation offsets");
+          }}
+        >
+          Clear simulation offsets
         </button>
       </div>
 
