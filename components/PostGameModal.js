@@ -397,9 +397,10 @@ export default function PostGameModal({
                 rounded-b-xl bg-white shadow-sm
               "
             >
-              <p className="text-center text-base sm:text-lg font-semibold text-gray-900 py-3 px-4 leading-snug">
-                {puzzle.answer}
+              <p className="text-center text-sm md:text-base font-medium text-gray-900 py-2 px-4 leading-snug break-words hyphens-auto">
+                 {puzzle.answer}
               </p>
+
             </div>
           </div>
         </div>
@@ -513,3 +514,4 @@ export default function PostGameModal({
     </Dialog>
   );
 }
+
