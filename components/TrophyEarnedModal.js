@@ -75,7 +75,7 @@ export default function TrophyEarnedModal({
         <DialogHeader className="items-center">
           <div className="flex items-center gap-2 text-emerald-600">
             <Trophy size={22} />
-            <DialogTitle className="text-lg">Trophy Unlocked!</DialogTitle>
+            <DialogTitle className="text-lg">Badge Unlocked!</DialogTitle>
           </div>
         </DialogHeader>
 
