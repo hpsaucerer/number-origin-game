@@ -201,31 +201,34 @@ export default function PostGameModal({
     const last = getLastAwardedTier(canonicalCategory);
     if (!tier || tier <= last) return;
 
-    // try to grant a token (optional; uses your existing API)
-    const deviceId = getOrCreateDeviceId();
-    let tokenGranted = false;
-    try {
-      const res = await fetch("/api/grant-token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          device_id: deviceId,
-          source: `trophy:${canonicalCategory}:${tier}`,
-          note: `Awarded for completing ${tier} ${canonicalCategory} puzzles`,
-        }),
-      });
-      tokenGranted = res.ok;
-    } catch (e) {
+// Grant 3 tokens (call your existing endpoint three times)
+const deviceId = getOrCreateDeviceId();
+const results = await Promise.all(
+  Array.from({ length: 3 }, (_, i) =>
+    fetch("/api/grant-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id: deviceId,
+        source: `trophy:${canonicalCategory}:${tier}`,
+        note: `Trophy ${tier} in ${canonicalCategory} (grant ${i + 1}/3)`,
+      }),
+    }).catch((e) => {
       console.warn("Token grant failed:", e);
-    }
+      return { ok: false };
+    })
+  )
+);
+const tokensGranted = results.filter((r) => r && r.ok).length;
 
-    setLastAwardedTier(canonicalCategory, tier);
-    setTrophy({
-      category: canonicalCategory,
-      tier,
-      tokenGranted,
-      badgeUrl: badgeUrlFor(canonicalCategory, tier),
-    });
+setLastAwardedTier(canonicalCategory, tier);
+setTrophy({
+  category: canonicalCategory,
+  tier,
+  tokensGranted, // <- number
+  badgeUrl: badgeUrlFor(canonicalCategory, tier),
+});
+
   }, [isCorrect, isArchive, puzzle?.category, puzzle?.date]);
 
   // ─── Tiles, token grant, confetti ───
@@ -432,9 +435,10 @@ export default function PostGameModal({
         category={trophy?.category}
         tier={trophy?.tier}
         badgeUrl={trophy?.badgeUrl}
-        tokenGranted={trophy?.tokenGranted}
+        tokensGranted={trophy?.tokensGranted}
       />
     </Dialog>
   );
 }
+
 
