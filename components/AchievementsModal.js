@@ -8,7 +8,8 @@ import { supabase } from "@/lib/supabase";
 import {
   ALL_CATEGORIES,
   getCompletedDatesFromLocalStorage,
-  nextTarget, // 🆕 dynamic target: 20 -> 50 -> 100
+  nextTarget, // 20 -> 50 -> 100
+  normaliseCategory,          // 🆕 import
 } from "@/lib/progress";
 
 export default function AchievementsModal({ open, onClose }) {
@@ -16,7 +17,7 @@ export default function AchievementsModal({ open, onClose }) {
   const [earnedTileIndexes, setEarnedTileIndexes] = useState([]);
   const [categoryAchievements, setCategoryAchievements] = useState({});
 
-  // simple color map (unchanged from your design)
+  // simple color map (unchanged)
   const COLOR_MAP = {
     Maths: "#3b82f6",
     Geography: "#63c4a7",
@@ -69,10 +70,21 @@ export default function AchievementsModal({ open, onClose }) {
         }
 
         const counts = ALL_CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
+        const unknown = {}; // dev aid: see unexpected labels
+
         rows.forEach((p) => {
-          const cat = (p?.category || "").trim();
-          if (counts[cat] != null) counts[cat] += 1;
+          const cat = normaliseCategory(p?.category); // 🆕 normalise
+          if (cat && counts[cat] != null) {
+            counts[cat] += 1;
+          } else {
+            const raw = p?.category ?? "<null>";
+            unknown[raw] = (unknown[raw] || 0) + 1;
+          }
         });
+
+        if (Object.keys(unknown).length && process.env.NODE_ENV === "development") {
+          console.warn("Unknown categories while counting:", unknown);
+        }
 
         setCategoryAchievements(counts);
       } catch (err) {
@@ -130,7 +142,7 @@ export default function AchievementsModal({ open, onClose }) {
             <div className="flex flex-col gap-2 sm:gap-2">
               {ALL_CATEGORIES.map((label) => {
                 const completed = categoryAchievements[label] || 0;
-                const target = nextTarget(completed); // ← 20 → 50 → 100
+                const target = nextTarget(completed); // 20 → 50 → 100
                 const percentage = target ? Math.min(100, (completed / target) * 100) : 0;
                 const lowerLabel = label.toLowerCase();
                 const color = COLOR_MAP[label] ?? "#3b82f6";
