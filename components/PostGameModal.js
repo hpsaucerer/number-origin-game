@@ -201,33 +201,82 @@ export default function PostGameModal({
     const last = getLastAwardedTier(canonicalCategory);
     if (!tier || tier <= last) return;
 
-// Grant 3 tokens (call your existing endpoint three times)
-const deviceId = getOrCreateDeviceId();
-const results = await Promise.all(
-  Array.from({ length: 3 }, (_, i) =>
-    fetch("/api/grant-token", {
+// --- grant Archive tokens (tries bulk first, falls back to per-token) ---
+async function grantArchiveTokens(amount) {
+  const deviceId = getOrCreateDeviceId();
+
+  // 1) Try bulk grant (preferred). Backend should credit "archive" bucket.
+  try {
+    const res = await fetch("/api/grant-token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         device_id: deviceId,
+        kind: "archive",      // <— tell the API these are ARCHIVE tokens
+        amount,               // <— grant 3 in a single call if supported
         source: `trophy:${canonicalCategory}:${tier}`,
-        note: `Trophy ${tier} in ${canonicalCategory} (grant ${i + 1}/3)`,
+        note: `Trophy ${tier} in ${canonicalCategory} (bulk ${amount})`,
       }),
-    }).catch((e) => {
-      console.warn("Token grant failed:", e);
-      return { ok: false };
-    })
-  )
-);
-const tokensGranted = results.filter((r) => r && r.ok).length;
+    });
+
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      const granted = Number(data?.granted ?? amount);
+
+      // Opportunistically update any local caches the Archives page might read
+      ["archive_token_balance", "archiveTokens"].forEach((k) => {
+        const cur = Number(localStorage.getItem(k));
+        if (Number.isFinite(cur)) localStorage.setItem(k, String(cur + granted));
+      });
+
+      return granted;
+    }
+  } catch (e) {
+    console.warn("Bulk archive token grant failed:", e);
+  }
+
+  // 2) Fallback: grant 1-by-1 (works with older API implementations)
+  let granted = 0;
+  for (let i = 0; i < amount; i++) {
+    try {
+      const res = await fetch("/api/grant-token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          device_id: deviceId,
+          kind: "archive",
+          amount: 1,
+          source: `trophy:${canonicalCategory}:${tier}`,
+          note: `Trophy ${tier} in ${canonicalCategory} (fallback ${i + 1}/${amount})`,
+        }),
+      });
+      if (res.ok) granted += 1;
+    } catch (e) {
+      console.warn("Per-token archive grant failed:", e);
+    }
+  }
+
+  // Update local caches if they exist
+  if (granted > 0) {
+    ["archive_token_balance", "archiveTokens"].forEach((k) => {
+      const cur = Number(localStorage.getItem(k));
+      if (Number.isFinite(cur)) localStorage.setItem(k, String(cur + granted));
+    });
+  }
+
+  return granted;
+}
+
+const tokensGranted = await grantArchiveTokens(3);
 
 setLastAwardedTier(canonicalCategory, tier);
 setTrophy({
   category: canonicalCategory,
   tier,
-  tokensGranted, // <- number
+  tokensGranted,
   badgeUrl: badgeUrlFor(canonicalCategory, tier),
 });
+
 
   }, [isCorrect, isArchive, puzzle?.category, puzzle?.date]);
 
@@ -440,5 +489,6 @@ setTrophy({
     </Dialog>
   );
 }
+
 
 
