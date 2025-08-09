@@ -24,6 +24,7 @@ import {
   TROPHY_TIERS,
   normaliseCategory,   // 🆕 normalize labels
   getSimulatedOffset,  // 🆕 preview-only local offset
+  badgeUrlFor,         // 🆕 build correct badge image path
 } from "@/lib/progress";
 
 const TILE_WORD = "NUMERUS";
@@ -223,7 +224,7 @@ export default function PostGameModal({
       category: canonicalCategory,
       tier,
       tokenGranted,
-      badgeUrl: `/badges/${canonicalCategory.toLowerCase()}-${tier}.png`,
+      badgeUrl: badgeUrlFor(canonicalCategory, tier),
     });
   }, [isCorrect, isArchive, puzzle?.category, puzzle?.date]);
 
@@ -436,3 +437,4 @@ export default function PostGameModal({
     </Dialog>
   );
 }
+
