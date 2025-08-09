@@ -374,36 +374,36 @@ export default function PostGameModal({
           </p>
         </div>
 
-        {/* Answer banner (green strip + white body) */}
-        <div className="mt-4 w-full flex justify-center">
-          <div className="w/full max-w-sm">
-            {/* Top label bar (green) */}
-            <div
-              className="
-                bg-green-100 text-green-900
-                text-center text-[10px] sm:text-xs font-semibold tracking-wide uppercase
-                border border-green-200 rounded-t-xl
-                px-3 py-1
-              "
-              aria-hidden
-            >
-              The answer was
-            </div>
+{/* Answer banner (green strip + white body) */}
+<div className="mt-4 w-full px-4 sm:px-0">   {/* <- add side padding on mobile */}
+  <div className="w-full max-w-sm mx-auto">
+    {/* Top label bar (green) */}
+    <div
+      className="
+        bg-green-100 text-green-900
+        text-center text-[10px] sm:text-xs font-semibold tracking-wide uppercase
+        border border-green-200 rounded-t-xl
+        px-3 py-1
+      "
+      aria-hidden
+    >
+      The answer was
+    </div>
 
-            {/* Body (white) */}
-            <div
-              className="
-                border border-gray-200 border-t-0
-                rounded-b-xl bg-white shadow-sm
-              "
-            >
-              <p className="text-center text-sm md:text-base font-medium text-gray-900 py-2 px-4 leading-snug break-words hyphens-auto">
-                 {puzzle.answer}
-              </p>
+    {/* Body (white) */}
+    <div
+      className="
+        border border-gray-200 border-t-0
+        rounded-b-xl bg-white shadow-sm
+      "
+    >
+      <p className="text-center text-[13px] sm:text-base font-semibold text-gray-900 py-3 px-4 leading-snug">
+        {puzzle.answer}
+      </p>
+    </div>
+  </div>
+</div>
 
-            </div>
-          </div>
-        </div>
 
         {showBonusButton && (
           <div className="flex flex-col items-center mt-3 space-y-2">
@@ -514,4 +514,5 @@ export default function PostGameModal({
     </Dialog>
   );
 }
+
 
