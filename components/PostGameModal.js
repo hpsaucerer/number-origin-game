@@ -72,6 +72,9 @@ export default function PostGameModal({
 
   // ─── handleSubmitScore needs todayKey in scope ───
   const handleSubmitScore = useCallback(async () => {
+    // 🔒 Never submit scores for archive puzzles
+    if (isArchive) return;
+
     // 1) nickname
     let name = localStorage.getItem("playerName");
     if (!name) {
@@ -115,7 +118,7 @@ export default function PostGameModal({
     } else {
       alert("Something went wrong submitting your score.");
     }
-  }, [puzzle?.date, attempts, isCorrect, startTime, todayKey]);
+  }, [isArchive, puzzle?.date, attempts, isCorrect, startTime, todayKey]);
 
   // ─── Countdown until midnight ───
   useEffect(() => {
@@ -329,12 +332,12 @@ export default function PostGameModal({
 
   // ─── Auto-submit once per day if they have a name ───
   useEffect(() => {
-    if (isCorrect && hasName && !hasSent) {
+    if (isCorrect && !isArchive && hasName && !hasSent) {
       handleSubmitScore()
         .then(() => localStorage.setItem(todayKey, "true"))
         .catch(console.error);
     }
-  }, [isCorrect, hasName, hasSent, handleSubmitScore, todayKey]);
+  }, [isCorrect, isArchive, hasName, hasSent, handleSubmitScore, todayKey]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -371,36 +374,35 @@ export default function PostGameModal({
           </p>
         </div>
 
-{/* Answer banner (green strip + white body) */}
-<div className="mt-4 w-full flex justify-center">
-  <div className="w-full max-w-sm">
-    {/* Top label bar (green) */}
-    <div
-      className="
-        bg-green-100 text-green-900
-        text-center text-[10px] sm:text-xs font-semibold tracking-wide uppercase
-        border border-green-200 rounded-t-xl
-        px-3 py-1
-      "
-      aria-hidden
-    >
-      The answer was
-    </div>
+        {/* Answer banner (green strip + white body) */}
+        <div className="mt-4 w-full flex justify-center">
+          <div className="w/full max-w-sm">
+            {/* Top label bar (green) */}
+            <div
+              className="
+                bg-green-100 text-green-900
+                text-center text-[10px] sm:text-xs font-semibold tracking-wide uppercase
+                border border-green-200 rounded-t-xl
+                px-3 py-1
+              "
+              aria-hidden
+            >
+              The answer was
+            </div>
 
-    {/* Body (white) */}
-    <div
-      className="
-        border border-gray-200 border-t-0
-        rounded-b-xl bg-white shadow-sm
-      "
-    >
-      <p className="text-center text-base sm:text-lg font-semibold text-gray-900 py-3 px-4 leading-snug">
-        {puzzle.answer}
-      </p>
-    </div>
-  </div>
-</div>
-
+            {/* Body (white) */}
+            <div
+              className="
+                border border-gray-200 border-t-0
+                rounded-b-xl bg-white shadow-sm
+              "
+            >
+              <p className="text-center text-base sm:text-lg font-semibold text-gray-900 py-3 px-4 leading-snug">
+                {puzzle.answer}
+              </p>
+            </div>
+          </div>
+        </div>
 
         {showBonusButton && (
           <div className="flex flex-col items-center mt-3 space-y-2">
@@ -511,6 +513,3 @@ export default function PostGameModal({
     </Dialog>
   );
 }
-
-
-
