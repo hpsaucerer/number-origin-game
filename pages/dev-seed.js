@@ -46,8 +46,7 @@ export default function DevSeed() {
       <div style={{ padding: 24 }}>
         <h2>Dev Seed</h2>
         <p>
-          A secret is required. Open with{" "}
-          <code>?secret=YOUR_SECRET</code>.
+          A secret is required. Open with <code>?secret=YOUR_SECRET</code>.
         </p>
       </div>
     );
@@ -56,18 +55,44 @@ export default function DevSeed() {
   async function seedCategory() {
     try {
       addLog(`Seeding ${count} completions for ${category}…`);
+
+      // Fetch *all* dates for the category (ordered). We’ll de-dupe client-side.
       const { data, error } = await supabase
         .from("puzzles")
-        .select("date")
+        .select("date,category")
         .eq("category", category)
-        .order("date", { ascending: true })
-        .limit(count);
+        .order("date", { ascending: true });
 
       if (error) throw error;
-      (data || []).forEach((r) =>
-        localStorage.setItem(`completed-${r.date}`, "true")
+
+      const allDates = (data || []).map((r) => r.date).filter(Boolean);
+
+      // Build a list of UNIQUE dates up to the requested count
+      const uniqueDates = [];
+      const seen = new Set();
+      for (const d of allDates) {
+        if (!seen.has(d)) {
+          seen.add(d);
+          uniqueDates.push(d);
+          if (uniqueDates.length >= count) break;
+        }
+      }
+
+      // Write only unique completed-* keys
+      uniqueDates.forEach((d) => {
+        localStorage.setItem(`completed-${d}`, "true");
+      });
+
+      const totalUniqueInDb = new Set(allDates).size;
+      const dupSkipped = allDates.length - totalUniqueInDb;
+
+      addLog(
+        `✅ Wrote ${uniqueDates.length} unique completed-* keys for ${category}.` +
+          (dupSkipped > 0 ? ` Skipped ${dupSkipped} duplicate date(s) from DB.` : "") +
+          (uniqueDates.length < count
+            ? ` Note: only ${totalUniqueInDb} unique dates exist for this category.`
+            : "")
       );
-      addLog(`✅ Wrote ${(data || []).length} completed-* keys.`);
     } catch (e) {
       addLog(`❌ ${e?.message || e}`);
     }
@@ -88,8 +113,7 @@ export default function DevSeed() {
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (!k) continue;
-      if (k.startsWith("trophyTier:") || k.startsWith("tile-earned-"))
-        toRemove.push(k);
+      if (k.startsWith("trophyTier:") || k.startsWith("tile-earned-")) toRemove.push(k);
     }
     toRemove.forEach((k) => localStorage.removeItem(k));
     localStorage.removeItem("earnedTileIndexes");
