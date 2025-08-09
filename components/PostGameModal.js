@@ -1,4 +1,6 @@
 // components/PostGameModal.js
+"use client";
+
 import { useEffect, useState, useCallback } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -10,6 +12,20 @@ import { getOrCreateDeviceId } from "@/lib/device";
 import Leaderboard from "@/components/Leaderboard";
 import { fetchCountryCode } from "@/utils/geo";
 import { calculatePoints } from "@/utils/game";
+import { supabase } from "@/lib/supabase";
+
+// 🆕 trophy helpers + modal
+import TrophyEarnedModal from "@/components/TrophyEarnedModal";
+import {
+  getCompletedDatesFromLocalStorage,
+  achievedTier,
+  getLastAwardedTier,
+  setLastAwardedTier,
+  TROPHY_TIERS,
+  normaliseCategory,   // normalize labels
+  getSimulatedOffset,  // preview-only local offset
+  badgeUrlFor,         // build correct badge image path
+} from "@/lib/progress";
 
 const TILE_WORD = "NUMERUS";
 
@@ -46,6 +62,9 @@ export default function PostGameModal({
   const [showBonusButton, setShowBonusButton] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
+  // 🆕 trophy popup state
+  const [trophy, setTrophy] = useState(null); // { category, tier, badgeUrl, tokensGranted }
+
   // ─── one-time name + per-day submission guard ───
   const todayKey = puzzle ? `submitted-${puzzle.date}` : null;
   const hasName = typeof window !== "undefined" && !!localStorage.getItem("playerName");
@@ -53,6 +72,9 @@ export default function PostGameModal({
 
   // ─── handleSubmitScore needs todayKey in scope ───
   const handleSubmitScore = useCallback(async () => {
+    // 🔒 Never submit scores for archive puzzles
+    if (isArchive) return;
+
     // 1) nickname
     let name = localStorage.getItem("playerName");
     if (!name) {
@@ -96,7 +118,7 @@ export default function PostGameModal({
     } else {
       alert("Something went wrong submitting your score.");
     }
-  }, [puzzle.date, attempts, isCorrect, startTime, todayKey]);
+  }, [isArchive, puzzle?.date, attempts, isCorrect, startTime, todayKey]);
 
   // ─── Countdown until midnight ───
   useEffect(() => {
@@ -127,6 +149,138 @@ export default function PostGameModal({
     })();
   }, []);
 
+  // 🆕 Award trophy if a tier is newly hit
+  const maybeAwardCategoryTrophy = useCallback(async () => {
+    if (!isCorrect || isArchive) return;
+    if (!puzzle?.category || !puzzle?.date) return;
+
+    // ensure the completion flag is set for today (idempotent)
+    const completedKey = `completed-${puzzle.date}`;
+    if (localStorage.getItem(completedKey) !== "true") {
+      localStorage.setItem(completedKey, "true");
+    }
+
+    const dates = getCompletedDatesFromLocalStorage();
+    if (dates.length === 0) return;
+
+    // canonical label for robust matching + storage
+    const canonicalCategory = normaliseCategory(puzzle.category) || puzzle.category;
+
+    // count this category's solved dates (normalize labels from DB)
+    let count = 0;
+    try {
+      // fetch rows for the user's completed dates only
+      const { data, error } = await supabase
+        .from("puzzles")
+        .select("category,date")
+        .in("date", dates);
+
+      let rows;
+      if (error) {
+        // fall back to full fetch and filter
+        const { data: all, error: allErr } = await supabase
+          .from("puzzles")
+          .select("category,date");
+        if (allErr) throw allErr;
+        rows = (all || []).filter((p) => dates.includes(p.date));
+      } else {
+        rows = data || [];
+      }
+
+      count = rows.reduce((acc, r) => {
+        const cat = normaliseCategory(r.category) || r.category;
+        return acc + (cat === canonicalCategory ? 1 : 0);
+      }, 0);
+    } catch (e) {
+      console.warn("Trophy count fetch failed:", e);
+      return;
+    }
+
+    // preview-only: add local simulation offset
+    const countEffective = count + getSimulatedOffset(canonicalCategory);
+
+    // did they newly reach a tier? (20, 50, 100)
+    const tier = achievedTier(countEffective, TROPHY_TIERS);
+    const last = getLastAwardedTier(canonicalCategory);
+    if (!tier || tier <= last) return;
+
+    // --- grant Archive tokens (tries bulk first, falls back to per-token) ---
+    async function grantArchiveTokens(amount) {
+      const deviceId = getOrCreateDeviceId();
+
+      // 1) Try bulk grant (preferred). Backend should credit "archive" bucket.
+      try {
+        const res = await fetch("/api/grant-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            device_id: deviceId,
+            kind: "archive",      // tell the API these are ARCHIVE tokens
+            amount,               // grant 3 in a single call if supported
+            source: `trophy:${canonicalCategory}:${tier}`,
+            note: `Trophy ${tier} in ${canonicalCategory} (bulk ${amount})`,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          const granted = Number(data?.granted ?? amount);
+
+          // opportunistically update any local caches the Archives page might read
+          ["archive_token_balance", "archiveTokens"].forEach((k) => {
+            const cur = Number(localStorage.getItem(k));
+            if (Number.isFinite(cur)) localStorage.setItem(k, String(cur + granted));
+          });
+
+          return granted;
+        }
+      } catch (e) {
+        console.warn("Bulk archive token grant failed:", e);
+      }
+
+      // 2) Fallback: grant 1-by-1 (works with older API implementations)
+      let granted = 0;
+      for (let i = 0; i < amount; i++) {
+        try {
+          const res = await fetch("/api/grant-token", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              device_id: deviceId,
+              kind: "archive",
+              amount: 1,
+              source: `trophy:${canonicalCategory}:${tier}`,
+              note: `Trophy ${tier} in ${canonicalCategory} (fallback ${i + 1}/${amount})`,
+            }),
+          });
+          if (res.ok) granted += 1;
+        } catch (e) {
+          console.warn("Per-token archive grant failed:", e);
+        }
+      }
+
+      // update local caches if they exist
+      if (granted > 0) {
+        ["archive_token_balance", "archiveTokens"].forEach((k) => {
+          const cur = Number(localStorage.getItem(k));
+          if (Number.isFinite(cur)) localStorage.setItem(k, String(cur + granted));
+        });
+      }
+
+      return granted;
+    }
+
+    const tokensGranted = await grantArchiveTokens(3);
+
+    setLastAwardedTier(canonicalCategory, tier);
+    setTrophy({
+      category: canonicalCategory,
+      tier,
+      tokensGranted,
+      badgeUrl: badgeUrlFor(canonicalCategory, tier),
+    });
+  }, [isCorrect, isArchive, puzzle?.category, puzzle?.date]);
+
   // ─── Tiles, token grant, confetti ───
   useEffect(() => {
     if (!open) return;
@@ -145,7 +299,7 @@ export default function PostGameModal({
       setEarnedTiles(stored);
     }
 
-    // First-token grant
+    // First-token grant (leave as-is if this already credits archive tokens in your API)
     const granted = localStorage.getItem("firstTokenGranted") === "true";
     if (!isArchive && !granted) {
       const devId = getOrCreateDeviceId();
@@ -154,8 +308,8 @@ export default function PostGameModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ device_id: devId, source: "first_token_after_game" }),
       })
-        .then(r => r.json())
-        .then(data => {
+        .then((r) => r.json())
+        .then((data) => {
           if (data.success) {
             localStorage.setItem("firstTokenGranted", "true");
             setShowBonusButton(true);
@@ -168,32 +322,35 @@ export default function PostGameModal({
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     }
 
+    // check for trophy after solve
+    maybeAwardCategoryTrophy();
+
     return () => {
       document.body.style.overflow = "";
     };
-  }, [open, isCorrect, puzzle.date, isArchive]);
+  }, [open, isCorrect, puzzle?.date, isArchive, maybeAwardCategoryTrophy]);
 
   // ─── Auto-submit once per day if they have a name ───
   useEffect(() => {
-    if (isCorrect && hasName && !hasSent) {
+    if (isCorrect && !isArchive && hasName && !hasSent) {
       handleSubmitScore()
         .then(() => localStorage.setItem(todayKey, "true"))
         .catch(console.error);
     }
-  }, [isCorrect, hasName, hasSent, handleSubmitScore, todayKey]);
+  }, [isCorrect, isArchive, hasName, hasSent, handleSubmitScore, todayKey]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-   <DialogContent
-   className="
-   w-full max-w-md
-   mt-8                         /* only 2 rem down instead of 4 */
-   px-0 pt-4 pb-8               /* keep the extra bottom padding */
-   relative bg-white rounded-xl shadow-xl
-   max-h-[85vh]                 /* cap height at 85% of viewport */
-   overflow-y-auto              /* only vertical scroll */
- "
-  >
+      <DialogContent
+        className="
+          w-full max-w-md
+          mt-8
+          px-0 pt-4 pb-8
+          relative bg-white rounded-xl shadow-xl
+          max-h-[85vh]
+          overflow-y-auto
+        "
+      >
         <button
           className="absolute top-2 right-2 text-blue-500 hover:text-blue-600 transition z-50"
           onClick={onClose}
@@ -217,10 +374,34 @@ export default function PostGameModal({
           </p>
         </div>
 
+        {/* Answer banner (green strip + white body) */}
         <div className="mt-4 w-full flex justify-center">
-          <div className="bg-green-100 border border-green-300 text-green-800 text-center px-4 py-2 rounded-xl shadow-sm font-semibold text-base max-w-xs w-full">
-            The answer was:
-            <span className="block text-sm font-bold mt-1">{puzzle.answer}</span>
+          <div className="w/full max-w-sm">
+            {/* Top label bar (green) */}
+            <div
+              className="
+                bg-green-100 text-green-900
+                text-center text-[10px] sm:text-xs font-semibold tracking-wide uppercase
+                border border-green-200 rounded-t-xl
+                px-3 py-1
+              "
+              aria-hidden
+            >
+              The answer was
+            </div>
+
+            {/* Body (white) */}
+            <div
+              className="
+                border border-gray-200 border-t-0
+                rounded-b-xl bg-white shadow-sm
+              "
+            >
+              <p className="text-center text-sm md:text-base font-medium text-gray-900 py-2 px-4 leading-snug break-words hyphens-auto">
+                 {puzzle.answer}
+              </p>
+
+            </div>
           </div>
         </div>
 
@@ -320,6 +501,17 @@ export default function PostGameModal({
           puzzleDate={puzzle.date}
         />
       )}
+
+      {/* 🆕 Trophy popup */}
+      <TrophyEarnedModal
+        open={!!trophy}
+        onClose={() => setTrophy(null)}
+        category={trophy?.category}
+        tier={trophy?.tier}
+        badgeUrl={trophy?.badgeUrl}
+        tokensGranted={trophy?.tokensGranted}
+      />
     </Dialog>
   );
 }
+

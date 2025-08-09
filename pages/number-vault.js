@@ -6,16 +6,11 @@ import Header from "@/components/ui/header";
 import Footer from "@/components/ui/Footer";
 import NumberHistoryWheel from "@/components/NumberHistoryWheel";
 import { supabase } from "@/lib/supabase";
-import { getCompletedDatesFromLocalStorage } from "@/lib/progress";
-
-const ALL_CATEGORIES = [
-  "Maths",
-  "Science",
-  "Culture",
-  "Geography",
-  "Sport",
-  "History",
-];
+import {
+  ALL_CATEGORIES,
+  getCompletedDatesFromLocalStorage,
+  normaliseCategory,               // 🆕 import
+} from "@/lib/progress";
 
 export default function NumberVaultPage() {
   const [history, setHistory] = useState([]);
@@ -24,12 +19,12 @@ export default function NumberVaultPage() {
   useEffect(() => {
     async function loadHistory() {
       // 1) read sanitized completion dates (removes bad completed-* keys)
-const dates = getCompletedDatesFromLocalStorage();
+      const dates = getCompletedDatesFromLocalStorage();
 
-if (dates.length === 0) {
-  setHistory([]);
-  return;
-}
+      if (dates.length === 0) {
+        setHistory([]);
+        return;
+      }
 
       // 2) try to fetch only those rows by date
       let rows = [];
@@ -40,7 +35,7 @@ if (dates.length === 0) {
           .in("date", dates);
 
         if (error) throw error;
-        rows = data;
+        rows = data || [];
       } catch (err) {
         console.warn(
           "Supabase .in('date',…) failed (Edge?), falling back to full fetch:",
@@ -55,17 +50,17 @@ if (dates.length === 0) {
           setHistory([]);
           return;
         }
-        rows = all.filter((p) => dates.includes(p.date));
+        rows = (all || []).filter((p) => dates.includes(p.date));
       }
 
-      // 3) shape it for the wheel
+      // 3) shape it for the wheel (🆕 normalise category here)
       setHistory(
         rows.map((p) => ({
           number:    p.number,
           formatted: p.formatted,
           answer:    p.answer,
           funFact:   p.fun_fact,
-          category:  p.category,
+          category:  normaliseCategory(p.category) || String(p.category || "").trim(),
           date:      p.date,
         }))
       );
@@ -74,16 +69,17 @@ if (dates.length === 0) {
     loadHistory();
   }, []);
 
-  // count per category
+  // count per category (🆕 use normalised labels)
   const categoryCounts = useMemo(() => {
     const acc = ALL_CATEGORIES.reduce((o, c) => ({ ...o, [c]: 0 }), {});
     history.forEach((p) => {
-      if (acc[p.category] != null) acc[p.category]++;
+      const cat = normaliseCategory(p.category) || p.category;
+      if (acc[cat] != null) acc[cat]++;
     });
     return acc;
   }, [history]);
 
-  // filter the wheel
+  // filter the wheel (history already normalised, so direct compare is fine)
   const filtered = useMemo(() => {
     return filterCategory === "All"
       ? history

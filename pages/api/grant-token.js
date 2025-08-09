@@ -1,3 +1,4 @@
+// pages/api/grant-token.js
 import { supabase } from "@/lib/supabase";
 
 export default async function handler(req, res) {
@@ -5,10 +6,19 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  let device_id, source, puzzle_number;
+  // ──────────────────────────────────────────────────────────────────────────
+  // Parse + validate inputs
+  // ──────────────────────────────────────────────────────────────────────────
+  let device_id, source, puzzle_number, kind, amount;
 
   try {
-    ({ device_id, source = "manual_grant", puzzle_number = null } = req.body || {});
+    ({
+      device_id,
+      source = "manual_grant",
+      puzzle_number = null,
+      kind = "archive",
+      amount = 1,
+    } = req.body || {});
   } catch (err) {
     console.error("❌ Error parsing JSON body:", err);
     return res.status(400).json({ error: "Invalid JSON body" });
@@ -18,84 +28,85 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing device_id" });
   }
 
-  const normalizedId = device_id.trim().toLowerCase();
+  const normalizedId = String(device_id).trim().toLowerCase();
   const token_date = new Date().toISOString().split("T")[0];
 
-  console.log("🛠️ Grant token for device:", normalizedId, "via source:", source, "→ puzzle_number:", puzzle_number);
+  // clamp amount to sane bounds
+  const amt = Math.max(1, Math.min(20, Number(amount) || 1));
+
+  if (kind !== "archive") {
+    // If you add other token “kinds” later, branch here.
+    return res.status(400).json({ error: `Unsupported token kind: ${kind}` });
+  }
+
+  console.log(
+    `🛠️ Grant ${amt} ${kind} token(s) for device: ${normalizedId} via source: ${source} → puzzle_number: ${puzzle_number}`
+  );
 
   try {
-    const { data: existing, error: checkError } = await supabase
+    // ────────────────────────────────────────────────────────────────────────
+    // Insert N archive tokens (NO reuse). Each is a separate row.
+    // ────────────────────────────────────────────────────────────────────────
+    const rows = Array.from({ length: amt }, () => ({
+      device_id: normalizedId,
+      used: false,
+      used_at: null,
+      puzzle_number: puzzle_number ? parseInt(puzzle_number, 10) : null,
+      token_date,
+      source,
+    }));
+
+    const { data: inserted, error: insertError } = await supabase
       .from("ArchiveTokens")
-      .select("*")
-      .eq("device_id", normalizedId)
-      .eq("used", false)
-      .limit(1);
-
-    if (checkError) {
-      throw new Error(`Supabase select error: ${checkError.message}`);
-    }
-
-    if (existing && existing.length > 0) {
-      console.log("✅ Reusing existing unused token:", existing[0].id);
-
-      console.log("📝 Logging to tokengrants table...");
-
-      // Optionally log this reuse attempt in a tracking table
-      await supabase.from("tokengrants").insert([{
-        device_id: normalizedId,
-        granted: false,
-        token_date,
-        source,
-        note: "Reused existing token"
-      }]);
-
-      return res.status(200).json({ success: true, token_id: existing[0].id, reused: true });
-    }
-
-    const { data: insertData, error: insertError } = await supabase
-      .from("ArchiveTokens")
-      .insert([{
-        device_id: normalizedId,
-        used: false,
-        used_at: null,
-        puzzle_number: puzzle_number ? parseInt(puzzle_number) : null,
-        token_date,
-        source
-      }])
+      .insert(rows)
       .select();
 
     if (insertError) {
       throw new Error(`Supabase insert error: ${insertError.message}`);
     }
 
-    if (!insertData || insertData.length === 0) {
-      throw new Error("Insert succeeded but no data returned.");
-    }
-    console.log("📝 Logging to tokengrants table...");
-    
-    // Track the successful issuance
-    await supabase.from("tokengrants").insert([{
-      device_id: normalizedId,
-      granted: true,
-      token_date,
-      source,
-      note: "New token granted"
-    }]);
+    const granted = Array.isArray(inserted) ? inserted.length : 0;
+    const token_ids = (inserted || []).map((r) => r.id);
 
-    return res.status(200).json({ success: true, token_id: insertData[0].id, reused: false });
+    // Log one summary row in tokengrants
+    try {
+      await supabase.from("tokengrants").insert([
+        {
+          device_id: normalizedId,
+          granted: true,
+          token_date,
+          source,
+          note: `Granted ${granted} ${kind} token(s)`,
+        },
+      ]);
+      console.log("📝 Logged grant to tokengrants.");
+    } catch (e) {
+      console.warn("tokengrants insert failed (non-fatal):", e.message);
+    }
+
+    return res.status(200).json({
+      success: true,
+      granted,
+      token_ids,
+    });
   } catch (err) {
     console.error("❌ Internal server error in grant-token:", err.message);
 
-    console.log("📝 Logging to tokengrants table...");
-    
-    // Log failed attempts too
-    await supabase.from("tokengrants").insert([{
-      device_id: device_id || "unknown",
-      granted: false,
-      token_date: new Date().toISOString().split("T")[0],
-      source: source || "unknown",
-      note: `ERROR: ${err.message}`
-    }]);
+    // Try to log the failure as well (best-effort)
+    try {
+      await supabase.from("tokengrants").insert([
+        {
+          device_id: normalizedId,
+          granted: false,
+          token_date,
+          source,
+          note: `ERROR: ${err.message}`,
+        },
+      ]);
+      console.log("📝 Logged failure to tokengrants.");
+    } catch {
+      /* ignore */
+    }
 
     return res.status(500).json({ error: err.message });
   }
