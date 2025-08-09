@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { ALL_CATEGORIES } from "@/lib/progress";
 
 const SECRET = process.env.NEXT_PUBLIC_DEV_SEED_SECRET || "";
-const ENV = process.env.VERCEL_ENV || process.env.NODE_ENV; // "production" | "preview" | "development"
+const ENV = process.env.NEXT_PUBLIC_VERCEL_ENV || "production"; // "development" | "preview" | "production"
 
 export default function DevSeed() {
   const [allowed, setAllowed] = useState(false);
