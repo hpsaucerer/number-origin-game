@@ -260,6 +260,34 @@ function getPlayerTitle(stats) {
   return "Dabbler";
 }
 
+const AnswerBanner = ({ variant = "correct", children }) => {
+  const isCorrect = variant === "correct";
+  const barColors = isCorrect
+    ? "bg-green-100 text-green-900 border-green-200"
+    : "bg-red-100 text-red-900 border-red-200";
+
+  return (
+    <div className="mt-4 w-full flex justify-center px-3 sm:px-0">
+      <div className="w-full max-w-sm">
+        {/* Top label bar */}
+        <div
+          className={`text-center text-[10px] sm:text-xs font-semibold tracking-wide uppercase border rounded-t-xl px-3 py-1 ${barColors}`}
+          aria-hidden
+        >
+          The answer was
+        </div>
+
+        {/* Body (white, smaller text on mobile) */}
+        <div className="border border-gray-200 border-t-0 rounded-b-xl bg-white shadow-sm">
+          <p className="text-center text-sm sm:text-base font-semibold text-gray-900 py-3 px-4 leading-snug">
+            {children}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Home({ overridePuzzle = null, isArchive: initialIsArchive = false, archiveIndex = null }) {
   const [wasFirstTimePlayer, setWasFirstTimePlayer] = useState(false); // ✅
   const [playerName, setPlayerName] = useState("");
@@ -1821,9 +1849,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {/* ✅ Correct Answer UI */}
 {isCorrect && (
   <div className="mt-6 text-center space-y-3">
-    <p className="text-green-600">
-      Correct! The answer is {puzzle.answer}.
-    </p>
+<AnswerBanner variant="correct">{puzzle.answer}</AnswerBanner>
 
     {!isArchive && (
       <>
@@ -1863,9 +1889,7 @@ if (wasFirstTimePlayer && !hasSeenWhatsNew) {
 {/* ❌ Incorrect Answer UI */}
 {!isCorrect && attempts >= maxGuesses && (
   <div className="mt-6 text-center space-y-3">
-    <p className="text-red-600">
-      Incorrect! The answer is <strong>{puzzle.answer}</strong>.
-    </p>
+<AnswerBanner variant="incorrect">{puzzle.answer}</AnswerBanner>
 
     {!isArchive && (
       <>
